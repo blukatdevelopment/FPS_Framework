@@ -1,0 +1,291 @@
+***********************
+*            _        *
+*   ___ _ __ (_) ___  *
+*  / _ \ '_ \| |/ __| *
+* |  __/ |_) | | (__  *
+*  \___| .__/|_|\___| *
+*      |_|            *
+***********************
+Title: Inventory_System
+Prereqs: fps_movement
+Description:
+The player should be able to pick up items
+in the world, storing them in their inventory.
+They should then be able to scroll through
+their inventory and select items. The inventory's
+capacity should be limited by total weight.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Item
+Designation: S-1
+Description: 
+An item should be able to be stored in
+the player's inventory,
+equipped to one of their hands,
+and dropped. An item should be able
+to be converted to(for storage) and 
+from(for dropping or equipping) Json.
+Items should know which slot they
+are equipped to, and whether they
+require both hands.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Create item baseclass
+Designation: T-1
+Implements: S-1
+Description:
+Create a baseclass for items
+with use, hold, drop, save,
+and load methods. Properties
+should include weight, stackable,
+stackSize, twoHanded.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Item Factory
+Designation: T-1
+Implements: S-1
+Description:
+An item factory should return
+a reference to an instantiated
+item, given either the item enum
+for creating a new item, or a
+Json record for instantiating an
+existing item. Said factory must
+be expanded as more item classes
+are added to the game.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Equip/Drop items
+Designation: T-1
+Implements:
+Description:
+Instantiated items should be 
+childed to a hand and their
+collision and gravity should
+be disabled or ignored. When
+dropped, the item should be
+rechilded and collision and
+gravity reinstated.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Pick up Items
+Designation: T-1
+Implements:
+Description:
+The player should be able to
+aim at near objects in order
+to pick them up.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Inventory
+Designation: S-2
+Description:
+In addition to storing and retrieving
+items with the inventory, the inventory
+should be able to mark items as being
+equipped to a slot. If overencumbered,
+the player should have a movement penalty.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Store stacking items
+Designation: T-1
+Implements:
+Description:
+Items should be stacked with
+their like kind first and added
+as new records only if none exist.
+
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Inventory Menu
+Designation: S-3
+Description: 
+The player should be able to summon
+a menu to interact with
+the Inventory. Item info should be displayed
+for the active item along with buttons for
+any actions available for the item.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Display scrolling list of items.
+Designation: T-1
+Implements:
+Description:
+Items should be able to be selected
+from list. A scroll up/down arrow should
+exist for this as well.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Display details of highlighted item.
+Designation: T-1
+Implements:
+Description:
+Show item info as well as create buttons for
+item interactions of selected item.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Create item interaction functions
+Designation: T-1
+Implements:
+Description:
+Create equip, discard, load, unload methods.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Display model of highlighted item.
+Designation: T-1
+Implements:
+Description:
+Render an item model to preview.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Loot Menu 
+Designation: S-4
+Description:
+The player should be able to
+exchange items with other 
+inventories via a looting menu.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: select other inventories
+Designation: T-1
+Implements:
+Description:
+Other inventories should be interactive
+the same way instantiated items are.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Render both inventory lists.
+Designation: T-1
+Implements:
+Description:
+Not only should both inventories
+be visible, but the menu should
+shut if either inventory ceases
+to exist.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Give/Take item
+Designation: T-1
+Implements:
+Description:
+Move item to/from inventory
+by clicking.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Give quantity modal
+Designation: T-1
+Implements:
+Description:
+Allow user to select quantity
+of items to be dropped, default
+to all. Pressing continue/A/Enter
+should cause part of the stack to
+be removed from the player's 
+inventory and added to the other
+inventory.

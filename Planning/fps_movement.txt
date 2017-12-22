@@ -1,0 +1,264 @@
+***********************
+*            _        *
+*   ___ _ __ (_) ___  *
+*  / _ \ '_ \| |/ __| *
+* |  __/ |_) | | (__  *
+*  \___| .__/|_|\___| *
+*      |_|            *
+***********************
+Title: fps_movement
+Prereqs: None
+Description:
+The player should move
+about the world and look around from a first-person
+point of view. Jumping, crouching, and sprinting are
+also key behaviours. 
+
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Movement
+Designation: S-1
+Description: 
+The player should be able to walk and sprint atop
+flat surfaces without falling and climb
+small inclines.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: WASD movement
+Designation: T-1
+Implements:
+Description:
+Move(x, z) should check the
+destination for collisions before
+moving. It should try a second
+and third time to move with
+increased y value in order to
+climb inclines or step over bumps.  
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Walk/Run leg animations
+Designation: T-1
+Implements:
+Description:
+Provide different animation
+states for legs.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Sprint
+Designation: T-1
+Implements:
+Description:
+Using sprint should increase
+movement speed. Sprinting
+should take player out of crouch
+if they are in a crouch.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Jumping
+Designation: S-2
+Description:
+The player's character should be able to jump,
+launching them into the air. They
+should not be able to jump again
+until they have touched the ground
+with their feet. The player should
+not be able to jump when falling.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: isFalling() method
+Designation: T-1
+Implements:
+Description:
+return true when falling
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: land() methods
+Designation: T-1
+Implements:
+Description:
+trigger land() on collision beneath
+feet. Should set landed variable to
+true.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Trigger jump animation.
+Designation: T-1
+Implements:
+Description:
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Crouching
+Designation: S-3
+Description:
+The player's character should be able
+to crouch, lowering their body down towards
+the ground and slowing motion.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Trigger crouch animation
+Designation: T-1
+Implements:
+Description:
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Movement penalty when crouched
+Designation: T-1
+Implements:
+Description:
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Input
+Designation: S-4
+Description:
+The player's inputs need to translate
+to actions for the player's character.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Create DeviceManager class
+Designation: T-1
+Implements:
+Description:
+Device manager should return
+input events from its target
+device.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Create InputEvent class
+Designation: T-1
+Implements:
+Description:
+InputEvent should account
+for buttons(button, action)
+and axes(x, y).
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Make Brain and extend it with InputHandler
+Designation: T-1
+Implements:
+Description:
+InputHandler should call an actor's methods
+according to the InputEvents it is provided
+by its DeviceManager every update()
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Looking
+Designation: S-5
+Description:
+The player should be able to turn
+their character's body side to side
+and turn their head up and down.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Pivot model's hips.
+Designation: T-1
+Implements:
+Description:
+Rotate humanoid's skeleton
+
