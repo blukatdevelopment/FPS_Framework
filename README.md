@@ -8,7 +8,7 @@ Godot 3.0, I have chosen it for its license and the capabilities of its
 
 ## Roadmap
 
-### Core[In Progress]
+### Core
 The first few epics will focus on delivering basic functionality such as 
 menus, saving/loading, and basic FPS functionality such as movement and item
 use. After this phase, general understanding of the game engine should be

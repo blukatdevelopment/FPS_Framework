@@ -14,6 +14,94 @@ about the world and look around from a first-person
 point of view. Jumping, crouching, and sprinting are
 also key behaviours. 
 
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Animation
+Designation: S-1
+Description: 
+Animations should blend and mask properly
+on the Actor.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Masking
+Designation: T-1
+Implements:
+Description:
+Animations should be masked so that
+they correspond to left/right arms, 
+legs, and torso.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Aim override
+Designation: T-1
+Implements:
+Looking up or down should
+override the angle of the hips.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Ragdoll
+Designation: T-1
+Implements:
+Description:
+The player should be able to
+enter or recover from a ragdoll
+state.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Animation blending
+Designation: T-1
+Implements:
+Description:
+Animations should blend
+as they transition.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Animation controller
+Designation: T-1
+Implements:
+Description:
+If possible, a script should be
+created to control the animation
+logic to provide a simple
+interface to easily use with
+different models or sets of animations.
+
 
 *******************************
 *  ____  _                    *
