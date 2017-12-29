@@ -1,0 +1,102 @@
+***********************
+*            _        *
+*   ___ _ __ (_) ___  *
+*  / _ \ '_ \| |/ __| *
+* |  __/ |_) | | (__  *
+*  \___| .__/|_|\___| *
+*      |_|            *
+***********************
+Title: Quest System
+Prereqs:
+Description:
+The player should be able 
+to start, resolve, and
+see the consequences
+of quests.
+
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Framework
+Designation: S-1
+Description:
+Though quests will rely on custom
+code, a framework will structure
+this code to operate interchangeably.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: QuestEvent object
+Designation: T-1
+Implements:
+Description:
+A QuestEvent object should
+store information perinent
+to quests. Json or XML may
+offer a flexible container
+for arbitrary data.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Unique ID for Actors
+Designation: T-1
+Implements:
+Description:
+All actors and items should have
+a unique auto-incremented
+id with which they can be
+referenced. (So you can say
+"Attack that lizard." rather
+than "Attack a lizard.")
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Session handles quests.
+Designation: T-1
+Implements:
+Description:
+The Session should receive
+and distribute QuestEvents to
+all quests.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Quest Interface
+Designation: T-1
+Implements:
+Description:
+Quest should implement:
+void Update(QuestEvent event)
+Json/Xml GetData()
+Json/Xml LoadData()
+String GetClassName()
+A factory method for
+quests should return an
+instantiated quest based on
+the class name.

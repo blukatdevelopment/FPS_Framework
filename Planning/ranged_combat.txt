@@ -132,7 +132,6 @@ Description:
 Aiming a ranged weapon should place the
 camera in position to see the iron sights.
 
-
 ************************
 *  _____         _     *
 * |_   _|_ _ ___| | __ *
