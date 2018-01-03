@@ -21,18 +21,6 @@ adding an Arena gameMode wherein the player fights NPC characters in one of
 multiple static maps. Upon completion, basic combat and AI should be done and
 available for testing via the Arena.
 
-### Mission
-With the completion of the Arena, a Mission mode will enter development. This
-mode will deliver a progression of missions with objectives for the player to
-complete. Completion of this stage should pave the way for quest creation and
-provide a wider variety of assets.
-
-### Adventure
-The Adventure mode will provide a randomly-generated map to be loaded onto the
-world piecemeal in a grid surrounding the player. NPCs will dispense quests that
-can be completed for rewards and a dialogue system should allow for more
-sophisticated objectives than found in the mission mode.
-
 # Development
 The work flow for this project will likely conform to the following process.
 1 Create Epic with stories and tasks.

@@ -1,0 +1,88 @@
+This is the containment file for overly-ambitious ideas. After the current
+scope of the game has advanced, these ideas may be worth consideration in the
+future.
+
+
+**Kingdom**
+Port in the Kingdom card game as a minigame.
+
+**Crafting**
+Create menu for turning ingrient items into product items.
+
+**Building**
+Allow Actors to convert collected resources into placeable structures.
+
+**Dialogue system**
+Allow players to traverse speech trees with NPCs with optional voiceovers.
+
+**NPC trading**
+Allow dialogue options to trigger trading menu.
+
+**NPC Quests**
+Allow dialogue options to trigger and (after completion) issue rewards.
+
+**Hunger/Thirst**
+Require food/water to survive. Possible add auto-consume option with "You have
+X days worth of supplies left" warnings to keep this from being tedious.
+
+**Followers**
+Allow player to have a couple NPC followers that maintain a distance from the
+player, assist in combat, and help carry items.
+
+**Squads**
+Allow player to command a set of NPC squad leaders that each have minions.
+Orders would include Move, Attack, Change Rules of Engagement, and Change Pace.
+
+**Generate map**
+Generate a 2D map of the world's terrain so that places that are not loaded 
+can still be viewed in detail.
+
+**Command map**
+Use 2D map to set navpoints and view a squad's calculated path.
+
+**Vehicles**
+A vehicle would store an actor(possibly exposing their body to harm), offer
+storage for items, and have some fancy physics to it. 
+
+**********************Conservation of resources*********************************
+This is the general idea that renewable resources can be created, but
+non-renewable resources can only be found.
+
+**Persistant world**
+All Actors/Items/Buildings should persist in their current state. Nothing should
+respawn nor despawn when a player is absent. Things do not need to remain 
+stationary when left alone, however.
+
+**NPC creation**
+Actor should be able to pro-create to produce children(By living in the same
+house/den) or venture in from a neighboring inaccessible territory.
+
+**Skeletal world representation**
+When unloaded, the world should update a minimal representation of each region
+as a set of ecosystems(wandering Actors), and settlements/dens(Sedentary Actors).
+Weighted random events and actions should decide resource production/harvest, 
+population growth, the outcome of altercations, and the position of NPCs at any
+given time.
+
+********************Multiplayer*************************************************
+
+**Multiplayer Sandbox*
+Client-Server multiplayer would allow multiple clients to drop in and out of a
+persistent world, as is the case in Minecraft.
+
+**Local Co-op**
+Player2 could join in using a gamepad. Player2 might play as a follower, squad
+leader, or commander(giving orders from a map filled with info).
+
+**Dual-screen multiplayer**
+Give Player2 monitor 2, reducing screen-peeking and eliminating split-screen
+issues.
+
+**Online Arena Mode**
+Standard matchmaking lobby->static map deathmatch arena with rounds. Gamemodes
+could vary.
+
+**Horde mode**
+Team 1 fights against oncoming waves of NPCs commanded by
+team 2. Each completed wave awards points to both sides. Team 1 uses points for
+upgrades and turrets whilst team 2 purchases upgrades and additional NPCs.
