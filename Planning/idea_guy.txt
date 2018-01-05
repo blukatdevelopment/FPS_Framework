@@ -1,7 +1,7 @@
-This is the containment file for overly-ambitious ideas. After the current
-scope of the game has advanced, these ideas may be worth consideration in the
-future.
-
+The ideas in this file are vague, overly ambitious, or otherwise not 
+fleshed out enough to place in their own epics. Some of these ideas will be
+fleshed out in due time, whilst some will remain here as candidates
+for future features.
 
 **Kingdom**
 Port in the Kingdom card game as a minigame.
@@ -43,6 +43,7 @@ Use 2D map to set navpoints and view a squad's calculated path.
 **Vehicles**
 A vehicle would store an actor(possibly exposing their body to harm), offer
 storage for items, and have some fancy physics to it. 
+
 
 **********************Conservation of resources*********************************
 This is the general idea that renewable resources can be created, but

@@ -7,7 +7,7 @@
 *      |_|            *
 ***********************
 Title: fps_movement
-Prereqs: None
+Prereqs: engine_basics
 Description:
 The player should move
 about the world and look around from a first-person
