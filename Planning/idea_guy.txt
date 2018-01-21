@@ -1,7 +1,12 @@
-The ideas in this file are vague, overly ambitious, or otherwise not 
-fleshed out enough to place in their own epics. Some of these ideas will be
-fleshed out in due time, whilst some will remain here as candidates
-for future features.
+This file contains info that is subjective in nature and concerns
+game design more than coherent software requirements.
+
+
+
+**********************************************************************
+        Far-Out Features
+**********************************************************************
+
 
 **Kingdom**
 Port in the Kingdom card game as a minigame.
@@ -87,3 +92,58 @@ could vary.
 Team 1 fights against oncoming waves of NPCs commanded by
 team 2. Each completed wave awards points to both sides. Team 1 uses points for
 upgrades and turrets whilst team 2 purchases upgrades and additional NPCs.
+
+
+********************************************************************************
+Philosophy
+********************************************************************************
+
+** Naming **
+A successful name is either short, or can be abbreviated or made into a 
+phoenetic acronym. A more successful name captures some fundamental truth about
+the game not only as a player experience, but also as a branding legacy.
+
+Angle A
+A common approach to naming is to fashion a compound word from a noun and 
+descriptor. 
+
+Nouns:
+  Mana
+  Magic
+  Theatre( of war)
+  
+
+Descriptors
+  Divine
+  
+
+** Pillars of gameplay **
+
+
+Choice -
+There should be a variety of valid play styles. Every problem should be as much
+about choosing a solution as it is executing one. Pros/cons should balance each
+solution so that it lends itself to a cohesive play style.
+
+Procedural Story -
+A fixed chain or tree of plot nodes allows fine-tailoring of cinematic experiences
+using hand-crafted gameplay sequences. This project will not have access to the
+labor nor creative talent required for such. More importantly, the AAA market
+is heavily saturated with this scheme.
+
+Instead, plot nodes should be defined in terms of objectives that can likewise
+be pursued and achieved by both human players and NPCs. A campaign should consist
+of a series of plot nodes leading toward the resolution of a larger objective.
+Multiple mutually-exclusive campaigns should be active at one time, allowing
+the player to either participate in, or simply watch a unique timeline unfold
+before them. Should the player fail in their aims, the world should not end,
+but instead continue to function with the full consequences of their failure.
+As the complexity of such a world increases, so does the novelty of each 
+gameplay. The competition of two active plot nodes acts as a unique plot node
+in of itself, meaning that the same number of plot nodes in such a procedural
+system can offer a geometric improvement in novelty over linear storytelling.
+
+
+
+
+
