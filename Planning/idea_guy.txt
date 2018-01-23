@@ -116,6 +116,8 @@ Nouns:
 Descriptors
   Divine
   
+Candidte name: manafest
+
 
 ** Pillars of gameplay **
 
@@ -144,6 +146,17 @@ in of itself, meaning that the same number of plot nodes in such a procedural
 system can offer a geometric improvement in novelty over linear storytelling.
 
 
+** Roadmapping**
+
+FPS lite-
+Basic fps movement, inventory, and combat.
+
+FPS polish-
+Ragdoll, animations, static arena gamemode.
 
 
+Procedural level design-
+terrain, buildings/scenery placement, dungeon gen.
 
+procedural quests-
+framework, example quest, example AIs.

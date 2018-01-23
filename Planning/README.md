@@ -17,7 +17,6 @@ Each text file is an epic filled with Tasks and stories.
 *      |_|            *
 ***********************
 Title:
-Prereqs:
 Description:
 
 *******************************
@@ -29,8 +28,9 @@ Description:
 *                      |___/  *
 *******************************
 Title: 
-Designation: S-1
 Description:
+
+
 
 ************************
 *  _____         _     *
@@ -40,6 +40,6 @@ Description:
 *   |_|\__,_|___/_|\_\ *
 ************************
 Title:
-Designation: T-1
-Implements:
 Description:
+
+

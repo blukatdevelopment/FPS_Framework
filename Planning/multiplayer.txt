@@ -1,0 +1,153 @@
+***********************
+*            _        *
+*   ___ _ __ (_) ___  *
+*  / _ \ '_ \| |/ __| *
+* |  __/ |_) | | (__  *
+*  \___| .__/|_|\___| *
+*      |_|            *
+***********************
+Title: Lobby
+Description:
+Players should be able
+to join and leave a
+lobby from which they can
+set up a game.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: chat
+Description:
+Players should be able to post
+text messages to a chat tab.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Last ten posts
+Description:
+A client should display
+at most the last ten 
+messages spoken.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: posting
+Description:
+A client posting to the
+server should cause all
+other clients to receive
+the post.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: player names
+Description:
+Each player should have
+a unique name. If a 
+player joins with a duplicate
+name, an auto-incremented
+number (1), (2), (100) should be
+added to their name
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Client menu.
+Description:
+Players should be able
+to enter or save a server's
+ip address in a GUI menu
+in order to connect.
+
+************************
+*  _____         _     *
+* |_   _|_ _ ___| | __ *
+*   | |/ _` / __| |/ / *
+*   | | (_| \__ \   <  *
+*   |_|\__,_|___/_|\_\ *
+************************
+Title: Server menu
+Description:
+Server should be able to host
+using a config file. Config file
+should be edited by server menu.
+
+***********************
+*            _        *
+*   ___ _ __ (_) ___  *
+*  / _ \ '_ \| |/ __| *
+* |  __/ |_) | | (__  *
+*  \___| .__/|_|\___| *
+*      |_|            *
+***********************
+Title: Multiplayer session
+Description:
+Players should be able to
+start a shared session
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Load scene
+Description:
+Players and server should
+all load the same scene
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: sync movement
+Description:
+Players should all move smoothly,
+getting corrections from the
+server.
+
+*******************************
+*  ____  _                    *
+* / ___|| |_ ___  _ __ _   _  *
+* \___ \| __/ _ \| '__| | | | *
+*  ___) | || (_) | |  | |_| | *
+* |____/ \__\___/|_|   \__, | *
+*                      |___/  *
+*******************************
+Title: Drop in/out
+Description:
+If the server allows, players
+should be able to connect and
+disconnect, entering the server
+through spawn points and
+otherwise disappearing.
