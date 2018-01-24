@@ -59,16 +59,17 @@ public class DeviceManager {
   /* Returns input events from MouseAndKeyboard inputs. */
   private List<InputEvent> KeyboardEvents(){
     List<InputEvent> ret = new List<InputEvent>();
-    // Keys down
-    ret.AddRange(KeyEvents(GD.KEY_W, 0, InputEvent.Buttons.W));
-    ret.AddRange(KeyEvents(GD.KEY_A, 1, InputEvent.Buttons.A));
-    ret.AddRange(KeyEvents(GD.KEY_S, 2, InputEvent.Buttons.S));
-    ret.AddRange(KeyEvents(GD.KEY_D, 3, InputEvent.Buttons.D));
+    // TODO: Replace all literals with appropriate constants when
+    // their location is known.
+    ret.AddRange(KeyEvents(87, 0, InputEvent.Buttons.W));
+    ret.AddRange(KeyEvents(65, 1, InputEvent.Buttons.A));
+    ret.AddRange(KeyEvents(83, 2, InputEvent.Buttons.S));
+    ret.AddRange(KeyEvents(68, 3, InputEvent.Buttons.D));
     ret.AddRange(KeyEvents(16777221, 4, InputEvent.Buttons.Enter)); // GD.KEY_RETURN is broken
-    ret.AddRange(KeyEvents(GD.KEY_UP, 5, InputEvent.Buttons.Up));
-    ret.AddRange(KeyEvents(GD.KEY_DOWN, 6, InputEvent.Buttons.Down));
-    ret.AddRange(KeyEvents(GD.KEY_LEFT, 7, InputEvent.Buttons.Left));
-    ret.AddRange(KeyEvents(GD.KEY_RIGHT, 8, InputEvent.Buttons.Right));
+    ret.AddRange(KeyEvents(16777232, 5, InputEvent.Buttons.Up));
+    ret.AddRange(KeyEvents(16777234, 6, InputEvent.Buttons.Down));
+    ret.AddRange(KeyEvents(16777231, 7, InputEvent.Buttons.Left));
+    ret.AddRange(KeyEvents(16777233, 8, InputEvent.Buttons.Right));
     return ret;
   }
   
