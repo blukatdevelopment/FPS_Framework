@@ -14,14 +14,18 @@ public class Actor : Node
     }
   }
     
-    public override void _Process(float delta)
-    {
-        if(brain != null){ brain.Update(delta); }
-        else{ GD.Print("Brain Null"); }
-    }
+  public override void _Process(float delta)
+  {
+      if(brain != null){ brain.Update(delta); }
+      else{ GD.Print("Brain Null"); }
+  }
+  
+  public void Move(int x, int y){
+      GD.Print("Moving[" + x + "," + y + "]");
+  }
 
   public static Actor ActorFactory(Brains b = Brains.Player1){
-    PackedScene ps = (PackedScene)GD.Load("res://Scene/Prefab/Actor.tscn");
+    PackedScene ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node st = ps.Instance();
     Actor a = (Actor)st;
     a.Init(b);

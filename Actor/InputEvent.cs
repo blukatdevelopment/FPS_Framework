@@ -45,6 +45,13 @@ public class InputEvent {
     this.y = y;
   }
   
+  public bool IsButton(){
+    if(this.button == Buttons.None){
+      return false;  
+    }
+    return true;
+  }
+  
   public override string ToString(){
     string ret = "";
     if(button != Buttons.None){
