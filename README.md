@@ -22,10 +22,17 @@ The work flow for this project will likely conform to the following process:
 * None
 
 ## Epic Backlog
-
+* fps_movement
+* fps_basics
+* inventory_system
+* fps_combat
+* multiplayer_session
+* quest_system
+* ranged_combat
 
 ## Active Epics
-* None
+* engine_basics
+* lobby
 
-### Current task(s)
-* None
+### Active stories
+* engine_basics.GUI

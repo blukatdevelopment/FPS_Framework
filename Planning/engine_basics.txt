@@ -26,6 +26,45 @@ Check what's necessary to make
 basic 2D menus.
 
 ###########
+#  Task   #
+###########
+Title: Box
+Description:
+Create a box that displays text or a graphic.
+
+###########
+#  Task   #
+###########
+Title: Buttons
+Description:
+Create a button that displays text or a graphic and
+calls a function when clicked.
+
+###########
+#  Task   #
+###########
+Title: Text Input Field
+Description:
+Create a text input field that updates a variable
+with its content.
+
+###########
+#  Task   #
+###########
+Title: Slider
+Description:
+Create a slider that sets an int/float between min and max values.
+
+###########
+#  Task   #
+###########
+Title: Scroll list
+Description:
+Create a visored list of GUI elements
+that can be scrolled through with scroll buttons
+and methods.
+
+###########
 #  Story  #
 ###########
 Title: Physics
@@ -129,3 +168,63 @@ Description:
 ###########
 Title: Figre out how to compile for arm linux.
 Description:
+
+
+##########################################################
+# In Progress #
+###############
+
+###########
+#  Story  #
+###########
+Title: GUI
+Description:
+Check what's necessary to make
+basic 2D menus.
+
+###########
+#  Task   #
+###########
+Title: Box
+Description:
+Create a box that displays text or a graphic.
+
+###########
+#  Task   #
+###########
+Title: Buttons
+Description:
+Create a button that displays text or a graphic and
+calls a function when clicked.
+
+###########
+#  Task   #
+###########
+Title: Text Input Field
+Description:
+Create a text input field that updates a variable
+with its content.
+
+###########
+#  Task   #
+###########
+Title: Slider
+Description:
+Create a slider that sets an int/float between min and max values.
+
+###########
+#  Task   #
+###########
+Title: Scroll list
+Description:
+Create a visored list of GUI elements
+that can be scrolled through with scroll buttons
+and methods.
+
+##########################################################
+# In Testing #
+##############
+
+##########################################################
+# Complete  #
+#############
