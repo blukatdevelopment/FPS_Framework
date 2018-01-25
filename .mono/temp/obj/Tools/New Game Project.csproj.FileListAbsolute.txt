@@ -1,0 +1,6 @@
+/home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.csprojResolveAssemblyReference.cache
+/home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.csproj.CoreCompileInputs.cache
+/home/blukat/Documents/FPS/.mono/temp/bin/Tools/New Game Project.dll
+/home/blukat/Documents/FPS/.mono/temp/bin/Tools/New Game Project.pdb
+/home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.dll
+/home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.pdb
