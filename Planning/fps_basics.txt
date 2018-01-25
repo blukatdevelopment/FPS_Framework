@@ -1,166 +1,101 @@
-***********************
-*            _        *
-*   ___ _ __ (_) ___  *
-*  / _ \ '_ \| |/ __| *
-* |  __/ |_) | | (__  *
-*  \___| .__/|_|\___| *
-*      |_|            *
-***********************
+###########
+#  Epic   #
+###########
 Title: FPS basics
-Prereqs:
 Description:
 Before more detailed fps mechanics are to be added and
 fleshed out with playtesting, far more basic features should
 prototype their functionality.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Movement
-Designation: S-1
 Description:
 An actor must be able to strafe, jump, and sprint.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Strafe
-Designation: T-1
-Implements:
 Description:
 WASD should move the actor in the 
 specified direction.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Sprint
-Designation: T-1
-Implements:
 Description:
 Holding shift should increase
 the actor's speed.
 
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Jump
-Designation: T-1
-Implements:
 Description:
 An actor should be able
 to jump after landing (touching something with
 the souls of their feet)
 
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Looking
-Designation: S-1
 Description:
 The actor should be able to turn
 sideways and pivot up and down.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Turn x
-Designation: T-1
-Implements:
 Description:
 Turning horizontally
 should rotate the actor's body.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Turn Y
-Designation: T-1
-Implements:
 Description:
 Turning vertically should
 incline player's torso up
  and down, in effect aiming
 the camera and arm.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Combat
 Description:
 An actor should be able to
 punch other actors to death.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Hitbox
 Description:
 There should be at least one
 hitbox to receive attacks
 from fists.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Fist
 Description:
 A fist should punch when
 activated, damaging enemies it
 collides with.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Death
 Description:
 When an actor's health falls
@@ -168,26 +103,18 @@ below 1 they should fall inanimate
 with their inputhandler
 switched to pause mode(menus only).
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title:Health bar
 Description:
 The player should be able to
 see either their health ammount
 or a red bar on their HUD.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Health regen
 Description:
 Health should regenerate over

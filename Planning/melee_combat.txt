@@ -1,11 +1,6 @@
-***********************
-*            _        *
-*   ___ _ __ (_) ___  *
-*  / _ \ '_ \| |/ __| *
-* |  __/ |_) | | (__  *
-*  \___| .__/|_|\___| *
-*      |_|            *
-***********************
+###########
+#  Epic   #
+###########
 Title: FPS Combat
 Description:
 The player should be able to sustain damage
@@ -13,16 +8,10 @@ to health and fatigue, perform unarmed
 attacks, and use melee and ranged weapons.
 Healing items are also a must.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Condition
-Designation: S-1
 Description:
 The player should be able to
 sustain damage to health and fatigue
@@ -30,59 +19,36 @@ from attacks, but also from colliding
 at an unsafe speed as well as 
 from sprinting.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Damage object
-Designation: T-1
-Implements:
 Description:
 Create damage object which contains
 both stamina and health damage.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Condition bars
-Designation: T-1
-Implements:
 Description:
 Create bars to show health and
 stamina in the bottom left corner
 of the screen.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: StatHandler
-Designation: T-1
-Implements:
 Description:
 Create stat handler module responsible
 for storing condition info and receiving
 damage objects.
 
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Unarmed attacks
 Prereqs: inventory_system
 Description:
@@ -91,61 +57,38 @@ ability that triggers a punching
 animation and causes damage and
 knockback to those effected.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Collision
-Designation: T-1
-Implements:
 Description:
 Find solution to handling
 collision for the apex of the 
 punch, but only then. (Either a boxcast
 or a raycast.)
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Punch animation
-Designation: T-1
-Implements:
 Description:
 Trigger a punch animation
 appropriately, transitioning
 back to the correct animation
 afterward.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Stamina consumption
-Designation: T-1
-Implements:
 Description:
 Punching should deliver damage
 according to the stamina it
 successfully consumed.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Melee weapon
 Designation: S-3
 Description:
@@ -155,108 +98,66 @@ according to which slot it's equipped
 to and which type of attack it uses
 (slash, stab).
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: sprinting animation
-Designation: T-1
-Implements:
 Description:
 When sprinting, the arms
 should move with the item(s)
 in hand.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Swing/stab animations
-Designation: T-1
-Implements:
 Description:
 A knife should use a stabbing
 animation whilst a sword should
 use a swinging animation.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Generic melee button
-Designation: T-1
-Implements:
 Description:
 Pressing a melee button
 should perform a melee attack
 with an arbitrary item in hand.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Holding animations
-Designation: T-1
-Implements:
 Description: Both the left and
 right hands should have single-handed
 holding animations active when
 brandishing a one-handed melee item.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Idle animations
-Designation: T-1
-Implements:
 Description:
 When no item is equipped
 or the equipped item is
 put away, idle animations
 should be active.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Put away equipped item
-Designation: S-1
 Description:
 Equipped items should be able to
 be holstered/sheathed in order
 to allow for movement bonus.
 
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Put away animations
-Designation: T-1
-Implements:
 Description:
 Animations should trigger
 properly from
@@ -264,30 +165,19 @@ holding->put away->idle
 and reverse for taking
 the items back out.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Hide item
-Designation: T-1
-Implements:
 Description:
 When put away, an item should
 be invisible/dormant.
 
 
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Food items
 Designation: S-5
 Description:
@@ -298,31 +188,19 @@ This will allow the main player
 to replenish their health
 after combat.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: eating animation
-Designation: T-1
-Implements:
 Description:
 An animation should be played
 when the player eats a food item,
 showing it being eaten.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Delay consumption
-Designation: T-1
-Implements:
 Description:
 Consumption of food items should
 be delayed by the eating animation.

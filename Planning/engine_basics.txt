@@ -1,13 +1,7 @@
-***********************
-*            _        *
-*   ___ _ __ (_) ___  *
-*  / _ \ '_ \| |/ __| *
-* |  __/ |_) | | (__  *
-*  \___| .__/|_|\___| *
-*      |_|            *
-***********************
+###########
+#  Epic   #
+###########
 Title: engine_basics
-Prereqs: None
 Description:
 Some details about the engine are vital to implementing
 even the most rudimentary feature sets. This epic
@@ -15,225 +9,123 @@ entails doing the research and proofs of concept
 to not only know what is possible, but aproximately
 how it is possible as well.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Audio
-Designation: S-1
 Description:
 Being able to control audio is
 key to making good forms
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: GUI
-Designation: S-1
 Description:
 Check what's necessary to make
 basic 2D menus.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Physics
-Designation: S-1
 Description:
 Determine collision, raycasting,
 and motion.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Assets
-Designation: S-1
 Description:
 Determine how assets are imported,
 stored, referenced, and what not.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: model workflow
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Animation workflow 
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Audio workflow
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: texture workflow
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Text file/json workflow
-Designation: T-1
-Implements:
 Description:
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Nodes as scenes and prefabs.
-Designation: S-1
 Description:
 Find out how to create, load, 
 and manipulate nodes.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: serialization scheme.
-Designation: T-1
-Implements:
 Description:
 Learn/identify C# JSon library and create some means to
 convert any given persistent class into and out of it. Allow 
 each record to indicate which class or factory should be called
 to instantiate the dormant object.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Object Factories
-Designation: T-1
-Implements:
 Description:
 Set up Factories for Items and Actors. That automatically attach
 the new instance to the root node.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Load scenes.
-Designation: T-1
-Implements:
 Description:
 Determine how to switch between arbitrary scenes on demand.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Building
-Designation: S-1
 Description:
 Figure out what's needed to build
 to the range of available platforms.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Figure out how to compile for windows.
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Figure out how to compile for linux.
-Designation: T-1
-Implements:
 Description:
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Figre out how to compile for arm linux.
-Designation: T-1
-Implements:
 Description:

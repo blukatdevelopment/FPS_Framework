@@ -1,11 +1,6 @@
-***********************
-*            _        *
-*   ___ _ __ (_) ___  *
-*  / _ \ '_ \| |/ __| *
-* |  __/ |_) | | (__  *
-*  \___| .__/|_|\___| *
-*      |_|            *
-***********************
+###########
+#  Epic   #
+###########
 Title: Ranged Combat
 Prereqs: Melee Combat
 Description:
@@ -14,14 +9,9 @@ ranged weapons that they can
 perform ranged and melee attacks with
 
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Ranged Weapon
 Designation: S-4
 Description:
@@ -30,118 +20,71 @@ based on an internal reserve of ammunition
 that can be replenished by reloading from the
 actor's inventory.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Projectile object
-Designation: T-1
-Implements:
 Description:
 A projectile should carry a damage
 object that it will impart on the first
 StatHandler it collides with and be destroyed
 on collision.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Ammo from inventory.
-Designation: T-1
-Implements:
 Description:
 The Inventory should have a requestAmmo() method
 called by a held item. A reference to the
 Inventory should be provided by a reference to
 the Actor supplied upon holding an item.
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: Firearm behaviors.
 Designation: S-4
 Description:
 Firearms should provide recoil, unique reload animations, 
 muzzle flash, and should allow aiming with iron sights.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Muzzle climb
-Designation: T-1
-Implements:
 Description:
 A ranged weapon with a non-zero recoil
 should cause the muzzle to move upward
 and sideways by a random distance.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Aiming Zoom
-Designation: T-1
-Implements:
 Description:
 Aiming should cause the camera to zoom in
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Smooth zoom 
-Designation: T-1
-Implements:
 Description:
 Zooming and unzooming should take place over time, rather than
 instantly.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Iron Sights
-Designation: T-1
-Implements:
 Description:
 Aiming a ranged weapon should place the
 camera in position to see the iron sights.
 
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title: Muzzle climb
-Designation: T-1
-Implements:
 Description:
 A ranged weapon with a non-zero recoil
 should cause the muzzle to move upward

@@ -1,45 +1,40 @@
-# Game
+# Planning
 
-This folder is my alternative to using Jira.
+This folder is where [user stories](https://en.wikipedia.org/wiki/User_story) are organized.
 
-Each text file is an epic filled with Tasks and stories.
-
-
+Instead of adding a status field to epics, stories, and tasks, they are to be moved down to
+the respective sessions when started.
 
 # Templates
 
-***********************
-*            _        *
-*   ___ _ __ (_) ___  *
-*  / _ \ '_ \| |/ __| *
-* |  __/ |_) | | (__  *
-*  \___| .__/|_|\___| *
-*      |_|            *
-***********************
+These can be copied and pasted when creating new files.
+
+###########
+#  Epic   #
+###########
 Title:
 Description:
 
-*******************************
-*  ____  _                    *
-* / ___|| |_ ___  _ __ _   _  *
-* \___ \| __/ _ \| '__| | | | *
-*  ___) | || (_) | |  | |_| | *
-* |____/ \__\___/|_|   \__, | *
-*                      |___/  *
-*******************************
+###########
+#  Story  #
+###########
 Title: 
 Description:
 
-
-
-************************
-*  _____         _     *
-* |_   _|_ _ ___| | __ *
-*   | |/ _` / __| |/ / *
-*   | | (_| \__ \   <  *
-*   |_|\__,_|___/_|\_\ *
-************************
+###########
+#  Task   #
+###########
 Title:
 Description:
 
+##########################################################
+# In Progress #
+###############
 
+##########################################################
+# In Testing #
+##############
+
+##########################################################
+# Complete  #
+#############
