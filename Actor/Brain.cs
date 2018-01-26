@@ -7,9 +7,11 @@ using System;
 
 public class Brain {
   protected Actor actor;
+  protected Node eyes;
   
-  public Brain(Actor actor){
+  public Brain(Actor actor, Node eyes){
       this.actor = actor;
+      this.eyes = eyes;
   }
   
   /* Called from update loop. Override this to control the actor.*/

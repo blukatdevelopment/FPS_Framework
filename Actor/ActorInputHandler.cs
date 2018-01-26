@@ -6,7 +6,7 @@ public class ActorInputHandler : Brain {
   private DeviceManager device;
   private Dictionary<InputEvent.Buttons, bool> held; 
   
-  public ActorInputHandler(Actor actor) : base (actor){
+  public ActorInputHandler(Actor actor, Node eyes) : base (actor, eyes){
     device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard);
     InitHeld();
   }
