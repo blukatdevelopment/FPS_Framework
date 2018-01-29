@@ -92,7 +92,7 @@ public class DeviceManager {
   private List<InputEvent> MouseEvents(){
     List<InputEvent> ret = new List<InputEvent>();
     if(mouseLast == null){ mouseLast = mouseCur; }
-    else if(mouseLast.x != mouseCur.x || mouseLast.y != mouseCur){
+    else if((mouseLast.x != mouseCur.x) || (mouseLast.y != mouseCur.y)){
       float dx = mouseLast.x - mouseCur.x;
       float dy = mouseLast.y - mouseCur.y;
       mouseLast = mouseCur;
