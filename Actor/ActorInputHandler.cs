@@ -6,9 +6,20 @@ public class ActorInputHandler : Brain {
   private DeviceManager device;
   private Dictionary<InputEvent.Buttons, bool> held; 
   
-  public ActorInputHandler(Actor actor, Node eyes) : base (actor, eyes){
-    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard);
+  public ActorInputHandler(Actor actor, Eyes eyes) : base (actor, eyes){
     InitHeld();
+    InitEyes(eyes);
+    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes);
+  }
+  
+  private void InitEyes(Node eyes){
+    if(eyes == null){ GD.Print("ActorInputHandler:Eyes were null"); }
+    else{
+      this.eyes = eyes as Eyes;
+      if(eyes == null){
+        GD.Print("ActorInputHandler:Eyes failed to cast.");
+      }
+    }
   }
   
   private void InitHeld(){

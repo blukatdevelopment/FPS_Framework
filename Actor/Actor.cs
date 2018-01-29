@@ -6,7 +6,7 @@ public class Actor : Node
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
-  private Node eyes;
+  private Eyes eyes;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
@@ -21,7 +21,7 @@ public class Actor : Node
   protected void InitChildren(){
     foreach(Node child in this.GetChildren()){
       switch(child.GetName()){
-        case "Eyes": eyes = child; break;
+        case "Eyes": eyes = child as Eyes; break;
       }
     }
     if(eyes == null){ GD.Print("Actor's eyes are null!"); }

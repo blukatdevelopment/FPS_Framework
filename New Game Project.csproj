@@ -56,6 +56,7 @@
     <Compile Include="Actor\DeviceManager.cs" />
     <Compile Include="Actor\InputEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Prefabs\Eyes.cs" />
     <Compile Include="Util\Session.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

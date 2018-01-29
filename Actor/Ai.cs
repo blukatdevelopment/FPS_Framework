@@ -4,7 +4,7 @@ using System;
 public class Ai : Brain
 {
   
-  public Ai(Actor actor, Node eyes) : base (actor, eyes){}
+  public Ai(Actor actor, Eyes eyes) : base (actor, eyes){}
   
   /* Method STUB */
   public override void Update(float delta){

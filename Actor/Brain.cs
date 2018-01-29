@@ -7,9 +7,9 @@ using System;
 
 public class Brain {
   protected Actor actor;
-  protected Node eyes;
+  protected Eyes eyes;
   
-  public Brain(Actor actor, Node eyes){
+  public Brain(Actor actor, Eyes eyes = null){
       this.actor = actor;
       this.eyes = eyes;
   }
