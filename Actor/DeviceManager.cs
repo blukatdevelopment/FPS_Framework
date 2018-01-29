@@ -110,11 +110,4 @@ public class DeviceManager {
     return ret;
   }
   
-  // Use this to find methods for classes.
-  static void ShowMethods(Type type){
-    foreach (var method in type.GetMethods()){
-      GD.Print("" + method.ReturnType +"," + method.Name);
-    }
-  }
-  
 }

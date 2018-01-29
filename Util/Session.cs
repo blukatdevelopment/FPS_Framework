@@ -7,9 +7,18 @@ public class Session : Node {
   public static Session session;
   private List<Actor> actors;
   
+  
+  
   public override void _Ready() {
+    EnforceSingleton();
+  }
+  
+  private void EnforceSingleton(){
     if(Session.session == null){ Session.session = this; }
     else{ this.QueueFree(); }
+  }
+  
+  private void InitActors(){
     actors = new List<Actor>();
     SpawnActor();
   }
@@ -25,4 +34,15 @@ public class Session : Node {
     this.AddChild(a);
   }
   
+  // Use this to find methods for classes.
+  public static void ShowMethods(Type type){
+    foreach (var method in type.GetMethods()){
+      string ret = "" + method.ReturnType +"," + method.Name;
+      foreach( var parameter in method.GetParameters()){
+        ret += ", " + parameter.ParameterType + " " + parameter.Name; 
+      }
+      GD.Print(ret);
+    }
+    
+  }
 }
