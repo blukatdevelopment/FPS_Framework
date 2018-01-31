@@ -6,11 +6,21 @@ using System.Collections.Generic;
 public class Session : Node {
   public static Session session;
   private List<Actor> actors;
-  
+  private Node activeMenu;
   
   
   public override void _Ready() {
     EnforceSingleton();
+    ChangeMenu(Menu.Menus.Main);
+  }
+  
+  public void ChangeMenu(Menu.Menus menu){
+    if(activeMenu != null){
+      activeMenu.QueueFree();
+      activeMenu = null;
+    }
+    activeMenu = Menu.MenuFactory(menu);
+    this.AddChild(activeMenu);
   }
   
   private void EnforceSingleton(){
