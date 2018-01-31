@@ -20,7 +20,7 @@ public class Session : Node {
       activeMenu = null;
     }
     activeMenu = Menu.MenuFactory(menu);
-    this.AddChild(activeMenu);
+    if(activeMenu != null){ this.AddChild(activeMenu); }
   }
   
   private void EnforceSingleton(){
