@@ -3,7 +3,7 @@ using System;
 
 public class Menu{
   public enum Controls{ Button }; 
-  public enum Menus{ None, Main };
+  public enum Menus{ None, Main, Lobby};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
@@ -27,16 +27,27 @@ public class Menu{
     switch(menu){
       case Menus.None: return null; break;
       case Menus.Main: ret = MainMenu(); break;
+      case Menus.Lobby: ret = LobbyMenu(); break;
     }
     return ret;
   }
   
-  /* Returns a Node tree consisting of a camera and some controls. */
+
   public static Node MainMenu(){
     PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     Node menu_instance = menu_ps.Instance();
     MainMenu menu = (MainMenu)menu_instance;
-    menu.SetStartButton((Godot.Button)Button(text : "Kill Menu.", onClick: menu.Start));
+    menu.SetLobbyButton((Godot.Button)Button(text : "Multiplayer", onClick: menu.Lobby));
+    menu.SetQuitButton((Godot.Button)Button(text : "Quit", onClick: menu.Quit));
+    return menu_instance;
+  }
+  
+  public static Node LobbyMenu(){
+    PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
+    Node menu_instance = menu_ps.Instance();
+    LobbyMenu menu = (LobbyMenu)menu_instance;
+    menu.SetMainMenuButton((Godot.Button)Button(text : "MainMenu", onClick: menu.ReturnToMainMenu));
+    menu.SetSendButton((Godot.Button)Button(text : "Send", onClick: menu.Send));
     return menu_instance;
   }
 }
