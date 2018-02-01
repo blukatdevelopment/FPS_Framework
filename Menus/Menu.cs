@@ -2,13 +2,14 @@ using Godot;
 using System;
 
 public class Menu{
-  public enum Controls{ Button }; 
+  public enum Controls{ Button, TextBox }; 
   public enum Menus{ None, Main, Lobby};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
     switch(control){
       case Controls.Button: return Button(); break;
+      case Controls.TextBox: return TextBox(); break;
     }
     return null;
   }
@@ -20,6 +21,12 @@ public class Menu{
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
     return (Control)button_instance;
+  }
+  
+  public static Control TextBox(){
+    PackedScene textBox_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
+    Node textBox_instance = textBox_ps.Instance();
+    return (Control)textBox_instance;
   }
   
   public static Node MenuFactory(Menus menu){
@@ -48,6 +55,8 @@ public class Menu{
     LobbyMenu menu = (LobbyMenu)menu_instance;
     menu.SetMainMenuButton((Godot.Button)Button(text : "MainMenu", onClick: menu.ReturnToMainMenu));
     menu.SetSendButton((Godot.Button)Button(text : "Send", onClick: menu.Send));
+    menu.SetComposeBox((Godot.TextEdit)TextBox());
+    menu.SetMessageBox((Godot.TextEdit)TextBox());
     return menu_instance;
   }
 }
