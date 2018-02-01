@@ -5690,7 +5690,7 @@
         </member>
         <member name="M:Godot.CanvasItem.IsVisibleInTree">
             <summary>
-            Returns [code]true[/code] if the node is in the [SceneTree] and is visible on-screen.
+            Returns [code]true[/code] if the node is present in the [SceneTree], its [member visible] property is [code]true[/code] and its inherited visibility is also [code]true[/code].
             </summary>
         </member>
         <member name="M:Godot.CanvasItem.Show">
@@ -13939,7 +13939,18 @@
         </member>
         <member name="M:Godot.OS.Execute(System.String,System.String[],System.Boolean,System.Object[])">
             <summary>
-            Execute the binary file in given path, optionally blocking until it returns. A process ID is returned.
+            Execute the file at the given path, optionally blocking until it returns.
+            Platform path resolution will take place.  The resolved file must exist and be executable.
+            Returns a process id.
+            For example:
+            [codeblock]
+            var output = []
+            var pid = OS.execute('ls', [], true, output)
+            [/codeblock]
+            If you wish to access a shell built-in or perform a composite command, a platform specific shell can be invoked.  For example:
+            [codeblock]
+            var pid = OS.execute('CMD.exe', ['/C', 'cd %TEMP% &amp;&amp; dir'], true, output)
+            [/codeblock]
             &lt;param name="output"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
             </summary>
         </member>
@@ -17221,7 +17232,7 @@
         </member>
         <member name="T:Godot.ProjectSettings">
             <summary>
-            Contains global variables accessible from everywhere. Use the normal [Object] API, such as "ProjectSettings.get(variable)", "ProjectSettings.set(variable,value)" or "ProjectSettings.has(variable)" to access them. Variables stored in project.godot are also loaded into ProjectSettings, making this object very useful for reading custom game configuration options.
+            Contains global variables accessible from everywhere. Use "ProjectSettings.get_setting(variable)", "ProjectSettings.set_setting(variable,value)" or "ProjectSettings.has_setting(variable)" to access them. Variables stored in project.godot are also loaded into ProjectSettings, making this object very useful for reading custom game configuration options.
             </summary>
         </member>
         <member name="M:Godot.ProjectSettings.HasSetting(System.String)">
@@ -18346,7 +18357,7 @@
         </member>
         <member name="M:Godot.RigidBody.ApplyImpulse(Godot.Vector3,Godot.Vector3)">
             <summary>
-            Apply a positioned impulse (which will be affected by the body mass and shape). This is the equivalent of hitting a billiard ball with a cue: a force that is applied once, and only once. Both the impulse and the offset from the body origin are in global coordinates.
+            Apply a positioned impulse (which will be affected by the body mass and shape). This is the equivalent of hitting a billiard ball with a cue: a force that is applied once, and only once. Both the impulse and the position are in global coordinates, and the position is relative to the object's origin.
             </summary>
         </member>
         <member name="M:Godot.RigidBody.GetCollidingBodies">
@@ -25078,7 +25089,7 @@
             Sets images to be rendered in the window margin.
             </summary>
         </member>
-        <member name="M:Godot.VisualServer.Free(Godot.RID)">
+        <member name="M:Godot.VisualServer.FreeRid(Godot.RID)">
             <summary>
             Tries to free an object in the VisualServer.
             </summary>
