@@ -23,9 +23,13 @@ public class Menu{
     return (Control)button_instance;
   }
   
-  public static Control TextBox(){
+  public static Control TextBox(string val = ""){
     PackedScene textBox_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
     Node textBox_instance = textBox_ps.Instance();
+    if(val != ""){
+      TextEdit textBox = (Godot.TextEdit)textBox_instance;
+      textBox.SetText(val);
+    }
     return (Control)textBox_instance;
   }
   
@@ -55,8 +59,12 @@ public class Menu{
     LobbyMenu menu = (LobbyMenu)menu_instance;
     menu.SetMainMenuButton((Godot.Button)Button(text : "MainMenu", onClick: menu.ReturnToMainMenu));
     menu.SetSendButton((Godot.Button)Button(text : "Send", onClick: menu.Send));
+    menu.SetJoinButton((Godot.Button)Button(text : "Join", onClick: menu.Join));
+    menu.SetHostButton((Godot.Button)Button(text : "Host", onClick: menu.Host));
     menu.SetComposeBox((Godot.TextEdit)TextBox());
     menu.SetMessageBox((Godot.TextEdit)TextBox());
+    menu.SetAddressBox((Godot.TextEdit)TextBox(Session.DefaultServerAddress));
+    menu.SetNameBox((Godot.TextEdit)TextBox("PlayerName"));
     return menu_instance;
   }
 }

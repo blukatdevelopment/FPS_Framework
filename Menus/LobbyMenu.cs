@@ -7,8 +7,13 @@ public class LobbyMenu : Container
 {
     private Godot.Button mainMenuButton;
     private Godot.Button sendButton;
+    private Godot.Button joinButton;
+    private Godot.Button hostButton;
+    
     private Godot.TextEdit composeBox;
     private Godot.TextEdit messageBox;
+    private Godot.TextEdit addressBox;
+    private Godot.TextEdit nameBox;
     
     private List<string> messages;
 
@@ -38,6 +43,16 @@ public class LobbyMenu : Container
         sendButton.SetSize(size);
         sendButton.SetPosition(new Vector2(size.x * 9, size.y * 9));
       }
+      if(hostButton != null){
+        size = new Vector2(w, h);
+        hostButton.SetSize(size);
+        hostButton.SetPosition(new Vector2(size.x * 4, 0));
+      }
+      if(joinButton != null){
+        size = new Vector2(w, h);
+        joinButton.SetSize(size);
+        joinButton.SetPosition(new Vector2(size.x * 5, 0));
+      }
       if(composeBox != null){
         size = new Vector2(4* w, 1* h);
         composeBox.SetSize(size);
@@ -48,6 +63,18 @@ public class LobbyMenu : Container
         messageBox.SetSize(size);
         messageBox.SetPosition(new Vector2(w, 7 * h));
       }
+      if(nameBox != null){
+        size = new Vector2(3 * w, h);
+        nameBox.SetSize(size);
+        nameBox.SetPosition(new Vector2(2 * w, 9 * h));
+      }
+      
+      if(addressBox != null){
+        size = new Vector2(4 * w, h);
+        addressBox.SetSize(size);
+        addressBox.SetPosition(new Vector2(0, 0));
+      }
+      
     }
     
     public void SetMainMenuButton(Godot.Button button){
@@ -62,6 +89,18 @@ public class LobbyMenu : Container
       AddChild(button);
     }
     
+    public void SetHostButton(Godot.Button button){
+      if(hostButton != null){ hostButton.QueueFree(); }
+      hostButton = button;
+      AddChild(button);
+    }
+    
+    public void SetJoinButton(Godot.Button button){
+      if(joinButton != null){ joinButton.QueueFree(); }
+      joinButton = button;
+      AddChild(button);
+    }
+    
     public void SetComposeBox(Godot.TextEdit box){
       if(composeBox != null){ composeBox.QueueFree(); }
       composeBox = box;
@@ -72,6 +111,18 @@ public class LobbyMenu : Container
       if(messageBox != null){ messageBox.QueueFree(); }
       messageBox = box;
       box.SetReadonly(true);
+      AddChild(box);
+    }
+    
+    public void SetNameBox(Godot.TextEdit box){
+      if(nameBox != null){ nameBox.QueueFree(); }
+      nameBox = box;
+      AddChild(box);
+    }
+    
+    public void SetAddressBox(Godot.TextEdit box){
+      if(addressBox != null){ addressBox.QueueFree(); }
+      addressBox = box;
       AddChild(box);
     }
     
@@ -94,6 +145,18 @@ public class LobbyMenu : Container
         str += messages[i] + "\n";
       }
       messageBox.SetText(str);
+    }
+    
+    public void Join(){
+      string address = "";
+      if(addressBox != null){
+        address = addressBox.GetText();
+      }
+      ReceiveMessage("Joining server:" + address);
+    }
+    
+    public void Host(){
+      ReceiveMessage("Hosting Server.");
     }
     
 }

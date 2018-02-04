@@ -7,13 +7,28 @@ public class Session : Node {
   public static Session session;
   private List<Actor> actors;
   private Node activeMenu;
-  
-  
+  private NetworkedMultiplayerENet peer;
+  private const int Port = 8080;
+  private const int MaxPlayers = 10;
+  public const string DefaultServerAddress = "192.168.1.1";
+
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
   }
   
+  public void InitServer(){
+    peer = new Godot.NetworkedMultiplayerENet();
+    peer.CreateServer(Port, MaxPlayers);
+    this.GetTree().SetNetworkPeer(peer);
+  }
+
+  public void InitClient(string address){
+    peer = new Godot.NetworkedMultiplayerENet();
+    peer.CreateClient(address, Port);
+    this.GetTree().SetNetworkPeer(peer);
+  }
+
   public void ChangeMenu(Menu.Menus menu){
     if(activeMenu != null){
       activeMenu.QueueFree();
