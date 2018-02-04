@@ -152,11 +152,26 @@ public class LobbyMenu : Container
       if(addressBox != null){
         address = addressBox.GetText();
       }
-      ReceiveMessage("Joining server:" + address);
+      ReceiveMessage("Connecting to server: " + address + " ...");
+      Session.session.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
+    }
+    
+    
+    public void JoinSucceed(){
+      ReceiveMessage("Connected.");
+    }
+    
+    public void JoinFail(){
+      ReceiveMessage("Connection Failed.");
     }
     
     public void Host(){
       ReceiveMessage("Hosting Server.");
+      Session.session.InitServer((Godot.Object)this, );
+    }
+    
+    public void PlayerJoined(int id){
+      ReceiveMessage("Player " + id + " joined.");
     }
     
 }
