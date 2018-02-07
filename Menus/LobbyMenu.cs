@@ -5,6 +5,7 @@ using System.Linq;
 
 public class LobbyMenu : Container
 {
+    // TODO: Get RpcId working. Perhaps you need an object reference?
     private Godot.Button mainMenuButton;
     private Godot.Button sendButton;
     private Godot.Button joinButton;
@@ -131,12 +132,20 @@ public class LobbyMenu : Container
     }
     
     public void Send(){
-      if(composeBox != null && composeBox.GetText() != ""){
-        ReceiveMessage("Player: " + composeBox.GetText());
+      if(composeBox != null && composeBox.GetText() != "" && nameBox != null){
+        string name = nameBox.GetText();
+        if(name == ""){
+          name = "Player ";
+        }
+        string message = name + ": " + composeBox.GetText(); 
+        ReceiveMessage(message);
+        Rpc(nameof(ReceiveMessage), message);
+        RpcId(1, nameof(ReceiveMessage), message);
         composeBox.SetText("");
       }
     }
     
+    [Remote]
     public void ReceiveMessage(string message){
       if(messages.Count > 50){ messages.Remove(messages.First()); }
       messages.Add(message);
@@ -144,6 +153,7 @@ public class LobbyMenu : Container
       for(int i = 0; i < messages.Count; i++){
         str += messages[i] + "\n";
       }
+      GD.Print(message);
       messageBox.SetText(str);
     }
     
@@ -159,6 +169,15 @@ public class LobbyMenu : Container
     
     public void JoinSucceed(){
       ReceiveMessage("Connected.");
+      string name = "Player";
+      if(nameBox != null){
+        name = nameBox.GetText();  
+      }
+      int id = this.GetTree().GetNetworkUniqueId();
+      List<string> info = new List<string>();
+      info.Add(name);
+      System.Object[] args = new System.Object[]{id}; 
+      this.Rpc(nameof(RegisterPlayer), args);
     }
     
     public void JoinFail(){
@@ -167,11 +186,22 @@ public class LobbyMenu : Container
     
     public void Host(){
       ReceiveMessage("Hosting Server on port " + Session.DefaultPort + ".");
-      Session.session.InitServer((Godot.Object)this, nameof(PlayerJoined));
+      Session.session.InitServer((Godot.Object)this, nameof(PlayerJoined), nameof(PlayerLeft));
     }
     
     public void PlayerJoined(int id){
-      ReceiveMessage("Player " + id + " joined.");
+      //ReceiveMessage("Player " + id + " joined.");
+    }
+    
+    [Remote]
+    public void RegisterPlayer(int id){
+      ReceiveMessage("Welcome to my server, player " + id + "!");
+      System.Object[] args = new System.Object[]{ "Howdy!"};
+      this.RpcId(id, nameof(ReceiveMessage), "Howdy");
+    }
+    
+    public void PlayerLeft(int id){
+      ReceiveMessage("Player " + id + " left.");
     }
     
 }
