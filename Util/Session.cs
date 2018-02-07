@@ -9,9 +9,9 @@ public class Session : Node {
   private List<Actor> actors;
   private Node activeMenu;
   public NetworkedMultiplayerENet peer;
-  private const int Port = 8080;
+  public const int DefaultPort = 27182;
   private const int MaxPlayers = 10;
-  public const string DefaultServerAddress = "192.168.1.1";
+  public const string DefaultServerAddress = "127.0.0.1";
 
   public override void _Ready() {
     EnforceSingleton();
@@ -21,16 +21,16 @@ public class Session : Node {
   
   public void InitServer(Godot.Object obj, string playerJoin){
     peer = new Godot.NetworkedMultiplayerENet();
-    this.GetTree().SetNetworkPeer(peer);
     this.GetTree().Connect("connected_to_server", obj, playerJoin);
-    peer.CreateServer(Port, MaxPlayers);
+    peer.CreateServer(DefaultPort, MaxPlayers);
+    this.GetTree().SetNetworkPeer(peer);
   }
   
   public void InitClient(string address, Godot.Object obj, string success, string fail){
     GetTree().Connect("connected_to_server", obj, success);
     GetTree().Connect("connection_failed", obj, fail);
     peer = new Godot.NetworkedMultiplayerENet();
-    peer.CreateClient(address, Port);
+    peer.CreateClient(address, DefaultPort);
     this.GetTree().SetNetworkPeer(peer);
   }
 

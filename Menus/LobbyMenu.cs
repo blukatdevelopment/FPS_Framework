@@ -152,7 +152,7 @@ public class LobbyMenu : Container
       if(addressBox != null){
         address = addressBox.GetText();
       }
-      ReceiveMessage("Connecting to server: " + address + " ...");
+      ReceiveMessage("Connecting to server: " + address + " on port " + Session.DefaultPort + "...");
       Session.session.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
     }
     
@@ -166,8 +166,8 @@ public class LobbyMenu : Container
     }
     
     public void Host(){
-      ReceiveMessage("Hosting Server.");
-      Session.session.InitServer((Godot.Object)this, );
+      ReceiveMessage("Hosting Server on port " + Session.DefaultPort + ".");
+      Session.session.InitServer((Godot.Object)this, nameof(PlayerJoined));
     }
     
     public void PlayerJoined(int id){
