@@ -18,3 +18,9 @@ beyond current state.
 For now I'm honestly just going to make a bunch of feature branches 
 throwing things at the wall to see what will stick.
 
+
+Feature/gridmap
+
+I'm going to play with the gridmap and see if I can
+A. Get a hand-built map using the gridmap.
+B. Procedurally generate a map using the gridmap.
