@@ -5,7 +5,6 @@ using System.Linq;
 
 public class LobbyMenu : Container
 {
-    // TODO: Get RpcId working. Perhaps you need an object reference?
     private Godot.Button mainMenuButton;
     private Godot.Button sendButton;
     private Godot.Button joinButton;
@@ -15,8 +14,10 @@ public class LobbyMenu : Container
     private Godot.TextEdit messageBox;
     private Godot.TextEdit addressBox;
     private Godot.TextEdit nameBox;
+    private Godot.TextEdit playersBox;
     
     private List<string> messages;
+    private int myId = 404;
 
     public override void _Ready() {
         messages = new List<string>();
@@ -127,20 +128,24 @@ public class LobbyMenu : Container
       AddChild(box);
     }
     
+    public void SetPlayersBox(Godot.TextEdit box){
+      if(playersBox != null){ playersBox.QueueFree(); }
+      addressBox = box;
+      if(box != null){
+        AddChild(box);
+      }
+    }
+    
     public void ReturnToMainMenu(){
       Session.session.ChangeMenu(Menu.Menus.Main);
     }
     
     public void Send(){
       if(composeBox != null && composeBox.GetText() != "" && nameBox != null){
-        string name = nameBox.GetText();
-        if(name == ""){
-          name = "Player ";
-        }
-        string message = name + ": " + composeBox.GetText(); 
+        string name = GetName();
+        string message = name + "(" + myId + "): " + composeBox.GetText(); 
         ReceiveMessage(message);
         Rpc(nameof(ReceiveMessage), message);
-        RpcId(1, nameof(ReceiveMessage), message);
         composeBox.SetText("");
       }
     }
@@ -166,18 +171,17 @@ public class LobbyMenu : Container
       Session.session.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
     }
     
-    
-    public void JoinSucceed(){
-      ReceiveMessage("Connected.");
+    public string GetName(){
       string name = "Player";
       if(nameBox != null){
         name = nameBox.GetText();  
       }
-      int id = this.GetTree().GetNetworkUniqueId();
-      List<string> info = new List<string>();
-      info.Add(name);
-      System.Object[] args = new System.Object[]{id}; 
-      this.Rpc(nameof(RegisterPlayer), args);
+      return name;  
+    }
+    
+    public void JoinSucceed(){
+      ReceiveMessage("Connected.");
+      myId = this.GetTree().GetNetworkUniqueId();
     }
     
     public void JoinFail(){
@@ -190,18 +194,36 @@ public class LobbyMenu : Container
     }
     
     public void PlayerJoined(int id){
-      //ReceiveMessage("Player " + id + " joined.");
+      string message = "Player with id " + id + " joined";
+      ReceiveMessage(message);
+      Rpc(nameof(ReceiveMessage), message);
     }
     
+    /* I'll need to come back to this when I figure out multiple args for Rpc() */
     [Remote]
-    public void RegisterPlayer(int id){
-      ReceiveMessage("Welcome to my server, player " + id + "!");
-      System.Object[] args = new System.Object[]{ "Howdy!"};
-      this.RpcId(id, nameof(ReceiveMessage), "Howdy");
+    public void RegisterPlayer(int id, List<string> info){
+      string name = "Anonymous";
+      if(info.Count > 0){
+        name = info[0];  
+      }
+      
+      string message = name + " has joined the lobby.";
+      
+      Rpc(nameof(ReceiveMessage), message);
+      
+      try{
+        Session.session.playerInfo.Add(id, info);
+      }
+      catch (ArgumentException){
+        Session.session.playerInfo[id] = info;
+      }
     }
     
     public void PlayerLeft(int id){
-      ReceiveMessage("Player " + id + " left.");
+      string message = "Player with id " + id + " left.";
+      ReceiveMessage(message);
+      Rpc(message);
+      
     }
     
 }

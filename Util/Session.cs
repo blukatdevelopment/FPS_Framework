@@ -13,12 +13,12 @@ public class Session : Node {
   private const int MaxPlayers = 10;
   public const string DefaultServerAddress = "127.0.0.1";
   public int selfPeerId;
-  public Dictionary<int, List<string>> player_info;
+  public Dictionary<int, List<string>> playerInfo;
 
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    player_info = new Dictionary<int, List<string>>();
+    playerInfo = new Dictionary<int, List<string>>();
     //ShowMethods(typeof(Node));
   }
   
@@ -81,7 +81,6 @@ public class Session : Node {
       GD.Print(ret);
       System.Threading.Thread.Sleep(100);
     }
-    
   }
   
   // Use this to find variables for classes, because Godot
