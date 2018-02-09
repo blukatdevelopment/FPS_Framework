@@ -11,28 +11,10 @@ with the engine, engine stability, and documentation improve, the rate of progre
 
 
 # Development
-The work flow for this project will likely conform to the following process:
-1. Create Epic(s) with stories and tasks.
-2. Create feature branch from develop
-3. Complete tasks
-4. Assess/test/debug stories, then merge feature branch to develop.
-5. Repeat until next update.
+Foregoing a Jira-styled workflow with user epics, stories, and tasks until
+such a time as C# API becomes available for Godot and C# support is improved
+beyond current state.
 
-## Complete Epics
-* None
+For now I'm honestly just going to make a bunch of feature branches 
+throwing things at the wall to see what will stick.
 
-## Epic Backlog
-* fps_movement
-* fps_basics
-* inventory_system
-* fps_combat
-* multiplayer_session
-* quest_system
-* ranged_combat
-
-## Active Epics
-* engine_basics
-* lobby
-
-### Active stories
-* engine_basics.GUI
