@@ -8,10 +8,6 @@ public class MainMenu : Container
     public Godot.Button lobbyButton;
     public Godot.Button quitButton;
     
-    public override void _Ready() {
-        
-    }
-    
     public void SetSinglePlayerButton(Godot.Button button){
       if(startButton != null){ lobbyButton.QueueFree(); }
       startButton = button;

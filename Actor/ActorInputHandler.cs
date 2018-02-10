@@ -58,6 +58,6 @@ public class ActorInputHandler : Brain {
   }
   
   private void HandleAxis(InputEvent evt){
-      // TODO: Implement mouse 
+      actor.Turn(evt.x, evt.y);
   }
 }

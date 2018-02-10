@@ -1,18 +1,22 @@
 using Godot;
 using System;
 
-public class Actor : Node
+public class Actor : RigidBody
 {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
   private Eyes eyes;
+  public bool debug = true;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
       case Brains.Player1: brain = (Brain)new ActorInputHandler(this, eyes); break;
       case Brains.Ai: brain = (Brain)new Ai(this, eyes); break;
+    }
+    if(eyes != null){
+      eyes.SetRotationDegrees(new Vector3(0, 0, 0));  
     }
   }
   
@@ -33,9 +37,28 @@ public class Actor : Node
       else{ GD.Print("Brain Null"); }
   }
   
+  
   public void Move(int x, int y){
-      GD.Print("Moving[" + x + "," + y + "]");
+      if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
   }
+  
+  
+  public void Turn(float x, float y){
+    if(debug){GD.Print("Actor: Turning[" + x + "," + y + "]"); }
+    Vector3 bodyRot = this.GetRotationDegrees();
+    bodyRot.y += y;
+    this.SetRotationDegrees(bodyRot);
+    
+    Vector3 headRot = eyes.GetRotationDegrees();
+    headRot.x += x;
+    eyes.SetRotationDegrees(headRot);
+  }
+  
+  
+  public void SetPos(Vector3 pos){
+    if(debug){ GD.Print("Actor: Set pos to " + pos); }
+  }
+  
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
   public static Actor ActorFactory(Brains b = Brains.Player1){
     PackedScene actor_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");

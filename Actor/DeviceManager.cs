@@ -64,14 +64,6 @@ public class DeviceManager {
     return ret;
   }
   
-  /* There's no way to get mouse position with a static method.
-   public override void _Input(InputEvent ev){
-    if(mouseActive && ev is InputEventMouse){
-      InputEventMouse mouseEvent = (InputEventMouse)ev;
-      mouseCur = mouseEvent.Position;
-    }
-  }
-  */
   
   /* Returns input events from MouseAndKeyboard inputs. */
   private List<InputEvent> KeyboardEvents(){
@@ -97,7 +89,6 @@ public class DeviceManager {
     List<InputEvent> ret = new List<InputEvent>();
     if(eyes != null){
       mouseCur = eyes.GetMousePosition();
-      GD.Print(mouseCur);
     }
     else{ GD.Print("DeviceManager:Eyes null"); }
     if(mouseLast == null){ mouseLast = mouseCur; }
@@ -105,7 +96,8 @@ public class DeviceManager {
       float dx = mouseLast.x - mouseCur.x;
       float dy = mouseLast.y - mouseCur.y;
       mouseLast = mouseCur;
-      ret.Add(new InputEvent(InputEvent.Axes.Mouse, dx, dy));
+      // It's worth noting that X and Y are flipped at this point.
+      ret.Add(new InputEvent(InputEvent.Axes.Mouse, dy, dx));
     }
     return ret;
   }
