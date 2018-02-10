@@ -2,7 +2,7 @@
 
 [ext_resource path="res://terrain/Terrain.meshlib" type="MeshLibrary" id=1]
 
-[node name="Terrain" type="Spatial" index="0"]
+[node name="Terrain" type="Spatial"]
 
 [node name="GridMap" type="GridMap" parent="." index="0"]
 

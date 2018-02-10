@@ -39,6 +39,12 @@ public class Session : Node {
     this.GetTree().SetNetworkPeer(peer);
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
+  
+  /* Kills everything and starts a single-player game session. */
+  public void SinglePlayerGame(){
+    GD.Print("SinglePlayerGame");
+    ChangeMenu(Menu.Menus.None);
+  }
 
   public void ChangeMenu(Menu.Menus menu){
     if(activeMenu != null){
