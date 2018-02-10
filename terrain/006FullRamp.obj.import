@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/006FullRamp.obj-da267a6b9f7d64b0623f606809ded766.mesh"
+
+[deps]
+
+files=[ "res://.import/006FullRamp.obj-da267a6b9f7d64b0623f606809ded766.mesh" ]
+
+source_file="res://terrain/006FullRamp.obj"
+source_md5="fb9e906733c6cf7b750e55454248b54b"
+
+dest_files=[ "res://.import/006FullRamp.obj-da267a6b9f7d64b0623f606809ded766.mesh", "res://.import/006FullRamp.obj-da267a6b9f7d64b0623f606809ded766.mesh" ]
+dest_md5="f3074a6d219739acae419af4c7e78e0f"
+
+[params]
+
+generate_tangents=true

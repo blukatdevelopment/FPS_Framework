@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/008Stairs.obj-b4b9d1a00d0a527f90030e3b172a493e.mesh"
+
+[deps]
+
+files=[ "res://.import/008Stairs.obj-b4b9d1a00d0a527f90030e3b172a493e.mesh" ]
+
+source_file="res://terrain/008Stairs.obj"
+source_md5="c48a3a96523f383a223b7d37bb5e1bd5"
+
+dest_files=[ "res://.import/008Stairs.obj-b4b9d1a00d0a527f90030e3b172a493e.mesh", "res://.import/008Stairs.obj-b4b9d1a00d0a527f90030e3b172a493e.mesh" ]
+dest_md5="88fe5af98e63986efd5dfe240b44794e"
+
+[params]
+
+generate_tangents=true

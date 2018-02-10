@@ -1,0 +1,19 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/003Full.obj-231d41c5edc05acb166e36a6f25588e6.mesh"
+
+[deps]
+
+files=[ "res://.import/003Full.obj-231d41c5edc05acb166e36a6f25588e6.mesh" ]
+
+source_file="res://terrain/003Full.obj"
+source_md5="8e4b265370104373d5a508f7fcc9547b"
+
+dest_files=[ "res://.import/003Full.obj-231d41c5edc05acb166e36a6f25588e6.mesh", "res://.import/003Full.obj-231d41c5edc05acb166e36a6f25588e6.mesh" ]
+dest_md5="9670ede53ac55b8e68232827ea05a094"
+
+[params]
+
+generate_tangents=true
