@@ -73,14 +73,22 @@ public class Actor : KinematicBody
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
   public static Actor ActorFactory(Brains b = Brains.Player1){
-    PackedScene actor_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
-    Node actor_instance = actor_ps.Instance();
+    PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
+    Node actorInstance = actorPs.Instance();
     
-    PackedScene eyes_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Eyes.tscn");
-    Node eyes_instance = eyes_ps.Instance();
-    actor_instance.AddChild(eyes_instance);
+    if(b == Brains.Player1){
+      PackedScene eyesPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Eyes.tscn");
+      Node eyesInstance = eyesPs.Instance();
+      actorInstance.AddChild(eyesInstance);
+      
+      Vector3 eyesPos = new Vector3(0, 2, 0);
+      Spatial eyesSpatial = (Spatial)eyesInstance;
+      eyesSpatial.Translate(eyesPos);
+    }
     
-    Actor actor = (Actor)actor_instance;
+    
+    
+    Actor actor = (Actor)actorInstance;
     actor.Init(b);
     return actor;
   }
