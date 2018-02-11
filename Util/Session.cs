@@ -20,7 +20,7 @@ public class Session : Node {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     playerInfo = new Dictionary<int, List<string>>();
-    //ShowMethods(typeof(Vector3));
+    //ShowMethods(typeof(Input));
   }
   
   public void Quit(){
