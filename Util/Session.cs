@@ -20,7 +20,7 @@ public class Session : Node {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     playerInfo = new Dictionary<int, List<string>>();
-    //ShowMethods(typeof(Node));
+    //ShowMethods(typeof(Vector3));
   }
   
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave){

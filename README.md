@@ -22,7 +22,8 @@ throwing things at the wall to see what will stick.
 Feature/Actor
 
 I want to create an Actor as a cube that can:
--Look around
--WASD around
+DONE-Look around
+DONE-WASD around
 -Jump(With or without jump limits)
+-Regulate movement speed with delta.
 -Sprint

@@ -46,10 +46,11 @@ points = PoolVector3Array( -3, 0, -3, -3, 0, 3, 3, 0, -3, 3, 0, 3, 0, 1, -3, 3, 
 
 points = PoolVector3Array( -3, 0, -3, -3, 0, 3, 3, 0, -3, 3, 0, 3, -3, 0, -3, 3, 0, -3, 0, 3, 0, 3, 0, 3, -3, 0, 3, 0, 3, 0, 3, 0, -3, 3, 0, 3, 0, 3, 0, -3, 0, 3, -3, 0, -3, 0, 3, 0 )
 
-[node name="Terrain" type="Spatial" index="0"]
+[node name="Terrain" type="Spatial"]
 
 [node name="MeshInstance" type="MeshInstance" parent="." index="0"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -82,6 +83,7 @@ disabled = false
 
 [node name="MeshInstance2" type="MeshInstance" parent="." index="1"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -114,6 +116,7 @@ disabled = false
 
 [node name="MeshInstance3" type="MeshInstance" parent="." index="2"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -146,6 +149,7 @@ disabled = false
 
 [node name="MeshInstance4" type="MeshInstance" parent="." index="3"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -178,6 +182,7 @@ disabled = false
 
 [node name="MeshInstance5" type="MeshInstance" parent="." index="4"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -210,6 +215,7 @@ disabled = false
 
 [node name="MeshInstance6" type="MeshInstance" parent="." index="5"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -242,6 +248,7 @@ disabled = false
 
 [node name="MeshInstance7" type="MeshInstance" parent="." index="6"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -274,6 +281,7 @@ disabled = false
 
 [node name="MeshInstance8" type="MeshInstance" parent="." index="7"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null
@@ -306,6 +314,7 @@ disabled = false
 
 [node name="MeshInstance9" type="MeshInstance" parent="." index="8"]
 
+editor/display_folded = true
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47356, -1.10206, -2.55846 )
 layers = 1
 material_override = null

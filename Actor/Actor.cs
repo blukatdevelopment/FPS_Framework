@@ -7,7 +7,7 @@ public class Actor : RigidBody
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
   private Eyes eyes;
-  public bool debug = true;
+  public bool debug = false;
   
   const int maxY = 90;
   const int minY = -90;
@@ -43,10 +43,11 @@ public class Actor : RigidBody
   
   public void Move(int x, int y){
       if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
-      Vector3 pos = GetTranslation();
-      pos.x += x;
-      pos.z += y;
-      SetTranslation(pos);
+      Translate(new Vector3(x, 0, -y));
+      //Transform transform = GetTransform();
+      //transform.origin += transform.basis.x * x;
+      //transform.origin += transform.basis.z * y;
+      //SetTransform(transform);
   }
   
   
