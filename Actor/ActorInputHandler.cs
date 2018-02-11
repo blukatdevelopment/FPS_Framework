@@ -60,7 +60,7 @@ public class ActorInputHandler : Brain {
   
   private void Press(InputEvent evt){
     switch(evt.button){
-      case InputEvent.Buttons.Esc: GD.Print("Escape"); break;
+      case InputEvent.Buttons.Esc: Session.session.Quit(); break;
     }
   }
   

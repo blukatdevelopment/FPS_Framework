@@ -35,7 +35,7 @@ public class MainMenu : Container
     }
     
     public void Quit(){
-        GetTree().Quit();
+        Session.session.Quit();
     }
     
     public override void _Process(float delta) {

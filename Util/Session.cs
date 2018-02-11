@@ -23,6 +23,10 @@ public class Session : Node {
     //ShowMethods(typeof(Vector3));
   }
   
+  public void Quit(){
+    GetTree().Quit();  
+  }
+  
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave){
     peer = new Godot.NetworkedMultiplayerENet();
     this.GetTree().Connect("network_peer_connected", obj, playerJoin);

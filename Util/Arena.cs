@@ -11,7 +11,7 @@ public class Arena : Node {
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     InitTerrain();
-    SpawnPlayer(new Vector3(0, 0, 0));
+    SpawnPlayer(new Vector3(0, 5, 0));
   }
   
   public void InitTerrain(){

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Actor : RigidBody
+public class Actor : KinematicBody
 {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
@@ -44,10 +44,7 @@ public class Actor : RigidBody
   public void Move(int x, int y){
       if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
       Translate(new Vector3(x, 0, -y));
-      //Transform transform = GetTransform();
-      //transform.origin += transform.basis.x * x;
-      //transform.origin += transform.basis.z * y;
-      //SetTransform(transform);
+      //MoveAndCollide(new Vector3(0, 0, 0));
   }
   
   
