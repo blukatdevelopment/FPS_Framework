@@ -51,13 +51,23 @@ public class ActorInputHandler : Brain {
   private void HandleButton(InputEvent evt){
     if(evt.action == InputEvent.Actions.Down){
       held[evt.button] = true;
+      Press(evt);
     }
     else if(evt.action == InputEvent.Actions.Up){
       held[evt.button] = false;
     }
   }
   
+  private void Press(InputEvent evt){
+    switch(evt.button){
+      case InputEvent.Buttons.Esc: GD.Print("Escape"); break;
+    }
+  }
+  
   private void HandleAxis(InputEvent evt){
+    if(evt.axis == InputEvent.Axes.Mouse){
       actor.Turn(evt.x, evt.y);
+    }
+    actor.Turn(evt.x, evt.y);
   }
 }

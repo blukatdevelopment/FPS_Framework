@@ -12,6 +12,8 @@ public class DeviceManager {
   private Devices device;
   private bool mouseActive;
   private Eyes eyes;
+  private float sensitivityX = 0.2f;
+  private float sensitivityY = 0.2f;
   
   List<bool> buttonsDown; // Store button states to check for changes.
   Vector2 mouseCur, mouseLast;
@@ -81,6 +83,7 @@ public class DeviceManager {
     ret.AddRange(KeyEvents(1, 9, InputEvent.Buttons.M1));
     ret.AddRange(KeyEvents(2, 10, InputEvent.Buttons.M2));
     ret.AddRange(KeyEvents(3, 11, InputEvent.Buttons.M3));
+    ret.AddRange(KeyEvents(16777217, 12, InputEvent.Buttons.Esc));
     ret.AddRange(MouseEvents());
     return ret;
   }
@@ -95,9 +98,10 @@ public class DeviceManager {
     else if((mouseLast.x != mouseCur.x) || (mouseLast.y != mouseCur.y)){
       float dx = mouseLast.x - mouseCur.x;
       float dy = mouseLast.y - mouseCur.y;
+      dx *= sensitivityX;
+      dy *= sensitivityY;
       mouseLast = mouseCur;
-      // It's worth noting that X and Y are flipped at this point.
-      ret.Add(new InputEvent(InputEvent.Axes.Mouse, dy, dx));
+      ret.Add(new InputEvent(InputEvent.Axes.Mouse, dx, dy));
     }
     return ret;
   }

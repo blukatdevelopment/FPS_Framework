@@ -9,6 +9,9 @@ public class Actor : RigidBody
   private Eyes eyes;
   public bool debug = true;
   
+  const int maxY = 90;
+  const int minY = -90;
+  
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
@@ -40,23 +43,34 @@ public class Actor : RigidBody
   
   public void Move(int x, int y){
       if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
+      Vector3 pos = GetTranslation();
+      pos.x += x;
+      pos.z += y;
+      SetTranslation(pos);
   }
   
   
   public void Turn(float x, float y){
     if(debug){GD.Print("Actor: Turning[" + x + "," + y + "]"); }
     Vector3 bodyRot = this.GetRotationDegrees();
-    bodyRot.y += y;
+    bodyRot.y += x;
     this.SetRotationDegrees(bodyRot);
     
     Vector3 headRot = eyes.GetRotationDegrees();
-    headRot.x += x;
+    headRot.x += y;
+    if(headRot.x < minY){
+      headRot.x = minY;  
+    }
+    if(headRot.x > maxY){
+      headRot.x = maxY;
+    }
     eyes.SetRotationDegrees(headRot);
   }
   
   
   public void SetPos(Vector3 pos){
     if(debug){ GD.Print("Actor: Set pos to " + pos); }
+    SetTranslation(pos);
   }
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */

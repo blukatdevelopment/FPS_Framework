@@ -5,11 +5,20 @@ using System.Collections.Generic;
 public class Arena : Node {
   bool singlePlayer;
   List<Actor> actors;
+  Spatial terrain;
   
   public void Init(bool singlePlayer){
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
+    InitTerrain();
     SpawnPlayer(new Vector3(0, 0, 0));
+  }
+  
+  public void InitTerrain(){
+    PackedScene ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Terrain.tscn");
+    Node instance = ps.Instance();
+    AddChild(instance);
+    terrain = (Spatial)instance;
   }
   
   public Actor SpawnPlayer(Vector3 pos){
