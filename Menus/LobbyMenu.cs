@@ -143,9 +143,9 @@ public class LobbyMenu : Container
     public void Send(){
       if(composeBox != null && composeBox.GetText() != "" && nameBox != null){
         string name = GetName();
-        string message = name + "(" + myId + "): " + composeBox.GetText(); 
-        ReceiveMessage(message);
-        Rpc(nameof(ReceiveMessage), message);
+        string message = composeBox.GetText(); 
+        ReceiveNamedMessage(message, name);
+        Rpc(nameof(ReceiveNamedMessage), message, name);
         composeBox.SetText("");
       }
     }
@@ -160,6 +160,12 @@ public class LobbyMenu : Container
       }
       GD.Print(message);
       messageBox.SetText(str);
+    }
+    
+    [Remote]
+    public void ReceiveNamedMessage(string message, string name){
+      string fullMessage = name + ":" + message;
+      ReceiveMessage(fullMessage);  
     }
     
     public void Join(){

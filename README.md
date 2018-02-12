@@ -19,8 +19,11 @@ For now I'm honestly just going to make a bunch of feature branches
 throwing things at the wall to see what will stick.
 
 
-Feature/gridmap
+Feature/Actor
 
-I'm going to play with the gridmap and see if I can
-A. Get a hand-built map using the gridmap.
-B. Procedurally generate a map using the gridmap.
+I want to create an Actor as a cube that can:
+DONE-Look around
+DONE-WASD around
+DONE-Jump(With or without jump limits)
+DONE-Regulate movement speed with delta.
+DONE-Sprint

@@ -12,6 +12,8 @@ public class DeviceManager {
   private Devices device;
   private bool mouseActive;
   private Eyes eyes;
+  private float sensitivityX = 0.2f;
+  private float sensitivityY = 0.2f;
   
   List<bool> buttonsDown; // Store button states to check for changes.
   Vector2 mouseCur, mouseLast;
@@ -64,14 +66,6 @@ public class DeviceManager {
     return ret;
   }
   
-  /* There's no way to get mouse position with a static method.
-   public override void _Input(InputEvent ev){
-    if(mouseActive && ev is InputEventMouse){
-      InputEventMouse mouseEvent = (InputEventMouse)ev;
-      mouseCur = mouseEvent.Position;
-    }
-  }
-  */
   
   /* Returns input events from MouseAndKeyboard inputs. */
   private List<InputEvent> KeyboardEvents(){
@@ -89,6 +83,10 @@ public class DeviceManager {
     ret.AddRange(KeyEvents(1, 9, InputEvent.Buttons.M1));
     ret.AddRange(KeyEvents(2, 10, InputEvent.Buttons.M2));
     ret.AddRange(KeyEvents(3, 11, InputEvent.Buttons.M3));
+    ret.AddRange(KeyEvents(16777217, 12, InputEvent.Buttons.Esc));
+    ret.AddRange(KeyEvents(16777218, 13, InputEvent.Buttons.Tab));
+    ret.AddRange(KeyEvents(32, 14, InputEvent.Buttons.Space));
+    ret.AddRange(KeyEvents(16777237, 15, InputEvent.Buttons.Shift));
     ret.AddRange(MouseEvents());
     return ret;
   }
@@ -97,13 +95,14 @@ public class DeviceManager {
     List<InputEvent> ret = new List<InputEvent>();
     if(eyes != null){
       mouseCur = eyes.GetMousePosition();
-      GD.Print(mouseCur);
     }
     else{ GD.Print("DeviceManager:Eyes null"); }
     if(mouseLast == null){ mouseLast = mouseCur; }
     else if((mouseLast.x != mouseCur.x) || (mouseLast.y != mouseCur.y)){
       float dx = mouseLast.x - mouseCur.x;
       float dy = mouseLast.y - mouseCur.y;
+      dx *= sensitivityX;
+      dy *= sensitivityY;
       mouseLast = mouseCur;
       ret.Add(new InputEvent(InputEvent.Axes.Mouse, dx, dy));
     }

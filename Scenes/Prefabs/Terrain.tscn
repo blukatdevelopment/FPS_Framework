@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://terrain/Terrain.meshlib" type="MeshLibrary" id=1]
+[ext_resource path="res://Terrain/Terrain.meshlib" type="MeshLibrary" id=1]
 
-[node name="Terrain" type="Spatial" index="0"]
+[node name="Terrain" type="Spatial"]
 
 [node name="GridMap" type="GridMap" parent="." index="0"]
 
@@ -16,7 +16,7 @@ cell_scale = 1.0
 collision_layer = 1
 collision_mask = 1
 data = {
-"cells": PoolIntArray( 0, 0, 537919488, 1, 0, 537919488, 65534, 0, 537919488, 65535, 0, 1048576, 0, 1, 537919488, 1, 1, 537919488, 65534, 1, 537919488, 65535, 1, 537919488, 0, 65535, 537919488, 1, 65535, 537919488, 65534, 65535, 537919488, 65535, 65535, 537919488 )
+"cells": PoolIntArray( 0, 0, 1048576, 1, 0, 537919488, 65534, 0, 537919488, 65535, 0, 537919488, 0, 1, 537919488, 1, 1, 1048576, 65534, 1, 1048576, 65535, 1, 1048576, 0, 65535, 1048576, 1, 65535, 1048576, 65534, 65535, 1048576, 65535, 65535, 1048576 )
 }
 _sections_unfolded = [ "Cell" ]
 __meta__ = {

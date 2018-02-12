@@ -1,3 +1,9 @@
+/*
+  This pseudo-singleton is a dumping place for session-specific data and methods.
+  The Session should be the root of the scene in the game. If it's null, things simply
+  won't work.
+
+*/
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -6,20 +12,27 @@ using System.Reflection;
 
 public class Session : Node {
   public static Session session;
-  private List<Actor> actors;
   private Node activeMenu;
+  
   public NetworkedMultiplayerENet peer;
   public const int DefaultPort = 27182;
   private const int MaxPlayers = 10;
   public const string DefaultServerAddress = "127.0.0.1";
   public int selfPeerId;
   public Dictionary<int, List<string>> playerInfo;
+  public Arena arena;
+   
 
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     playerInfo = new Dictionary<int, List<string>>();
-    //ShowMethods(typeof(Node));
+    //ShowMethods(typeof());
+    //ShowProperties(typeof(KinematicCollision));
+  }
+  
+  public void Quit(){
+    GetTree().Quit();  
   }
   
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave){
@@ -39,6 +52,24 @@ public class Session : Node {
     this.GetTree().SetNetworkPeer(peer);
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
+  
+  /* Remove game nodes/variables in order to return it to a menu. */
+  public void ClearGame(){
+    if(arena != null){
+      arena.QueueFree();
+      arena = null;
+    }
+  }
+  
+  /* Kills everything and starts a single-player game session. */
+  public void SinglePlayerGame(){
+    GD.Print("SinglePlayerGame");
+    Node arenaNode = Arena.ArenaFactory();
+    arena = (Arena)arenaNode;
+    arena.Init(true);
+    AddChild(arenaNode);
+    ChangeMenu(Menu.Menus.None);
+  }
 
   public void ChangeMenu(Menu.Menus menu){
     if(activeMenu != null){
@@ -52,22 +83,6 @@ public class Session : Node {
   private void EnforceSingleton(){
     if(Session.session == null){ Session.session = this; }
     else{ this.QueueFree(); }
-  }
-  
-  private void InitActors(){
-    actors = new List<Actor>();
-    SpawnActor();
-  }
-  
-  /* Create a new actor and place it as a child node. */
-  private void SpawnActor() {
-    Actor a = Actor.ActorFactory();
-    if(a == null){
-      GD.Print("Actor was null.");
-      return;
-    }
-    actors.Add(a);
-    this.AddChild(a);
   }
   
   // Use this to find methods for classes.

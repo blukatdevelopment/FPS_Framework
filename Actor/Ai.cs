@@ -8,7 +8,7 @@ public class Ai : Brain
   
   /* Method STUB */
   public override void Update(float delta){
-    GD.Print("AI update");
+    
   }
 
 }

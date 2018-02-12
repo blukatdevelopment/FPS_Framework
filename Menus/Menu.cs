@@ -48,6 +48,7 @@ public class Menu{
     PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     Node menu_instance = menu_ps.Instance();
     MainMenu menu = (MainMenu)menu_instance;
+    menu.SetSinglePlayerButton((Godot.Button)Button(text : "Single Player", onClick: menu.SinglePlayerGame));
     menu.SetLobbyButton((Godot.Button)Button(text : "Multiplayer", onClick: menu.Lobby));
     menu.SetQuitButton((Godot.Button)Button(text : "Quit", onClick: menu.Quit));
     return menu_instance;

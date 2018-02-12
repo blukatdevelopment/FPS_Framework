@@ -5,12 +5,14 @@ using System.Collections.Generic;
 public class ActorInputHandler : Brain {
   private DeviceManager device;
   private Dictionary<InputEvent.Buttons, bool> held; 
+  private float delta = 1f;
   
   public ActorInputHandler(Actor actor, Eyes eyes) : base (actor, eyes){
     InitHeld();
     InitEyes(eyes);
     device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes);
   }
+  
   
   private void InitEyes(Node eyes){
     if(eyes == null){ GD.Print("ActorInputHandler:Eyes were null"); }
@@ -22,6 +24,7 @@ public class ActorInputHandler : Brain {
     }
   }
   
+  
   private void InitHeld(){
     held = new Dictionary<InputEvent.Buttons, bool>();
     foreach(InputEvent.Buttons button in Enum.GetValues(typeof(InputEvent.Buttons))){
@@ -29,7 +32,9 @@ public class ActorInputHandler : Brain {
     }
   }
   
+  
   public override void Update(float delta){
+    this.delta = delta;
     List<InputEvent> events = device.GetInputEvents();
     for(int i = 0; i < events.Count; i++){
         if(events[i].IsButton()){ HandleButton(events[i]); }
@@ -40,24 +45,48 @@ public class ActorInputHandler : Brain {
   
   private void HandleMovement(){
     int dx = 0;
-    int dy = 0;
-    if(held[InputEvent.Buttons.W]){ dy++; }
+    int dz = 0;
+    if(held[InputEvent.Buttons.W]){ dz--; }
     if(held[InputEvent.Buttons.A]){ dx--; }
-    if(held[InputEvent.Buttons.S]){ dy--; }
+    if(held[InputEvent.Buttons.S]){ dz++; }
     if(held[InputEvent.Buttons.D]){ dx++; }
-    if(dx != 0 || dy != 0){ actor.Move(dx, dy); }
+    if(dx != 0 || dz != 0){
+      Vector3 movement = new Vector3(dx, 0, dz);
+      movement *= actor.GetMovementSpeed(); 
+      actor.Move(movement, this.delta); 
+    }
   }
+  
   
   private void HandleButton(InputEvent evt){
     if(evt.action == InputEvent.Actions.Down){
       held[evt.button] = true;
+      Press(evt);
     }
     else if(evt.action == InputEvent.Actions.Up){
       held[evt.button] = false;
+      if(evt.button == InputEvent.Buttons.Shift){
+        actor.sprinting = false;
+
+      }
     }
   }
   
+  
+  private void Press(InputEvent evt){
+    switch(evt.button){
+      case InputEvent.Buttons.Esc: Session.session.Quit(); break;
+      case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
+      case InputEvent.Buttons.Space: actor.Jump(); break;
+      case InputEvent.Buttons.Shift: actor.sprinting = true; break;
+    }
+  }
+  
+  
   private void HandleAxis(InputEvent evt){
-      // TODO: Implement mouse 
+    if(evt.axis == InputEvent.Axes.Mouse){
+      actor.Turn(evt.x, evt.y);
+    }
+    actor.Turn(evt.x, evt.y);
   }
 }
