@@ -41,10 +41,16 @@ public class Actor : KinematicBody
   }
   
   
-  public void Move(int x, int y){
+  public void Move(int x, int z){
       if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
-      Translate(new Vector3(x, 0, -y));
-      //MoveAndCollide(new Vector3(0, 0, 0));
+      Vector3 movement = new Vector3(x, 0, -z); 
+      
+      Transform current = GetTransform();
+      Transform destination = current; 
+      destination.Translated(movement);
+      
+      Vector3 delta = destination.origin - current.origin;
+      MoveAndCollide(delta);
   }
   
   
@@ -69,14 +75,15 @@ public class Actor : KinematicBody
   public void SetPos(Vector3 pos){
     if(debug){ GD.Print("Actor: Set pos to " + pos); }
     SetTranslation(pos);
+    
   }
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
-  public static Actor ActorFactory(Brains b = Brains.Player1){
+  public static Actor ActorFactory(Brains brain = Brains.Player1){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
     
-    if(b == Brains.Player1){
+    if(brain == Brains.Player1){
       PackedScene eyesPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Eyes.tscn");
       Node eyesInstance = eyesPs.Instance();
       actorInstance.AddChild(eyesInstance);
@@ -89,7 +96,7 @@ public class Actor : KinematicBody
     
     
     Actor actor = (Actor)actorInstance;
-    actor.Init(b);
+    actor.Init(brain);
     return actor;
   }
 }

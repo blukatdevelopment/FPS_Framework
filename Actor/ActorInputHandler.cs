@@ -61,6 +61,7 @@ public class ActorInputHandler : Brain {
   private void Press(InputEvent evt){
     switch(evt.button){
       case InputEvent.Buttons.Esc: Session.session.Quit(); break;
+      case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
     }
   }
   
