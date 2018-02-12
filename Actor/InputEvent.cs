@@ -28,6 +28,7 @@ public class InputEvent {
   public Actions action;
   public Axes axis;
   public float x, y; // Movement of axes.
+  public float delta = 1f; // Delta from _Process
   
   /* Constructor for button input. */
   public InputEvent(Buttons button, Actions action){
@@ -35,6 +36,7 @@ public class InputEvent {
     this.action = action;
     this.axis = Axes.None;
     x = y = 0f;
+    this.delta = Session.session.delta;
   }
     
   /* Constructor for  Axis input. */
@@ -44,6 +46,7 @@ public class InputEvent {
     this.axis = axis;
     this.x = x;
     this.y = y;
+    this.delta = Session.session.delta;
   }
   
   public bool IsButton(){

@@ -33,6 +33,7 @@ public class ActorInputHandler : Brain {
   
   
   public override void Update(float delta){
+    Session.session.delta = delta;
     List<InputEvent> events = device.GetInputEvents();
     for(int i = 0; i < events.Count; i++){
         if(events[i].IsButton()){ HandleButton(events[i]); }

@@ -1,3 +1,8 @@
+/*
+  This pseudo-singleton is a dumping place for session-specific data and methods.
+  The Session should be the root of the scene in the game.
+
+*/
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -15,6 +20,8 @@ public class Session : Node {
   public int selfPeerId;
   public Dictionary<int, List<string>> playerInfo;
   public Arena arena;
+  
+  public float delta = 1f; // Used by InputEvent's constructor and set by ActorInputHandler. 
 
   public override void _Ready() {
     EnforceSingleton();
