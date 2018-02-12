@@ -3,43 +3,8 @@
 ###########
 Title: FPS basics
 Description:
-Before more detailed fps mechanics are to be added and
-fleshed out with playtesting, far more basic features should
-prototype their functionality.
-
-###########
-#  Story  #
-###########
-Title: Movement
-Description:
-An actor must be able to strafe, jump, and sprint.
-
-###########
-#  Task   #
-###########
-Title: Strafe
-Description:
-WASD should move the actor in the 
-specified direction.
-
-###########
-#  Task   #
-###########
-Title: Sprint
-Description:
-Holding shift should increase
-the actor's speed.
-
-
-###########
-#  Task   #
-###########
-Title: Jump
-Description:
-An actor should be able
-to jump after landing (touching something with
-the souls of their feet)
-
+As a player I should be able to to control a character in a manner 
+reminiscent of Minecraft.
 
 ###########
 #  Story  #
@@ -47,15 +12,8 @@ the souls of their feet)
 Title: Looking
 Description:
 The actor should be able to turn
-sideways and pivot up and down.
-
-###########
-#  Task   #
-###########
-Title: Turn x
-Description:
-Turning horizontally
-should rotate the actor's body.
+sideways and pivot up and down in order to look around 
+and aim my character's equipped item.
 
 ###########
 #  Task   #
@@ -120,14 +78,49 @@ Description:
 Health should regenerate over
 time(in lieu of healing items).
 
-##########################################################
-# In Progress #
-###############
-
-##########################################################
-# In Testing #
-##############
 
 ##########################################################
 # Complete  #
 #############
+
+###########
+#  Story  #
+###########
+Title: Movement
+Description:
+An actor must be able to strafe, jump, and sprint.
+
+###########
+#  Task   #
+###########
+Title: Strafe
+Description:
+WASD should move the actor in the 
+specified direction.
+
+###########
+#  Task   #
+###########
+Title: Sprint
+Description:
+Holding shift should increase
+the actor's speed.
+
+
+###########
+#  Task   #
+###########
+Title: Jump
+Description:
+An actor should be able
+to jump after landing (touching something with
+the souls of their feet)
+
+
+###########
+#  Task   #
+###########
+Title: Turn x
+Description:
+Turning horizontally
+should rotate the actor's body.

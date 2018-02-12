@@ -11,19 +11,8 @@ with the engine, engine stability, and documentation improve, the rate of progre
 
 
 # Development
-Foregoing a Jira-styled workflow with user epics, stories, and tasks until
-such a time as C# API becomes available for Godot and C# support is improved
-beyond current state.
 
-For now I'm honestly just going to make a bunch of feature branches 
-throwing things at the wall to see what will stick.
-
-
-Feature/Actor
-
-I want to create an Actor as a cube that can:
-DONE-Look around
-DONE-WASD around
-DONE-Jump(With or without jump limits)
-DONE-Regulate movement speed with delta.
-DONE-Sprint
+Random feature branches will be the norm for the next few months.
+At this early stage of development focus will be applied to laying out
+simple solutions that can and will be refined later as more engine-specific
+problems are solved.
