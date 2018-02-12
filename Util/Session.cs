@@ -1,6 +1,7 @@
 /*
   This pseudo-singleton is a dumping place for session-specific data and methods.
-  The Session should be the root of the scene in the game.
+  The Session should be the root of the scene in the game. If it's null, things simply
+  won't work.
 
 */
 using Godot;

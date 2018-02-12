@@ -25,8 +25,10 @@ public class Actor : KinematicBody
     }
   }
   
+  public float GetMovementSpeed(){
+    return 5f;
+  }
   
-  /* Sets ChildNode references as appropriate. */
   protected void InitChildren(){
     foreach(Node child in this.GetChildren()){
       switch(child.GetName()){
@@ -44,15 +46,15 @@ public class Actor : KinematicBody
   }
   
   public void Gravity(float delta){
-    float gravForce = -9.81f;
+    float gravForce = -9.81f; // TODO: Manage a velocity Vector3
     Vector3 grav = (new Vector3(0, gravForce, 0) * delta);
-    Move(grav.x, grav.y, grav.z);
+    Move(grav);
   }
 
   
-  public void Move(float x, float y,  float z){
-      if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "," + z + "]"); }
-      Vector3 movement = new Vector3(x, y, -z); 
+  public void Move(Vector3 movement, float moveDelta = 1f){
+      //Vector3 movement = new Vector3(x, y, -z) * moveDelta; 
+      movement *= moveDelta;
       
       Transform current = GetTransform();
       Transform destination = current; 
@@ -69,7 +71,7 @@ public class Actor : KinematicBody
   public void Jump(){
     if(!grounded){ return; }
     float jumpHeight = 10;
-    Move(0, jumpHeight, 0);
+    Move(new Vector3(0, jumpHeight, 0));
     grounded = false;
   }
 
@@ -112,8 +114,6 @@ public class Actor : KinematicBody
       Spatial eyesSpatial = (Spatial)eyesInstance;
       eyesSpatial.Translate(eyesPos);
     }
-    
-    
     
     Actor actor = (Actor)actorInstance;
     actor.Init(brain);

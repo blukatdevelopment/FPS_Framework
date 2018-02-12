@@ -44,12 +44,16 @@ public class ActorInputHandler : Brain {
   
   private void HandleMovement(){
     int dx = 0;
-    int dy = 0;
-    if(held[InputEvent.Buttons.W]){ dy++; }
+    int dz = 0;
+    if(held[InputEvent.Buttons.W]){ dz--; }
     if(held[InputEvent.Buttons.A]){ dx--; }
-    if(held[InputEvent.Buttons.S]){ dy--; }
+    if(held[InputEvent.Buttons.S]){ dz++; }
     if(held[InputEvent.Buttons.D]){ dx++; }
-    if(dx != 0 || dy != 0){ actor.Move(dx, 0, dy); }
+    if(dx != 0 || dz != 0){
+      Vector3 movement = new Vector3(dx, 0, dz);
+      movement *= actor.GetMovementSpeed(); 
+      actor.Move(movement, Session.session.delta); 
+    }
   }
   
   
