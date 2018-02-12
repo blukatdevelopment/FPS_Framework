@@ -21,8 +21,7 @@ public class Session : Node {
   public int selfPeerId;
   public Dictionary<int, List<string>> playerInfo;
   public Arena arena;
-  
-  public float delta = 1f; // Used by InputEvent's constructor and set by ActorInputHandler. 
+   
 
   public override void _Ready() {
     EnforceSingleton();

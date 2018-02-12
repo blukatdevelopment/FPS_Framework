@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class ActorInputHandler : Brain {
   private DeviceManager device;
   private Dictionary<InputEvent.Buttons, bool> held; 
+  private float delta = 1f;
   
   public ActorInputHandler(Actor actor, Eyes eyes) : base (actor, eyes){
     InitHeld();
@@ -33,7 +34,7 @@ public class ActorInputHandler : Brain {
   
   
   public override void Update(float delta){
-    Session.session.delta = delta;
+    this.delta = delta;
     List<InputEvent> events = device.GetInputEvents();
     for(int i = 0; i < events.Count; i++){
         if(events[i].IsButton()){ HandleButton(events[i]); }
@@ -52,7 +53,7 @@ public class ActorInputHandler : Brain {
     if(dx != 0 || dz != 0){
       Vector3 movement = new Vector3(dx, 0, dz);
       movement *= actor.GetMovementSpeed(); 
-      actor.Move(movement, Session.session.delta); 
+      actor.Move(movement, this.delta); 
     }
   }
   
