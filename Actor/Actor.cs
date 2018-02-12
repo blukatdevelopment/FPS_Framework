@@ -13,6 +13,7 @@ public class Actor : KinematicBody
   const int minY = -90;
   
   private bool grounded = false; //True when Actor is standing on surface.
+  public bool sprinting = false;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
@@ -26,7 +27,11 @@ public class Actor : KinematicBody
   }
   
   public float GetMovementSpeed(){
-    return 5f;
+    float speed = 5f;
+    if(sprinting){
+      speed *= 2f;
+    }
+    return speed;
   }
   
   protected void InitChildren(){

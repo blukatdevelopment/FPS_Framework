@@ -65,6 +65,10 @@ public class ActorInputHandler : Brain {
     }
     else if(evt.action == InputEvent.Actions.Up){
       held[evt.button] = false;
+      if(evt.button == InputEvent.Buttons.Shift){
+        actor.sprinting = false;
+
+      }
     }
   }
   
@@ -74,6 +78,7 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.Esc: Session.session.Quit(); break;
       case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
+      case InputEvent.Buttons.Shift: actor.sprinting = true; break;
     }
   }
   

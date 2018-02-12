@@ -25,5 +25,5 @@ I want to create an Actor as a cube that can:
 DONE-Look around
 DONE-WASD around
 DONE-Jump(With or without jump limits)
--Regulate movement speed with delta.
--Sprint
+DONE-Regulate movement speed with delta.
+DONE-Sprint
