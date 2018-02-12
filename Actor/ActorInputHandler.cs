@@ -12,6 +12,7 @@ public class ActorInputHandler : Brain {
     device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes);
   }
   
+  
   private void InitEyes(Node eyes){
     if(eyes == null){ GD.Print("ActorInputHandler:Eyes were null"); }
     else{
@@ -22,12 +23,14 @@ public class ActorInputHandler : Brain {
     }
   }
   
+  
   private void InitHeld(){
     held = new Dictionary<InputEvent.Buttons, bool>();
     foreach(InputEvent.Buttons button in Enum.GetValues(typeof(InputEvent.Buttons))){
       held.Add(button, false);
     }
   }
+  
   
   public override void Update(float delta){
     List<InputEvent> events = device.GetInputEvents();
@@ -45,8 +48,9 @@ public class ActorInputHandler : Brain {
     if(held[InputEvent.Buttons.A]){ dx--; }
     if(held[InputEvent.Buttons.S]){ dy--; }
     if(held[InputEvent.Buttons.D]){ dx++; }
-    if(dx != 0 || dy != 0){ actor.Move(dx, dy); }
+    if(dx != 0 || dy != 0){ actor.Move(dx, 0, dy); }
   }
+  
   
   private void HandleButton(InputEvent evt){
     if(evt.action == InputEvent.Actions.Down){
@@ -58,16 +62,15 @@ public class ActorInputHandler : Brain {
     }
   }
   
+  
   private void Press(InputEvent evt){
     switch(evt.button){
       case InputEvent.Buttons.Esc: Session.session.Quit(); break;
       case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
+      case InputEvent.Buttons.Space: actor.Jump(); break;
     }
   }
   
-  public override void _Process(){
-    if(){}
-  }
   
   private void HandleAxis(InputEvent evt){
     if(evt.axis == InputEvent.Axes.Mouse){

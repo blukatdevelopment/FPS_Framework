@@ -20,7 +20,8 @@ public class Session : Node {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     playerInfo = new Dictionary<int, List<string>>();
-    //ShowMethods(typeof(Input));
+    //ShowMethods(typeof());
+    //ShowProperties(typeof(KinematicCollision));
   }
   
   public void Quit(){

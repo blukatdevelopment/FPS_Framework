@@ -14,7 +14,7 @@ public class InputEvent {
     Q, W, E, R, T, Y, U, I, O, P, 
     A, S, D, F, G, H, J, K, L, Z, 
     X, C, V, B, N, M, Comma, Period,
-    Tab, Shift, Ctrl,
+    Tab, Shift, Ctrl, Space,
     Enter, Up, Down, Left, Right,
     One, Two, Three, Four, Five, Six, Seven, Eight, Nine, Zero,
     // Mouse buttons

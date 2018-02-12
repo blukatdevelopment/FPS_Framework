@@ -24,6 +24,6 @@ Feature/Actor
 I want to create an Actor as a cube that can:
 DONE-Look around
 DONE-WASD around
--Jump(With or without jump limits)
+DONE-Jump(With or without jump limits)
 -Regulate movement speed with delta.
 -Sprint

@@ -12,6 +12,8 @@ public class Actor : KinematicBody
   const int maxY = 90;
   const int minY = -90;
   
+  private bool grounded = false; //True when Actor is standing on surface.
+  
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
@@ -38,22 +40,39 @@ public class Actor : KinematicBody
   {
       if(brain != null){ brain.Update(delta); }
       else{ GD.Print("Brain Null"); }
+      Gravity(delta);
   }
   
+  public void Gravity(float delta){
+    float gravForce = -9.81f;
+    Vector3 grav = (new Vector3(0, gravForce, 0) * delta);
+    Move(grav.x, grav.y, grav.z);
+  }
+
   
-  
-  public void Move(float x, float z){
-      if(debug){ GD.Print("Actor: Moving[" + x + "," + z + "]"); }
-      Vector3 movement = new Vector3(x, 0, -z); 
+  public void Move(float x, float y,  float z){
+      if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "," + z + "]"); }
+      Vector3 movement = new Vector3(x, y, -z); 
       
       Transform current = GetTransform();
       Transform destination = current; 
       destination.Translated(movement);
       
       Vector3 delta = destination.origin - current.origin;
-      MoveAndCollide(delta);
+      KinematicCollision collision = MoveAndCollide(delta);
+      if(!grounded && collision != null && collision.Position.y < GetTranslation().y){
+        GD.Print("Landed!");
+        grounded = true;
+      }
   }
   
+  public void Jump(){
+    if(!grounded){ return; }
+    float jumpHeight = 10;
+    Move(0, jumpHeight, 0);
+    grounded = false;
+  }
+
   
   public void Turn(float x, float y){
     if(debug){GD.Print("Actor: Turning[" + x + "," + y + "]"); }
