@@ -41,8 +41,9 @@ public class Actor : KinematicBody
   }
   
   
-  public void Move(int x, int z){
-      if(debug){ GD.Print("Actor: Moving[" + x + "," + y + "]"); }
+  
+  public void Move(float x, float z){
+      if(debug){ GD.Print("Actor: Moving[" + x + "," + z + "]"); }
       Vector3 movement = new Vector3(x, 0, -z); 
       
       Transform current = GetTransform();

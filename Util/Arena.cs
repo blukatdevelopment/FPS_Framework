@@ -11,7 +11,8 @@ public class Arena : Node {
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     InitTerrain();
-    SpawnPlayer(new Vector3(0, 5, 0));
+    SpawnActor(new Vector3(0, 5, 0));
+    SpawnActor(new Vector3(0, 5, 5), Actor.Brains.Ai);
   }
   
   public void InitTerrain(){
@@ -21,8 +22,8 @@ public class Arena : Node {
     terrain = (Spatial)instance;
   }
   
-  public Actor SpawnPlayer(Vector3 pos){
-    Actor actor = Actor.ActorFactory(Actor.Brains.Player1);
+  public Actor SpawnActor(Vector3 pos, Actor.Brains brain = Actor.Brains.Player1){
+    Actor actor = Actor.ActorFactory(brain);
     actors.Add(actor);
     actor.SetPos(pos);
     AddChild((Node)actor);

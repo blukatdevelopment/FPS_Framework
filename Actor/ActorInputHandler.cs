@@ -65,6 +65,10 @@ public class ActorInputHandler : Brain {
     }
   }
   
+  public override void _Process(){
+    if(){}
+  }
+  
   private void HandleAxis(InputEvent evt){
     if(evt.axis == InputEvent.Axes.Mouse){
       actor.Turn(evt.x, evt.y);
