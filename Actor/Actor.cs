@@ -11,9 +11,11 @@ public class Actor : KinematicBody
   
   const int maxY = 90;
   const int minY = -90;
+  const float GravityAcceleration = -9.81f; 
   
   private bool grounded = false; //True when Actor is standing on surface.
   public bool sprinting = false;
+  private float gravityVelocity = 0f;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
@@ -50,10 +52,12 @@ public class Actor : KinematicBody
       Gravity(delta);
   }
   
-  public void Gravity(float delta){
-    float gravForce = -9.81f; // TODO: Manage a velocity Vector3
-    Vector3 grav = (new Vector3(0, gravForce, 0) * delta);
-    Move(grav);
+  public void Gravity(float delta){ 
+    float gravityForce = GravityAcceleration * delta;
+    gravityVelocity += gravityForce;
+    
+    Vector3 grav = (new Vector3(0, gravityVelocity, 0));
+    Move(grav, delta);
   }
 
   
@@ -68,15 +72,17 @@ public class Actor : KinematicBody
       Vector3 delta = destination.origin - current.origin;
       KinematicCollision collision = MoveAndCollide(delta);
       if(!grounded && collision != null && collision.Position.y < GetTranslation().y){
-        GD.Print("Landed!");
-        grounded = true;
+        if(gravityVelocity < 0){
+          grounded = true;
+          gravityVelocity = 0f;
+        }
       }
   }
   
   public void Jump(){
     if(!grounded){ return; }
-    float jumpHeight = 10;
-    Move(new Vector3(0, jumpHeight, 0));
+    float jumpForce = 10;
+    gravityVelocity = jumpForce;
     grounded = false;
   }
 
