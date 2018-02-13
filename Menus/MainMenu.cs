@@ -8,6 +8,13 @@ public class MainMenu : Container
     public Godot.Button lobbyButton;
     public Godot.Button quitButton;
     
+    
+    public void Init(){
+      SetSinglePlayerButton((Godot.Button)Menu.Button(text : "Single Player", onClick: SinglePlayerGame));
+      SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Lobby));
+      SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
+    }
+    
     public void SetSinglePlayerButton(Godot.Button button){
       if(startButton != null){ lobbyButton.QueueFree(); }
       startButton = button;

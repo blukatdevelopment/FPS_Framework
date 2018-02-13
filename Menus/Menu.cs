@@ -48,9 +48,7 @@ public class Menu{
     PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     Node menu_instance = menu_ps.Instance();
     MainMenu menu = (MainMenu)menu_instance;
-    menu.SetSinglePlayerButton((Godot.Button)Button(text : "Single Player", onClick: menu.SinglePlayerGame));
-    menu.SetLobbyButton((Godot.Button)Button(text : "Multiplayer", onClick: menu.Lobby));
-    menu.SetQuitButton((Godot.Button)Button(text : "Quit", onClick: menu.Quit));
+    menu.Init();
     return menu_instance;
   }
   
@@ -58,14 +56,7 @@ public class Menu{
     PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
     Node menu_instance = menu_ps.Instance();
     LobbyMenu menu = (LobbyMenu)menu_instance;
-    menu.SetMainMenuButton((Godot.Button)Button(text : "MainMenu", onClick: menu.ReturnToMainMenu));
-    menu.SetSendButton((Godot.Button)Button(text : "Send", onClick: menu.Send));
-    menu.SetJoinButton((Godot.Button)Button(text : "Join", onClick: menu.Join));
-    menu.SetHostButton((Godot.Button)Button(text : "Host", onClick: menu.Host));
-    menu.SetComposeBox((Godot.TextEdit)TextBox());
-    menu.SetMessageBox((Godot.TextEdit)TextBox());
-    menu.SetAddressBox((Godot.TextEdit)TextBox(Session.DefaultServerAddress));
-    menu.SetNameBox((Godot.TextEdit)TextBox("PlayerName"));
+    menu.Init();
     return menu_instance;
   }
 }

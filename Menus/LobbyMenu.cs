@@ -23,6 +23,17 @@ public class LobbyMenu : Container
         messages = new List<string>();
     }
     
+    public void Init(){
+      SetMainMenuButton((Godot.Button)Menu.Button(text : "MainMenu", onClick: ReturnToMainMenu));
+      SetSendButton((Godot.Button)Menu.Button(text : "Send", onClick: Send));
+      SetJoinButton((Godot.Button)Menu.Button(text : "Join", onClick: Join));
+      SetHostButton((Godot.Button)Menu.Button(text : "Host", onClick: Host));
+      SetComposeBox((Godot.TextEdit)Menu.TextBox());
+      SetMessageBox((Godot.TextEdit)Menu.TextBox());
+      SetAddressBox((Godot.TextEdit)Menu.TextBox(Session.DefaultServerAddress));
+      SetNameBox((Godot.TextEdit)Menu.TextBox("PlayerName"));
+    }
+    
     public override void _Process(float delta) {
       Reposition();
     }
