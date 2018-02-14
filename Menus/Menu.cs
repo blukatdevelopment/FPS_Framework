@@ -15,22 +15,22 @@ public class Menu{
   }
   
   public static Control Button(string text = "", Action onClick = null){
-    PackedScene button_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/Button.tscn");
-    Node button_instance = button_ps.Instance();
-    Button button = (Button)button_instance;
+    PackedScene buttonPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/Button.tscn");
+    Node buttonInstance = buttonPs.Instance();
+    Button button = (Button)buttonInstance;
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
-    return (Control)button_instance;
+    return (Control)buttonInstance;
   }
   
   public static Control TextBox(string val = ""){
-    PackedScene textBox_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    Node textBox_instance = textBox_ps.Instance();
+    PackedScene textBoxPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
+    Node textBoxInstance = textBoxPs.Instance();
     if(val != ""){
-      TextEdit textBox = (Godot.TextEdit)textBox_instance;
+      TextEdit textBox = (Godot.TextEdit)textBoxInstance;
       textBox.SetText(val);
     }
-    return (Control)textBox_instance;
+    return (Control)textBoxInstance;
   }
   
   public static Node MenuFactory(Menus menu){
