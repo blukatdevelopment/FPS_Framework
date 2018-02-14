@@ -3,7 +3,7 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{ None, Main, Lobby};
+  public enum Menus{ None, Main, Multiplayer, Lobby};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
@@ -45,18 +45,26 @@ public class Menu{
   
 
   public static Node MainMenu(){
-    PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
-    Node menu_instance = menu_ps.Instance();
-    MainMenu menu = (MainMenu)menu_instance;
+    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
+    Node menuInstance = menuPs.Instance();
+    MainMenu menu = (MainMenu)menuInstance;
     menu.Init();
-    return menu_instance;
+    return menuInstance;
+  }
+  
+  public static Node MultiplayerMenu(){
+    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
+    Node menuInstance = menuPs.Instance();
+    MainMenu menu = (MainMenu)menuInstance;
+    menu.Init();
+    return menuInstance;
   }
   
   public static Node LobbyMenu(){
-    PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
-    Node menu_instance = menu_ps.Instance();
-    LobbyMenu menu = (LobbyMenu)menu_instance;
+    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
+    Node menuInstance = menuPs.Instance();
+    LobbyMenu menu = (LobbyMenu)menuInstance;
     menu.Init();
-    return menu_instance;
+    return menuInstance;
   }
 }
