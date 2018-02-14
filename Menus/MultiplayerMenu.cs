@@ -13,4 +13,6 @@ public class MultiplayerMenu : Container
         
         
     }
+    
+    public void Init(){}
 }

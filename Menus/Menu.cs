@@ -38,6 +38,7 @@ public class Menu{
     switch(menu){
       case Menus.None: return null; break;
       case Menus.Main: ret = MainMenu(); break;
+      case Menus.Multiplayer: ret = MultiplayerMenu(); break;
       case Menus.Lobby: ret = LobbyMenu(); break;
     }
     return ret;
@@ -45,24 +46,21 @@ public class Menu{
   
 
   public static Node MainMenu(){
-    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
-    Node menuInstance = menuPs.Instance();
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     MainMenu menu = (MainMenu)menuInstance;
     menu.Init();
     return menuInstance;
   }
   
   public static Node MultiplayerMenu(){
-    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
-    Node menuInstance = menuPs.Instance();
-    MainMenu menu = (MainMenu)menuInstance;
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
+    MultiplayerMenu menu = (MultiplayerMenu)menuInstance;
     menu.Init();
     return menuInstance;
   }
   
   public static Node LobbyMenu(){
-    PackedScene menuPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
-    Node menuInstance = menuPs.Instance();
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
     LobbyMenu menu = (LobbyMenu)menuInstance;
     menu.Init();
     return menuInstance;

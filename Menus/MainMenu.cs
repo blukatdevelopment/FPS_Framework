@@ -11,7 +11,7 @@ public class MainMenu : Container
     
     public void Init(){
       SetSinglePlayerButton((Godot.Button)Menu.Button(text : "Single Player", onClick: SinglePlayerGame));
-      SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Lobby));
+      SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Multiplayer));
       SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
     }
     
@@ -37,8 +37,8 @@ public class MainMenu : Container
       Session.session.SinglePlayerGame();
     }
     
-    public void Lobby(){
-      Session.session.ChangeMenu(Menu.Menus.Lobby);
+    public void Multiplayer(){
+      Session.session.ChangeMenu(Menu.Menus.Multiplayer);
     }
     
     public void Quit(){

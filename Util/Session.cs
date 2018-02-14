@@ -28,6 +28,16 @@ public class Session : Node {
     GetTree().Quit();  
   }
   
+  /* Convenience method for creating nodes. */
+  public static Node Instance(string path){
+    PackedScene packedScene = (PackedScene)GD.Load(path);
+    if(packedScene == null){
+      GD.Print("Path [" + path + "] is invalid." );
+      return null;
+    }
+    return packedScene.Instance();
+  }
+  
   /* Remove game nodes/variables in order to return it to a menu. */
   public void ClearGame(){
     if(arena != null){
