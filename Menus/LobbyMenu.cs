@@ -30,7 +30,7 @@ public class LobbyMenu : Container
       SetHostButton((Godot.Button)Menu.Button(text : "Host", onClick: Host));
       SetComposeBox((Godot.TextEdit)Menu.TextBox());
       SetMessageBox((Godot.TextEdit)Menu.TextBox());
-      SetAddressBox((Godot.TextEdit)Menu.TextBox(Session.DefaultServerAddress));
+      SetAddressBox((Godot.TextEdit)Menu.TextBox(NetworkSession.DefaultServerAddress));
       SetNameBox((Godot.TextEdit)Menu.TextBox("PlayerName"));
     }
     
@@ -184,8 +184,8 @@ public class LobbyMenu : Container
       if(addressBox != null){
         address = addressBox.GetText();
       }
-      ReceiveMessage("Connecting to server: " + address + " on port " + Session.DefaultPort + "...");
-      Session.session.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
+      ReceiveMessage("Connecting to server: " + address + " on port " + NetworkSession.DefaultPort + "...");
+      Session.session.netSes.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
     }
     
     public string GetName(){
@@ -206,8 +206,8 @@ public class LobbyMenu : Container
     }
     
     public void Host(){
-      ReceiveMessage("Hosting Server on port " + Session.DefaultPort + ".");
-      Session.session.InitServer((Godot.Object)this, nameof(PlayerJoined), nameof(PlayerLeft));
+      ReceiveMessage("Hosting Server on port " + NetworkSession.DefaultPort + ".");
+      Session.session.netSes.InitServer((Godot.Object)this, nameof(PlayerJoined), nameof(PlayerLeft));
     }
     
     public void PlayerJoined(int id){
@@ -229,10 +229,10 @@ public class LobbyMenu : Container
       Rpc(nameof(ReceiveMessage), message);
       
       try{
-        Session.session.playerInfo.Add(id, info);
+        Session.session.netSes.playerInfo.Add(id, info);
       }
       catch (ArgumentException){
-        Session.session.playerInfo[id] = info;
+        Session.session.netSes.playerInfo[id] = info;
       }
     }
     

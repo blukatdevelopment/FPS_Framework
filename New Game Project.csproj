@@ -59,11 +59,13 @@
     <Compile Include="Menus\LobbyMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\Menu.cs" />
+    <Compile Include="Menus\MultiplayerMenu.cs" />
     <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Menus\TextBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\Prefabs\Eyes.cs" />
     <Compile Include="Util\Arena.cs" />
+    <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

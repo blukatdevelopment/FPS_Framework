@@ -13,44 +13,19 @@ using System.Reflection;
 public class Session : Node {
   public static Session session;
   private Node activeMenu;
-  
-  public NetworkedMultiplayerENet peer;
-  public const int DefaultPort = 27182;
-  private const int MaxPlayers = 10;
-  public const string DefaultServerAddress = "127.0.0.1";
-  public int selfPeerId;
-  public Dictionary<int, List<string>> playerInfo;
   public Arena arena;
+  public NetworkSession netSes;
    
 
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    playerInfo = new Dictionary<int, List<string>>();
     //ShowMethods(typeof());
     //ShowProperties(typeof(KinematicCollision));
   }
   
   public void Quit(){
     GetTree().Quit();  
-  }
-  
-  public void InitServer(Godot.Object obj, string playerJoin, string playerLeave){
-    peer = new Godot.NetworkedMultiplayerENet();
-    this.GetTree().Connect("network_peer_connected", obj, playerJoin);
-    this.GetTree().Connect("network_peer_disconnected", obj, playerLeave);
-    peer.CreateServer(DefaultPort, MaxPlayers);
-    this.GetTree().SetNetworkPeer(peer);
-    selfPeerId = this.GetTree().GetNetworkUniqueId();
-  }
-  
-  public void InitClient(string address, Godot.Object obj, string success, string fail){
-    GetTree().Connect("connected_to_server", obj, success);
-    GetTree().Connect("connection_failed", obj, fail);
-    peer = new Godot.NetworkedMultiplayerENet();
-    peer.CreateClient(address, DefaultPort);
-    this.GetTree().SetNetworkPeer(peer);
-    selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
   
   /* Remove game nodes/variables in order to return it to a menu. */
@@ -60,7 +35,6 @@ public class Session : Node {
       arena = null;
     }
   }
-  
   /* Kills everything and starts a single-player game session. */
   public void SinglePlayerGame(){
     GD.Print("SinglePlayerGame");
