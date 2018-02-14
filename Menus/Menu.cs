@@ -15,8 +15,7 @@ public class Menu{
   }
   
   public static Control Button(string text = "", Action onClick = null){
-    PackedScene buttonPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/Button.tscn");
-    Node buttonInstance = buttonPs.Instance();
+    Node buttonInstance = Session.Instance("res://Scenes/Prefabs/Controls/Button.tscn");
     Button button = (Button)buttonInstance;
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
@@ -24,8 +23,7 @@ public class Menu{
   }
   
   public static Control TextBox(string val = ""){
-    PackedScene textBoxPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    Node textBoxInstance = textBoxPs.Instance();
+    Node textBoxInstance = Session.Instance("res://Scenes/Prefabs/Controls/TextBox.tscn");
     if(val != ""){
       TextEdit textBox = (Godot.TextEdit)textBoxInstance;
       textBox.SetText(val);
@@ -48,6 +46,7 @@ public class Menu{
   public static Node MainMenu(){
     Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     MainMenu menu = (MainMenu)menuInstance;
+    Session.session.AddChild(menu);
     menu.Init();
     return menuInstance;
   }
@@ -55,6 +54,7 @@ public class Menu{
   public static Node MultiplayerMenu(){
     Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
     MultiplayerMenu menu = (MultiplayerMenu)menuInstance;
+    Session.session.AddChild(menu);
     menu.Init();
     return menuInstance;
   }
@@ -62,6 +62,7 @@ public class Menu{
   public static Node LobbyMenu(){
     Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
     LobbyMenu menu = (LobbyMenu)menuInstance;
+    Session.session.AddChild(menu);
     menu.Init();
     return menuInstance;
   }

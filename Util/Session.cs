@@ -61,7 +61,6 @@ public class Session : Node {
       activeMenu = null;
     }
     activeMenu = Menu.MenuFactory(menu);
-    if(activeMenu != null){ this.AddChild(activeMenu); }
   }
   
   private void EnforceSingleton(){
