@@ -17,6 +17,7 @@ public class MultiplayerMenu : Container
     Godot.TextEdit portBox;
     Godot.TextEdit addressBox;
     Godot.TextEdit nameBox;
+    
     Godot.Button startServerButton;
     Godot.Button startClientButton;
     
@@ -77,7 +78,6 @@ public class MultiplayerMenu : Container
       ScaleControl(addressBox, 3 * wu, hu, 4 * wu, 3 * hu);
       ScaleControl(nameBox, 2 * wu, hu, 2 * wu, 3 * hu);
       
-      
     }
     
     /* Despite checking for nulls, this still ends up with nulls. I'm going to attribute this to race conditions. */
@@ -115,11 +115,9 @@ public class MultiplayerMenu : Container
       selectionButton.Hide();
       startServerButton.Hide();
       portBox.Hide();
+      startServerButton.SetText("Host Game");
     }
     
-    public void StartServer(){
-      GD.Print("Start Server");
-    }
     
     /* Show client configuration settings */
     public void ShowClient(){
@@ -132,18 +130,30 @@ public class MultiplayerMenu : Container
       ScaleControls();
     }
     
+    
     public void HideClient(){
       selectionButton.Hide();
       startClientButton.Hide();
       portBox.Hide();
       addressBox.Hide();
       nameBox.Hide();
+      startClientButton.SetText("Join Game");
     }
+    
     
     public void StartClient(){
       GD.Print("Start client");
+      startClientButton.SetText("Joining...");
     }
     
+    
+    public void StartServer(){
+      GD.Print("Start Server");
+      startServerButton.SetText("Hosting...");
+      
+    }
+
+
     
     public void MainMenu(){
       Session.session.ChangeMenu(Menu.Menus.Main);
