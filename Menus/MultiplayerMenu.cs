@@ -26,9 +26,37 @@ public class MultiplayerMenu : Container
     }
     
     public void Init(){
+      InitControls();
+      ShowSelection();
+    }
+    
+    public void InitControls(){
       mainMenuButton = (Godot.Button)Menu.Button("Main Menu", MainMenu);
       AddChild(mainMenuButton);
-      ShowSelection();
+      
+      serverButton = (Godot.Button)Menu.Button("Host", ShowServer);
+      AddChild(serverButton);
+      
+      clientButton = (Godot.Button)Menu.Button("Join", ShowClient);
+      AddChild(clientButton);
+      
+      selectionButton = (Godot.Button)Menu.Button("Back", ShowSelection);
+      AddChild(selectionButton);
+      
+      portBox = (Godot.TextEdit)Menu.TextBox("" + NetworkSession.DefaultPort);
+      AddChild(portBox);
+      
+      startServerButton = (Godot.Button)Menu.Button("Host Game", StartServer);
+      AddChild(startServerButton);
+      
+      addressBox = (Godot.TextEdit)Menu.TextBox(NetworkSession.DefaultServerAddress);
+      AddChild(addressBox);
+      
+      nameBox = (Godot.TextEdit)Menu.TextBox("Name");
+      AddChild(nameBox);
+      
+      startClientButton = (Godot.Button)Menu.Button("Join Game", StartClient);
+      AddChild(startClientButton);
     }
     
     void ScaleControls(){
@@ -55,58 +83,38 @@ public class MultiplayerMenu : Container
     /* Despite checking for nulls, this still ends up with nulls. I'm going to attribute this to race conditions. */
     public void ScaleControl(Control control, float width, float height, float x, float y){
       if(control == null){ return; }
-      
       control.SetSize(new Vector2(width, height)); 
       control.SetPosition(new Vector2(x, y)); 
-      
     }
     
     /* Let user select server or client. */
     public void ShowSelection(){
       HideClient();
       HideServer();
-      
-      serverButton = (Godot.Button)Menu.Button("Host", ShowServer);
-      AddChild(serverButton);
-      
-      clientButton = (Godot.Button)Menu.Button("Join", ShowClient);
-      AddChild(clientButton);
-      
+      serverButton.Show();
+      clientButton.Show();
       ScaleControls();
     }
     
     public void HideSelection(){
-      HideControl(serverButton);
-      HideControl(clientButton);
+      serverButton.Hide();
+      clientButton.Hide();
     }
     
     /* Show server configuration settings. */
     public void ShowServer(){
       HideSelection();
-      
-      selectionButton = (Godot.Button)Menu.Button("Back", ShowSelection);
-      AddChild(selectionButton);
-      
-      portBox = (Godot.TextEdit)Menu.TextBox("" + NetworkSession.DefaultPort);
-      AddChild(portBox);
-      
-      startServerButton = (Godot.Button)Menu.Button("Host Game", StartServer);
-      AddChild(startServerButton);
-      
+      selectionButton.Show();
+      startServerButton.Show();
+      portBox.Show();
       ScaleControls();
     }
     
-    public void HideControl(Control control){
-      if(control != null){
-        control.QueueFree();
-        control = null;
-      }
-    }
     
     public void HideServer(){
-      HideControl(selectionButton);
-      HideControl(startServerButton);
-      HideControl(portBox);
+      selectionButton.Hide();
+      startServerButton.Hide();
+      portBox.Hide();
     }
     
     public void StartServer(){
@@ -116,31 +124,20 @@ public class MultiplayerMenu : Container
     /* Show client configuration settings */
     public void ShowClient(){
       HideSelection();
-      
-      selectionButton = (Godot.Button)Menu.Button("Back", ShowSelection);
-      AddChild(selectionButton);
-      
-      portBox = (Godot.TextEdit)Menu.TextBox("" + NetworkSession.DefaultPort);
-      AddChild(portBox);
-      
-      addressBox = (Godot.TextEdit)Menu.TextBox(NetworkSession.DefaultServerAddress);
-      AddChild(addressBox);
-      
-      nameBox = (Godot.TextEdit)Menu.TextBox("Name");
-      AddChild(nameBox);
-      
-      startClientButton = (Godot.Button)Menu.Button("Join Game", StartClient);
-      AddChild(startClientButton);
-      
+      selectionButton.Show();
+      startClientButton.Show();
+      portBox.Show();
+      addressBox.Show();
+      nameBox.Show();
       ScaleControls();
     }
     
     public void HideClient(){
-      HideControl(selectionButton);
-      HideControl(startClientButton);
-      HideControl(portBox);
-      HideControl(addressBox);
-      HideControl(nameBox);
+      selectionButton.Hide();
+      startClientButton.Hide();
+      portBox.Hide();
+      addressBox.Hide();
+      nameBox.Hide();
     }
     
     public void StartClient(){
