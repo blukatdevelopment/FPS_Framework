@@ -67,24 +67,17 @@ public class MultiplayerMenu : Container
       float wu = width/10; // relative height and width units
       float hu = height/10;
       
-      ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
-      ScaleControl(serverButton, 4 * wu, 4 * hu, 0, hu);
-      ScaleControl(clientButton, 4 * wu, 4 * hu, width - 4 * wu, hu);
-      ScaleControl(selectionButton, 2 * wu, hu, 4 * wu, 9 * hu);
+      Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+      Menu.ScaleControl(serverButton, 4 * wu, 4 * hu, 0, hu);
+      Menu.ScaleControl(clientButton, 4 * wu, 4 * hu, width - 4 * wu, hu);
+      Menu.ScaleControl(selectionButton, 2 * wu, hu, 4 * wu, 9 * hu);
       
-      ScaleControl(startServerButton, 2 * wu, hu, 8 * wu, 3 * hu);
-      ScaleControl(startClientButton, 2 * wu, hu, 8 * wu, 3 * hu);
-      ScaleControl(portBox, 1 * wu, hu, 7 * wu, 3 * hu);
-      ScaleControl(addressBox, 3 * wu, hu, 4 * wu, 3 * hu);
-      ScaleControl(nameBox, 2 * wu, hu, 2 * wu, 3 * hu);
+      Menu.ScaleControl(startServerButton, 2 * wu, hu, 8 * wu, 3 * hu);
+      Menu.ScaleControl(startClientButton, 2 * wu, hu, 8 * wu, 3 * hu);
+      Menu.ScaleControl(portBox, 1 * wu, hu, 7 * wu, 3 * hu);
+      Menu.ScaleControl(addressBox, 3 * wu, hu, 4 * wu, 3 * hu);
+      Menu.ScaleControl(nameBox, 2 * wu, hu, 2 * wu, 3 * hu);
       
-    }
-    
-    /* Despite checking for nulls, this still ends up with nulls. I'm going to attribute this to race conditions. */
-    public void ScaleControl(Control control, float width, float height, float x, float y){
-      if(control == null){ return; }
-      control.SetSize(new Vector2(width, height)); 
-      control.SetPosition(new Vector2(x, y)); 
     }
     
     /* Let user select server or client. */
@@ -144,6 +137,7 @@ public class MultiplayerMenu : Container
     public void StartClient(){
       GD.Print("Start client");
       startClientButton.SetText("Joining...");
+      Session.session.ChangeMenu(Menu.Menus.Lobby);
     }
     
     

@@ -66,4 +66,10 @@ public class Menu{
     menu.Init();
     return menuInstance;
   }
+  
+  public static void ScaleControl(Control control, float width, float height, float x, float y){
+    if(control == null){ return; }
+    control.SetSize(new Vector2(width, height)); 
+    control.SetPosition(new Vector2(x, y)); 
+  }
 }
