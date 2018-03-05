@@ -36,7 +36,6 @@ public class LobbyMenu : Container
       AddChild(playersBox);
       
       ScaleControls();
-      GD.Print("Lobby menu initialized");
     }
     
     void ScaleControls(){
@@ -82,6 +81,13 @@ public class LobbyMenu : Container
     public void ReceiveNamedMessage(string message, string name){
       string fullMessage = name + ":" + message;
       ReceiveMessage(fullMessage);  
+    }
+    
+    [Remote]
+    public void UpdatePlayers(){
+      NetworkSession netSes = Session.session.netSes;
+      if(netSes == null){ return; }
+      
     }
     
 }
