@@ -90,13 +90,16 @@ public class ActorInputHandler : Brain {
   
   private void Press(InputEvent evt){    
     switch(evt.button){
-      case InputEvent.Buttons.Esc: actor.Pause(); break;
+      case InputEvent.Buttons.Esc: 
+        actor.Pause();
+        if(actor.menuActive){ Input.SetMouseMode(Input.MouseMode.Visible); }
+        else{ Input.SetMouseMode(Input.MouseMode.Captured); } 
+        break;
       case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.sprinting = true; break;
     }
   }
-  
   
   private void HandleAxis(InputEvent evt){
     if(evt.axis == InputEvent.Axes.Mouse){
