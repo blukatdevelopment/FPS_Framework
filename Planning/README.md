@@ -75,11 +75,11 @@ Three songs should be produced with the following criteria:
 
 
 ## Testing
-- Each programming user story should be tested.
+- Each programming user story or task should be tested.
 
-## Interface Programming
+## Interface Programming [2/6]
 
-**Main Menu**
+**DONE Main Menu**
 Should allow user to choose a game mode or exit.
 Options
 - Singleplayer - Start new game
@@ -111,11 +111,10 @@ Options
 - Send message
 - Toggle start game countdown (If reaches 0, multiplayer game will begin.)
 
-**Pause Menu**
+**DONE Pause Menu**
 Should allow users to quit the game.
 
 Options
-- Resume game
 - Return to main menu
 - Quit
 

@@ -45,6 +45,12 @@ public class Session : Node {
       arena = null;
     }
   }
+  
+  public void QuitToMainMenu(){
+    ClearGame();
+    ChangeMenu(Menu.Menus.Main);
+  }
+  
   /* Kills everything and starts a single-player game session. */
   public void SinglePlayerGame(){
     GD.Print("SinglePlayerGame");
