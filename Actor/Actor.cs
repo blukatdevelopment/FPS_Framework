@@ -17,6 +17,8 @@ public class Actor : KinematicBody
   public bool sprinting = false;
   private float gravityVelocity = 0f;
   
+  public bool menuActive = false;
+  
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
@@ -88,7 +90,7 @@ public class Actor : KinematicBody
 
   
   public void Turn(float x, float y){
-    if(debug){GD.Print("Actor: Turning[" + x + "," + y + "]"); }
+    if(debug){ GD.Print("Actor: Turning[" + x + "," + y + "]"); }
     Vector3 bodyRot = this.GetRotationDegrees();
     bodyRot.y += x;
     this.SetRotationDegrees(bodyRot);
@@ -109,6 +111,18 @@ public class Actor : KinematicBody
     if(debug){ GD.Print("Actor: Set pos to " + pos); }
     SetTranslation(pos);
     
+  }
+  
+  public void Pause(){
+    menuActive = !menuActive;
+    if(menuActive){
+      if(debug){ GD.Print("Actor: Paused"); }
+      Session.session.ChangeMenu(Menu.Menus.Pause);
+    }
+    else{
+      if(debug){ GD.Print("Actor: Resumed"); }
+      Session.session.ChangeMenu(Menu.Menus.None);
+    }
   }
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */

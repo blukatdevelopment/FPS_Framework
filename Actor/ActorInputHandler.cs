@@ -35,12 +35,27 @@ public class ActorInputHandler : Brain {
   
   public override void Update(float delta){
     this.delta = delta;
+    
     List<InputEvent> events = device.GetInputEvents();
-    for(int i = 0; i < events.Count; i++){
-        if(events[i].IsButton()){ HandleButton(events[i]); }
-        else{ HandleAxis(events[i]); }
+    
+    if(actor.menuActive == false){
+      for(int i = 0; i < events.Count; i++){
+          if(events[i].IsButton()){ HandleButton(events[i]); }
+          else{ HandleAxis(events[i]); }
+      }
+      
+      HandleMovement();
     }
-    HandleMovement();
+    else{
+      HandleMenuInput(events);
+      
+    }
+  }
+  
+  private void HandleMenuInput(List<InputEvent> events){
+    for(int i = 0; i < events.Count; i++){
+      if(events[i].button == InputEvent.Buttons.Esc){ HandleButton(events[i]); }
+    }
   }
   
   private void HandleMovement(){
@@ -73,9 +88,9 @@ public class ActorInputHandler : Brain {
   }
   
   
-  private void Press(InputEvent evt){
+  private void Press(InputEvent evt){    
     switch(evt.button){
-      case InputEvent.Buttons.Esc: Session.session.Quit(); break;
+      case InputEvent.Buttons.Esc: actor.Pause(); break;
       case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.sprinting = true; break;

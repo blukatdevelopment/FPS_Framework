@@ -158,8 +158,8 @@ simplify the development of content-specific programming.
 **FPS controls**
 The core gameplay should consist of controlling an Actor using conventional
 FPS mouse and keyboard controls.
-- WASD movement
-- Mouse aiming/turning
+- DONE WASD movement 
+- DONE Mouse aiming/turning
 - Left Mouse to punch or shoot rifle
 - R to reload rifle
 - Tab to switch between rifle and hand.

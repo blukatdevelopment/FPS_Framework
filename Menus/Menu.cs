@@ -3,7 +3,7 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{ None, Main, Multiplayer, Lobby};
+  public enum Menus{ None, Main, Multiplayer, Lobby, Pause};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
