@@ -7,5 +7,7 @@ public class PauseMenu : Container{
     
   }
 
+  public void Init(){
     
+  }
 }

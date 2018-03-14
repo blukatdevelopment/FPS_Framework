@@ -36,7 +36,7 @@ public class Menu{
     switch(menu){
       case Menus.None: return null; break;
       case Menus.HUD: return null; break;
-      case Menus.Pause: return null; break;
+      case Menus.Pause: ret = PauseMenu(); break;
       case Menus.Main: ret = MainMenu(); break;
       case Menus.Multiplayer: ret = MultiplayerMenu(); break;
       case Menus.Lobby: ret = LobbyMenu(); break;
@@ -64,6 +64,22 @@ public class Menu{
   public static Node LobbyMenu(){
     Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
     LobbyMenu menu = (LobbyMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static Node PauseMenu(){
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/PauseMenu.tscn");
+    PauseMenu menu = (PauseMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static Node HUDMenu(){
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/HUDMenu.tscn");
+    HUDMenu menu = (HUDMenu)menuInstance;
     Session.session.AddChild(menu);
     menu.Init();
     return menuInstance;
