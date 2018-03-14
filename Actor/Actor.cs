@@ -38,6 +38,10 @@ public class Actor : KinematicBody
     return speed;
   }
   
+  public void SwitchItem(){
+    if(debug){ GD.Print("Actor: Switched Item"); }
+  }
+  
   protected void InitChildren(){
     foreach(Node child in this.GetChildren()){
       switch(child.GetName()){

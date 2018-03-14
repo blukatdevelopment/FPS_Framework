@@ -95,7 +95,7 @@ public class ActorInputHandler : Brain {
         if(actor.menuActive){ Input.SetMouseMode(Input.MouseMode.Visible); }
         else{ Input.SetMouseMode(Input.MouseMode.Captured); } 
         break;
-      case InputEvent.Buttons.Tab: Input.SetMouseMode(Input.MouseMode.Visible); break;
+      case InputEvent.Buttons.Tab: actor.SwitchItem(); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.sprinting = true; break;
     }

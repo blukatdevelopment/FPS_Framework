@@ -163,7 +163,7 @@ FPS mouse and keyboard controls.
 - Left Mouse to punch or shoot rifle
 - R to reload rifle
 - Tab to switch between rifle and hand.
-- Escape to bring open or close pause menu, toggling gameplay input handling.
+- DONE Escape to bring open or close pause menu, toggling gameplay input handling.
 
 **Equipment**
 Every Actor should spawn with a hand and a rifle. The rifle should equip upon 
