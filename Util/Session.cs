@@ -52,7 +52,7 @@ public class Session : Node {
     arena = (Arena)arenaNode;
     arena.Init(true);
     AddChild(arenaNode);
-    ChangeMenu(Menu.Menus.None);
+    ChangeMenu(Menu.Menus.HUD);
   }
 
   public void ChangeMenu(Menu.Menus menu){
