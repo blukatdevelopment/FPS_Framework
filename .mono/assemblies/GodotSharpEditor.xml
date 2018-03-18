@@ -255,6 +255,11 @@
             Get the options and default values for the preset at this index. Returns an Array of Dictionaries with the following keys: "name", "default_value", "property_hint" (optional), "hint_string" (optional), "usage" (optional).
             </summary>
         </member>
+        <member name="M:Godot.EditorImportPlugin.GetImportOrder">
+            <summary>
+            Get the order of this importer to be run when importing resources. Higher values will be called later. Use this to ensure the importer runs after the dependencies are already imported.
+            </summary>
+        </member>
         <member name="M:Godot.EditorImportPlugin.GetImporterName">
             <summary>
             Get the unique name of the importer.
@@ -272,6 +277,11 @@
         <member name="M:Godot.EditorImportPlugin.GetPresetName(System.Int32)">
             <summary>
             Get the name of the options preset at this index.
+            </summary>
+        </member>
+        <member name="M:Godot.EditorImportPlugin.GetPriority">
+            <summary>
+            Get the priority of this plugin for the recognized extension. Higher priority plugins will be preferred. Default value is 1.0.
             </summary>
         </member>
         <member name="M:Godot.EditorImportPlugin.GetRecognizedExtensions">
@@ -379,6 +389,16 @@
         </member>
         <member name="M:Godot.EditorInterface.GetSelectedPath">
             <summary>
+            </summary>
+        </member>
+        <member name="M:Godot.EditorInterface.SetPluginEnabled(System.String,System.Boolean)">
+            <summary>
+            Sets the enabled status of a plugin. The plugin name is the same as its directory name.
+            </summary>
+        </member>
+        <member name="M:Godot.EditorInterface.IsPluginEnabled(System.String)">
+            <summary>
+            Returns the enabled status of a plugin. The plugin name is the same as its directory name.
             </summary>
         </member>
         <member name="M:Godot.EditorInterface.SaveScene">
@@ -516,6 +536,11 @@
         <member name="M:Godot.EditorPlugin.RemoveControlFromBottomPanel(Godot.Control)">
             <summary>
             Remove the control from the bottom panel. Don't forget to call this if you added one, so the editor can remove it cleanly.
+            </summary>
+        </member>
+        <member name="M:Godot.EditorPlugin.RemoveControlFromContainer(Godot.EditorPlugin.CustomControlContainer,Godot.Control)">
+            <summary>
+            Remove the control from the specified container. Use it when cleaning up after adding a control with [method add_control_to_container]. Note that you can simply free the control if you won't use it anymore.
             </summary>
         </member>
         <member name="M:Godot.EditorPlugin.AddToolSubmenuItem(System.String,Godot.Object)">

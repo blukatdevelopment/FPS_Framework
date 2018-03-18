@@ -78,11 +78,12 @@ public class Menu{
   }
   
   public static Node HUDMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/HUDMenu.tscn");
-    HUDMenu menu = (HUDMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
+    return null;
+    //Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/HUDMenu.tscn");
+    //HUDMenu menu = (HUDMenu)menuInstance;
+    //Session.session.AddChild(menu);
+    //menu.Init();
+    //return menuInstance;
   }
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){

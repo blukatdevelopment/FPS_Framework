@@ -58,7 +58,8 @@ public class Session : Node {
     arena = (Arena)arenaNode;
     arena.Init(true);
     AddChild(arenaNode);
-    ChangeMenu(Menu.Menus.HUD);
+    //ChangeMenu(Menu.Menus.HUD); Disabled until HUD menu is added in.
+    ChangeMenu(Menu.Menus.None);
   }
 
   public void ChangeMenu(Menu.Menus menu){
