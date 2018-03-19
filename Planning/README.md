@@ -89,22 +89,54 @@ Options
 **Multiplayer Menu**
 Should allow user to select settings for either hosting or joining a game.
 
+Info
+- Info field (displays instructions, errors, etc.)
+
 Options
 - Host
 - Join
 - Return to main menu
 
+
 Host settings fieldset
 - Game name 
 - Port 
 
+Upon clicking host button, server NetworkSession should be initialized
+and validation(if any) should occur.
+Upon succcess, Menu should change to ServerMenu
+
 Join settings fieldset
 - server address
 - Port 
-- Name 
+- Name
+
+Upon clicking join, NetworkSession should be initialized from fieldset and
+validation(if any, should occur). 
+
+Upon successfully joining a game, menu should transition to LobbyMenu.
+
+Upon failure, NetworkSession should be freed and an error message should
+display.
+ 
+
+**Server Menu**
+Should provide controls and info for a server instance.
+
+Info
+- Connected players
+- Message history
+
+Options
+- Return to main menu(shut down server)
+- Send message
 
 **Lobby Menu**
 Should allow users to chat while they wait for the game to begin.
+
+Info
+- Connected players
+- Message history
 
 Options
 - Return to main menu
@@ -137,20 +169,79 @@ Info shown
 Networking architecture should be developed by modifying a single-player
 gamemode.
 
-- Players should be able to connect or host servers via the multiplayer menu
-- Players should be able to chat or start the game in the lobby menu
-- Players should also be able to fight one another in the multiplayer arena.
+**Join Existing Game**
+Upon Join, a NetworkSession should be initialized as client and 
+attempt to join the existing game on the port and address specified.
+
+**Host New Game**
+Upon host, a NetworkSession should be initialized as Server.
+
+**Sync Lobby**
+Synced Lobby actions
+- Send message
+- Toggle start timer
+
+Synced game instance
+Each Item and Actor should contain RPC calls that are only made when a
+NetworkSession exists and has netActive is true( a static Session.NetActive()
+would make this check less verbose). 
+
+- Current player movement/position (~20 times per second) from within _Process
+- Item pickup
+- Item switching
+- Item Use
 
 ## Core Programming
-The underlying architecture of the game should be modular and expandable to
-simplify the development of content-specific programming.
+System architecture should strive for modularity and loose coupling to allow
+for clean development of custom functionality.
 
-- Transitioning between menus.
-- Transition between gameplay and menus.
-- Managing session variables.
-- Instancing UI and in-game Scenes.
-- Gather input from arbitrary device.
+**Manage Session State**
+The Session class should act as a pseudo-singleton, whereby a static variable
+Session.session points to a single instance, allowing all scripts access to the
+session's methods and public variables. 
 
+**Transition between menus**
+UI should be abstracted into Menu scripts attached to containers that each offer
+an Init() method. Creating and freeing these scripts from the Session should be
+transition between menus.
+
+**Transition betwen gameplay and menus**
+The Session should keep track of the parent node of an active game instance and
+free it when transitioning from game to menu.
+
+**Instancing Scenes**
+Each one-to-one relationship between Class and Scene should be contained within
+a single static factory method (Node Session.Instance()). This will not only
+simplify instancing, but make changing scene file locations easy to change/debug.
+
+
+**Gather Input from arbitrary device**
+A DeviceManager should be initialized with the specific device. For this scope,
+the mouse and keyboard will be the only supported devices. Inputs will be 
+converted to InputEvents, which can then be handled via specific input handlers.
+(in this scope that means only the ActorInputHandler). Abstracting the devices
+out will abstract away minor differences in similar devices 
+(such as various modern controllers).
+
+**Item/Actor Functional interfaces**
+Items and Actors should interact with one another via Interfaces.
+
+IHasAmmo
+- int SurveyAmmo(string AmmoType, int max)
+- int RequestAmmo(string AmmoType, int max)
+- int StoreAmmo(string Ammotype, int max)
+
+IReceiveDamage
+- ReceiveDamage(Damage damage)
+
+IUse
+- void Use(Uses use)- Use should be an Enum (A, B, C, D, E, F, G)
+
+**Simple VS complex items**
+A simple item class can be
+
+**Damage class**
+To account for 
 
 ## Gameplay Programming
 
