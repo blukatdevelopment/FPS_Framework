@@ -125,7 +125,7 @@ public class Actor : KinematicBody
     }
     else{
       if(debug){ GD.Print("Actor: Resumed"); }
-      Session.session.ChangeMenu(Menu.Menus.None);
+      Session.session.ChangeMenu(Menu.Menus.HUD);
     }
   }
   
