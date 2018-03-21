@@ -65,8 +65,17 @@ One map should be designed with the following criteria.
 - At least 5 item spawnpoints placed in accessible positions
 
 
-## DONE Sound engineering
-No audio will exist in this iteration.
+## Sound engineering
+
+At least one song should be produced.
+
+The following sfx should be produced
+- rifle shot
+- rifle reload
+- fist swing
+- fist impact
+- actor receive damage
+- actor die
 
 
 ## Testing
@@ -186,7 +195,7 @@ would make this check less verbose).
 - Item switching
 - Item Use
 
-## DONE Core Programming
+## Core Programming
 System architecture should strive for modularity and loose coupling to allow
 for clean development of custom functionality.
 
@@ -208,7 +217,6 @@ free it when transitioning from game to menu.
 Each one-to-one relationship between Class and Scene should be contained within
 a single static factory method (Node Session.Instance()). This will not only
 simplify instancing, but make changing scene file locations easy to change/debug.
-
 
 **DONE Gather Input from arbitrary device**
 A DeviceManager should be initialized with the specific device. For this scope,
@@ -239,8 +247,16 @@ centralizing the location of item names and the classes/data they are associated
 with.
 
 **DONE Damage class**
-Information about a specific attack will be contained within a Damage object, which will
-initially contain a single health variable.
+Information about a specific attack will be contained within a Damage object, 
+which will initially contain a single health variable.
+
+**SFX factory**
+Sound effects should be accessible via a static factory method using an 
+Sfxs enum.
+
+**Music Factory**
+Each song should be accessible via a static factory method using a Songs
+enum.
 
 ## Gameplay Programming
 
