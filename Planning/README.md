@@ -191,31 +191,31 @@ would make this check less verbose).
 - Item switching
 - Item Use
 
-## Core Programming
+## DONE Core Programming
 System architecture should strive for modularity and loose coupling to allow
 for clean development of custom functionality.
 
-**Manage Session State**
+**DONE Manage Session State**
 The Session class should act as a pseudo-singleton, whereby a static variable
 Session.session points to a single instance, allowing all scripts access to the
 session's methods and public variables. 
 
-**Transition between menus**
+**DONE Transition between menus**
 UI should be abstracted into Menu scripts attached to containers that each offer
 an Init() method. Creating and freeing these scripts from the Session should be
 transition between menus.
 
-**Transition betwen gameplay and menus**
+**DONE Transition betwen gameplay and menus**
 The Session should keep track of the parent node of an active game instance and
 free it when transitioning from game to menu.
 
-**Instancing Scenes**
+**DONE Instancing Scenes**
 Each one-to-one relationship between Class and Scene should be contained within
 a single static factory method (Node Session.Instance()). This will not only
 simplify instancing, but make changing scene file locations easy to change/debug.
 
 
-**Gather Input from arbitrary device**
+**DONE Gather Input from arbitrary device**
 A DeviceManager should be initialized with the specific device. For this scope,
 the mouse and keyboard will be the only supported devices. Inputs will be 
 converted to InputEvents, which can then be handled via specific input handlers.
@@ -223,13 +223,13 @@ converted to InputEvents, which can then be handled via specific input handlers.
 out will abstract away minor differences in similar devices 
 (such as various modern controllers).
 
-**Item/Actor Functional interfaces**
+**DONE Item/Actor Functional interfaces**
 Items and Actors should interact with one another via Interfaces.
 
 IHasAmmo
 - int SurveyAmmo(string AmmoType, int max)
 - int RequestAmmo(string AmmoType, int max)
-- int StoreAmmo(string Ammotype, int max)
+- int StoreAmmo(string AmmoType, int max)
 
 IReceiveDamage
 - ReceiveDamage(Damage damage)
@@ -237,11 +237,15 @@ IReceiveDamage
 IUse
 - void Use(Uses use)- Use should be an Enum (A, B, C, D, E, F, G)
 
-**Simple VS complex items**
-A simple item class can be
+**DONE Item factory**
+Many items should be able to be produced in their simplest form from a
+static factory method, given only a string. Items can then be spawned this way,
+centralizing the location of item names and the classes/data they are associated
+with.
 
-**Damage class**
-To account for 
+**DONE Damage class**
+Information about a specific attack will be contained within a Damage object, which will
+initially contain a single health variable.
 
 ## Gameplay Programming
 
