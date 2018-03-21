@@ -20,9 +20,12 @@ contained within ideaguy.txt in order to avoid feature creep.
 Premise:
 An arena game should ideally consist of the most essential features
 needed by a multiplayer arena shooter. Each developmental role
-or responsibility should be met minimally to achieve a functioning
+or responsibility should be met at least minimally to achieve a well-rounded
 deliverable.
 
+Target: Arena 0.0.1
+Version 0.0.1 is tasked with providing the most minimalistic playable arena
+gameplay possible.
 
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
@@ -40,7 +43,7 @@ A game should last 5 minutes.
 ## Art
 The following models should be produced. No textures are necessary.
 
-Actor
+** Actor **
 - Actor Body
 - Actor Hand
 - Rifle
@@ -48,30 +51,22 @@ Actor
 - Ammo Pack
 - Health Pack
 
-Terrain
+** DONE Terrain**
 - Large platform
 - Cube obstacle
 - ramp
 
 
 ## Level Design
-Three Arena maps should be designed with the following criteria:
+One map should be designed with the following criteria.
 
 - Falling out of the map should be difficult/impossible
 - At least 20 spawnpoints that do not clip through terrain
 - At least 5 item spawnpoints placed in accessible positions
 
 
-## Sound engineering
-The following sound effects should be produced in .ogg format.
-- Firing rifle
-- Swinging fist
-- Taking damage
-
-Three songs should be produced with the following criteria:
-- At least two minutes in length
-- Not excessively quiet or loud
-- Loop seamlessly or with little syncopation
+## DONE Sound engineering
+No audio will exist in this iteration.
 
 
 ## Testing
@@ -293,6 +288,15 @@ A melee weapon should receive collision signals from a hitbox. When damageActive
 and colliding with another actor (not itself), it should make the other actor 
 ReceiveDamage and then set damageActive to false.
 
+**SpawnPoint**
+A spawn point should be a spatial a level designer can place within a 
+level scene.  An enum should decide whether a spawn point is for actors
+or items. A string variable should decide what item spawns there, if relevant.
+
+**Respawn**
+When a player dies, a counter should display on their HUD to indicate how long
+they have left before a respawn. When a respawn occurs, the actor should be
+freed and a new actor created at a random actor spawnpoint. 
 
 **Projectile**
 A projectile should control a KinematicBody to move Forward(Vector3 velocity)
