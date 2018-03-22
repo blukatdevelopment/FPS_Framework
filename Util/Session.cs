@@ -20,7 +20,7 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    //ShowMethods(typeof());
+    ShowMethods(typeof(AudioStreamPlayer));
     //ShowProperties(typeof(KinematicCollision));
   }
   

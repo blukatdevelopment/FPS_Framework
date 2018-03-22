@@ -79,7 +79,8 @@ The following sfx should be produced
 
 
 ## Testing
-- Each programming user story or task should be tested.
+- Each programming user story or task should be tested and approved before
+the deliverable can be released.
 
 ## Interface Programming [2/6]
 
