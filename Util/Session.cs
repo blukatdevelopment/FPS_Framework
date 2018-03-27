@@ -15,17 +15,28 @@ public class Session : Node {
   private Node activeMenu;
   public Arena arena;
   public NetworkSession netSes;
+  public JukeBox jukeBox;
    
 
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    ShowMethods(typeof(AudioStreamPlayer));
+    //ShowMethods(typeof(AudioStreamPlayer));
     //ShowProperties(typeof(KinematicCollision));
+    Sound.PlaySong(Sound.Songs.FloatingHorizons);
+    
   }
   
   public void Quit(){
     GetTree().Quit();  
+  }
+  
+  public void InitJukeBox(){
+    if(jukeBox != null){
+      return;
+    }
+    jukeBox = (JukeBox)Instance("res://Scenes/JukeBox.tscn");
+    AddChild(jukeBox);
   }
   
   /* Convenience method for creating nodes. */

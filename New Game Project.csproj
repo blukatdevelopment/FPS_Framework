@@ -71,8 +71,10 @@
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\IUse.cs" />
     <Compile Include="Util\Arena.cs" />
+    <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
+    <Compile Include="Util\Sound.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
