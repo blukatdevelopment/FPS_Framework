@@ -65,11 +65,11 @@ One map should be designed with the following criteria.
 - At least 5 item spawnpoints placed in accessible positions
 
 
-## Sound engineering
+## DONE Sound engineering
 
-At least one song should be produced. DONE
+DONE At least one song should be produced.
 
-The following sfx should be produced
+DONE The following sfx should be produced
 - rifle shot
 - rifle reload
 - fist swing
@@ -255,7 +255,7 @@ which will initially contain a single health variable.
 Sound effects should be accessible via a static factory method using an 
 Sfxs enum.
 
-**Music Factory**
+**DONE Music Factory**
 Each song should be accessible via a static factory method using a Songs
 enum.
 
