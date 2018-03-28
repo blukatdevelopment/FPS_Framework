@@ -67,7 +67,7 @@ One map should be designed with the following criteria.
 
 ## Sound engineering
 
-At least one song should be produced.
+At least one song should be produced. DONE
 
 The following sfx should be produced
 - rifle shot

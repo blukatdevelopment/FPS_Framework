@@ -1,26 +1,26 @@
 using Godot;
 
 public class Sound {
-	public enum Effects{
+  public enum Effects{
     None,
-		RifleShot,
-		RifleReload,
-		FistSwing,
-		FistImpact,
-		ActorDamage,
+    RifleShot,
+    RifleReload,
+    FistSwing,
+    FistImpact,
+    ActorDamage,
     ActorDeath
-	};
+  };
 
-	public enum Songs{
-		None,
+  public enum Songs{
+    None,
     FloatingHorizons
-	};
+  };
 
-	public static void EffectFactory(Effects effect){
+  public static void EffectFactory(Effects effect){
     
-	}
+  }
 
-	public static string SongFile(Songs song){
+  public static string SongFile(Songs song){
     string ret = "";
     switch(song){
       case Songs.FloatingHorizons: 
@@ -28,7 +28,7 @@ public class Sound {
         break;
     }
     return ret;
-	}
+  }
   
   public static void PlaySong(Songs song){
     if(song == Songs.None){
