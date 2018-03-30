@@ -23,7 +23,7 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     //ShowMethods(typeof(AudioStreamPlayer));
     //ShowProperties(typeof(KinematicCollision));
-    Sound.PlaySong(Sound.Songs.FloatingHorizons);
+    //Sound.PlaySong(Sound.Songs.FloatingHorizons);
     
   }
   
@@ -69,6 +69,7 @@ public class Session : Node {
     arena = (Arena)arenaNode;
     arena.Init(true);
     AddChild(arenaNode);
+    ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
   }
 

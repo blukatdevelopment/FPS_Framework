@@ -34,7 +34,10 @@ public class Menu{
   public static Node MenuFactory(Menus menu){
     Node ret = null;
     switch(menu){
-      case Menus.None: return null; break;
+      case Menus.None: 
+        Sound.PauseSong();
+        return null; 
+        break;
       case Menus.HUD: HUDMenu(); break;
       case Menus.Pause: ret = PauseMenu(); break;
       case Menus.Main: ret = MainMenu(); break;

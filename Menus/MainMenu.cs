@@ -13,6 +13,7 @@ public class MainMenu : Container
       SetSinglePlayerButton((Godot.Button)Menu.Button(text : "Single Player", onClick: SinglePlayerGame));
       SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Multiplayer));
       SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
+      Sound.PlaySong(Sound.Songs.FloatingHorizons);
     }
     
     public void SetSinglePlayerButton(Godot.Button button){

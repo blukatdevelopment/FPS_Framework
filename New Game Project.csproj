@@ -75,6 +75,7 @@
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
     <Compile Include="Util\Sound.cs" />
+    <Compile Include="Util\Speaker.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
