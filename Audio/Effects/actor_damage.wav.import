@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/actor_damage.wav-722487b850a82c0d2cbdcbdbee045d2c.sample"
+
+[deps]
+
+source_file="res://Audio/Effects/actor_damage.wav"
+source_md5="a99db64dbe75b73a8c0a1a6d65df6a12"
+
+dest_files=[ "res://.import/actor_damage.wav-722487b850a82c0d2cbdcbdbee045d2c.sample" ]
+dest_md5="9450baf20d2cab6a73807df4354259e7"
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/swing.wav-c546ab33aa4ca12bc3adf20cc004d362.sample"
+
+[deps]
+
+source_file="res://Audio/Effects/swing.wav"
+source_md5="0efdff7f609f8c9e985547a4eb322cb4"
+
+dest_files=[ "res://.import/swing.wav-c546ab33aa4ca12bc3adf20cc004d362.sample" ]
+dest_md5="9e21b6ac0c0b2f98a8b5d9bac66d9b8b"
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

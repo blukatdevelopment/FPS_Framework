@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/chtcht.wav-b89fdf47242e5975d6c01197b9b8b894.sample"
+
+[deps]
+
+source_file="res://Audio/Effects/chtcht.wav"
+source_md5="246f0f937983019f9c2ba126f51f2720"
+
+dest_files=[ "res://.import/chtcht.wav-b89fdf47242e5975d6c01197b9b8b894.sample" ]
+dest_md5="1a1d2f43e202220d5fa5f589ad39838c"
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0
