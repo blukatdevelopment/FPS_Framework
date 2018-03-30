@@ -19,6 +19,8 @@ public class Actor : KinematicBody
   
   public bool menuActive = false;
   
+  public Speaker speaker;
+  
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
@@ -28,6 +30,8 @@ public class Actor : KinematicBody
     if(eyes != null){
       eyes.SetRotationDegrees(new Vector3(0, 0, 0));  
     }
+    speaker = Speaker.Instance();
+    AddChild(speaker);
   }
   
   public float GetMovementSpeed(){
@@ -90,6 +94,7 @@ public class Actor : KinematicBody
     float jumpForce = 10;
     gravityVelocity = jumpForce;
     grounded = false;
+    
   }
 
   

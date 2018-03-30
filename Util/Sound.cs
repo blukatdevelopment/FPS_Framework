@@ -30,6 +30,31 @@ public class Sound {
     return ret;
   }
   
+  public static string EffectFile(Effects effect){
+    string ret = "";
+    switch(effect){
+      case Effects.RifleShot:
+        ret = "res://Audio/Effects/pew.wav";
+        break;
+      case Effects.RifleReload:
+        ret = "res://Audio/Effects/chtcht.wav";
+        break;
+      case Effects.FistSwing:
+        ret = "res://Audio/Effects/swing.wav";
+        break;
+      case Effects.FistImpact:
+        ret = "res://Audio/Effects/impact.wav";
+        break;
+      case Effects.ActorDamage:
+        ret = "res://Audio/Effects/actor_damage.wav";
+        break;
+      case Effects.ActorDeath:
+        ret = "res://Audio/Effects/actor_die.wav";
+        break;
+    }
+    return ret;
+  }
+  
   public static void PlaySong(Songs song){
     if(song == Songs.None){
       return;

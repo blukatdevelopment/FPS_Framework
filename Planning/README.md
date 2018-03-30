@@ -251,13 +251,20 @@ with.
 Information about a specific attack will be contained within a Damage object, 
 which will initially contain a single health variable.
 
-**SFX factory**
+**DONE SFX factory**
 Sound effects should be accessible via a static factory method using an 
 Sfxs enum.
 
 **DONE Music Factory**
 Each song should be accessible via a static factory method using a Songs
 enum.
+
+**JukeBox**
+A pseudo-singleton JukeBox should be attached to the Session and accessible
+via static methods from Sound in order to play music.
+
+**Speaker**
+A class should exist for playing sound effects spatially.
 
 ## Gameplay Programming
 
