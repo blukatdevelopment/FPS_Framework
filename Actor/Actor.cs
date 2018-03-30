@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-public class Actor : KinematicBody
-{
+public class Actor : KinematicBody, IReceiveDamage {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -20,11 +19,16 @@ public class Actor : KinematicBody
   public bool menuActive = false;
   
   public Speaker speaker;
+
+  private int health;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
-      case Brains.Player1: brain = (Brain)new ActorInputHandler(this, eyes); break;
+      case Brains.Player1: 
+        brain = (Brain)new ActorInputHandler(this, eyes); 
+        Session.session.player = this;
+        break;
       case Brains.Ai: brain = (Brain)new Ai(this, eyes); break;
     }
     if(eyes != null){
@@ -32,6 +36,7 @@ public class Actor : KinematicBody
     }
     speaker = Speaker.Instance();
     AddChild(speaker);
+    health = 100;
   }
   
   public float GetMovementSpeed(){
@@ -97,6 +102,13 @@ public class Actor : KinematicBody
     
   }
 
+  public void ReceiveDamage(Damage damage){
+    health -= damage.health;
+  }
+
+  public int GetHealth(){
+    return health;
+  }
   
   public void Turn(float x, float y){
     if(debug){ GD.Print("Actor: Turning[" + x + "," + y + "]"); }

@@ -16,10 +16,6 @@ public class Sound {
     FloatingHorizons
   };
 
-  public static void EffectFactory(Effects effect){
-    
-  }
-
   public static string SongFile(Songs song){
     string ret = "";
     switch(song){

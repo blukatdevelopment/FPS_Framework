@@ -16,7 +16,8 @@ public class Session : Node {
   public Arena arena;
   public NetworkSession netSes;
   public JukeBox jukeBox;
-   
+  
+  public Actor player;
 
   public override void _Ready() {
     EnforceSingleton();

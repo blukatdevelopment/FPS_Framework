@@ -27,7 +27,7 @@ Target: Arena 0.0.1
 Version 0.0.1 is tasked with providing the most minimalistic playable arena
 gameplay possible.
 
-## Design
+##DONE Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
 
@@ -82,7 +82,7 @@ DONE The following sfx should be produced
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
 
-## Interface Programming [2/6]
+## Interface Programming
 
 **DONE Main Menu**
 Should allow user to choose a game mode or exit.
@@ -196,7 +196,7 @@ would make this check less verbose).
 - Item switching
 - Item Use
 
-## Core Programming
+##DONE Core Programming
 System architecture should strive for modularity and loose coupling to allow
 for clean development of custom functionality.
 
@@ -259,11 +259,11 @@ Sfxs enum.
 Each song should be accessible via a static factory method using a Songs
 enum.
 
-**JukeBox**
+**DONE JukeBox**
 A pseudo-singleton JukeBox should be attached to the Session and accessible
 via static methods from Sound in order to play music.
 
-**Speaker**
+**DONE Speaker**
 A class should exist for playing sound effects spatially.
 
 ## Gameplay Programming
