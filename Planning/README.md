@@ -40,16 +40,16 @@ other Actors in order to score points, picking up ammo spawned at spawnpoints.
 A game should last 5 minutes.
 
 
-## Art
+##DONE Art
 The following models should be produced. No textures are necessary.
 
 ** Actor **
-- Actor Body
-- Actor Hand
-- Rifle
-- Bullet
-- Ammo Pack
-- Health Pack
+- DONE Actor Body
+- DONE Actor Hand
+- DONE Rifle
+- DONE Bullet
+- DONE Ammo Pack
+- DONE Health Pack
 
 ** DONE Terrain**
 - Large platform
