@@ -86,8 +86,8 @@ public class ActorInputHandler : Brain {
       }
     }
   }
-  
-  
+
+
   private void Press(InputEvent evt){    
     switch(evt.button){
       case InputEvent.Buttons.Esc: 
@@ -98,6 +98,9 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.Tab: actor.SwitchItem(); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.sprinting = true; break;
+      case InputEvent.Buttons.M1: actor.Use(Item.Uses.A); break;
+      case InputEvent.Buttons.M2: actor.Use(Item.Uses.B); break;
+      case InputEvent.Buttons.M3: actor.Use(Item.Uses.C); break;
     }
   }
   

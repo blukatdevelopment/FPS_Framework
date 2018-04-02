@@ -22,10 +22,10 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    //ShowMethods(typeof(AudioStreamPlayer));
-    //ShowProperties(typeof(KinematicCollision));
+    //ShowMethods(typeof(Godot.Input));
+    //ShowProperties(typeof(Godot.Input));
     //Sound.PlaySong(Sound.Songs.FloatingHorizons);
-    
+    //Godot.GD.ButtonList.ButtonLeft
   }
   
   public void Quit(){

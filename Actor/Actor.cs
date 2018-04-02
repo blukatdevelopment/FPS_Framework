@@ -59,9 +59,13 @@ public class Actor : KinematicBody, IReceiveDamage {
     }
     if(eyes == null){ GD.Print("Actor's eyes are null!"); }
   }
+
+  /* Relays call to active item. */
+  public void Use(Item.Uses use){
+    GD.Print("Item used: " + use);
+  }  
     
-  public override void _Process(float delta)
-  {
+  public override void _Process(float delta){
       if(brain != null){ brain.Update(delta); }
       else{ GD.Print("Brain Null"); }
       Gravity(delta);
