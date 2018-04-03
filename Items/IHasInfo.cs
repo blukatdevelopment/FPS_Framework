@@ -1,0 +1,4 @@
+interface IHasInfo{
+  string GetInfo();
+
+}

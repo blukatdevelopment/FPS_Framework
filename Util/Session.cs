@@ -17,6 +17,7 @@ public class Session : Node {
   public NetworkSession netSes;
   public JukeBox jukeBox;
   
+  
   public Actor player;
 
   public override void _Ready() {

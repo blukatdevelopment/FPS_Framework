@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Actor : KinematicBody, IReceiveDamage, IHasItem {
+public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -22,6 +22,10 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem {
 
   private int health;
   
+  // Inventory
+  private Item activeItem;
+  private int unarmed; // True->Hand, False->Rifle
+  
   public void Init(Brains b = Brains.Player1){
     InitChildren();
     switch(b){
@@ -37,6 +41,14 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem {
     speaker = Speaker.Instance();
     AddChild(speaker);
     health = 100;
+  }
+  
+  public string GetInfo(){
+    return "Actor";  
+  }
+  
+  public string GetMoreInfo(){
+    return "A character in this game.";
   }
   
   public void SetSprint(bool val){
