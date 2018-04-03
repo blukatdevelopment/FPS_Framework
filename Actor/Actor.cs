@@ -40,7 +40,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem {
   }
   
   public void SetSprint(bool val){
-    sprint = val;
+    sprinting = val;
   }
   
   public float GetMovementSpeed(){
@@ -142,15 +142,15 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem {
     
   }
   
-  public bool HasItem(){
+  public bool HasItem(string item){
     return false;
   }
   
-  public ItemInfo(){
+  public string ItemInfo(){
     return "Unequipped";
   }
   
-  public ReceiveItem(Item item){
+  public int ReceiveItem(Item item){
     return 0;
   }
   
