@@ -39,6 +39,10 @@ public class Actor : KinematicBody, IReceiveDamage {
     health = 100;
   }
   
+  public void SetSprint(bool val){
+    sprint = val;
+  }
+  
   public float GetMovementSpeed(){
     float speed = 5f;
     if(sprinting){
