@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Healthpack.obj-2657f1dcb07967e767859768c163f2d6.mesh"
+
+[deps]
+
+files=[ "res://.import/Healthpack.obj-2657f1dcb07967e767859768c163f2d6.mesh" ]
+
+source_file="res://Models/Healthpack.obj"
+source_md5="1c10b13cf578162cee97432ca14f8b5c"
+
+dest_files=[ "res://.import/Healthpack.obj-2657f1dcb07967e767859768c163f2d6.mesh", "res://.import/Healthpack.obj-2657f1dcb07967e767859768c163f2d6.mesh" ]
+dest_md5="4abbd0833d9f75218c6b248b7fb5b9a0"
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
