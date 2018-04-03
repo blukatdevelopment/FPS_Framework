@@ -70,6 +70,7 @@
     <Compile Include="Items\IReceiveDamage.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\IUse.cs" />
+    <Compile Include="Items\IHasItem.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />

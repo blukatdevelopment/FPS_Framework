@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class Actor : KinematicBody, IReceiveDamage {
+public class Actor : KinematicBody, IReceiveDamage, IHasItem {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -140,6 +140,18 @@ public class Actor : KinematicBody, IReceiveDamage {
     if(debug){ GD.Print("Actor: Set pos to " + pos); }
     SetTranslation(pos);
     
+  }
+  
+  public bool HasItem(){
+    return false;
+  }
+  
+  public ItemInfo(){
+    return "Unequipped";
+  }
+  
+  public ReceiveItem(Item item){
+    return 0;
   }
   
   public void Pause(){
