@@ -24,9 +24,8 @@ public class Session : Node {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     //ShowMethods(typeof(Godot.Input));
-    //ShowProperties(typeof(Godot.Input));
-    //Sound.PlaySong(Sound.Songs.FloatingHorizons);
-    //Godot.GD.ButtonList.ButtonLeft
+    //ShowProperties(typeof(Godot.RigidBody));
+    //ShowVariables(typeof(Godot.RigidBody));
   }
   
   public void Quit(){
@@ -105,7 +104,7 @@ public class Session : Node {
   // Lacks real C# documentation
   public static void ShowProperties(Type type){
     foreach(PropertyInfo prop in type.GetProperties()){
-      GD.Print(prop.Name);
+      GD.Print(prop.Name + " : " + prop.PropertyType );
     }
   }
   
@@ -118,6 +117,7 @@ public class Session : Node {
 
     foreach (FieldInfo field in type.GetFields(bindingFlags)) {
         GD.Print(field.Name);
+        System.Threading.Thread.Sleep(100);
     }
   }
 }

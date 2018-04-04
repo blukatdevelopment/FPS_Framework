@@ -29,6 +29,10 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   private int ammo = 0;
   private List<Item> items;
   
+  // Handpos
+  private float HandPosX = 0;
+  private float HandPosY = 0;
+  private float HandPosZ = -1;
   
   public void Init(Brains b = Brains.Player1){
     
@@ -95,7 +99,13 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
       return;
     }
     StashItem();
-    GD.Print("Equipping" + items[index].GetInfo() );
+    Item item = items[index];
+    if(eyes == null){
+      return;
+    }
+    eyes.AddChild(item);
+    item.Mode = RigidBody.ModeEnum.Static;
+    item.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
   }
   
   /* Removes activeItem from hands. */

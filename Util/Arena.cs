@@ -22,12 +22,18 @@ public class Arena : Node {
     terrain = (Spatial)instance;
   }
   
+  public Item SpawnItem(Item.Types type, Vector3 pos){
+    Item item = Item.Factory(type);
+    item.Translation = pos;
+    AddChild(item);
+    return item;
+  }
+  
   public Actor SpawnActor(Vector3 pos, Actor.Brains brain = Actor.Brains.Player1){
     Actor actor = Actor.ActorFactory(brain);
     actors.Add(actor);
     actor.SetPos(pos);
     AddChild((Node)actor);
-    
     return actor;
   }
   
