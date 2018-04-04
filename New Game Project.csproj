@@ -72,6 +72,9 @@
     <Compile Include="Items\IUse.cs" />
     <Compile Include="Items\IHasItem.cs" />
     <Compile Include="Items\IHasInfo.cs" />
+    <Compile Include="Items\IWeapon.cs" />
+    <Compile Include="Items\MeleeWeapon.cs" />
+    <Compile Include="Items\ProjectileWeapon.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />

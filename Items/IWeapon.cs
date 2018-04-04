@@ -1,0 +1,3 @@
+interface IWeapon{
+  int GetBaseDamage();
+}

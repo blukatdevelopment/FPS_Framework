@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   
@@ -24,9 +25,13 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   
   // Inventory
   private Item activeItem;
-  private int unarmed; // True->Hand, False->Rifle
+  private bool unarmed = true; // True->Hand, False->Rifle
+  private int ammo = 0;
+  private List<Item> items;
+  
   
   public void Init(Brains b = Brains.Player1){
+    
     InitChildren();
     switch(b){
       case Brains.Player1: 
@@ -41,6 +46,14 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
     speaker = Speaker.Instance();
     AddChild(speaker);
     health = 100;
+    InitInventory();
+  }
+  
+  void InitInventory(){
+    items = new List<Item>();
+    ReceiveItem(Item.Factory(Item.Types.Hand));
+    ReceiveItem(Item.Factory(Item.Types.Rifle));
+    EquipItem(0);
   }
   
   public string GetInfo(){
@@ -65,6 +78,34 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   
   public void SwitchItem(){
     if(debug){ GD.Print("Actor: Switched Item"); }
+    unarmed = !unarmed;
+    if(unarmed){
+      EquipItem(0);
+    }
+    else{
+      EquipItem(1);
+    }
+    
+  }
+  
+  /* Equip item based on index in items. */
+  public void EquipItem(int index){
+    if(index >= items.Count){
+      GD.Print("Invalid index " + index);
+      return;
+    }
+    StashItem();
+    GD.Print("Equipping" + items[index].GetInfo() );
+  }
+  
+  /* Removes activeItem from hands. */
+  public void StashItem(){
+    if(activeItem == null){
+      return;
+    }
+    Node node = (Node)activeItem;
+    this.RemoveChild(node);
+    activeItem = null;
   }
   
   protected void InitChildren(){
@@ -163,6 +204,10 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   }
   
   public int ReceiveItem(Item item){
+    if(items.Count < 2){
+      items.Add(item);
+    }
+    
     return 0;
   }
   
