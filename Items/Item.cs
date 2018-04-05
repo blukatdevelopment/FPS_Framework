@@ -18,7 +18,8 @@ public class Item : RigidBody, IHasInfo, IUse {
   public enum Types{
     None,
     Hand,
-    Rifle
+    Rifle,
+    Bullet
   };
   
   
@@ -103,10 +104,10 @@ public class Item : RigidBody, IHasInfo, IUse {
       case Types.Rifle: 
         ret.BaseInit("Rifle", "There are many like it, but this one is yours.");
         break;
+      case Types.Bullet:
+        ret.BaseInit("Bullet", "Comes out one end of the rifle. Be sure to know which.");
+      break;
     }
-    
-    
-    
     
     return ret;
   }
@@ -117,6 +118,7 @@ public class Item : RigidBody, IHasInfo, IUse {
     switch(type){
       case Types.Hand: ret = "res://Scenes/Prefabs/Items/Hand.tscn"; break;
       case Types.Rifle: ret = "res://Scenes/Prefabs/Items/Rifle.tscn"; break;
+      case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
     }
     
     return ret;

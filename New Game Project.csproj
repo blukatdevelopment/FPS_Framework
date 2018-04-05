@@ -75,6 +75,7 @@
     <Compile Include="Items\IWeapon.cs" />
     <Compile Include="Items\MeleeWeapon.cs" />
     <Compile Include="Items\ProjectileWeapon.cs" />
+    <Compile Include="Items\Projectile.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />

@@ -136,7 +136,11 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
 
   /* Relays call to active item. */
   public void Use(Item.Uses use){
-    GD.Print("Item used: " + use);
+    if(activeItem == null){
+      GD.Print("No item equipped.");
+      return;
+    }
+    activeItem.Use(use);
   }  
     
   public override void _Process(float delta){

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class MeleeWeapon : Item, IWeapon {
+public class MeleeWeapon : Item, IUse, IWeapon {
   
   const int HealthDamage = 10;
   

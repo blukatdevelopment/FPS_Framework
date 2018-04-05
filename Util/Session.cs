@@ -58,6 +58,13 @@ public class Session : Node {
     }
   }
   
+  public static Node GameNode(){
+    if(Session.session.arena != null){
+      return Session.session.arena;
+    }
+    return Session.session;
+  }
+  
   public void QuitToMainMenu(){
     ClearGame();
     ChangeMenu(Menu.Menus.Main);
