@@ -3,14 +3,14 @@ using System;
 
 public class MeleeWeapon : Item, IWeapon {
   
-  const int Damage = 10;
+  const int HealthDamage = 10;
   
   public void Init(){
     
   }
   
-  public int GetBaseDamage(){
-    return Damage;
+  public Damage GetBaseDamage(){
+    return new Damage(HealthDamage);
   }
   
   public override void Use(Item.Uses use){

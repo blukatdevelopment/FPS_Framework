@@ -3,14 +3,14 @@ using System;
 
 public class ProjectileWeapon : Item, IWeapon {
   
-  const int Damage = 10;
+  const int BaseDamage = 10;
   
   public void Init(){
     
   }
   
-  public int GetBaseDamage(){
-    return Damage;
+  public Damage GetBaseDamage(){
+    return new Damage(BaseDamage);
   }
   
   public override void Use(Item.Uses use){

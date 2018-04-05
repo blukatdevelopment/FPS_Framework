@@ -28,23 +28,36 @@ public class Item : RigidBody, IHasInfo, IUse {
   public int quantity;
   public int quantityMax;
   public Godot.CollisionShape collider;
+  private bool collisionDisabled = true;
   
-  public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1){
+  public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.quantity = quantity;
     this.quantityMax = quantityMax;
-    SetCollision(false);
+    
+    SetCollision(allowCollision);
+    this.Connect("body_entered", this, "OnCollide");
+    
   }
+  
   
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
+    collisionDisabled = !val;
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
       if(cs != null){
         cs.Disabled = !val;
       }
+    }
+    ContactMonitor = val;
+    if(val){
+      ContactsReported = 1;
+    }
+    else{
+      ContactsReported = 0;
     }
   }
   
@@ -60,6 +73,20 @@ public class Item : RigidBody, IHasInfo, IUse {
     return description;
   }
   
+  /*
+  public override void _Process(float delta){
+    if(!collisionDisabled){
+      object[] collidingBodies = GetCollidingBodies();
+      if(collidingBodies.Length > 0){
+        OnCollide();
+      }
+    }
+  }
+  */
+  
+  public virtual void OnCollide(Godot.Object body){
+    GD.Print(name + "Colliding!");
+  }
   
   /* Returns a base/simple item by it's name. */
   public static Item Factory(Types type){

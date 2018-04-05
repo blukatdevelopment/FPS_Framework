@@ -1,3 +1,3 @@
 interface IWeapon{
-  int GetBaseDamage();
+  Damage GetBaseDamage();
 }

@@ -23,7 +23,7 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    //ShowMethods(typeof(Godot.Input));
+    //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
