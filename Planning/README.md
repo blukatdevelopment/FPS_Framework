@@ -275,7 +275,7 @@ FPS mouse and keyboard controls.
 - DONE Mouse aiming/turning
 - Left Mouse to punch or shoot rifle
 - R to reload rifle
-- Tab to switch between rifle and hand.
+- DONE Tab to switch between rifle and hand.
 - DONE Escape to bring open or close pause menu, toggling gameplay input handling.
 
 **Equipment**
@@ -332,7 +332,7 @@ and update velocity with gravity.
 Upon colliding, it should check if it collided with an actor, and if so, cause
 them to ReceiveDamage. At this point the projectile should free itself.
 
-**Ranged Weapon**
+**Projectile Weapon**
 A ranged weapon should have a reserve of ammo that is depleted by firing 
 projectiles and replenished by requesting ammo from its holder during a reload.
 

@@ -35,10 +35,8 @@ public class Item : RigidBody, IHasInfo, IUse {
     this.description = description;
     this.quantity = quantity;
     this.quantityMax = quantityMax;
-    
-    SetCollision(allowCollision);
     this.Connect("body_entered", this, "OnCollide");
-    
+    SetCollision(allowCollision);
   }
   
   

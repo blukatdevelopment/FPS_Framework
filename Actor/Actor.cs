@@ -106,15 +106,22 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
     eyes.AddChild(item);
     item.Mode = RigidBody.ModeEnum.Static;
     item.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
+    activeItem = item;
   }
   
   /* Removes activeItem from hands. */
   public void StashItem(){
     if(activeItem == null){
+      GD.Print("No activeitem");
       return;
     }
-    Node node = (Node)activeItem;
-    this.RemoveChild(node);
+    if(activeItem.GetParent() == null){
+      GD.Print("activeItem is orphan");
+      return;
+    }
+    
+    eyes.RemoveChild(activeItem);
+    
     activeItem = null;
   }
   
