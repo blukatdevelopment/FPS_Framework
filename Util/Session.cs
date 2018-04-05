@@ -24,7 +24,7 @@ public class Session : Node {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
     //ShowMethods(typeof(Godot.Input));
-    //ShowProperties(typeof(Godot.RigidBody));
+    //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
   

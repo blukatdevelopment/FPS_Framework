@@ -281,7 +281,6 @@ FPS mouse and keyboard controls.
 **Equipment**
 Every Actor should spawn with a hand and a rifle. The rifle should equip upon 
 init. 
-**TODO Disable collision on held items.**
 
 When an item is equipped, its scene should be loaded in the actor's hand
 position. An actor's input handler should direct certain inputs to the equipped
