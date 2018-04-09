@@ -32,7 +32,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   // Handpos
   private float HandPosX = 0;
   private float HandPosY = 0;
-  private float HandPosZ = -1;
+  private float HandPosZ = -1.5f;
   
   public void Init(Brains b = Brains.Player1){
     

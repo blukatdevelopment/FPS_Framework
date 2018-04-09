@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Arena : Node {
+public class Arena : Spatial {
   bool singlePlayer;
   List<Actor> actors;
   Spatial terrain;
@@ -11,6 +11,7 @@ public class Arena : Node {
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     InitTerrain();
+    SpawnItem(Item.Types.Rifle, new Vector3(0, 5, 0));
     SpawnActor(new Vector3(0, 5, 0));
     SpawnActor(new Vector3(0, 5, 5), Actor.Brains.Ai);
   }

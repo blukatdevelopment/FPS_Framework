@@ -40,7 +40,18 @@ public class Item : RigidBody, IHasInfo, IUse {
     SetCollision(allowCollision);
   }
   
-  
+  /*
+  public void SetTriggerMode(bool val){
+    object[] owners = GetShapeOwners();
+    foreach(object owner in owners){
+      int ownerInt = (int)owner;
+      CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
+      if(cs != null){
+        cs.
+      }
+    }
+  }
+  */
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
     collisionDisabled = !val;
@@ -53,7 +64,7 @@ public class Item : RigidBody, IHasInfo, IUse {
     }
     ContactMonitor = val;
     if(val){
-      ContactsReported = 1;
+      ContactsReported = 10;
     }
     else{
       ContactsReported = 0;
@@ -72,19 +83,25 @@ public class Item : RigidBody, IHasInfo, IUse {
     return description;
   }
   
+  
   /*
   public override void _Process(float delta){
     if(!collisionDisabled){
       object[] collidingBodies = GetCollidingBodies();
       if(collidingBodies.Length > 0){
-        OnCollide();
+        foreach(object body in collidingBodies){
+          PhysicsBody pb = body as PhysicsBody;
+          if(pb != null){
+            OnCollide(pb);
+          }
+        }
       }
     }
   }
   */
   
-  public virtual void OnCollide(Godot.Object body){
-    GD.Print(name + "Colliding!");
+  public virtual void OnCollide(object body){
+    GD.Print(name + " Colliding with " + body);
   }
   
   /* Returns a base/simple item by it's name. */

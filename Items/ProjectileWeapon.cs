@@ -21,8 +21,15 @@ public class ProjectileWeapon : Item, IUse, IWeapon {
     }
   }
   
+  /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
+    GD.Print("Fire");
     Item projectile = Item.Factory(Item.Types.Bullet);
-    
+    Vector3 globalPosition = this.ToGlobal(this.Translation);
+    Spatial gameNode = (Spatial)Session.GameNode();
+    Vector3 gamePosition = gameNode.ToLocal(globalPosition);
+    projectile.Translation = gamePosition;
+    gameNode.AddChild(projectile);
+    projectile.ApplyImpulse(new Vector3(0, 0, 0), new Vector3(0, 10, 0));
   }
 }
