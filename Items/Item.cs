@@ -38,6 +38,24 @@ public class Item : RigidBody, IHasInfo, IUse {
     this.quantityMax = quantityMax;
     this.Connect("body_entered", this, "OnCollide");
     SetCollision(allowCollision);
+    InitArea();
+  }
+  
+  void InitArea(){
+    List<CollisionShape> shapes = GetCollisionShapes();
+    Area area = new Area();
+    CollisionShape areaShape = new CollisionShape();
+    area.AddChild(areaShape);
+    object[] areaShapeOwners = area.GetShapeOwners();
+    for(int i = 0; i < areaShapeOwners.Length; i++){
+      int ownerInt = (int)areaShapeOwners[i];
+      for(int j = 0; j < shapes.Count; j++){
+        area.ShapeOwnerAddShape(ownerInt, shapes[i].Shape);
+        GD.Print("Adding shape" + j + " to owner " + i);
+      }
+    }
+    area.Connect("body_entered", this, "OnCollide");
+    AddChild(area);
   }
   
   /*
@@ -52,6 +70,20 @@ public class Item : RigidBody, IHasInfo, IUse {
     }
   }
   */
+  
+  List<CollisionShape> GetCollisionShapes(){
+    List<CollisionShape> shapes = new List<CollisionShape>();
+    object[] owners = GetShapeOwners();
+    foreach(object owner in owners){
+      int ownerInt = (int)owner;
+      CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
+      if(cs != null){
+        shapes.Add(cs);
+      }
+    }
+    return shapes;
+  }
+  
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
     collisionDisabled = !val;
