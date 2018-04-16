@@ -186,6 +186,9 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
 
   public void ReceiveDamage(Damage damage){
     health -= damage.health;
+    if(health < 0){
+      health = 0;
+    }
   }
 
   public int GetHealth(){

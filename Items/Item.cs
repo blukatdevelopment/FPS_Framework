@@ -51,7 +51,7 @@ public class Item : RigidBody, IHasInfo, IUse {
       int ownerInt = (int)areaShapeOwners[i];
       for(int j = 0; j < shapes.Count; j++){
         area.ShapeOwnerAddShape(ownerInt, shapes[i].Shape);
-        GD.Print("Adding shape" + j + " to owner " + i);
+        //GD.Print("Adding shape" + j + " to owner " + i);
       }
     }
     area.Connect("body_entered", this, "OnCollide");
@@ -132,9 +132,7 @@ public class Item : RigidBody, IHasInfo, IUse {
   }
   */
   
-  public virtual void OnCollide(object body){
-    GD.Print(name + " Colliding with " + body);
-  }
+  public virtual void OnCollide(object body){}
   
   /* Returns a base/simple item by it's name. */
   public static Item Factory(Types type){
