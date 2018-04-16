@@ -1,34 +1,34 @@
-This file contains info that is subjective in nature and concerns
-game design more than coherent software requirements.
+This file contains ideas that simply don't fit within the current scope of
+development. This file serves to collect ideas to consider when the current ones
+are implemented and the project is ready to grow.
 
 
 
 **********************************************************************
-        Far-Out Features
+        Features
 **********************************************************************
 
 
 **Kingdom**
 Port in the Kingdom card game as a minigame.
 
-**Crafting**
+## Crafting
 Create menu for turning ingrient items into product items.
 
-**Building**
+## Building
 Allow Actors to convert collected resources into placeable structures.
+
+## Quests
+Allow starting and completing quests.
+
+
+## NPC interactions
 
 **Dialogue system**
 Allow players to traverse speech trees with NPCs with optional voiceovers.
 
 **NPC trading**
 Allow dialogue options to trigger trading menu.
-
-**NPC Quests**
-Allow dialogue options to trigger and (after completion) issue rewards.
-
-**Hunger/Thirst**
-Require food/water to survive. Possible add auto-consume option with "You have
-X days worth of supplies left" warnings to keep this from being tedious.
 
 **Followers**
 Allow player to have a couple NPC followers that maintain a distance from the
@@ -38,6 +38,11 @@ player, assist in combat, and help carry items.
 Allow player to command a set of NPC squad leaders that each have minions.
 Orders would include Move, Attack, Change Rules of Engagement, and Change Pace.
 
+## Survival elements
+**Hunger/Thirst**
+Require food/water to survive. Possible add auto-consume option with "You have
+X days worth of supplies left" warnings to keep this from being tedious.
+
 **Generate map**
 Generate a 2D map of the world's terrain so that places that are not loaded 
 can still be viewed in detail.
@@ -45,9 +50,57 @@ can still be viewed in detail.
 **Command map**
 Use 2D map to set navpoints and view a squad's calculated path.
 
-**Vehicles**
-A vehicle would store an actor(possibly exposing their body to harm), offer
-storage for items, and have some fancy physics to it. 
+## Vehicles
+A vehicle allows faster travel in order to avoid walking on foot. Additionally,
+vehicles can provide armor or movement for the purpose of combat. Vehicles hold
+Actors and items in seats and cargo containers.
+
+**Mounted Animal**
+A horse or similar animal would move similarly to an actor, albeit faster and
+capable of climbing greater slopes.
+
+**Automobile**
+A wheeled vehicle that moved quickly on smooth roads are more slowly along
+grass and sand depending on the tires and suspension. Must be refueled with oil
+often.
+
+**Armored vehicle**
+Either a tank or armored personnel carrier, the common thread is armor covering
+a vehicle with a heavier frame that is intended to withstand small arms fire.
+A tank features heavy weaponry whilst an armored personnel carrier focuses on
+speed and the delivery of passengers. 
+
+**Airship**
+Slow and held in the air by arcane technology, airships are essentially floating
+fortresses capable of hauling large cargos. This is often utilized either in
+military or trade contexts. Airships are vulnerable in both their power sources
+and their propulsion systems, which are needed to keep them in the air. Due to a
+lack of gliding, airships will undergo freefall if their propulsion is disabled
+and cannot land gracefully in emergencies. The same tech that keeps airships 
+in flight is often used to produce force fields and shields. 
+
+**Gravjet**
+A gravjet applies the arcane propulsion of Airships to a small, aerodynamic
+chassis. Speed and maneuverability trump capacity, meaning that gravjets can
+be kept in the air with significantly less mana than their bulkier counterparts.
+In addition to the breakneck pace of the arcane propulsion systems, a gravity
+stabilization field inside the cockpit allows the vehicle to pull maneuvers that
+would otherwise create fatal G-forces for conventional aircraft. Gravjets can
+hover, stop on a dime, and make 90 degree angles without harming the pilot nor
+vehicle. 
+
+**Airplane**
+Using a mechanical propeller, airplanes stay airborne often by oil-derrived
+fuel. Kinetic, incindiary, and explosive weapons are often used. Airplanes are
+among the slowest aircraft. They often fall into either fighter, bomber, or 
+transport configurations.
+
+**Jetplanes**
+Jets are propelled by jet engines, allowing them to move at speeds rivaling 
+gravjets. Due to their speed and maximum elevation relative to airplanes, jets
+rest at the apex of oil-driven aircraft. 
+
+
 
 
 **********************Conservation of resources*********************************
@@ -149,10 +202,10 @@ system can offer a geometric improvement in novelty over linear storytelling.
 ** Roadmapping**
 
 FPS lite-
-Basic fps movement, inventory, and combat.
+Primitive fps movement and combat in arena.
 
 FPS polish-
-Ragdoll, animations, static arena gamemode.
+Ragdoll, animations, multi-stage arena.
 
 
 Procedural level design-
