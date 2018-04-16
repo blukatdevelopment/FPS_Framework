@@ -19,13 +19,14 @@ public class ProjectileWeapon : Item, IUse, IWeapon {
     switch(use){
       case Uses.A: Fire(); break;
       case Uses.B: GD.Print("Aim"); break;
-      case Uses.D: GD.Print("Reload"); break;
+      case Uses.D: Reload(); break;
     }
   }
   
   /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
     GD.Print("Fire");
+    speaker.PlayEffect(Sound.Effects.RifleShot);
     Item projectile = Item.Factory(Item.Types.Bullet);
     
     Vector3 projectilePosition = ProjectilePosition();
@@ -44,6 +45,11 @@ public class ProjectileWeapon : Item, IUse, IWeapon {
     impulse *= impulse;
     
     projectile.ApplyImpulse(new Vector3(0, 0, 0), impulse);
+  }
+  
+  private void Reload(){
+    GD.Print("Reload");
+    speaker.PlayEffect(Sound.Effects.RifleReload);
   }
   
   private Vector3 ProjectilePosition(){

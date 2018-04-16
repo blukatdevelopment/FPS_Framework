@@ -5,7 +5,7 @@ public class Projectile : Item {
   int healthDamage = 50;
   
   public override void OnCollide(object body){
-    IReceiveDamage receiver = (IReceiveDamage)body;
+    IReceiveDamage receiver = body as IReceiveDamage;
     if(receiver != null){
       GiveDamage(receiver);
     }

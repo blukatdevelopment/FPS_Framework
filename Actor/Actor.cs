@@ -185,9 +185,14 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   }
 
   public void ReceiveDamage(Damage damage){
+    
     health -= damage.health;
+    if(damage.health > 0 && health > 0){
+      speaker.PlayEffect(Sound.Effects.ActorDamage);
+    }
     if(health < 0){
       health = 0;
+      speaker.PlayEffect(Sound.Effects.ActorDeath);
     }
   }
 

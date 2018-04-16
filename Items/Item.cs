@@ -30,6 +30,7 @@ public class Item : RigidBody, IHasInfo, IUse {
   public int quantityMax;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
+  protected Speaker speaker;
   
   public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
@@ -39,6 +40,8 @@ public class Item : RigidBody, IHasInfo, IUse {
     this.Connect("body_entered", this, "OnCollide");
     SetCollision(allowCollision);
     InitArea();
+    speaker = Speaker.Instance();
+    AddChild(speaker);
   }
   
   void InitArea(){
