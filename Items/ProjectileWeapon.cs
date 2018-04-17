@@ -4,8 +4,8 @@ using System;
 public class ProjectileWeapon : Item, IUse, IWeapon {
   
   const int BaseDamage = 10;
-  const float ProjectileOffset = 3f;
-  const float ImpulseStrength = 10f;
+  const float ProjectileOffset = 0.1f;
+  const float ImpulseStrength = 50f;
   
   public void Init(){
     
@@ -34,17 +34,16 @@ public class ProjectileWeapon : Item, IUse, IWeapon {
     
     Spatial gameNode = (Spatial)Session.GameNode();
     
+    
     Vector3 gamePosition = gameNode.ToLocal(globalPosition);
     projectile.Translation = gamePosition;
     gameNode.AddChild(projectile);
 
-      
-    Vector3 impulse = -this.Transform.basis.z;
-    
-    // TODO: Find a better way to increase magnitude (Multiplying by a scalar doesn't work)
-    impulse *= impulse;
-    
-    projectile.ApplyImpulse(new Vector3(0, 0, 0), impulse);
+    Transform start = this.GetGlobalTransform();
+    Transform destination = start;
+    destination.Translated(new Vector3(0, 0, 1));
+    Vector3 impulse = start.origin - destination.origin;
+    projectile.SetAxisVelocity(impulse * ImpulseStrength);
   }
   
   private void Reload(){
