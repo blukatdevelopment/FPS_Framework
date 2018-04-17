@@ -35,7 +35,7 @@ public class HUDMenu : Container{
     string healthText = "Health: " + player.GetHealth();
     healthBox.SetText(healthText);
 
-    string itemText = "Item: None";
+    string itemText = player.ItemInfo();
     itemBox.SetText(itemText);
 
   }

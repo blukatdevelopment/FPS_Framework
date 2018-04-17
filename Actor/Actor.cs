@@ -229,6 +229,9 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   }
   
   public string ItemInfo(){
+    if(activeItem != null){
+      return activeItem.GetInfo();
+    }
     return "Unequipped";
   }
   
