@@ -106,7 +106,7 @@ public class Item : RigidBody, IHasInfo, IUse {
     }
   }
   
-  public virtual void Use(Uses use){
+  public virtual void Use(Uses use, bool released = false){
     GD.Print("Item used " + use);
   }
   

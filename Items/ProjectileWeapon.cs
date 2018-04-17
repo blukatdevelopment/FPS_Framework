@@ -14,6 +14,11 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
     
   }
   
+  public override string GetInfo(){
+    string ret = name + "[" + ammo + "/" + maxAmmo + "]";
+    return ret; 
+  }
+  
   public Damage GetBaseDamage(){
     return new Damage(BaseDamage);
   }
@@ -61,7 +66,7 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
     
   }
   
-  public override void Use(Item.Uses use){
+  public override void Use(Item.Uses use, bool released = false){
     switch(use){
       case Uses.A: Fire(); break;
       case Uses.B: GD.Print("Aim"); break;
@@ -71,7 +76,10 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   
   /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
-    GD.Print("Fire");
+    if(ammo < 1){
+      return;
+    }
+    ammo--;
     speaker.PlayEffect(Sound.Effects.RifleShot);
     Item projectile = Item.Factory(Item.Types.Bullet);
     

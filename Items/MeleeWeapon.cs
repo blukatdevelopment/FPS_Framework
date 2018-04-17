@@ -13,7 +13,7 @@ public class MeleeWeapon : Item, IUse, IWeapon {
     return new Damage(HealthDamage);
   }
   
-  public override void Use(Item.Uses use){
+  public override void Use(Item.Uses use, bool released = false){
     switch(use){
       case Uses.A: Swing(); break;
       case Uses.B: GD.Print("Guard"); break;

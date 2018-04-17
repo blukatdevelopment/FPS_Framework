@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
+public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -26,7 +26,9 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   // Inventory
   private Item activeItem;
   private bool unarmed = true; // True->Hand, False->Rifle
-  private int ammo = 0;
+  private string ammoType = "bullet";
+  private int ammo = 100;
+  private int maxAmmo = 100;
   private List<Item> items;
   
   // Handpos
@@ -58,6 +60,41 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
     ReceiveItem(Item.Factory(Item.Types.Hand));
     ReceiveItem(Item.Factory(Item.Types.Rifle));
     EquipItem(0);
+  }
+  
+  /* Show up to max ammo */
+  public int CheckAmmo(string ammoType, int max){
+    if(this.ammoType != ammoType){
+      return 0;
+    }
+    if(max > ammo){
+      return ammo;
+    }
+    return max;
+  }
+  
+  /* Return up to max ammo, removing that ammo from inventory. */
+  public int RequestAmmo(string ammoType, int max){
+    int amount = CheckAmmo(ammoType, max);
+    ammo -= amount;
+    return amount;
+  }
+  
+  /* Store up to max ammo, returning overflow. */
+  public int StoreAmmo(string ammoType, int max){
+    if(ammoType != this.ammoType){
+      return max;
+    }
+    int amount = max + ammo;
+    if(maxAmmo < amount){
+      ammo = maxAmmo;
+      amount -= ammo;
+    }
+    else{
+      ammo += amount;
+      amount = 0;
+    }
+    return amount;
   }
   
   public string GetInfo(){
@@ -135,7 +172,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo {
   }
 
   /* Relays call to active item. */
-  public void Use(Item.Uses use){
+  public void Use(Item.Uses use, bool released = false){
     if(activeItem == null){
       GD.Print("No item equipped.");
       return;

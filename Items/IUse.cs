@@ -1,5 +1,5 @@
 interface IUse {
 
-	void Use(Item.Uses use);
+	void Use(Item.Uses use, bool released = false);
 
 }
