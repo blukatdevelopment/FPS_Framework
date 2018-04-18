@@ -10,8 +10,24 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   int ammo = 10;
   int maxAmmo = 10;
   
+  float busyDelay = 0f;
+  bool busy = false;
+  delegate void OnBusyEnd();
+  OnBusyEnd busyEndHandler;
+  
   public void Init(){
     
+  }
+  
+  public override void _Process(float delta){
+    if(busy){
+      busyDelay -= delta;
+      if(busyDelay <= 0f){
+        busy = false;
+        busyDelay = 0f;
+        busyEndHandler();
+      }
+    }  
   }
   
   public override string GetInfo(){
@@ -53,24 +69,33 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   
   /* Store up to max ammo, returning overflow. */
   public int StoreAmmo(string ammoType, int max){
-    if(ammoType != this.ammoType){
+    if(ammoType != this.ammoType || busy){
       return max;
     }
     
     int amount = max + ammo;
     
     if(maxAmmo <= amount){
-      ammo = maxAmmo;
-      amount -= ammo;
+      StartReload(maxAmmo);
+      amount -= maxAmmo;
     }
     else{
-      ammo += amount;
+      int fullAmmo = ammo + amount;
+      StartReload(fullAmmo);
       amount = 0;
     }
     
     return amount;
   }
   
+  void StartReload(int finalAmmo){
+    busy = true;
+    busyDelay = 2f;
+    OnBusyEnd loadAmmo = () => { 
+      ammo = finalAmmo; 
+    };
+    busyEndHandler = loadAmmo;
+  }
   
   public override void Use(Item.Uses use, bool released = false){
     switch(use){

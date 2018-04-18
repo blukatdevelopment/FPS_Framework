@@ -9,12 +9,12 @@ public class Projectile : Item {
     if(receiver != null){
       GiveDamage(receiver);
     }
+    this.QueueFree();
   }
   
   void GiveDamage(IReceiveDamage receiver){
     Damage damage = new Damage();
     damage.health = healthDamage;
     receiver.ReceiveDamage(damage);
-    this.QueueFree();
   }
 }

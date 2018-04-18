@@ -273,27 +273,26 @@ The core gameplay should consist of controlling an Actor using conventional
 FPS mouse and keyboard controls.
 - DONE WASD movement 
 - DONE Mouse aiming/turning
-- Left Mouse to punch or shoot rifle
-- R to reload rifle
+- DONE Left Mouse to punch or shoot rifle
+- DONE R to reload rifle
 - DONE Tab to switch between rifle and hand.
 - DONE Escape to bring open or close pause menu, toggling gameplay input handling.
 
 **Equipment**
-Every Actor should spawn with a hand and a rifle. The rifle should equip upon 
-init. 
+DONE Every Actor should spawn with a hand and a rifle. 
+The rifle should equip upon init. 
 
-When an item is equipped, its scene should be loaded in the actor's hand
-position. An actor's input handler should direct certain inputs to the equipped
-item.
+DONE When an item is equipped, its scene should be loaded in the actor's hand position. 
+DONE An actor's input handler should direct certain inputs to the equipped item.
 
-When an item is unequipped, its scene should be removed from the Actor's node
-and freed. Equipping one item should unequip the other.
+DONE When an item is unequipped, its scene should be removed from the Actor's node. 
+DONE Equipping one item should unequip the other.
 
 **Health**
-An Actor should have health ranging from 0 to 100. The Actor should have at least
-one hitbox as a means for weapons to deliver damage. A dead Actor should rotate
-on its side as to indicate it is dead. A dead actor's input handler should ignore
-all non-menu input.
+DONE An Actor should have health ranging from 0 to 100.
+DONE The Actor should have at least one hitbox as a means for weapons to deliver damage. 
+A dead Actor should rotate on its side as to indicate it is dead.
+A dead actor's input handler should ignore all non-menu input.
 
 
 **Melee Weapon**
@@ -308,8 +307,9 @@ set true and the item should assume its forward position.
 When swingTime exceeds damageEnd it should set damageActive to false and and
 return to its normal position(The actor's hand position).
 
-A melee weapon should receive collision signals from a hitbox. When damageActive,
-and colliding with another actor (not itself), it should make the other actor 
+A melee weapon should receive collision signals from a hitbox. 
+
+When damageActive,and colliding with another actor (not its wielder), it should make the other actor 
 ReceiveDamage and then set damageActive to false.
 
 **SpawnPoint**
@@ -323,29 +323,28 @@ they have left before a respawn. When a respawn occurs, the actor should be
 freed and a new actor created at a random actor spawnpoint. 
 
 **Projectile**
-A projectile should control a KinematicBody to move Forward(Vector3 velocity)
+N/A A projectile should control a KinematicBody to move Forward(Vector3 velocity)
 and have its velocity effected by gravity.
 
-Upon being Fired, a projectile will begin moving according to its velocity
-and update velocity with gravity.
+DONE Upon being Fired, a projectile will begin moving according to its velocity and update velocity with gravity.
 
-Upon colliding, it should check if it collided with an actor, and if so, cause
-them to ReceiveDamage. At this point the projectile should free itself.
+DONE Upon colliding, it should check if it collided with an actor, and if so, cause them to ReceiveDamage. 
+DONE At this point the projectile should free itself.
 
 **Projectile Weapon**
-A ranged weapon should have a reserve of ammo that is depleted by firing 
+DONE A ranged weapon should have a reserve of ammo that is depleted by firing 
 projectiles and replenished by requesting ammo from its holder during a reload.
 
-When firing, a ranged weapon creates a projectile scene and Fires it in the
+DONE When firing, a ranged weapon creates a projectile scene and Fires it in the
 direction the ranged weapon is facing.
 
-When a reload (tertiary use) is attempted, it surveys stored and available ammo.
-If ammo is not already full and its holder exists and has ammo, the ranged weapon
+DONE When a reload (tertiary use) is attempted, it surveys stored and available ammo.
+DONE If ammo is not already full and its holder exists and has ammo, the ranged weapon
 will trigger a reload.
 
-When a reload is triggered it sets a reloadTime to 0 and increases it from 
-_Process(delta). When reloadTime exceeds reloadDelay, the ranged weapon's 
-reserve of ammo is increased by an amount successfully requested from its holder.
+DONE When a reload is triggered it will wait a delay before doing so.
+
+DONE reserve of ammo is increased by an amount successfully requested from its holder.
 
 **Health/Ammo pickup**
 ammoCount should be an integer ranging from 0 to 999. If not full(999), the player
