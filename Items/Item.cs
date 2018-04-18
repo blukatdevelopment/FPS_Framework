@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 
-public class Item : RigidBody, IHasInfo, IUse {
+public class Item : RigidBody, IHasInfo, IUse, IEquip {
   public enum Uses{ 
     A, // Primary use (Left Mouse) 
     B, // Secondary Use(Right Mouse)
@@ -31,6 +31,7 @@ public class Item : RigidBody, IHasInfo, IUse {
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
   protected Speaker speaker;
+  protected object wielder;
   
   public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
@@ -172,6 +173,14 @@ public class Item : RigidBody, IHasInfo, IUse {
     }
     
     return ret;
+  }
+  
+  public void Equip(object wielder){
+    this.wielder = wielder;
+  }
+  
+  public void Unequip(){
+    this.wielder = null;
   }
 
 }

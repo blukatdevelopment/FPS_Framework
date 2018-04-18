@@ -67,6 +67,9 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     if(this.ammoType != ammoType){
       return 0;
     }
+    if(max < 0){
+      return ammo;
+    }
     if(max > ammo){
       return ammo;
     }
@@ -86,7 +89,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
       return max;
     }
     int amount = max + ammo;
-    if(maxAmmo < amount){
+    if(maxAmmo <= amount){
       ammo = maxAmmo;
       amount -= ammo;
     }
@@ -135,15 +138,20 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
       GD.Print("Invalid index " + index);
       return;
     }
+    
     StashItem();
     Item item = items[index];
+    
     if(eyes == null){
       return;
     }
+    
     eyes.AddChild(item);
+    
     item.Mode = RigidBody.ModeEnum.Static;
     item.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
     activeItem = item;
+    activeItem.Equip(this);
   }
   
   /* Removes activeItem from hands. */
@@ -152,6 +160,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
       GD.Print("No activeitem");
       return;
     }
+    
     if(activeItem.GetParent() == null){
       GD.Print("activeItem is orphan");
       return;

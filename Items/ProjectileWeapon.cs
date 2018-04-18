@@ -15,7 +15,14 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   }
   
   public override string GetInfo(){
-    string ret = name + "[" + ammo + "/" + maxAmmo + "]";
+    string ret = name + "[" + ammo + "/" + maxAmmo;
+    if(wielder != null){
+      IHasAmmo ammoHolder = wielder as IHasAmmo;
+      if(ammoHolder != null){
+        ret += "/" + ammoHolder.CheckAmmo(ammoType, -1);
+      }
+    }
+    ret += "]";
     return ret; 
   }
   
@@ -27,6 +34,9 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   public int CheckAmmo(string ammoType, int max){
     if(this.ammoType != ammoType){
       return 0;
+    }
+    if(max < 0){
+      return ammo;
     }
     if(max > ammo){
       return ammo;
@@ -46,8 +56,10 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
     if(ammoType != this.ammoType){
       return max;
     }
+    
     int amount = max + ammo;
-    if(maxAmmo < amount){
+    
+    if(maxAmmo <= amount){
       ammo = maxAmmo;
       amount -= ammo;
     }
@@ -55,16 +67,10 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
       ammo += amount;
       amount = 0;
     }
+    
     return amount;
   }
   
-  public void Equip(object wielder){
-    
-  }
-  
-  public void Unequip(object wielder){
-    
-  }
   
   public override void Use(Item.Uses use, bool released = false){
     switch(use){
@@ -101,8 +107,25 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
   }
   
   private void Reload(){
-    GD.Print("Reload");
+    int needed = maxAmmo - ammo;
+    
+    if(needed == 0 || wielder == null){
+      return;
+    }
+    
+    IHasAmmo ammoHolder = wielder as IHasAmmo;
+    
+    if(ammoHolder == null){
+      return;
+    }
+    
+    if(ammoHolder.CheckAmmo(ammoType, 1) == 0){
+      return;
+    }
+    
     speaker.PlayEffect(Sound.Effects.RifleReload);
+    int receivedAmmo = ammoHolder.RequestAmmo(ammoType, needed);
+    StoreAmmo(ammoType, receivedAmmo);
   }
   
   private Vector3 ProjectilePosition(){
