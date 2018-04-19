@@ -87,7 +87,6 @@ public class ActorInputHandler : Brain {
     }
   }
 
-
   private void Press(InputEvent evt){    
     switch(evt.button){
       case InputEvent.Buttons.Esc: 

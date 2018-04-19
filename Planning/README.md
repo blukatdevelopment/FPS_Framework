@@ -291,7 +291,7 @@ DONE Equipping one item should unequip the other.
 **Health**
 DONE An Actor should have health ranging from 0 to 100.
 DONE The Actor should have at least one hitbox as a means for weapons to deliver damage. 
-A dead Actor should rotate on its side as to indicate it is dead.
+DONE A dead Actor should rotate on its side as to indicate it is dead.
 A dead actor's input handler should ignore all non-menu input.
 
 
@@ -322,7 +322,7 @@ When a player dies, a counter should display on their HUD to indicate how long
 they have left before a respawn. When a respawn occurs, the actor should be
 freed and a new actor created at a random actor spawnpoint. 
 
-**Projectile**
+**DONE Projectile**
 N/A A projectile should control a KinematicBody to move Forward(Vector3 velocity)
 and have its velocity effected by gravity.
 
@@ -331,7 +331,7 @@ DONE Upon being Fired, a projectile will begin moving according to its velocity 
 DONE Upon colliding, it should check if it collided with an actor, and if so, cause them to ReceiveDamage. 
 DONE At this point the projectile should free itself.
 
-**Projectile Weapon**
+**DONE Projectile Weapon**
 DONE A ranged weapon should have a reserve of ammo that is depleted by firing 
 projectiles and replenished by requesting ammo from its holder during a reload.
 

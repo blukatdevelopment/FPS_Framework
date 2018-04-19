@@ -200,6 +200,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     gravityVelocity += gravityForce;
     
     Vector3 grav = (new Vector3(0, gravityVelocity, 0));
+    grav = this.ToLocal(grav);
     Move(grav, delta);
   }
 
@@ -231,15 +232,23 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   }
 
   public void ReceiveDamage(Damage damage){
-    
+    if(health <= 0){
+      return;
+    }
     health -= damage.health;
     if(damage.health > 0 && health > 0){
       speaker.PlayEffect(Sound.Effects.ActorDamage);
     }
-    if(health < 0){
+    if(health <= 0){
       health = 0;
       speaker.PlayEffect(Sound.Effects.ActorDeath);
+      Die();
     }
+  }
+  
+  public void Die(){
+    GD.Print("Dead");
+    Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
   }
 
   public int GetHealth(){
