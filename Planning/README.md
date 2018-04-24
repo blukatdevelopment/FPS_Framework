@@ -268,7 +268,7 @@ A class should exist for playing sound effects spatially.
 
 ## Gameplay Programming
 
-**FPS controls**
+**DONE FPS controls**
 The core gameplay should consist of controlling an Actor using conventional
 FPS mouse and keyboard controls.
 - DONE WASD movement 
@@ -278,9 +278,9 @@ FPS mouse and keyboard controls.
 - DONE Tab to switch between rifle and hand.
 - DONE Escape to bring open or close pause menu, toggling gameplay input handling.
 
-**Equipment**
+**DONE Equipment**
 DONE Every Actor should spawn with a hand and a rifle. 
-The rifle should equip upon init. 
+DONE The rifle should equip upon init. 
 
 DONE When an item is equipped, its scene should be loaded in the actor's hand position. 
 DONE An actor's input handler should direct certain inputs to the equipped item.
@@ -288,24 +288,24 @@ DONE An actor's input handler should direct certain inputs to the equipped item.
 DONE When an item is unequipped, its scene should be removed from the Actor's node. 
 DONE Equipping one item should unequip the other.
 
-**Health**
+**DONE Health**
 DONE An Actor should have health ranging from 0 to 100.
 DONE The Actor should have at least one hitbox as a means for weapons to deliver damage. 
 DONE A dead Actor should rotate on its side as to indicate it is dead.
-A dead actor's input handler should ignore all non-menu input.
+DONE A dead actor's input handler should ignore all non-menu input.
 
 
 **Melee Weapon**
-A melee weapon should trigger a swing it's cooldown is full.
+When a swing starts: 
+- DONE giving damage should be active.
+- the hand should move to a forward position
+When a swing ends:
+- Damage should be disabled
+- DONE the hand should reset position
 
-Cooldown should be a float value that increases with _Process(delta) to a max
-value and is set to 0 when a swing is triggered.
-
-When a swing is active, _Process(delta) should increase swingTime for timing.
-When swingTime exceeds damageStart for the first time, damageActive should be 
-set true and the item should assume its forward position.
-When swingTime exceeds damageEnd it should set damageActive to false and and
-return to its normal position(The actor's hand position).
+When a swing connects:
+- target should receive damage
+- swing should end
 
 A melee weapon should receive collision signals from a hitbox. 
 

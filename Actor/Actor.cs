@@ -59,7 +59,8 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     items = new List<Item>();
     ReceiveItem(Item.Factory(Item.Types.Hand));
     ReceiveItem(Item.Factory(Item.Types.Rifle));
-    EquipItem(0);
+    EquipItem(1);
+    unarmed = false;
   }
   
   /* Show up to max ammo */

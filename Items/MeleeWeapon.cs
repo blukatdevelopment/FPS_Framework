@@ -5,8 +5,27 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   
   const int HealthDamage = 10;
   
+  bool swinging = false;
+  float busyDelay = 0f;
+  bool busy = false;
+  delegate void OnBusyEnd();
+  OnBusyEnd busyEndHandler;
+  
+  
+  
   public void Init(){
     
+  }
+  
+  public override void _Process(float delta){
+    if(busy){
+      busyDelay -= delta;
+      if(busyDelay <= 0f){
+        busy = false;
+        busyDelay = 0f;
+        busyEndHandler();
+      }
+    }  
   }
   
   public Damage GetBaseDamage(){
@@ -20,9 +39,47 @@ public class MeleeWeapon : Item, IUse, IWeapon {
     }
   }
   
-  private void Swing(){
-    GD.Print("Swing");
-    speaker.PlayEffect(Sound.Effects.FistSwing);
+  public override void OnCollide(object body){
+    if(!swinging){
+      return;
+    }
+    IReceiveDamage receiver = body as IReceiveDamage;
+    IReceiveDamage wielderDamage = wielder as IReceiveDamage;
+    if(receiver != null && receiver != wielderDamage){
+      Strike(receiver);
+    }
+    
+    
   }
   
+  private void Strike(IReceiveDamage receiver){
+    GiveDamage(receiver);
+    EndSwing();
+  }
+  
+  void GiveDamage(IReceiveDamage receiver){
+    Damage damage = new Damage();
+    damage.health = HealthDamage;
+    receiver.ReceiveDamage(damage);
+  }
+  
+  private void Swing(){
+    if(!busy){
+      StartSwing();
+    }
+  }
+  
+  private void StartSwing(){
+    GD.Print("Swing start");
+    speaker.PlayEffect(Sound.Effects.FistSwing);
+    busy = true;
+    busyDelay = 1f;
+    OnBusyEnd endSwing = EndSwing;
+    busyEndHandler = endSwing;
+    swinging = true;
+  }
+   
+  private void EndSwing(){
+    GD.Print("Swing end.");
+  } 
 }
