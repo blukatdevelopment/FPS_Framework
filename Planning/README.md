@@ -295,17 +295,17 @@ DONE A dead Actor should rotate on its side as to indicate it is dead.
 DONE A dead actor's input handler should ignore all non-menu input.
 
 
-**Melee Weapon**
+**DONE Melee Weapon**
 When a swing starts: 
 - DONE giving damage should be active.
-- the hand should move to a forward position
+- DONE the hand should move to a forward position
 When a swing ends:
-- Damage should be disabled
+- DONE Damage should be disabled
 - DONE the hand should reset position
 
 When a swing connects:
-- target should receive damage
-- swing should end
+- DONE target should receive damage
+- DONE swing should end
 
 A melee weapon should receive collision signals from a hitbox. 
 
@@ -347,8 +347,8 @@ DONE When a reload is triggered it will wait a delay before doing so.
 DONE reserve of ammo is increased by an amount successfully requested from its holder.
 
 **Health/Ammo pickup**
-ammoCount should be an integer ranging from 0 to 999. If not full(999), the player
-should pick up any ammo it collides with.
+- DONE ammoCount should be an integer ranging from 0 to 999. If not full(999)
+- the player should pick up any ammo it collides with.
 
 When an ammo pack is picked up, the ammoCount rises to at most full(999) and the ammo
 scene is freed.

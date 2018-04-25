@@ -175,11 +175,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     return ret;
   }
   
-  public void Equip(object wielder){
+  public virtual void Equip(object wielder){
     this.wielder = wielder;
   }
   
-  public void Unequip(){
+  public virtual void Unequip(){
     this.wielder = null;
   }
 

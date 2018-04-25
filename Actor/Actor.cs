@@ -28,7 +28,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   private bool unarmed = true; // True->Hand, False->Rifle
   private string ammoType = "bullet";
   private int ammo = 100;
-  private int maxAmmo = 100;
+  private int maxAmmo = 999;
   private List<Item> items;
   
   // Handpos

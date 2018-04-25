@@ -4,6 +4,8 @@ using System;
 public class MeleeWeapon : Item, IUse, IWeapon {
   
   const int HealthDamage = 10;
+  private Vector3 wieldedPosition;
+  private Vector3 forwardPosition;
   
   bool swinging = false;
   float busyDelay = 0f;
@@ -15,6 +17,12 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   
   public void Init(){
     
+  }
+  
+  public override void Equip(object wielder){
+    this.wielder = wielder;
+    this.wieldedPosition = GetTranslation();
+    this.forwardPosition = this.wieldedPosition + new Vector3(0, 0, -1);
   }
   
   public override void _Process(float delta){
@@ -64,7 +72,7 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   }
   
   private void Swing(){
-    if(!busy){
+    if(!busy && !swinging){
       StartSwing();
     }
   }
@@ -73,13 +81,17 @@ public class MeleeWeapon : Item, IUse, IWeapon {
     GD.Print("Swing start");
     speaker.PlayEffect(Sound.Effects.FistSwing);
     busy = true;
-    busyDelay = 1f;
+    busyDelay = 0.5f;
     OnBusyEnd endSwing = EndSwing;
     busyEndHandler = endSwing;
     swinging = true;
+    Translation = forwardPosition;
   }
    
   private void EndSwing(){
     GD.Print("Swing end.");
+    swinging = false;
+    busy = false;
+    Translation = wieldedPosition;
   } 
 }
