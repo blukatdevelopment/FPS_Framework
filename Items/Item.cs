@@ -19,7 +19,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     None,
     Hand,
     Rifle,
-    Bullet
+    Bullet,
+    HealthPack,
+    AmmoPack
   };
   
   
@@ -61,19 +63,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     area.Connect("body_entered", this, "OnCollide");
     AddChild(area);
   }
-  
-  /*
-  public void SetTriggerMode(bool val){
-    object[] owners = GetShapeOwners();
-    foreach(object owner in owners){
-      int ownerInt = (int)owner;
-      CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
-      if(cs != null){
-        cs.
-      }
-    }
-  }
-  */
+
   
   List<CollisionShape> GetCollisionShapes(){
     List<CollisionShape> shapes = new List<CollisionShape>();
@@ -119,22 +109,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     return description;
   }
   
-  
-  /*
-  public override void _Process(float delta){
-    if(!collisionDisabled){
-      object[] collidingBodies = GetCollidingBodies();
-      if(collidingBodies.Length > 0){
-        foreach(object body in collidingBodies){
-          PhysicsBody pb = body as PhysicsBody;
-          if(pb != null){
-            OnCollide(pb);
-          }
-        }
-      }
-    }
-  }
-  */
+
   
   public virtual void OnCollide(object body){}
   
@@ -157,7 +132,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
         break;
       case Types.Bullet:
         ret.BaseInit("Bullet", "Comes out one end of the rifle. Be sure to know which.");
-      break;
+        break;
+      case Types.HealthPack:
+        ret.BaseInit("HealthPack", "Heals what ails you.");
+        break;
     }
     
     return ret;
@@ -170,6 +148,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
       case Types.Hand: ret = "res://Scenes/Prefabs/Items/Hand.tscn"; break;
       case Types.Rifle: ret = "res://Scenes/Prefabs/Items/Rifle.tscn"; break;
       case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
+      case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
+      case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
     }
     
     return ret;

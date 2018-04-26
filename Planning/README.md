@@ -307,11 +307,6 @@ When a swing connects:
 - DONE target should receive damage
 - DONE swing should end
 
-A melee weapon should receive collision signals from a hitbox. 
-
-When damageActive,and colliding with another actor (not its wielder), it should make the other actor 
-ReceiveDamage and then set damageActive to false.
-
 **SpawnPoint**
 A spawn point should be a spatial a level designer can place within a 
 level scene.  An enum should decide whether a spawn point is for actors
@@ -349,10 +344,9 @@ DONE reserve of ammo is increased by an amount successfully requested from its h
 **Health/Ammo pickup**
 - DONE ammoCount should be an integer ranging from 0 to 999. If not full(999)
 - the player should pick up any ammo it collides with.
+- DONE HealthPack should give health and free itself when player collides.
 
-When an ammo pack is picked up, the ammoCount rises to at most full(999) and the ammo
-scene is freed.
-The same applies to health packs, but with health instead of ammoCount.
+When an ammo pack is picked up, the ammoCount rises to at most full(999).
 
 ## AI programming
 AI should be as simple as possible and perform a few behaviors.
