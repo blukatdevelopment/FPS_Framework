@@ -43,7 +43,6 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   public override void Use(Item.Uses use, bool released = false){
     switch(use){
       case Uses.A: Swing(); break;
-      case Uses.B: GD.Print("Guard"); break;
     }
   }
   
@@ -78,7 +77,6 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   }
   
   private void StartSwing(){
-    GD.Print("Swing start");
     speaker.PlayEffect(Sound.Effects.FistSwing);
     busy = true;
     busyDelay = 0.5f;
@@ -89,7 +87,6 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   }
    
   private void EndSwing(){
-    GD.Print("Swing end.");
     swinging = false;
     busy = false;
     Translation = wieldedPosition;
