@@ -22,6 +22,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   public Speaker speaker;
 
   private int health;
+  private int healthMax = 100;
   
   // Inventory
   private Item activeItem;
@@ -245,6 +246,10 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
       speaker.PlayEffect(Sound.Effects.ActorDeath);
       Die();
     }
+    if(health > healthMax){
+      health = healthMax;
+    }
+    
   }
   
   public void Die(){
