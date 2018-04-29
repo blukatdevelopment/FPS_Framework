@@ -79,6 +79,7 @@
     <Compile Include="Items\Projectile.cs" />
     <Compile Include="Items\PowerUp.cs" />
     <Compile Include="Items\HealthPowerUp.cs" />
+    <Compile Include="Items\AmmoPowerUp.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />

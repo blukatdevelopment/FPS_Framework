@@ -136,6 +136,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
       case Types.HealthPack:
         ret.BaseInit("HealthPack", "Heals what ails you.");
         break;
+      case Types.AmmoPack:
+        ret.BaseInit("AmmoPack", "Food for your rifle.");
+        break;
     }
     
     return ret;

@@ -341,12 +341,10 @@ DONE When a reload is triggered it will wait a delay before doing so.
 
 DONE reserve of ammo is increased by an amount successfully requested from its holder.
 
-**Health/Ammo pickup**
+**DONE Health/Ammo pickup**
 - DONE ammoCount should be an integer ranging from 0 to 999. If not full(999)
-- the player should pick up any ammo it collides with.
+- DONE the player should pick up any ammo it collides with.
 - DONE HealthPack should give health and free itself when player collides.
-
-When an ammo pack is picked up, the ammoCount rises to at most full(999).
 
 ## AI programming
 AI should be as simple as possible and perform a few behaviors.

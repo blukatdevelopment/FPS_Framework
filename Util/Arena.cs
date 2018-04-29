@@ -12,6 +12,7 @@ public class Arena : Spatial {
     actors = new List<Actor>();
     InitTerrain();
     SpawnItem(Item.Types.HealthPack, new Vector3(1, 5, 1));
+    SpawnItem(Item.Types.AmmoPack, new Vector3(5, 5, 5));
     SpawnActor(new Vector3(0, 5, 0));
     SpawnActor(new Vector3(0, 5, 5), Actor.Brains.Ai);
   }
