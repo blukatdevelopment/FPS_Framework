@@ -7,6 +7,6 @@ public class SessionEvent {
   
   public SessionEvent() {
     this.type = Types.None;
-    this.actors = new Actor[0]; 
+    this.actors = new Actor[0];
   }
 }

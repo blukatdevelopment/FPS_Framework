@@ -27,7 +27,15 @@ public class Arena : Spatial {
   }
   
   public void HandleEvent(SessionEvent sessionEvent){
-    GD.Print("Arena handling event: " + sessionEvent.type);
+    if(sessionEvent.type == SessionEvent.Types.ActorDied ){
+      GD.Print("Respawning player");
+      Actor[] actors = sessionEvent.actors;
+      if(actors != null && actors.Length > 0 && actors[0] != null){
+        Actor.Brains brain = actors[0].brainType;
+        actors[0].QueueFree();
+        SpawnActor(brain);
+      }
+    }
   }
   
   public void InitSpawnPoints(){
@@ -79,7 +87,7 @@ public class Arena : Spatial {
   
   public Vector3 RandomActorSpawn(){
     System.Random rand = new System.Random();
-    int randInt = rand.Next(itemSpawnPoints.Count);
+    int randInt = rand.Next(actorSpawnPoints.Count);
     return actorSpawnPoints[randInt];
   }
   

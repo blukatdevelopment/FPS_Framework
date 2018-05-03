@@ -6,7 +6,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
-  private Brains brainType;
+  public Brains brainType;
   private Eyes eyes;
   public bool debug = false;
   

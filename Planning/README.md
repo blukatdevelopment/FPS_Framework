@@ -266,7 +266,7 @@ via static methods from Sound in order to play music.
 **DONE Speaker**
 A class should exist for playing sound effects spatially.
 
-## Gameplay Programming
+##DONE Gameplay Programming
 
 **DONE FPS controls**
 The core gameplay should consist of controlling an Actor using conventional
@@ -312,7 +312,7 @@ A spawn point should be a spatial a level designer can place within a
 level scene.  An enum should decide whether a spawn point is for actors
 or items. A string variable should decide what item spawns there, if relevant.
 
-**Respawn**
+**DONE Respawn**
 When a player dies, a counter should display on their HUD to indicate how long
 they have left before a respawn. When a respawn occurs, the actor should be
 freed and a new actor created at a random actor spawnpoint. 
@@ -353,6 +353,5 @@ AI should be as simple as possible and perform a few behaviors.
 - Attempt to pick up items when they are in sight.
 - Select strategy according to inventory (weapons + ammo + item.HasAmmo())
 - For ranged combat aim at target and fire until they die or leave vision.
-- For melee combat aim at target and fire when within range until they die or leave
-vision.
+- For melee combat aim at target and fire when within range until they die or leave vision.
 - Cease activity when dead.
