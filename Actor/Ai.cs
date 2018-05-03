@@ -3,12 +3,34 @@ using System;
 
 public class Ai : Brain
 {
+  Actor[] actorsInSight;
   
-  public Ai(Actor actor, Eyes eyes) : base (actor, eyes){}
+  float remainingDelay = 0f;
+  const float Delay = 0.03f; 
+  public Ai(Actor actor, Eyes eyes) : base (actor, eyes){
+    actorsInSight = Actor[];
+  }
   
-  /* Method STUB */
   public override void Update(float delta){
+    remainingDelay -= delta;
+    if(remainingDelay <= 0f){
+      remainingDelay = delay;
+      See();
+      Think();
+    }
     
   }
+  
+  void See(){
+    
+  }
+  
+  void Think(){
+    GD.Print("Thinking...");
+  }
+  
+  
+  
+  
 
 }

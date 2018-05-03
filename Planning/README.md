@@ -350,8 +350,5 @@ DONE reserve of ammo is increased by an amount successfully requested from its h
 AI should be as simple as possible and perform a few behaviors.
 
 - Wander randomly, looking for targets.
-- Attempt to pick up items when they are in sight.
-- Select strategy according to inventory (weapons + ammo + item.HasAmmo())
-- For ranged combat aim at target and fire until they die or leave vision.
-- For melee combat aim at target and fire when within range until they die or leave vision.
+- Move toward and aim at target, firing.
 - Cease activity when dead.
