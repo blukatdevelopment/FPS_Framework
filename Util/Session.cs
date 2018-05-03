@@ -75,8 +75,8 @@ public class Session : Node {
     GD.Print("SinglePlayerGame");
     Node arenaNode = Arena.ArenaFactory();
     arena = (Arena)arenaNode;
-    arena.Init(true);
     AddChild(arenaNode);
+    arena.Init(true);
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
   }

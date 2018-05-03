@@ -307,7 +307,7 @@ When a swing connects:
 - DONE target should receive damage
 - DONE swing should end
 
-**SpawnPoint**
+**DONE SpawnPoint**
 A spawn point should be a spatial a level designer can place within a 
 level scene.  An enum should decide whether a spawn point is for actors
 or items. A string variable should decide what item spawns there, if relevant.

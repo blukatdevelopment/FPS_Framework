@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Terrain/Terrain.meshlib" type="MeshLibrary" id=1]
+[ext_resource path="res://Scenes/ActorSpawnPoint.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/ItemSpawnPoint.tscn" type="PackedScene" id=3]
 
-[node name="Terrain" type="Spatial" index="0"]
+[node name="Terrain" type="Spatial"]
 
 [node name="Map" type="GridMap" parent="." index="0"]
 
@@ -16,11 +18,65 @@ cell_scale = 1.0
 collision_layer = 1
 collision_mask = 1
 data = {
-"cells": PoolIntArray( 0, 0, 1048576, 1, 0, 1048576, 65534, 0, 1048576, 65535, 0, 1048576, 0, 1, 1048576, 1, 1, 537919488, 65534, 1, 537919488, 65535, 1, 537919488, 0, 65535, 1048576, 1, 65535, 1048576, 65534, 65535, 1048576, 65535, 65535, 1048576 )
+"cells": PoolIntArray( 0, 0, 1048576, 1, 0, 1048576, 65534, 0, 1048576, 65535, 0, 537919488, 0, 1, 537919488, 1, 1, 1048576, 65534, 1, 1048576, 65535, 1, 1048576, 0, 65535, 1048576, 1, 65535, 1048576, 65534, 65535, 1048576, 65535, 65535, 1048576 )
 }
 _sections_unfolded = [ "Cell" ]
 __meta__ = {
 "_editor_clip_": 0
 }
+
+[node name="ActorSpawnPoint" type="Spatial" parent="." index="1" groups=[
+"ActorSpawnPoint",
+] instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 7, 2 )
+
+[node name="ActorSpawnPoint2" type="Spatial" parent="." index="2" groups=[
+"ActorSpawnPoint",
+] instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 8, 8 )
+
+[node name="ActorSpawnPoint3" type="Spatial" parent="." index="3" groups=[
+"ActorSpawnPoint",
+] instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 7, 4 )
+
+[node name="ActorSpawnPoint4" type="Spatial" parent="." index="4" groups=[
+"ActorSpawnPoint",
+] instance=ExtResource( 2 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 9, 10 )
+
+[node name="ItemSpawnPoint" type="Spatial" parent="." index="5" groups=[
+"ItemSpawnPoint",
+] instance=ExtResource( 3 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -8.30184, 6.54003, 11.6105 )
+
+[node name="ItemSpawnPoint2" type="Spatial" parent="." index="6" groups=[
+"ItemSpawnPoint",
+] instance=ExtResource( 3 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.3403, 7.94529, 10.4726 )
+
+[node name="ItemSpawnPoint3" type="Spatial" parent="." index="7" groups=[
+"ItemSpawnPoint",
+] instance=ExtResource( 3 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6773, 4.32044, 13.3272 )
+
+[node name="ItemSpawnPoint4" type="Spatial" parent="." index="8" groups=[
+"ItemSpawnPoint",
+] instance=ExtResource( 3 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.63137, 6.61516, 13.8109 )
+
+[node name="ItemSpawnPoint5" type="Spatial" parent="." index="9" groups=[
+"ItemSpawnPoint",
+] instance=ExtResource( 3 )]
+
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -4.56245, 8.81118, 12.3613 )
 
 
