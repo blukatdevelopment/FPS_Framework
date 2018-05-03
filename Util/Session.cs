@@ -127,4 +127,11 @@ public class Session : Node {
         System.Threading.Thread.Sleep(100);
     }
   }
+  
+  /* Trickle events down from the Session */
+  public void HandleEvent(SessionEvent sessionEvent){
+    if(arena != null){
+      arena.HandleEvent(sessionEvent);
+    }
+  }
 }

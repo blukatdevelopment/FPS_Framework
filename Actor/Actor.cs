@@ -6,6 +6,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
+  private Brains brainType;
   private Eyes eyes;
   public bool debug = false;
   
@@ -40,6 +41,7 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   public void Init(Brains b = Brains.Player1){
     
     InitChildren();
+    this.brainType = b;
     switch(b){
       case Brains.Player1: 
         brain = (Brain)new ActorInputHandler(this, eyes); 
@@ -253,8 +255,12 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   }
   
   public void Die(){
-    GD.Print("Dead");
     Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
+    SessionEvent evt = new SessionEvent();
+    evt.type = SessionEvent.Types.ActorDied;
+    evt.actors = new Actor[1];
+    evt.actors[0] = this;
+    Session.session.HandleEvent(evt);
   }
 
   public int GetHealth(){

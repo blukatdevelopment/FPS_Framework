@@ -26,6 +26,10 @@ public class Arena : Spatial {
     terrain = (Spatial)instance;
   }
   
+  public void HandleEvent(SessionEvent sessionEvent){
+    GD.Print("Arena handling event: " + sessionEvent.type);
+  }
+  
   public void InitSpawnPoints(){
     GD.Print("Initializing item spawns");
     SceneTree st = GetTree();
