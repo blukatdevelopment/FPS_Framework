@@ -55,6 +55,7 @@
     <Compile Include="Actor\Brain.cs" />
     <Compile Include="Actor\DeviceManager.cs" />
     <Compile Include="Actor\InputEvent.cs" />
+    <Compile Include="Actor\ILook.cs" />
     <Compile Include="Menus\Button.cs" />
     <Compile Include="Menus\LobbyMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />

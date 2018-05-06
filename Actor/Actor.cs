@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo {
+public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo, ILook {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -12,7 +12,8 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   
   const int maxY = 90;
   const int minY = -90;
-  const float GravityAcceleration = -9.81f; 
+  const float GravityAcceleration = -9.81f;
+  const float TerminalVelocity = -53;
   
   private bool grounded = false; //True when Actor is standing on surface.
   public bool sprinting = false;
@@ -112,6 +113,14 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     return "A character in this game.";
   }
   
+  public Vector3 HeadPosition(){
+    return new Vector3();
+  }
+  
+  public Vector3 Forward(){
+    return new Vector3();
+  }
+  
   public void SetSprint(bool val){
     sprinting = val;
   }
@@ -175,7 +184,11 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     activeItem = null;
   }
   
+  /* Finds any attached eyes if eys are not already set by factory.  */
   protected void InitChildren(){
+    if(eyes != null){
+      return;
+    }
     foreach(Node child in this.GetChildren()){
       switch(child.GetName()){
         case "Eyes": eyes = child as Eyes; break;
@@ -202,9 +215,12 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   public void Gravity(float delta){ 
     float gravityForce = GravityAcceleration * delta;
     gravityVelocity += gravityForce;
+    if(gravityVelocity < TerminalVelocity){
+      gravityVelocity = TerminalVelocity;
+    }
     
-    Vector3 grav = (new Vector3(0, gravityVelocity, 0));
-    grav = this.ToLocal(grav);
+    Vector3 grav = new Vector3(0, gravityVelocity, 0);
+    //grav = this.ToLocal(grav);
     Move(grav, delta);
   }
 
@@ -327,17 +343,22 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
     
-    if(brain == Brains.Player1){
-      PackedScene eyesPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Eyes.tscn");
-      Node eyesInstance = eyesPs.Instance();
-      actorInstance.AddChild(eyesInstance);
-      
-      Vector3 eyesPos = new Vector3(0, 2, 0);
-      Spatial eyesSpatial = (Spatial)eyesInstance;
-      eyesSpatial.Translate(eyesPos);
+    Actor actor = (Actor)actorInstance;
+    
+    Vector3 eyesPos = new Vector3(0, 2, 0);
+    
+    switch(brain){
+      case Brains.Player1: 
+        Node eyeInstance = Session.Instance("res://Scenes/Prefabs/Eyes.tscn");
+        actor.eyes = eyeInstance as Eyes;
+        break;
+      default:
+        actor.eyes = new Eyes();
+        break;
     }
     
-    Actor actor = (Actor)actorInstance;
+    actor.eyes.Translate(eyesPos);
+    actor.AddChild(actor.eyes);
     actor.Init(brain);
     return actor;
   }
