@@ -47,6 +47,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     AddChild(speaker);
   }
   
+  public virtual bool IsBusy(){
+    return false;
+  }
+  
   void InitArea(){
     List<CollisionShape> shapes = GetCollisionShapes();
     Area area = new Area();

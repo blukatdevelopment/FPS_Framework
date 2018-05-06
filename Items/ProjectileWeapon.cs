@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
+public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   
   const int BaseDamage = 10;
   const float ProjectileOffset = 0.1f;
@@ -95,6 +95,10 @@ public class ProjectileWeapon : Item, IUse, IWeapon, IHasAmmo, IEquip {
       ammo = finalAmmo; 
     };
     busyEndHandler = loadAmmo;
+  }
+  
+  public override bool IsBusy(){
+    return busy;
   }
   
   public override void Use(Item.Uses use, bool released = false){

@@ -3,13 +3,14 @@ using System;
 
 public class Ai : Brain
 {
-  Actor[] actorsInSight;
+  Actor target;
   Actor host;
+  
   float remainingDelay = 0f;
   const float Delay = 0.03f; 
   public Ai(Actor actor, Eyes eyes) : base (actor, eyes){
     host = actor;
-    actorsInSight = new Actor[0];
+    target = null;
   }
   
   public override void Update(float delta){
@@ -30,16 +31,34 @@ public class Ai : Brain
       return null;
     }
     object collider = result["collider"];
-    //GD.Print(collider);
-    return null;
+    return collider as Actor;
   }
   
   void See(){
-    RayCastForActor(new Vector3(0, -1, 0), new Vector3(0, 1, 0));
+    if(target != null){
+      return;
+    }
+    float distance = 100f;
+    Vector3 start = actor.HeadPosition();
+    Vector3 end = actor.Forward();
+    end *= distance; // Move distance
+    end += start; // Add starting position
+    
+    target = RayCastForActor(start, end);
   }
   
   void Think(){
-    //GD.Print("Thinking...");
+    if(target != null && !actor.IsBusy()){
+      actor.Use(Item.Uses.A);
+      target = null;
+    }
+    IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
+    if(ammoHaver != null && !actor.IsBusy()){
+      actor.Use(Item.Uses.D);
+      return;
+    }
+    
+    
   }
 
 }

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class MeleeWeapon : Item, IUse, IWeapon {
+public class MeleeWeapon : Item, IWeapon {
   
   const int HealthDamage = 10;
   private Vector3 wieldedPosition;
@@ -38,6 +38,10 @@ public class MeleeWeapon : Item, IUse, IWeapon {
   
   public Damage GetBaseDamage(){
     return new Damage(HealthDamage);
+  }
+  
+  public override bool IsBusy(){
+    return busy;
   }
   
   public override void Use(Item.Uses use, bool released = false){

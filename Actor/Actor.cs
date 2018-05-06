@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo, ILook {
+public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IHasAmmo, ILook {
   
   public enum Brains{Player1, Ai}; // Possible brains to use.
   private Brain brain;
@@ -59,6 +59,11 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     InitInventory();
   }
   
+  public Item PrimaryItem(){
+    return activeItem;
+  }
+  
+  
   void InitInventory(){
     items = new List<Item>();
     ReceiveItem(Item.Factory(Item.Types.Hand));
@@ -114,11 +119,17 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
   }
   
   public Vector3 HeadPosition(){
-    return new Vector3();
+    if(eyes != null){
+      return eyes.ToGlobal(eyes.Translation);
+    }
+    return this.ToGlobal(Translation);
   }
   
   public Vector3 Forward(){
-    return new Vector3();
+    if(eyes != null){
+      return -eyes.Transform.basis.z;
+    }
+    return Transform.basis.z;
   }
   
   public void SetSprint(bool val){
@@ -196,7 +207,14 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
     }
     if(eyes == null){ GD.Print("Actor's eyes are null!"); }
   }
-
+  
+  public bool IsBusy(){
+    if(activeItem == null){
+      return false;
+    }
+    return activeItem.IsBusy();
+  }
+  
   /* Relays call to active item. */
   public void Use(Item.Uses use, bool released = false){
     if(activeItem == null){
@@ -204,7 +222,8 @@ public class Actor : KinematicBody, IReceiveDamage, IHasItem, IHasInfo, IHasAmmo
       return;
     }
     activeItem.Use(use);
-  }  
+  }
+  
     
   public override void _Process(float delta){
       if(brain != null){ brain.Update(delta); }
