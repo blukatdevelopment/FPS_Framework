@@ -48,12 +48,15 @@ public class Ai : Brain
   }
   
   void Think(){
-    if(target != null && !actor.IsBusy()){
+    if(actor.IsBusy()){
+      return;
+    }
+    if(target != null){
       actor.Use(Item.Uses.A);
       target = null;
     }
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
-    if(ammoHaver != null && !actor.IsBusy()){
+    if(ammoHaver != null){
       actor.Use(Item.Uses.D);
       return;
     }

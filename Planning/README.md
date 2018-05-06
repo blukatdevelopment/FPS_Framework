@@ -351,4 +351,4 @@ AI should be as simple as possible and perform a few behaviors.
 
 - Wander randomly, looking for targets.
 - Move toward and aim at target, firing.
-- Cease activity when dead.
+- DONE Cease activity when dead.
