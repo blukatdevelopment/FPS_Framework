@@ -8,4 +8,7 @@ interface IHasAmmo {
     
     /* Store up to max ammo, returning overflow. */
     int StoreAmmo(string ammoType, int max);
+    
+    /* Returns string representations of available ammo types. */
+    string[] AmmoTypes();
 }

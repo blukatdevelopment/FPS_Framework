@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Ai : Brain
 {
@@ -15,13 +16,15 @@ public class Ai : Brain
   
   public override void Update(float delta){
     remainingDelay -= delta;
-    if(remainingDelay <= 0f){
+    if(remainingDelay <= 0f && !actor.IsBusy()){
       remainingDelay = Delay;
       See();
-      Think();
+      Act();
     }
     
   }
+  
+  
   
   Actor RayCastForActor(Vector3 start, Vector3 end){
     PhysicsDirectSpaceState spaceState = host.GetWorld().DirectSpaceState as PhysicsDirectSpaceState;
@@ -31,37 +34,95 @@ public class Ai : Brain
       return null;
     }
     object collider = result["collider"];
-    return collider as Actor;
+    Actor candidate = collider as Actor;
+    if(candidate != host){
+      return candidate;
+    }
+    return null;
+  }
+  
+  /* 
+    Can't boxcast? Gridcast! 
+    This will create a grid of raycasts to mimick the functionality of a 
+    boxcast that is abstructed by obstacles.
+    scale decides how many layers of raycasts surround the center
+    spacing decides how far apart each layer is
+  */
+  List<Actor> GridCastForActor(Vector3 start, Vector3 end, int scale = 3, float spacing = 0.5f){
+    List<Actor> found = new List<Actor>();
+    if(scale < 0){
+      scale *= -1;
+    }
+    
+    List<Vector3> starts = new List<Vector3>();
+    List<Vector3> ends = new List<Vector3>();
+    
+    float offX, offY;
+    
+    for(int i = -scale; i < scale; i++){
+      for(int j = -scale; j < scale; j++){
+        Vector3 otherStart = start;
+        Vector3 otherEnd = end;
+        offX = spacing * j;
+        offY = spacing * i;
+        otherStart += new Vector3(offX, offY, 0f);
+        otherEnd += new Vector3(offX, offY, 0f);
+        Actor candidate = RayCastForActor(otherStart, otherEnd);
+        if(candidate != null && !found.Contains(candidate)){
+          found.Add(candidate);
+        }
+      }
+    }
+    
+    return found;
   }
   
   void See(){
-    if(target != null){
-      return;
+    if(target == null){
+      AcquireTarget();
     }
+  }
+  
+  void AcquireTarget(){
     float distance = 100f;
     Vector3 start = actor.HeadPosition();
     Vector3 end = actor.Forward();
     end *= distance; // Move distance
     end += start; // Add starting position
     
-    target = RayCastForActor(start, end);
+    List<Actor> targets = GridCastForActor(start, end);
+    if(targets.Count > 0){
+      target = targets[0];
+      GD.Print("Target acquired! " + target);
+    }
   }
   
-  void Think(){
-    if(actor.IsBusy()){
+  void Act(){
+    if(target == null){
       return;
     }
-    if(target != null){
-      actor.Use(Item.Uses.A);
-      target = null;
-    }
+    
+    actor.Use(Item.Uses.A);
+    target = null;
+    
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
     if(ammoHaver != null){
-      actor.Use(Item.Uses.D);
+      ManageAmmo(ammoHaver);
+    }
+  }
+  
+  void ManageAmmo(IHasAmmo ammoHaver){
+    string[] ammoTypes = ammoHaver.AmmoTypes();
+    if(ammoTypes == null || ammoTypes.Length == 0){
       return;
     }
     
-    
+    string ammoType = ammoTypes[0];
+    int haverCount = ammoHaver.CheckAmmo(ammoType, -1);
+    int actorCount = actor.CheckAmmo(ammoType, -1);
+    if(haverCount == 0 && actorCount > 0){
+      actor.Use(Item.Uses.D);
+    }
   }
 
 }

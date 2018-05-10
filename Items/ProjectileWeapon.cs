@@ -88,6 +88,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     return amount;
   }
   
+  public string[] AmmoTypes(){
+    
+    return new string[]{ ammoType };
+  }
+  
   void StartReload(int finalAmmo){
     busy = true;
     busyDelay = 2f;

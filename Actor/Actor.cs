@@ -110,6 +110,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return amount;
   }
   
+  public string[] AmmoTypes(){
+    
+    return new string[]{"bullet"};
+  }
+  
   public string GetInfo(){
     return "Actor";  
   }
