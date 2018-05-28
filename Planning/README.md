@@ -350,5 +350,6 @@ DONE reserve of ammo is increased by an amount successfully requested from its h
 AI should be as simple as possible and perform a few behaviors.
 
 - Wander randomly, looking for targets.
-- Move toward and aim at target, firing.
+- Move toward target
+- aim at target, firing.
 - DONE Cease activity when dead.

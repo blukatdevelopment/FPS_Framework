@@ -24,7 +24,17 @@ public class Ai : Brain
     
   }
   
-  
+  /* Follow target blindly */
+  void Pursue(){
+    if(target == null){
+      return;
+    }
+    Vector3 hostForward = host.Forward();
+    Vector3 hostPos = host.ToGlobal(host.Translation);
+    Vector3 targetPos= target.ToGlobal(target.Translation);
+    Vector3 dir =  targetPos - hostPos;
+    host.Translation = host.ToLocal(hostPos + dir);
+  }
   
   Actor RayCastForActor(Vector3 start, Vector3 end){
     PhysicsDirectSpaceState spaceState = host.GetWorld().DirectSpaceState as PhysicsDirectSpaceState;
@@ -101,7 +111,8 @@ public class Ai : Brain
     if(target == null){
       return;
     }
-    
+    Pursue();
+    return;
     actor.Use(Item.Uses.A);
     target = null;
     
