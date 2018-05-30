@@ -132,9 +132,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public Vector3 Forward(){
     if(eyes != null){
-      return -eyes.Transform.basis.z;
+      return Util.TForward(eyes.Transform);
     }
-    return Transform.basis.z;
+    return Util.TForward(this.Transform);
+  }
+  
+  public Vector3 Up(){
+    if(eyes != null){
+      return Util.TUp(eyes.Transform);
+    }
+    return Util.TUp(this.Transform);
   }
   
   public void SetSprint(bool val){

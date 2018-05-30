@@ -29,11 +29,14 @@ public class Ai : Brain
     if(target == null){
       return;
     }
-    Vector3 hostForward = host.Forward();
-    Vector3 hostPos = host.ToGlobal(host.Translation);
-    Vector3 targetPos= target.ToGlobal(target.Translation);
-    Vector3 dir =  targetPos - hostPos;
-    host.Translation = host.ToLocal(hostPos + dir);
+    // This is local to the parent, which is not acceptable.
+    Vector3 tPos = target.Translation;
+    host.LookAt(tPos, host.Up());
+    
+  }
+  
+  void AimAt(Vector3 point){
+    
   }
   
   Actor RayCastForActor(Vector3 start, Vector3 end){

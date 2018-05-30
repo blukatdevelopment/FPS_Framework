@@ -86,6 +86,7 @@
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
     <Compile Include="Util\Sound.cs" />
+    <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
     <Compile Include="Util\Events\SessionEvent.cs" />
   </ItemGroup>
