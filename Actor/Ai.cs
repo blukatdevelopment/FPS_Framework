@@ -6,6 +6,7 @@ public class Ai : Brain
 {
   Actor target;
   Actor host;
+  const float AimMargin = 0.5f; 
   
   float remainingDelay = 0f;
   const float Delay = 0.03f; 
@@ -29,18 +30,38 @@ public class Ai : Brain
     if(target == null){
       return;
     }
-    // This is local to the parent, which is not a robust solution.
-    Vector3 tPos = target.Translation;
-    Transform lookingAt = host.Transform.LookingAt(tPos, host.Up());
-    Vector3 hRot = host.GetRotationDegrees();
-    Vector3 lRot = lookingAt.basis.GetEuler();
-    lRot = Util.ToDegrees(lRot);
-    Vector3 turnRot = (lRot - hRot).Normalized();
-    host.Turn(turnRot.y, turnRot.x);
+    
+    Vector3 targetPos = target.Translation;
+    AimAt(targetPos);
   }
   
   void AimAt(Vector3 point){
+    // This is local to the parent, which is not an ideal solution.
     
+    Transform hostTrans = host.Transform;    
+    Transform lookingAt = hostTrans.LookingAt(point, host.Up());
+    
+    // Get horizontal rotation based on host body.
+    Vector3 hostRot = host.GetRotationDegrees();
+    
+    // Get vertical Rotation based on head when possible.
+    hostRot.x = host.RotationDegrees().x;
+    
+    Vector3 lookingRot = lookingAt.basis.GetEuler();
+    lookingRot = Util.ToDegrees(lookingRot);
+    Vector3 turnRot = (lookingRot - hostRot).Normalized();
+    
+    host.Turn(turnRot.y, turnRot.x);
+  }
+  
+  bool AimingAt(Vector3 point){
+    Vector3 hostRot = host.GetRotationDegrees();
+    Transform aimedTrans = host.Transform.LookingAt(point, host.Up());
+    Vector3 aimedRot = aimedTrans.basis.GetEuler();
+    aimedRot = Util.ToDegrees(aimedRot);
+    float aimAngle = hostRot.DistanceTo(aimedRot);
+    
+    return aimAngle < AimMargin;
   }
   
   Actor RayCastForActor(Vector3 start, Vector3 end){
@@ -118,8 +139,10 @@ public class Ai : Brain
     if(target == null){
       return;
     }
-    Pursue();
-    return;
+    if(!AimingAt(target.Translation)){
+      Pursue();
+      return;
+    }
     actor.Use(Item.Uses.A);
     target = null;
     

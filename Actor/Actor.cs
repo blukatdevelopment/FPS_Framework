@@ -144,6 +144,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return Util.TUp(this.Transform);
   }
   
+  public Vector3 RotationDegrees(){
+    if(eyes != null){
+      return eyes.GetRotationDegrees();
+    }
+    return GetRotationDegrees();
+  }
+  
+  public Transform GetLookingTransform(){
+    if(eyes != null){
+      return eyes.Transform;
+    }
+    return Transform;
+  }
+  
   public void SetSprint(bool val){
     sprinting = val;
   }
