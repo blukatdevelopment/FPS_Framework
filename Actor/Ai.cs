@@ -29,10 +29,11 @@ public class Ai : Brain
     if(target == null){
       return;
     }
-    // This is local to the parent, which is not acceptable.
+    // This is local to the parent, which is not a robust solution.
     Vector3 tPos = target.Translation;
-    host.LookAt(tPos, host.Up());
-    
+    Transform lookingAt = host.Transform.LookingAt(tPos, host.Up());
+    host.Transform = lookingAt;
+    Vector3 hRot = host.GetRotationDegrees();
   }
   
   void AimAt(Vector3 point){
