@@ -346,10 +346,10 @@ DONE reserve of ammo is increased by an amount successfully requested from its h
 - DONE the player should pick up any ammo it collides with.
 - DONE HealthPack should give health and free itself when player collides.
 
-## AI programming
+## DONE AI programming
 AI should be as simple as possible and perform a few behaviors.
 
-- Wander randomly, looking for targets.
-- Move toward target
-- aim at target, firing.
+- DONE Wander, looking for targets.
+- DONE Move toward target
+- DONE aim at target, firing.
 - DONE Cease activity when dead.

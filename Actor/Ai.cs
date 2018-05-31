@@ -20,19 +20,25 @@ public class Ai : Brain
     if(remainingDelay <= 0f && !actor.IsBusy()){
       remainingDelay = Delay;
       See();
-      Act();
+      Act(delta);
     }
     
   }
   
+  void Wander(float delta){
+    host.Turn(1f, 0f);
+    host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
+  }
+  
   /* Follow target blindly */
-  void Pursue(){
+  void Pursue(float delta){
     if(target == null){
       return;
     }
     
     Vector3 targetPos = target.Translation;
     AimAt(targetPos);
+    host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
   }
   
   void AimAt(Vector3 point){
@@ -135,12 +141,13 @@ public class Ai : Brain
     }
   }
   
-  void Act(){
+  void Act(float delta){
     if(target == null){
+      Wander(delta);
       return;
     }
     if(!AimingAt(target.Translation)){
-      Pursue();
+      Pursue(delta);
       return;
     }
     actor.Use(Item.Uses.A);
