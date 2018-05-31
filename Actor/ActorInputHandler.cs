@@ -90,9 +90,7 @@ public class ActorInputHandler : Brain {
   private void Press(InputEvent evt){    
     switch(evt.button){
       case InputEvent.Buttons.Esc: 
-        actor.Pause();
-        if(actor.menuActive){ Input.SetMouseMode(Input.MouseMode.Visible); }
-        else{ Input.SetMouseMode(Input.MouseMode.Captured); } 
+        Session.Event(SessionEvent.PauseEvent());
         break;
       case InputEvent.Buttons.Tab: actor.SwitchItem(); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;

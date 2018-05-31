@@ -36,6 +36,15 @@ public class Arena : Spatial {
         SpawnActor(brain);
       }
     }
+    else if(sessionEvent.type == SessionEvent.Types.Pause){
+      TogglePause();
+    }
+  }
+  
+  public void TogglePause(){
+    foreach(Actor actor in actors){
+      actor.Pause();
+    }
   }
   
   public void InitSpawnPoints(){

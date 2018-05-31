@@ -134,4 +134,9 @@ public class Session : Node {
       arena.HandleEvent(sessionEvent);
     }
   }
+
+  // Static convenience method.
+  public static void Event(SessionEvent sessionEvent){
+    Session.session.HandleEvent(sessionEvent);
+  }
 }

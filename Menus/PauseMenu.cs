@@ -5,14 +5,16 @@ public class PauseMenu : Container{
   
   public Godot.Button quitButton;
   public Godot.Button mainMenuButton;
+  public Godot.Button resumeButton;
   
   public override void _Ready(){
     
   }
 
   public void Init(){
-    SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
-    SetMainMenuButton((Godot.Button)Menu.Button(text : "Main Menu", onClick: QuitToMainMenu));
+    SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick : Quit));
+    SetMainMenuButton((Godot.Button)Menu.Button(text : "Main Menu", onClick : QuitToMainMenu));
+    SetResumeButton((Godot.Button)Menu.Button(text : "Resume", onClick : Resume));
     ScaleControls();
   }
   
@@ -20,9 +22,10 @@ public class PauseMenu : Container{
       Rect2 screen = this.GetViewportRect();
       float width = screen.Size.x;
       float height = screen.Size.y;
-      float wu = width/10; // relative height and width units
-      float hu = height/10;
+      float wu = width / 10; // relative height and width units
+      float hu = height / 10;
       
+      Menu.ScaleControl(resumeButton, 4 * wu, 2 * hu, 3 * wu, 0);
       Menu.ScaleControl(mainMenuButton, 4 * wu, 2 * hu, 3 * wu, 2 * hu);
       Menu.ScaleControl(quitButton, 4 * wu, 2 * hu, 3 * wu,  4 * hu);
   }
@@ -38,6 +41,12 @@ public class PauseMenu : Container{
     mainMenuButton = button;
     AddChild(button);
   }
+
+  public void SetResumeButton(Godot.Button button){
+    if(resumeButton != null){ resumeButton.QueueFree(); }
+    resumeButton = button;
+    AddChild(button);
+  }
   
   public void Quit(){
       Session.session.Quit();
@@ -45,6 +54,10 @@ public class PauseMenu : Container{
   
   public void QuitToMainMenu(){
     Session.session.QuitToMainMenu();
+  }
+
+  public void Resume(){
+    Session.Event(SessionEvent.PauseEvent());
   }
   
 }

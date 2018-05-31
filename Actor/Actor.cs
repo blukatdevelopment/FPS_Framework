@@ -372,14 +372,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void Pause(){
+    ActorInputHandler inputHandler = brain as ActorInputHandler;
+    if(inputHandler == null){
+      GD.Print("AI foregoing pause menu stuff");
+      return;
+    }
+    
     menuActive = !menuActive;
+    
     if(menuActive){
       if(debug){ GD.Print("Actor: Paused"); }
       Session.session.ChangeMenu(Menu.Menus.Pause);
+      Input.SetMouseMode(Input.MouseMode.Visible);
     }
     else{
       if(debug){ GD.Print("Actor: Resumed"); }
       Session.session.ChangeMenu(Menu.Menus.HUD);
+      Input.SetMouseMode(Input.MouseMode.Captured);
     }
   }
   
