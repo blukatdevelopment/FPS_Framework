@@ -32,8 +32,11 @@ public class Ai : Brain
     // This is local to the parent, which is not a robust solution.
     Vector3 tPos = target.Translation;
     Transform lookingAt = host.Transform.LookingAt(tPos, host.Up());
-    host.Transform = lookingAt;
     Vector3 hRot = host.GetRotationDegrees();
+    Vector3 lRot = lookingAt.basis.GetEuler();
+    lRot = Util.ToDegrees(lRot);
+    Vector3 turnRot = (lRot - hRot).Normalized();
+    host.Turn(turnRot.y, turnRot.x);
   }
   
   void AimAt(Vector3 point){
