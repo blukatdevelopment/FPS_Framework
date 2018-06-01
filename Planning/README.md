@@ -163,13 +163,13 @@ After a specific amount of time, a new game should start.
 Options-
 Return to main menu at bottom of screen
 
-**HUD**
+**DONE HUD**
 Should display relevant info during gameplay.
 
 Info shown
 - Health
 - Active item info
-- Gamemode info (populated via Session)
+- Objective info (populated via Session)
 
 ## Network Programming
 Networking architecture should be developed by modifying a single-player

@@ -87,7 +87,6 @@ public class Session : Node {
       activeMenu = null;
     }
     activeMenu = Menu.MenuFactory(menu);
-    
   }
   
   private void EnforceSingleton(){
@@ -129,13 +128,17 @@ public class Session : Node {
     }
   }
   
+  public string GetObjectiveText(){
+    return "Fight the enemies.";
+  }
+  
   /* Trickle events down from the Session */
   public void HandleEvent(SessionEvent sessionEvent){
     if(arena != null){
       arena.HandleEvent(sessionEvent);
     }
   }
-
+  
   // Static convenience method.
   public static void Event(SessionEvent sessionEvent){
     Session.session.HandleEvent(sessionEvent);

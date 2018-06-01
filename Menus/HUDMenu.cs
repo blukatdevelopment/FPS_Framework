@@ -9,6 +9,7 @@ public class HUDMenu : Container{
 
   Godot.TextEdit healthBox;
   Godot.TextEdit itemBox;
+  Godot.TextEdit objectiveBox;
 
   public override void _Ready(){
       
@@ -31,12 +32,14 @@ public class HUDMenu : Container{
       return;
     }
     
-    
     string healthText = "Health: " + player.GetHealth();
     healthBox.SetText(healthText);
 
     string itemText = player.ItemInfo();
     itemBox.SetText(itemText);
+    
+    string objectiveText = Session.session.GetObjectiveText();
+    objectiveBox.SetText(objectiveText);
 
   }
 
@@ -48,6 +51,10 @@ public class HUDMenu : Container{
     itemBox = (Godot.TextEdit)Menu.TextBox("item");
     itemBox.Readonly = true;
     AddChild(itemBox);
+    
+    objectiveBox = (Godot.TextEdit)Menu.TextBox("Object Info");
+    objectiveBox.Readonly = true;
+    AddChild(objectiveBox);
     
     ScaleControls();
   }
@@ -61,7 +68,7 @@ public class HUDMenu : Container{
 
     Menu.ScaleControl(healthBox, 2 * wu, hu, 0, height - hu);
     Menu.ScaleControl(itemBox, 2 * wu, hu, 8 * wu, 9 * hu);
-
+    Menu.ScaleControl(objectiveBox, 4 * wu, hu, 3 * wu, 0);
   }
 
 }
