@@ -66,8 +66,8 @@ public class Session : Node {
   }
   
   public void QuitToMainMenu(){
-    ClearGame();
     ChangeMenu(Menu.Menus.Main);
+    ClearGame();
   }
   
   /* Kills everything and starts a single-player game session. */
@@ -87,6 +87,7 @@ public class Session : Node {
       activeMenu = null;
     }
     activeMenu = Menu.MenuFactory(menu);
+    
   }
   
   private void EnforceSingleton(){

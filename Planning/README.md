@@ -152,6 +152,7 @@ Options
 Should allow users to quit the game.
 
 Options
+- Resume
 - Return to main menu
 - Quit
 

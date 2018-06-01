@@ -38,7 +38,7 @@ public class Menu{
         Sound.PauseSong();
         return null; 
         break;
-      case Menus.HUD: HUDMenu(); break;
+      case Menus.HUD: ret = HUDMenu(); break;
       case Menus.Pause: ret = PauseMenu(); break;
       case Menus.Main: ret = MainMenu(); break;
       case Menus.Multiplayer: ret = MultiplayerMenu(); break;
