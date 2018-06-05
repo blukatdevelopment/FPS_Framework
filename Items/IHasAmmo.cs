@@ -1,6 +1,6 @@
 interface IHasAmmo {
     
-	  /* Show up to max ammo */
+    /* Show up to max ammo */
     int CheckAmmo(string ammoType, int max);
 
     /* Return up to max ammo, removing that ammo from inventory. */

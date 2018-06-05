@@ -135,22 +135,23 @@ public class MultiplayerMenu : Container
     
     
     public void StartClient(){
-      GD.Print("Start client");
       //startClientButton.SetText("Joining...");
       
       NetworkSession netSes = new NetworkSession();
+      netSes.initAddress = addressBox.GetText();
+      netSes.initPort = portBox.GetText();
       Session.session.AddChild(netSes);
       Session.session.netSes = netSes;
 
-      netSes.isServer = false;
 
+      netSes.isServer = false;
+      netSes.initName = nameBox.GetText();
 
       Session.session.ChangeMenu(Menu.Menus.Lobby);
     }
     
     
     public void StartServer(){
-      GD.Print("Start Server");
       //startServerButton.SetText("Hosting...");
       
       NetworkSession netSes = new NetworkSession();
@@ -158,7 +159,7 @@ public class MultiplayerMenu : Container
       Session.session.netSes = netSes;
 
       netSes.isServer = true;
-
+      netSes.initPort = portBox.GetText();
 
       Session.session.ChangeMenu(Menu.Menus.Lobby);
     }

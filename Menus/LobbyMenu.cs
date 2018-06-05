@@ -11,6 +11,8 @@ public class LobbyMenu : Container
     Godot.Button mainMenuButton;
     Godot.TextEdit playersBox;
     
+
+    private string myName;
     private List<string> messages;
 
     public override void _Ready() {
@@ -35,7 +37,26 @@ public class LobbyMenu : Container
       playersBox.Readonly = true;
       AddChild(playersBox);
       
+      InitNetwork();
+
       ScaleControls();
+    }
+
+    void InitNetwork(){
+      if(Session.session.netSes == null){
+        GD.Print("No network session found in lobby menu");
+        return;
+      }
+
+      NetworkSession netSes = Session.session.netSes;
+
+      if(netSes.isServer){
+        netSes.InitServer(obj: this, playerJoin: "PlayerJoined", playerLeave: "PlayerQuit", port : netSes.initPort);
+      }
+      else{
+        netSes.InitClient(address: netSes.initAddress, obj: this, success: "ConnectionSucceeded", fail: "ConnectionFailed", port: netSes.initPort);
+      }
+
     }
     
     void ScaleControls(){
@@ -58,14 +79,40 @@ public class LobbyMenu : Container
     
     public void Send(){
       if(composeBox != null && composeBox.GetText() != ""){
-        string name = "Name!";
+        
         string message = composeBox.GetText(); 
-        ReceiveNamedMessage(message, name);
-        Rpc(nameof(ReceiveNamedMessage), message, name);
+        ReceiveNamedMessage(message, myName);
+        Rpc(nameof(ReceiveNamedMessage), message, myName);
         composeBox.SetText("");
       }
     }
     
+    public void PlayerJoined(int id){
+      //ReceiveMessage("Player " + id + " joined.");
+    }
+
+    public void PlayerQuit(int id){
+      //ReceiveMessage("Player " + id + " quit.");
+    }
+
+    public void ConnectionSucceeded(){
+      GD.Print("Connection succeeded!");
+      NetworkSession netSes = Session.session.netSes;
+      myName = netSes.initName;
+      
+      if(myName == "Name"){
+        myName = "Player #" + netSes.peer.GetUniqueId().ToString();
+      }
+
+      string message = myName + " joined!"; 
+      ReceiveMessage(message);
+      Rpc(nameof(ReceiveMessage), message);
+    }
+
+    public void ConnectionFailed(){
+      ReceiveMessage("Connection failed. :(");
+    }
+
     [Remote]
     public void ReceiveMessage(string message){
       if(messages.Count > 50){ messages.Remove(messages.First()); }
@@ -84,7 +131,7 @@ public class LobbyMenu : Container
     }
     
     [Remote]
-    public void UpdatePlayers(){
+    public void UpdatePlayers(int id, PlayerData data){
       NetworkSession netSes = Session.session.netSes;
       if(netSes == null){ return; }
       
