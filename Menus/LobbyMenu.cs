@@ -49,6 +49,8 @@ public class LobbyMenu : Container
       }
 
       NetworkSession netSes = Session.session.netSes;
+      
+      myName = "Server";
 
       if(netSes.isServer){
         netSes.InitServer(obj: this, playerJoin: "PlayerJoined", playerLeave: "PlayerQuit", port : netSes.initPort);
@@ -56,7 +58,7 @@ public class LobbyMenu : Container
       else{
         netSes.InitClient(address: netSes.initAddress, obj: this, success: "ConnectionSucceeded", fail: "ConnectionFailed", port: netSes.initPort);
       }
-
+      BuildPlayers();
     }
     
     void ScaleControls(){
@@ -133,7 +135,7 @@ public class LobbyMenu : Container
     
     [Remote]
     public void ReceiveNamedMessage(string message, string name){
-      string fullMessage = name + ":" + message;
+      string fullMessage = name + ": " + message;
       ReceiveMessage(fullMessage);  
     }
     
