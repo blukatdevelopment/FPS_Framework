@@ -18,10 +18,30 @@ public class NetworkSession : Node {
   public int selfPeerId;
   public Dictionary<int, List<string>> playerInfo;
   
+  // Init variables
+  public bool isServer;
+  public Godot.object initObj;
+  public string initPlayerJoin;
+  public string initPlayerLeave;
+  public string initAddress;
+  public string initSuccess;
+  public string initFail;
+
+  
   public override void _Ready(){
     playerInfo = new Dictionary<int, List<string>>();
   }
   
+  // Will use either InitServer or InitClient using init variables.
+  public void Init(){
+      if(server){
+        Initserver(initObj, initPlayerJoin, initPlayerLeave);
+      }
+      else{
+        InitClient(initAddress, initObj, initSuccess, initFail);
+      }
+  }
+
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave){
     peer = new Godot.NetworkedMultiplayerENet();
     this.GetTree().Connect("network_peer_connected", obj, playerJoin);

@@ -15,9 +15,10 @@ public class Session : Node {
   private Node activeMenu;
   public Arena arena;
   public NetworkSession netSes;
+
   public JukeBox jukeBox;
   
-  
+
   public Actor player;
 
   public override void _Ready() {
@@ -55,6 +56,10 @@ public class Session : Node {
     if(arena != null){
       arena.QueueFree();
       arena = null;
+    }
+    if(netSes !- null){
+      netSes.QueueFree();
+      netSes = null;
     }
   }
   
