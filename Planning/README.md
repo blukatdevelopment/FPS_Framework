@@ -175,6 +175,7 @@ Info shown
 Networking architecture should be developed by modifying a single-player
 gamemode.
 
+
 **Join Existing Game**
 Upon Join, a NetworkSession should be initialized as client and 
 attempt to join the existing game on the port and address specified.
@@ -184,7 +185,7 @@ Upon host, a NetworkSession should be initialized as Server.
 
 **Sync Lobby**
 Synced Lobby actions
-- Send message
+- DONE Send message
 - Toggle start timer
 
 Synced game instance

@@ -93,16 +93,23 @@ public class LobbyMenu : Container
 
     public void PlayerQuit(int id){
       //ReceiveMessage("Player " + id + " quit.");
+      RemovePlayer(id);
+      Rpc(nameof(RemovePlayer), id);
     }
 
     public void ConnectionSucceeded(){
       GD.Print("Connection succeeded!");
       NetworkSession netSes = Session.session.netSes;
       myName = netSes.initName;
-      
+      int myId = netSes.peer.GetUniqueId();
+
       if(myName == "Name"){
-        myName = "Player #" + netSes.peer.GetUniqueId().ToString();
+        myName = "Player #" + myId.ToString();
       }
+
+      PlayerData data = new PlayerData(myName, myId);
+      AddPlayer(myId, myName);
+      Rpc(nameof(AddPlayer), myId, myName);
 
       string message = myName + " joined!"; 
       ReceiveMessage(message);
@@ -131,10 +138,30 @@ public class LobbyMenu : Container
     }
     
     [Remote]
-    public void UpdatePlayers(int id, PlayerData data){
+    public void AddPlayer(int id, string name){
       NetworkSession netSes = Session.session.netSes;
-      if(netSes == null){ return; }
-      
+      if(netSes == null){ 
+        GD.Print("No network session detected");
+        return; 
+      }
+      netSes.playerData.Add(id, name);
+      GD.Print("Added " + id + ", " + name);
+      BuildPlayers();
+    }
+
+    [Remote]
+    public void RemovePlayer(int id){
+      Session.session.netSes.playerData.Remove(id);
+      BuildPlayers();
+    }
+
+    void BuildPlayers(){
+      NetworkSession netSes = Session.session.netSes;
+      string names = "Players(" + netSes.playerData.Count + ")\n";
+      foreach(KeyValuePair<int, string> entry in netSes.playerData){
+        names += entry.Value + "\n";
+      }
+      playersBox.SetText(names);
     }
     
 }
