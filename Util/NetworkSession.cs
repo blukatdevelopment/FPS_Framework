@@ -20,7 +20,7 @@ public class NetworkSession : Node {
   
   // Init variables
   public bool isServer;
-  public Godot.object initObj;
+  public Godot.Object initObj;
   public string initPlayerJoin;
   public string initPlayerLeave;
   public string initAddress;
@@ -34,8 +34,8 @@ public class NetworkSession : Node {
   
   // Will use either InitServer or InitClient using init variables.
   public void Init(){
-      if(server){
-        Initserver(initObj, initPlayerJoin, initPlayerLeave);
+      if(isServer){
+        InitServer(initObj, initPlayerJoin, initPlayerLeave);
       }
       else{
         InitClient(initAddress, initObj, initSuccess, initFail);

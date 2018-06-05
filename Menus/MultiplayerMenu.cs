@@ -138,11 +138,11 @@ public class MultiplayerMenu : Container
       GD.Print("Start client");
       //startClientButton.SetText("Joining...");
       
-      NetworkSession netses = new NetworkSession();
+      NetworkSession netSes = new NetworkSession();
       Session.session.AddChild(netSes);
       Session.session.netSes = netSes;
 
-      netSes.server = false;
+      netSes.isServer = false;
 
 
       Session.session.ChangeMenu(Menu.Menus.Lobby);
@@ -153,11 +153,11 @@ public class MultiplayerMenu : Container
       GD.Print("Start Server");
       //startServerButton.SetText("Hosting...");
       
-      NetworkSession netses = new NetworkSession();
+      NetworkSession netSes = new NetworkSession();
       Session.session.AddChild(netSes);
       Session.session.netSes = netSes;
 
-      netSes.server = true;
+      netSes.isServer = true;
 
 
       Session.session.ChangeMenu(Menu.Menus.Lobby);

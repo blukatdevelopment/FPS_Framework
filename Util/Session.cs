@@ -57,7 +57,7 @@ public class Session : Node {
       arena.QueueFree();
       arena = null;
     }
-    if(netSes !- null){
+    if(netSes != null){
       netSes.QueueFree();
       netSes = null;
     }
