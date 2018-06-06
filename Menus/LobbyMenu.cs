@@ -10,13 +10,36 @@ public class LobbyMenu : Container
     Godot.Button sendButton;
     Godot.Button mainMenuButton;
     Godot.TextEdit playersBox;
+    Godot.Button readyButton;
     
+
+    private bool countDownActive = false;
+    private float timer = 0f;
+    private int countDown = 10;
+    private bool isReady = false;
+
 
     private string myName;
     private List<string> messages;
 
     public override void _Ready() {
-        messages = new List<string>();
+      messages = new List<string>();
+    }
+
+    public override void _Process(float delta){
+      
+      if(countDownActive){
+        timer += delta;
+        if(timer > 1f){
+          countDown--;
+          timer = 0;
+          BuildPlayers();
+        }
+        if(countDown < 1){
+          countDownActive = false;
+          GD.Print("Game started");
+        }
+      }
     }
     
     public void Init(){
@@ -32,10 +55,14 @@ public class LobbyMenu : Container
       
       mainMenuButton = (Godot.Button)Menu.Button("Main Menu", ReturnToMainMenu);
       AddChild(mainMenuButton);
+
+      readyButton = (Godot.Button)Menu.Button("Ready", ToggleReady);
+      AddChild(readyButton);
       
-      playersBox = (Godot.TextEdit)Menu.TextBox("Player1 \n Player2 \n Player3 \n etc");
+      playersBox = (Godot.TextEdit)Menu.TextBox("");
       playersBox.Readonly = true;
       AddChild(playersBox);
+
       
       InitNetwork();
 
@@ -73,6 +100,7 @@ public class LobbyMenu : Container
       Menu.ScaleControl(messageBox, 6 * wu, 8 * hu, 3 * wu, 0);
       Menu.ScaleControl(sendButton, wu, 2 * hu, 9 * wu, 8 * hu);
       Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
+      Menu.ScaleControl(readyButton, wu, hu, 2 * wu, 0);
     }
     
     public void ReturnToMainMenu(){
@@ -109,7 +137,7 @@ public class LobbyMenu : Container
         myName = "Player #" + myId.ToString();
       }
 
-      PlayerData data = new PlayerData(myName, myId);
+
       AddPlayer(myId, myName);
       Rpc(nameof(AddPlayer), myId, myName);
 
@@ -157,9 +185,41 @@ public class LobbyMenu : Container
       BuildPlayers();
     }
 
+    void ToggleReady(){
+      isReady = !isReady;
+      if(isReady){
+        readyButton.SetText("Waiting");
+        StartCountDown();
+        Rpc(nameof(StartCountDown));
+      }
+      else{
+        readyButton.SetText("Ready");
+      }
+
+    }
+
+    void StopCountDown(){
+      countDownActive = false;
+    }
+
+    [Remote]
+    void StartCountDown(){
+      timer = 0f;
+      countDown = 10;
+      countDownActive = true;
+      BuildPlayers();
+    }
+
     void BuildPlayers(){
       NetworkSession netSes = Session.session.netSes;
-      string names = "Players(" + netSes.playerData.Count + ")\n";
+      string names = "Players(" + netSes.playerData.Count + ")";
+      
+      if(countDownActive){
+        names += " Starting in " + countDown;
+      }
+
+      names += "\n";
+      
       foreach(KeyValuePair<int, string> entry in netSes.playerData){
         names += entry.Value + "\n";
       }
