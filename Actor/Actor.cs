@@ -346,7 +346,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void SyncPosition(){
     Vector3 pos = GetTranslation();
-    Rpc(nameof(SetTranslation), pos.x, pos.y, pos.z);
+    RpcUnreliable(nameof(SetPosition), pos.x, pos.y, pos.z);
   }
 
   public void SyncAim(){
@@ -373,7 +373,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void SetPosition(float x, float y, float z){
     Vector3 pos = new Vector3(x, y, z);
-
+    SetTranslation(pos);
   }
 
   public void Turn(float x, float y){
