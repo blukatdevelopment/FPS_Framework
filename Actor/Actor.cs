@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IHasAmmo, ILook {
   
@@ -330,10 +331,22 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void ReceiveDamage(Damage damage){
+    string damageJson = JsonConvert.SerializeObject(damage, Formatting.Indented);
+    DoReceiveDamage(damageJson);
+    if(netActive){
+      Rpc(nameof(DoReceiveDamage), damageJson);
+    }
+  }
+
+  [Remote]
+  public void DoReceiveDamage(string damageJson){
+    Damage damage = JsonConvert.DeserializeObject<Damage>(damageJson);
+    
     if(health <= 0){
       return;
     }
     health -= damage.health;
+    
     if(damage.health > 0 && health > 0){
       speaker.PlayEffect(Sound.Effects.ActorDamage);
     }
@@ -345,10 +358,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(health > healthMax){
       health = healthMax;
     }
-    
   }
   
   public void Die(){
+    GD.Print("Actor Died");
     Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
     SessionEvent evt = new SessionEvent();
     evt.type = SessionEvent.Types.ActorDied;
