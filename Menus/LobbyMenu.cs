@@ -85,11 +85,11 @@ public class LobbyMenu : Container
       myName = "Server";
 
       if(netSes.isServer){
-        netSes.InitServer(obj: this, playerJoin: "PlayerJoined", playerLeave: "PlayerQuit", port : netSes.initPort);
+        netSes.InitServer(obj: this, playerJoin: nameof(PlayerJoined), playerLeave: nameof(PlayerQuit), port : netSes.initPort);
         ReceiveMessage("Server initialized with random seed: " + netSes.randomSeed);
       }
       else{
-        netSes.InitClient(address: netSes.initAddress, obj: this, success: "ConnectionSucceeded", fail: "ConnectionFailed", port: netSes.initPort);
+        netSes.InitClient(address: netSes.initAddress, obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected),  port: netSes.initPort);
       }
       BuildPlayers();
     }
@@ -124,11 +124,13 @@ public class LobbyMenu : Container
     }
     
     public void PlayerJoined(int id){
+      /*
       foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
         int datId = entry.Value.id;
         string datJson = JsonConvert.SerializeObject(entry.Value, Formatting.Indented);
-        RpcId(datId, nameof(AddPlayer), datJson);
+        RpcId(id, nameof(AddPlayer), datJson);
       }
+      */
     }
 
     [Remote]
@@ -143,6 +145,7 @@ public class LobbyMenu : Container
       Rpc(nameof(RemovePlayer), id);
     }
 
+    /* Called before peers connect. */
     public void ConnectionSucceeded(){
       GD.Print("Connection succeeded!");
       NetworkSession netSes = Session.session.netSes;
@@ -157,12 +160,21 @@ public class LobbyMenu : Container
       string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
 
       AddPlayer(json);
+      GD.Print("Adding player");
       Rpc(nameof(AddPlayer), json);
 
       string message = myName + " joined!"; 
       ReceiveMessage(message);
       Rpc(nameof(ReceiveMessage), message);
     }
+
+    public void PeerConnected(int id){
+      int myId = Session.session.netSes.selfPeerId;
+      PlayerData myDat = Session.session.netSes.playerData[myId];
+      string myJson = JsonConvert.SerializeObject(myDat, Formatting.Indented);
+      RpcId(id, nameof(AddPlayer), myJson);
+    }
+
 
     public void ConnectionFailed(){
       ReceiveMessage("Connection failed. :(");

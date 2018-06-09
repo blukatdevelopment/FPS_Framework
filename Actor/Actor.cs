@@ -7,7 +7,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public enum Brains{
     Player1, // Local player leveraging keyboard input.
     Ai,      // Computer player
-    Peer     // Remote player controlled via RPC calls
+    Remote     // Remote player controlled via RPC calls
   };
   
   private Brain brain;
@@ -56,7 +56,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       case Brains.Ai: 
         brain = (Brain)new Ai(this, eyes); 
         break;
-      case Brains.Peer:
+      case Brains.Remote:
         brain = null;
         break;
 

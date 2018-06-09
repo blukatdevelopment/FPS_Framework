@@ -53,12 +53,13 @@ public class NetworkSession : Node {
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
   
-  public void InitClient(string address, Godot.Object obj, string success, string fail, string port = ""){
+  public void InitClient(string address, Godot.Object obj, string success, string peerJoin, string fail, string port = ""){
     GD.Print("Initializing Client");
 
     GetTree().Connect("connected_to_server", obj, success);
     GetTree().Connect("connection_failed", obj, fail);
-    
+    GetTree().Connect("network_peer_connected", obj, peerJoin);
+
     int usedPort = DefaultPort;
 
     int customPort = 0;

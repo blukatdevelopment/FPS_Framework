@@ -24,7 +24,7 @@ public class Arena : Spatial {
   public void SinglePlayerInit(){
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
-    SpawnActor();
+    SpawnActor(Actor.Brains.Player1);
     SpawnActor(Actor.Brains.Ai);
   }
 
@@ -38,10 +38,10 @@ public class Arena : Spatial {
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
       if(id == myId){
-
+        SpawnActor(Actor.Brains.Player1);
       }
       else{
-
+        SpawnActor(Actor.Brains.Remote);
       }
     }
   }
