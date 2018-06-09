@@ -27,18 +27,22 @@ public class LobbyMenu : Container
     }
 
     public override void _Process(float delta){
-      
       if(countDownActive){
-        timer += delta;
-        if(timer > 1f){
-          countDown--;
-          timer = 0;
-          BuildPlayers();
-        }
-        if(countDown < 1){
-          countDownActive = false;
-          GD.Print("Game started");
-        }
+        CountDown(delta);
+      }
+      
+    }
+
+    void CountDown(float delta){
+      timer += delta;
+      if(timer > 1f){
+        countDown--;
+        timer = 0;
+        BuildPlayers();
+      }
+      if(countDown < 1){
+        countDownActive = false;
+        StartGame();
       }
     }
     
@@ -131,7 +135,7 @@ public class LobbyMenu : Container
       GD.Print("Connection succeeded!");
       NetworkSession netSes = Session.session.netSes;
       myName = netSes.initName;
-      int myId = netSes.peer.GetUniqueId();
+      int myId = netSes.selfPeerId;
 
       if(myName == "Name"){
         myName = "Player #" + myId.ToString();
@@ -174,7 +178,9 @@ public class LobbyMenu : Container
         GD.Print("No network session detected");
         return; 
       }
-      netSes.playerData.Add(id, name);
+      PlayerData dat = new PlayerData(name, id);
+
+      netSes.playerData.Add(id, dat);
       GD.Print("Added " + id + ", " + name);
       BuildPlayers();
     }
@@ -187,10 +193,13 @@ public class LobbyMenu : Container
 
     void ToggleReady(){
       isReady = !isReady;
-      if(isReady){
+      int myId = Session.session.netSes.selfPeerId;
+      
+      TogglePlayerReady(myId);
+      Rpc(nameof(TogglePlayerReady), myId);
+      
+      if(isReady){  
         readyButton.SetText("Waiting");
-        StartCountDown();
-        Rpc(nameof(StartCountDown));
       }
       else{
         readyButton.SetText("Ready");
@@ -198,12 +207,55 @@ public class LobbyMenu : Container
 
     }
 
+    [Remote]
+    public void TogglePlayerReady(int playerId){
+      GD.Print("Toggling player " + playerId);
+      PlayerData dat = Session.session.netSes.playerData[playerId];
+      
+      if(dat == null){
+        GD.Print("Player " + playerId + " doesn't exist.");
+        return;
+      }
+
+      dat.ready = !dat.ready;
+      string message = dat.name;
+      message += dat.ready ? "is ready." : "is not ready.";
+
+      if(AllPlayersReady()){
+        StartCountDown();
+
+      }
+      else{
+        StopCountDown();
+      }
+
+      //ReceiveMessage(message);
+      Rpc(nameof(ReceiveMessage), message);
+    }
+
+    public bool AllPlayersReady(){
+      NetworkSession netSes = Session.session.netSes;
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        if(entry.Value.ready == false){
+          return false;
+        }
+      }
+      return true;
+    }
+
+    public void StartGame(){
+      GD.Print("Game started!");
+    }
+
     void StopCountDown(){
       countDownActive = false;
+      BuildPlayers();
+      GD.Print("Stopping countdown");
     }
 
     [Remote]
     void StartCountDown(){
+      GD.Print("Starting countdown");
       timer = 0f;
       countDown = 10;
       countDownActive = true;
@@ -220,8 +272,8 @@ public class LobbyMenu : Container
 
       names += "\n";
       
-      foreach(KeyValuePair<int, string> entry in netSes.playerData){
-        names += entry.Value + "\n";
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        names += entry.Value.name + "\n";
       }
       playersBox.SetText(names);
     }

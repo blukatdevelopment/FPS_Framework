@@ -16,7 +16,7 @@ public class NetworkSession : Node {
   private const int MaxPlayers = 10;
   public const string DefaultServerAddress = "127.0.0.1";
   public int selfPeerId;
-  public Dictionary<int, string> playerData;
+  public Dictionary<int, PlayerData> playerData;
   
   // Init variables
   public bool isServer;
@@ -26,7 +26,7 @@ public class NetworkSession : Node {
 
   
   public override void _Ready(){
-    playerData = new Dictionary<int, string>();
+    playerData = new Dictionary<int, PlayerData>();
   }
 
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave, string port = ""){
@@ -42,8 +42,6 @@ public class NetworkSession : Node {
     if(port != "" && Int32.TryParse(port, out customPort)){
       usedPort = customPort;
     }
-
-    this.initName = "Server";
 
     peer.CreateServer(DefaultPort, MaxPlayers);
     this.GetTree().SetNetworkPeer(peer);
