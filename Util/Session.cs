@@ -55,6 +55,14 @@ public class Session : Node {
     return false;
   }
 
+  /* Used for syncing items. */
+  public static bool IsServer(){
+    if(session.netSes != null){
+      return session.netSes.isServer;
+    }
+    return false;
+  }
+
   /* Convenience method for creating nodes. */
   public static Node Instance(string path){
     PackedScene packedScene = (PackedScene)GD.Load(path);

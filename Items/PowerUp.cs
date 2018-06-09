@@ -1,6 +1,6 @@
 public class PowerUp : Item {
   
-  public override void OnCollide(object body){
+  public override void DoOnCollide(object body){
     ApplyPowerUp(body);
   }
   

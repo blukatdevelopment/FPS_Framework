@@ -56,12 +56,16 @@ public class Arena : Spatial {
   
   public void HandleEvent(SessionEvent sessionEvent){
     if(sessionEvent.type == SessionEvent.Types.ActorDied ){
-      GD.Print("Respawning player");
+      
       Actor[] actors = sessionEvent.actors;
       if(actors != null && actors.Length > 0 && actors[0] != null){
         Actor.Brains brain = actors[0].brainType;
+        int id = actors[0].netId;
+        GD.Print("Respawning player id " + id);
+        Node actorNode = actors[0] as Node;
+        actorNode.Name = "Deadplayer" + id;
         actors[0].QueueFree();
-        SpawnActor(brain);
+        SpawnActor(brain, id);
       }
     }
     else if(sessionEvent.type == SessionEvent.Types.Pause){
@@ -116,6 +120,7 @@ public class Arena : Spatial {
   public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1, int id = 0){
     Vector3 pos = RandomActorSpawn();
     Actor actor = Actor.ActorFactory(brain);
+    actor.netId = id;
     actors.Add(actor);
     actor.SetPos(pos);
     Node actorNode = actor as Node;
@@ -124,7 +129,6 @@ public class Arena : Spatial {
     }
     
     AddChild(actorNode);
-    GD.Print(actorNode);
     return actor;
   }
   

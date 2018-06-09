@@ -51,6 +51,26 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     return false;
   }
   
+  public override void _Process(float delta){
+    if(Session.IsServer()){
+      SyncPosition();
+    }
+  }
+
+  public void SyncPosition(){
+    Vector3 position = GetTranslation();
+    float x = position.x;
+    float y = position.y;
+    float z = position.z;
+    RpcUnreliable(nameof(SetPosition), x, y, z);
+  }
+
+  [Remote]
+  public void SetPosition(float x, float y, float z){
+    Vector3 pos = new Vector3(x, y, z);
+    SetTranslation(pos); 
+  }
+
   void InitArea(){
     List<CollisionShape> shapes = GetCollisionShapes();
     Area area = new Area();
@@ -64,8 +84,20 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
         //GD.Print("Adding shape" + j + " to owner " + i);
       }
     }
-    area.Connect("body_entered", this, "OnCollide");
+    area.Connect("body_entered", this, nameof(OnCollide));
     AddChild(area);
+  }
+
+  public void OnCollide(object body){
+    if(!Session.NetActive()){
+      GD.Print("Colliding because !netactive");
+      DoOnCollide(body);
+    }
+    else if(Session.IsServer()){
+      GD.Print("Colliding because isserver");
+      DoOnCollide(body);
+    }
+    
   }
 
   
@@ -115,7 +147,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
   
 
   
-  public virtual void OnCollide(object body){}
+  public virtual void DoOnCollide(object body){}
   
   /* Returns a base/simple item by it's name. */
   public static Item Factory(Types type){

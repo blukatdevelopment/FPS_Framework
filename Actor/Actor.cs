@@ -45,6 +45,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
 
+  // Network
+  public int netId;
+
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
@@ -281,8 +284,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
     
   public override void _Process(float delta){
-      if(brain != null){ brain.Update(delta); }
-      Gravity(delta);
+      if(brainType != Brains.Remote){ 
+        brain.Update(delta); 
+        Gravity(delta);
+      }
   }
   
   public void Gravity(float delta){ 
@@ -334,6 +339,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DoReceiveDamage(string damageJson){
+    GD.Print("Receiving damage");
     Damage damage = JsonConvert.DeserializeObject<Damage>(damageJson);
     
     if(health <= 0){
