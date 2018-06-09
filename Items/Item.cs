@@ -34,7 +34,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
-  
+
   public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
     this.description = description;

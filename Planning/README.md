@@ -176,27 +176,26 @@ Networking architecture should be developed by modifying a single-player
 gamemode.
 
 
-**Join Existing Game**
+**DONE Join Existing Game**
 Upon Join, a NetworkSession should be initialized as client and 
 attempt to join the existing game on the port and address specified.
 
-**Host New Game**
+**DONE Host New Game**
 Upon host, a NetworkSession should be initialized as Server.
 
-**Sync Lobby**
+**DONE Sync Lobby**
 Synced Lobby actions
 - DONE Send message
-- Toggle start timer
+- DONE Toggle start timer
 
 Synced game instance
 Each Item and Actor should contain RPC calls that are only made when a
 NetworkSession exists and has netActive is true( a static Session.NetActive()
 would make this check less verbose). 
 
-- Current player movement/position (~20 times per second) from within _Process
 - Item pickup
-- Item switching
-- Item Use
+- DONE Item switching
+- DONE Item Use
 
 ##DONE Core Programming
 System architecture should strive for modularity and loose coupling to allow

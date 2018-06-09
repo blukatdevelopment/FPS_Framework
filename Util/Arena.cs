@@ -43,6 +43,8 @@ public class Arena : Spatial {
         SpawnActor(Actor.Brains.Remote, id);
       }
     }
+    SpawnItem(Item.Types.HealthPack);
+    SpawnItem(Item.Types.AmmoPack);
   }
   
   public void InitTerrain(){

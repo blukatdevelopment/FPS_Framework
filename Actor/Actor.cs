@@ -45,9 +45,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
 
-
-  // Network
-  public bool netActive = false;
   
   public void Init(Brains b = Brains.Player1){
     InitChildren();
@@ -56,9 +53,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       case Brains.Player1: 
         brain = (Brain)new ActorInputHandler(this, eyes); 
         Session.session.player = this;
-        if(Session.session.netSes != null){
-          netActive = true;
-        }
         break;
       case Brains.Ai: 
         brain = (Brain)new Ai(this, eyes); 
@@ -190,7 +184,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void SwitchItem(){
     DoSwitchItem();
-    if(netActive){
+    if(Session.NetActive()){
       Rpc(nameof(DoSwitchItem));
     }
   }
@@ -269,7 +263,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void Use(Item.Uses use, bool released = false){
     DoUse(use, released);
-    if(netActive){
+    if(Session.NetActive()){
       Rpc(nameof(DoUse), use, released);
     }
   }
@@ -333,7 +327,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void ReceiveDamage(Damage damage){
     string damageJson = JsonConvert.SerializeObject(damage, Formatting.Indented);
     DoReceiveDamage(damageJson);
-    if(netActive){
+    if(Session.NetActive()){
       Rpc(nameof(DoReceiveDamage), damageJson);
     }
   }

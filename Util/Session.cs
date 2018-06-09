@@ -48,6 +48,13 @@ public class Session : Node {
     return new System.Random();
   }
 
+  public static bool NetActive(){
+    if(session.netSes != null){
+      return true;
+    }
+    return false;
+  }
+
   /* Convenience method for creating nodes. */
   public static Node Instance(string path){
     PackedScene packedScene = (PackedScene)GD.Load(path);
