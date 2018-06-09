@@ -188,7 +188,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void SwitchItem(){
-    if(debug){ GD.Print("Actor: Switched Item"); }
+    DoSwitchItem();
+    if(netActive){
+      Rpc(nameof(DoSwitchItem));
+    }
+  }
+
+  [Remote]
+  public void DoSwitchItem(){
+    GD.Print("Actor: Switched Item");
     unarmed = !unarmed;
     if(unarmed){
       EquipItem(0);
@@ -196,7 +204,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     else{
       EquipItem(1);
     }
-    
   }
   
   /* Equip item based on index in items. */
@@ -258,14 +265,24 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem.IsBusy();
   }
   
-  /* Relays call to active item. */
+  
   public void Use(Item.Uses use, bool released = false){
+    DoUse(use, released);
+    if(netActive){
+      Rpc(nameof(DoUse), use, released);
+    }
+  }
+
+
+  [Remote]
+  public void DoUse(Item.Uses use, bool released = false){
     if(activeItem == null){
       GD.Print("No item equipped.");
       return;
     }
     activeItem.Use(use);
   }
+
   
     
   public override void _Process(float delta){
@@ -355,7 +372,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     float x = bodyRot.y;
     float y = headRot.x;
-    
+
     RpcUnreliable(nameof(SetRotation), x, y);
   }
 

@@ -7,7 +7,7 @@ public class ActorInputHandler : Brain {
   private Dictionary<InputEvent.Buttons, bool> held; 
   private float delta = 1f;
   private float syncTimer = 0f;
-  public const float syncRate = 0.1f;
+  public const float syncRate = 0.05f;
   
   public ActorInputHandler(Actor actor, Spatial eyes) : base (actor, eyes){
     InitHeld();
@@ -115,7 +115,8 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.R: actor.Use(Item.Uses.D); break;
     }
   }
-  
+
+
   private void HandleAxis(InputEvent evt){
     if(evt.axis == InputEvent.Axes.Mouse){
       actor.Turn(evt.x, evt.y);
