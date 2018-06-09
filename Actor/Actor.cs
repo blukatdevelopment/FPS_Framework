@@ -4,7 +4,12 @@ using System.Collections.Generic;
 
 public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IHasAmmo, ILook {
   
-  public enum Brains{Player1, Ai}; // Possible brains to use.
+  public enum Brains{
+    Player1, // Local player leveraging keyboard input.
+    Ai,      // Computer player
+    Peer     // Remote player controlled via RPC calls
+  };
+  
   private Brain brain;
   public Brains brainType;
   private Eyes eyes;
@@ -48,7 +53,13 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         brain = (Brain)new ActorInputHandler(this, eyes); 
         Session.session.player = this;
         break;
-      case Brains.Ai: brain = (Brain)new Ai(this, eyes); break;
+      case Brains.Ai: 
+        brain = (Brain)new Ai(this, eyes); 
+        break;
+      case Brains.Peer:
+        brain = null;
+        break;
+
     }
     if(eyes != null){
       eyes.SetRotationDegrees(new Vector3(0, 0, 0));  

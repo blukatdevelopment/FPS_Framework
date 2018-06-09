@@ -17,7 +17,9 @@ public class NetworkSession : Node {
   public const string DefaultServerAddress = "127.0.0.1";
   public int selfPeerId;
   public Dictionary<int, PlayerData> playerData;
-  
+  public int randomSeed;
+  public System.Random random;
+
   // Init variables
   public bool isServer;
   public string initAddress;
@@ -42,6 +44,9 @@ public class NetworkSession : Node {
     if(port != "" && Int32.TryParse(port, out customPort)){
       usedPort = customPort;
     }
+
+    this.randomSeed = (int)DateTime.Now.Ticks;
+    this.random = new Random(randomSeed);
 
     peer.CreateServer(DefaultPort, MaxPlayers);
     this.GetTree().SetNetworkPeer(peer);
@@ -68,5 +73,10 @@ public class NetworkSession : Node {
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
   
+
+  public void InitRandom(int seed){
+    this.randomSeed = seed;
+    this.random = new System.Random(randomSeed);
+  }
   
 }

@@ -85,6 +85,7 @@ public class LobbyMenu : Container
 
       if(netSes.isServer){
         netSes.InitServer(obj: this, playerJoin: "PlayerJoined", playerLeave: "PlayerQuit", port : netSes.initPort);
+        ReceiveMessage("Server initialized with random seed: " + netSes.randomSeed);
       }
       else{
         netSes.InitClient(address: netSes.initAddress, obj: this, success: "ConnectionSucceeded", fail: "ConnectionFailed", port: netSes.initPort);
@@ -123,6 +124,13 @@ public class LobbyMenu : Container
     
     public void PlayerJoined(int id){
       //ReceiveMessage("Player " + id + " joined.");
+      RpcId(id, nameof(InitRandomSeed), Session.session.netSes.randomSeed);
+    }
+
+    [Remote]
+    public void InitRandomSeed(int randomSeed){
+      Session.session.netSes.InitRandom(randomSeed);
+      GD.Print("Random seed initialized as " + randomSeed);
     }
 
     public void PlayerQuit(int id){

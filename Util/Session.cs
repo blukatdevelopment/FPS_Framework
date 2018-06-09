@@ -41,6 +41,13 @@ public class Session : Node {
     AddChild(jukeBox);
   }
   
+  public static System.Random GetRandom(){
+    if(Session.session.netSes != null && Session.session.netSes.random != null){
+      return Session.session.netSes.random;
+    }
+    return new System.Random();
+  }
+
   /* Convenience method for creating nodes. */
   public static Node Instance(string path){
     PackedScene packedScene = (PackedScene)GD.Load(path);

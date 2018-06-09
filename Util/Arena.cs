@@ -13,10 +13,17 @@ public class Arena : Spatial {
     actors = new List<Actor>();
     InitTerrain();
     InitSpawnPoints();
+  }
+
+  public void SinglePlayerInit(){
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
     SpawnActor();
     SpawnActor(Actor.Brains.Ai);
+  }
+
+  public void MultiplayerInit(){
+    
   }
   
   public void InitTerrain(){
@@ -80,7 +87,7 @@ public class Arena : Spatial {
   }
   
   public Vector3 RandomItemSpawn(){
-    System.Random rand = new System.Random();
+    System.Random rand = Session.GetRandom();
     int randInt = rand.Next(itemSpawnPoints.Count);
     return itemSpawnPoints[randInt];
   }
