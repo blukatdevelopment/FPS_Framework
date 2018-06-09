@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class LobbyMenu : Container
 {
@@ -149,6 +150,9 @@ public class LobbyMenu : Container
         myName = "Player #" + myId.ToString();
       }
 
+      PlayerData dat = new PlayerData(myName, myId);
+
+      Rpc(nameof(PrintPlayer), JsonConvert.SerializeObject(dat, Formatting.Indented));
 
       AddPlayer(myId, myName);
       Rpc(nameof(AddPlayer), myId, myName);
@@ -252,7 +256,7 @@ public class LobbyMenu : Container
     }
 
     public void StartGame(){
-      GD.Print("Game started!");
+      Session.session.MultiPlayerGame();
     }
 
     void StopCountDown(){
@@ -269,6 +273,12 @@ public class LobbyMenu : Container
       countDownActive = true;
       BuildPlayers();
     }
+
+    [Remote]
+    void PrintPlayer(string dat){
+      GD.Print("Printing player " + dat);
+    }
+
 
     void BuildPlayers(){
       NetworkSession netSes = Session.session.netSes;

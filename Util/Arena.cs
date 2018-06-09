@@ -13,6 +13,12 @@ public class Arena : Spatial {
     actors = new List<Actor>();
     InitTerrain();
     InitSpawnPoints();
+    if(singlePlayer){
+      SinglePlayerInit();
+    }
+    else{
+      MultiplayerInit();
+    }
   }
 
   public void SinglePlayerInit(){
@@ -23,7 +29,21 @@ public class Arena : Spatial {
   }
 
   public void MultiplayerInit(){
-    
+    NetworkSession netSes = Session.session.netSes;
+    if(netSes.isServer){
+      return;
+    }
+
+    int myId = netSes.selfPeerId;
+    foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+      int id = entry.Value.id;
+      if(id == myId){
+
+      }
+      else{
+
+      }
+    }
   }
   
   public void InitTerrain(){
@@ -102,7 +122,7 @@ public class Arena : Spatial {
   }
   
   public Vector3 RandomActorSpawn(){
-    System.Random rand = new System.Random();
+    System.Random rand = Session.GetRandom();
     int randInt = rand.Next(actorSpawnPoints.Count);
     return actorSpawnPoints[randInt];
   }
