@@ -7,9 +7,9 @@ using System;
 
 public class Brain {
   protected Actor actor;
-  protected Eyes eyes;
+  protected Spatial eyes;
   
-  public Brain(Actor actor, Eyes eyes = null){
+  public Brain(Actor actor, Spatial eyes = null){
       this.actor = actor;
       this.eyes = eyes;
   }

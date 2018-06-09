@@ -36,7 +36,7 @@ public class Arena : Spatial {
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
       if(id == myId && !Session.session.netSes.isServer){
-        GD.Print("Addingplayer1");
+        
         SpawnActor(Actor.Brains.Player1, id);
       }
       else{
@@ -122,6 +122,7 @@ public class Arena : Spatial {
     }
     
     AddChild(actorNode);
+    GD.Print(actorNode);
     return actor;
   }
   

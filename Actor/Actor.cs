@@ -12,7 +12,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   private Brain brain;
   public Brains brainType;
-  private Eyes eyes;
+  private Spatial eyes;
   public bool debug = false;
   
   const int maxY = 90;
@@ -345,7 +345,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void SyncPosition(){
-    GD.Print("Syncing position");
     Vector3 pos = GetTranslation();
     Rpc(nameof(SetTranslation), pos.x, pos.y, pos.z);
   }
@@ -452,11 +451,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     switch(brain){
       case Brains.Player1: 
         Node eyeInstance = Session.Instance("res://Scenes/Prefabs/Eyes.tscn");
-        actor.eyes = eyeInstance as Eyes;
+        actor.eyes = eyeInstance as Spatial;
         break;
       default:
         GD.Print("Giving default eyes to player");
-        actor.eyes = null;// new Eyes();
+        actor.eyes = new Spatial();
         break;
     }
     

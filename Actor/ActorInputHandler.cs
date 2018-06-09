@@ -9,17 +9,17 @@ public class ActorInputHandler : Brain {
   private float syncTimer = 0f;
   public const float syncRate = 0.1f;
   
-  public ActorInputHandler(Actor actor, Eyes eyes) : base (actor, eyes){
+  public ActorInputHandler(Actor actor, Spatial eyes) : base (actor, eyes){
     InitHeld();
     InitEyes(eyes);
-    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes);
+    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes as Eyes);
   }
   
   
   private void InitEyes(Node eyes){
     if(eyes == null){ GD.Print("ActorInputHandler:Eyes were null"); }
     else{
-      this.eyes = eyes as Eyes;
+      this.eyes = eyes as Spatial;
       if(eyes == null){
         GD.Print("ActorInputHandler:Eyes failed to cast.");
       }
