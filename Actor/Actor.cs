@@ -350,7 +350,13 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void SyncAim(){
+    Vector3 headRot = RotationDegrees();
+    Vector3 bodyRot = GetRotationDegrees();
 
+    float x = bodyRot.y;
+    float y = headRot.x;
+    
+    RpcUnreliable(nameof(SetRotation), x, y);
   }
 
   [Remote]
@@ -359,7 +365,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     bodyRot.y = x;
     this.SetRotationDegrees(bodyRot);
 
-    Vector3 headRot = eyes.GetRotationDegrees();
+    Vector3 headRot = RotationDegrees();
     headRot.x = y;
     if(headRot.x < minY){
       headRot.x = minY;  
