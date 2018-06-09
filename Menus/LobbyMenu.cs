@@ -251,7 +251,7 @@ public class LobbyMenu : Container
 
       dat.ready = !dat.ready;
       string message = dat.name;
-      message += dat.ready ? "is ready." : "is not ready.";
+      message += dat.ready ? " is ready." : " is not ready.";
 
       if(AllPlayersReady()){
         StartCountDown();
@@ -261,8 +261,7 @@ public class LobbyMenu : Container
         StopCountDown();
       }
 
-      //ReceiveMessage(message);
-      Rpc(nameof(ReceiveMessage), message);
+      ReceiveMessage(message);
     }
 
     public bool AllPlayersReady(){
