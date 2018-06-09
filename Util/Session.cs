@@ -98,6 +98,7 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
     AddChild(arenaNode);
+    arena = (Arena)arenaNode;
     arena.Init(false);
     if(netSes.isServer == false){
       ChangeMenu(Menu.Menus.HUD);

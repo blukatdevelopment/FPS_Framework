@@ -124,8 +124,11 @@ public class LobbyMenu : Container
     }
     
     public void PlayerJoined(int id){
-      //ReceiveMessage("Player " + id + " joined.");
-      RpcId(id, nameof(InitRandomSeed), Session.session.netSes.randomSeed);
+      foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+        int datId = entry.Value.id;
+        string datJson = JsonConvert.SerializeObject(entry.Value, Formatting.Indented);
+        RpcId(datId, nameof(AddPlayer), datJson);
+      }
     }
 
     [Remote]
@@ -151,11 +154,10 @@ public class LobbyMenu : Container
       }
 
       PlayerData dat = new PlayerData(myName, myId);
+      string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
 
-      Rpc(nameof(PrintPlayer), JsonConvert.SerializeObject(dat, Formatting.Indented));
-
-      AddPlayer(myId, myName);
-      Rpc(nameof(AddPlayer), myId, myName);
+      AddPlayer(json);
+      Rpc(nameof(AddPlayer), json);
 
       string message = myName + " joined!"; 
       ReceiveMessage(message);
@@ -184,16 +186,22 @@ public class LobbyMenu : Container
     }
     
     [Remote]
-    public void AddPlayer(int id, string name){
+    public void AddPlayer(string json){
+      PlayerData dat = JsonConvert.DeserializeObject<PlayerData>(json);
+      
+      if(dat == null){
+        GD.Print("AddPlayer: PlayerData null");
+        return;
+      }
+
       NetworkSession netSes = Session.session.netSes;
       if(netSes == null){ 
-        GD.Print("No network session detected");
+        GD.Print("AddPlayer: No network session detected");
         return; 
       }
-      PlayerData dat = new PlayerData(name, id);
-
-      netSes.playerData.Add(id, dat);
-      GD.Print("Added " + id + ", " + name);
+      
+      netSes.playerData.Add(dat.id, dat);
+      GD.Print("Added " + json);
       BuildPlayers();
     }
 
@@ -276,7 +284,8 @@ public class LobbyMenu : Container
 
     [Remote]
     void PrintPlayer(string dat){
-      GD.Print("Printing player " + dat);
+      PlayerData playerDat = JsonConvert.DeserializeObject<PlayerData>(dat);
+      GD.Print("Printing player " + playerDat);
     }
 
 
