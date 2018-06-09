@@ -16,7 +16,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public bool debug = false;
   
   const int maxY = 90;
-  const int minY = -90;
+  const int minY = -40;
   const float GravityAcceleration = -9.81f;
   const float TerminalVelocity = -53;
   
@@ -43,15 +43,21 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosX = 0;
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
+
+
+  // Network
+  public bool netActive = false;
   
   public void Init(Brains b = Brains.Player1){
-    
     InitChildren();
     this.brainType = b;
     switch(b){
       case Brains.Player1: 
         brain = (Brain)new ActorInputHandler(this, eyes); 
         Session.session.player = this;
+        if(Session.session.netSes != null){
+          netActive = true;
+        }
         break;
       case Brains.Ai: 
         brain = (Brain)new Ai(this, eyes); 
@@ -264,7 +270,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
   public override void _Process(float delta){
       if(brain != null){ brain.Update(delta); }
-      else{ GD.Print("Brain Null"); }
       Gravity(delta);
   }
   
@@ -339,8 +344,40 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return health;
   }
   
+  public void SyncPosition(){
+    GD.Print("Syncing position");
+    Vector3 pos = GetTranslation();
+    Rpc(nameof(SetTranslation), pos.x, pos.y, pos.z);
+  }
+
+  public void SyncAim(){
+
+  }
+
+  [Remote]
+  public void SetRotation(float x, float y){
+    Vector3 bodyRot = this.GetRotationDegrees();
+    bodyRot.y = x;
+    this.SetRotationDegrees(bodyRot);
+
+    Vector3 headRot = eyes.GetRotationDegrees();
+    headRot.x = y;
+    if(headRot.x < minY){
+      headRot.x = minY;  
+    }
+    if(headRot.x > maxY){
+      headRot.x = maxY;
+    }
+    eyes.SetRotationDegrees(headRot);
+  }
+
+  [Remote]
+  public void SetPosition(float x, float y, float z){
+    Vector3 pos = new Vector3(x, y, z);
+
+  }
+
   public void Turn(float x, float y){
-    if(debug){ GD.Print("Actor: Turning[" + x + "," + y + "]"); }
     Vector3 bodyRot = this.GetRotationDegrees();
     bodyRot.y += x;
     this.SetRotationDegrees(bodyRot);
@@ -418,7 +455,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         actor.eyes = eyeInstance as Eyes;
         break;
       default:
-        actor.eyes = new Eyes();
+        GD.Print("Giving default eyes to player");
+        actor.eyes = null;// new Eyes();
         break;
     }
     

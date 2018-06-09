@@ -6,6 +6,8 @@ public class ActorInputHandler : Brain {
   private DeviceManager device;
   private Dictionary<InputEvent.Buttons, bool> held; 
   private float delta = 1f;
+  private float syncTimer = 0f;
+  public const float syncRate = 0.1f;
   
   public ActorInputHandler(Actor actor, Eyes eyes) : base (actor, eyes){
     InitHeld();
@@ -49,6 +51,18 @@ public class ActorInputHandler : Brain {
     else{
       HandleMenuInput(events);
       
+    }
+    if(actor.netActive){
+      NetUpdate();
+    }
+  }
+
+  public void NetUpdate(){
+    syncTimer += delta;
+    if(syncTimer >= syncRate){
+      syncTimer = 0f;
+      actor.SyncPosition();
+      actor.SyncAim();
     }
   }
   

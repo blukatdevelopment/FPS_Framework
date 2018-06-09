@@ -22,6 +22,7 @@ public class Arena : Spatial {
   }
 
   public void SinglePlayerInit(){
+    GD.Print("SinglePlayerInit");
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
     SpawnActor(Actor.Brains.Player1);
@@ -30,18 +31,16 @@ public class Arena : Spatial {
 
   public void MultiplayerInit(){
     NetworkSession netSes = Session.session.netSes;
-    if(netSes.isServer){
-      return;
-    }
 
     int myId = netSes.selfPeerId;
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
-      if(id == myId){
-        SpawnActor(Actor.Brains.Player1);
+      if(id == myId && !Session.session.netSes.isServer){
+        GD.Print("Addingplayer1");
+        SpawnActor(Actor.Brains.Player1, id);
       }
       else{
-        SpawnActor(Actor.Brains.Remote);
+        SpawnActor(Actor.Brains.Remote, id);
       }
     }
   }
@@ -83,7 +82,7 @@ public class Arena : Spatial {
       Spatial spawnPoint = actorSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.actorSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
-        GD.Print("Found actor spawn point" + spawnPoint.GetGlobalTransform().origin);
+        //GD.Print("Found actor spawn point" + spawnPoint.GetGlobalTransform().origin);
       }
     }
     
@@ -93,7 +92,7 @@ public class Arena : Spatial {
       Spatial spawnPoint = itemSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.itemSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
-        GD.Print("Found Item spawn point" + spawnPoint.GetGlobalTransform().origin);
+        //GD.Print("Found Item spawn point" + spawnPoint.GetGlobalTransform().origin);
       }
     }
   }
@@ -112,12 +111,17 @@ public class Arena : Spatial {
     return itemSpawnPoints[randInt];
   }
   
-  public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1){
+  public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1, int id = 0){
     Vector3 pos = RandomActorSpawn();
     Actor actor = Actor.ActorFactory(brain);
     actors.Add(actor);
     actor.SetPos(pos);
-    AddChild((Node)actor);
+    Node actorNode = actor as Node;
+    if(id != 0){
+      actorNode.Name = "Player" + id;
+    }
+    
+    AddChild(actorNode);
     return actor;
   }
   

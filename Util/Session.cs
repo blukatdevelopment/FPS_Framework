@@ -82,15 +82,15 @@ public class Session : Node {
     ClearGame();
   }
   
-  /* Kills everything and starts a single-player game session. */
   public void SinglePlayerGame(){
     GD.Print("SinglePlayerGame");
+    ChangeMenu(Menu.Menus.None);
+    ChangeMenu(Menu.Menus.HUD);
     Node arenaNode = Arena.ArenaFactory();
     arena = (Arena)arenaNode;
     AddChild(arenaNode);
     arena.Init(true);
-    ChangeMenu(Menu.Menus.None);
-    ChangeMenu(Menu.Menus.HUD);
+    
   }
 
   public void MultiPlayerGame(){
@@ -106,6 +106,7 @@ public class Session : Node {
   }
 
   public void ChangeMenu(Menu.Menus menu){
+    GD.Print("Changed menu to " + menu);
     if(activeMenu != null){
       activeMenu.QueueFree();
       activeMenu = null;
