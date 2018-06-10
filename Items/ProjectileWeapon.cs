@@ -116,13 +116,31 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   
   /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
-    if(ammo < 1){
+    if(ammo < 1 || (Session.NetActive() && !Session.IsServer() )){
       return;
     }
+    
+    string name = Session.NextItemId();
+
+    if(name == ""){
+      GD.Print("ProjectileWeapon.Fire: NextItemId was blank.");
+    }
+
+    if(Session.IsServer()){
+      DeferredFire(name);
+      Rpc(nameof(DeferredFire), name);
+    }
+    else{
+      DeferredFire(name);
+    }
+  }
+
+  [Remote]
+  public void DeferredFire(string name){
     ammo--;
     speaker.PlayEffect(Sound.Effects.RifleShot);
-    Item projectile = Item.Factory(Item.Types.Bullet);
-    
+    Item projectile = Item.Factory(Item.Types.Bullet, name);
+
     Vector3 projectilePosition = ProjectilePosition();
     Vector3 globalPosition = this.ToGlobal(projectilePosition);
     

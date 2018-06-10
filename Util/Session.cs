@@ -21,6 +21,13 @@ public class Session : Node {
 
   public Actor player;
 
+  public static string NextItemId(){
+    if(Session.session.arena != null){
+      return Session.session.arena.NextItemName();
+    }
+    return "";
+  }
+
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);

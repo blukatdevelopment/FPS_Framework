@@ -22,6 +22,12 @@ public class Arena : Spatial {
     }
   }
 
+  public string NextItemName(){
+    string name = "Item_" + nextId;
+    nextId++;
+    return name;
+  }
+
   public void SinglePlayerInit(){
     GD.Print("SinglePlayerInit");
     SpawnItem(Item.Types.HealthPack);
@@ -115,8 +121,7 @@ public class Arena : Spatial {
 
 
     if(Session.IsServer()){
-      string name = "Item_" + nextId;
-      nextId++;
+      string name = NextItemName();
       Node itemNode = item as Node;
       itemNode.Name = name;
       Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z);

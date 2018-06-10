@@ -150,7 +150,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
   public virtual void DoOnCollide(object body){}
   
   /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type){
+  public static Item Factory(Types type, string name = ""){
     Item ret = null;
     if(type == Types.None){
       return null;
@@ -176,7 +176,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
         ret.BaseInit("AmmoPack", "Food for your rifle.");
         break;
     }
-    
+    if(name != ""){
+      Node retNode = ret as Node;
+      retNode.Name = name;
+    }
     return ret;
   }
   

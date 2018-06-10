@@ -47,6 +47,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   // Network
   public int netId;
+  
+  // Delayed inventory init.
+  float initTimer, initDelay;
+  bool initActive = false;
+  string initHand, initRifle;
 
   
   public void Init(Brains b = Brains.Player1){
@@ -80,9 +85,35 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   
   void InitInventory(){
+    if(Session.NetActive() && !Session.IsServer()){
+      return;
+    }
+    
+    string rifle = Session.NextItemId();
+    string hand = Session.NextItemId();
+
+    if(rifle == "" || hand == ""){
+      GD.Print("InitInventory: Rifle and hand strings are blank");
+    }
+
+    DeferredInitInventory(rifle, hand);
+
+    if(Session.IsServer()){
+      initTimer = 0f;
+      initDelay = 0.25f;
+      initActive = true;
+      initHand = hand;
+      initRifle = rifle;
+    }
+    
+  }
+
+  [Remote]
+  void DeferredInitInventory(string rifleName, string handName){
+    GD.Print("DeferredInitInventory");
     items = new List<Item>();
-    ReceiveItem(Item.Factory(Item.Types.Hand));
-    ReceiveItem(Item.Factory(Item.Types.Rifle));
+    ReceiveItem(Item.Factory(Item.Types.Hand, handName));
+    ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
     EquipItem(1);
     unarmed = false;
   }
@@ -288,6 +319,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         brain.Update(delta); 
         Gravity(delta);
       }
+      if(initActive){
+        initTimer+= delta;
+        if(initTimer >= initDelay){
+          initActive = false;
+          initTimer = 0;
+          Rpc(nameof(DeferredInitInventory), initRifle, initHand);
+        }
+      }
   }
   
   public void Gravity(float delta){ 
@@ -487,11 +526,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     switch(brain){
       case Brains.Player1: 
         Node eyeInstance = Session.Instance("res://Scenes/Prefabs/Eyes.tscn");
+        eyeInstance.Name = "Eyes";
         actor.eyes = eyeInstance as Spatial;
         break;
       default:
         GD.Print("Giving default eyes to player");
-        actor.eyes = new Spatial();
+        Spatial eyeSpat = new Spatial();
+        Node eyesNode = eyeSpat as Node;
+        eyesNode.Name = "Eyes";
+        actor.eyes = eyeSpat;
         break;
     }
     
