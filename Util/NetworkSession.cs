@@ -41,6 +41,7 @@ public class NetworkSession : Node {
     int usedPort = DefaultPort;
 
     int customPort = 0;
+    
     if(port != "" && Int32.TryParse(port, out customPort)){
       usedPort = customPort;
     }

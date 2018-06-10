@@ -7,7 +7,8 @@ public class Arena : Spatial {
   List<Actor> actors;
   Spatial terrain;
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
-  
+  int nextId = -2147483648;
+
   public void Init(bool singlePlayer){
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
@@ -103,12 +104,37 @@ public class Arena : Spatial {
     }
   }
   
-  public Item SpawnItem(Item.Types type){
+  public void SpawnItem(Item.Types type){
+    if(Session.NetActive() && !Session.IsServer()){
+      return;
+    }
     Vector3 pos = RandomItemSpawn();
     Item item = Item.Factory(type);
     item.Translation = pos;
     AddChild(item);
-    return item;
+
+
+    if(Session.IsServer()){
+      string name = "Item_" + nextId;
+      nextId++;
+      Node itemNode = item as Node;
+      itemNode.Name = name;
+      Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z);
+    }
+  }
+
+  [Remote]
+  public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z){
+    GD.Print("Deferred spawn " + name);
+    Vector3 pos = new Vector3(x, y, z);
+    Item item = Item.Factory(type);
+    item.Translation = pos;
+
+    Node itemNode = item as Node;
+    itemNode.Name = name;
+
+    AddChild(item);
+    return item; 
   }
   
   public Vector3 RandomItemSpawn(){
