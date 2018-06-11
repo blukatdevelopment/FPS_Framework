@@ -10,8 +10,10 @@ public class Arena : Spatial {
   int nextId = -2147483648;
   
   const float RoundDuration = 3f;
+  const float ScoreDuration = 5f;
   float roundTimeRemaining;
   bool roundTimerActive = false;
+  bool scorePresented = false;
 
 
   public void Init(bool singlePlayer){
@@ -31,7 +33,11 @@ public class Arena : Spatial {
   public override void _Process(float delta){
     if(roundTimerActive){
       roundTimeRemaining -= delta;
-      if(roundTimeRemaining < 0){
+      if(roundTimeRemaining < 0 && !scorePresented){
+        PresentScore();
+        scorePresented = true;
+      }
+      if(roundTimeRemaining < -ScoreDuration){
         roundTimerActive = false;
         RoundOver();
       }
@@ -39,6 +45,10 @@ public class Arena : Spatial {
   }
   
   public string GetObjectiveText(){
+    
+    if(scorePresented){
+      return "score goes here!";
+    }
     string ret = "Arena\n";
     string timeText = TimeFormat( (int)roundTimeRemaining);
     ret += "Time: " + timeText;
@@ -59,13 +69,17 @@ public class Arena : Spatial {
     return minutesText + ":" + secondsText;
   }
   
+  public void PresentScore(){
+    GD.Print("Presenting score");
+  }
+  
   public void RoundOver(){
     GD.Print("The round is over!");
     if(this.singlePlayer){
       Session.session.QuitToMainMenu();
     }
     else{
-      
+      Session.session.ChangeMenu(Menu.Menus.Lobby);
     } 
   }
 
