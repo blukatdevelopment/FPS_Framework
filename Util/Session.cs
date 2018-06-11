@@ -90,6 +90,7 @@ public class Session : Node {
       netSes.QueueFree();
       netSes = null;
     }
+    Input.SetMouseMode(Input.MouseMode.Visible);
   }
   
   public static Node GameNode(){
@@ -176,6 +177,9 @@ public class Session : Node {
   }
   
   public string GetObjectiveText(){
+    if(arena != null){
+      return arena.GetObjectiveText();
+    }
     return "Fight the enemies.";
   }
   

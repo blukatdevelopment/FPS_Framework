@@ -8,6 +8,11 @@ public class Arena : Spatial {
   Spatial terrain;
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
+  
+  const float RoundDuration = 3f;
+  float roundTimeRemaining;
+  bool roundTimerActive = false;
+
 
   public void Init(bool singlePlayer){
     this.singlePlayer = singlePlayer;
@@ -20,7 +25,50 @@ public class Arena : Spatial {
     else{
       MultiplayerInit();
     }
+    
   }
+
+  public override void _Process(float delta){
+    if(roundTimerActive){
+      roundTimeRemaining -= delta;
+      if(roundTimeRemaining < 0){
+        roundTimerActive = false;
+        RoundOver();
+      }
+    }
+  }
+  
+  public string GetObjectiveText(){
+    string ret = "Arena\n";
+    string timeText = TimeFormat( (int)roundTimeRemaining);
+    ret += "Time: " + timeText;
+    return ret;
+  }
+  
+  public string TimeFormat(int timeSeconds){
+    int minutes = timeSeconds / 60;
+    int seconds = timeSeconds % 60;
+    string minutesText = "" + minutes;
+    if(minutes < 1){
+      minutesText = "00";
+    }
+    string secondsText = "" + seconds;
+    if(seconds < 1){
+      secondsText = "00";
+    }
+    return minutesText + ":" + secondsText;
+  }
+  
+  public void RoundOver(){
+    GD.Print("The round is over!");
+    if(this.singlePlayer){
+      Session.session.QuitToMainMenu();
+    }
+    else{
+      
+    } 
+  }
+
 
   public string NextItemName(){
     string name = "Item_" + nextId;
@@ -34,6 +82,8 @@ public class Arena : Spatial {
     SpawnItem(Item.Types.AmmoPack);
     SpawnActor(Actor.Brains.Player1);
     SpawnActor(Actor.Brains.Ai);
+    roundTimeRemaining = RoundDuration;
+    roundTimerActive = true;
   }
 
   public void MultiplayerInit(){
