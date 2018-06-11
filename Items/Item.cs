@@ -40,7 +40,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     this.description = description;
     this.quantity = quantity;
     this.quantityMax = quantityMax;
-    this.Connect("body_entered", this, "OnCollide");
+    this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
     speaker = Speaker.Instance();
@@ -89,6 +89,12 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
   }
 
   public void OnCollide(object body){
+    Node bodyNode = body as Node;
+    if(bodyNode == null){
+      GD.Print("Item.OnCollide: body was not a node.");
+      return;
+    }
+
     if(!Session.NetActive()){
       GD.Print("Colliding because !netactive");
       DoOnCollide(body);
@@ -96,8 +102,17 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     else if(Session.IsServer()){
       GD.Print("Colliding because isserver");
       DoOnCollide(body);
+      string path = bodyNode.GetPath().GetConcatenatedSubnames();
+      Rpc(nameof(OnCollideWithPath), path);
     }
-    
+  }
+
+  [Remote]
+  public void OnCollideWithPath(string path){
+    NodePath nodePath = new NodePath(path);
+    Node node = GetNode(nodePath);
+    object obj = node as object;
+    DoOnCollide(obj);
   }
 
   

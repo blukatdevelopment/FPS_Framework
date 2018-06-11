@@ -50,6 +50,7 @@ public class MeleeWeapon : Item, IWeapon {
     }
   }
   
+  [Remote]
   public override void DoOnCollide(object body){
     if(!swinging){
       return;
