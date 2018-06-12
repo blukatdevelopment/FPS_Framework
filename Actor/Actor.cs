@@ -392,7 +392,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(health <= 0){
       health = 0;
       speaker.PlayEffect(Sound.Effects.ActorDeath);
-      Die();
+      Die(damage.sender);
     }
     if(health > healthMax){
       health = healthMax;
@@ -404,7 +404,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
 
     string path = NodePath();
-    GD.Print(path + "died");
+    GD.Print(path + "died by " + source);
     SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
     Session.session.HandleEvent(evt);
   }
@@ -412,7 +412,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public string NodePath(){
     NodePath path = GetPath();
     GD.Print("Nodepath" + path);
-    return = path.ToString(); // GetConcatenatedSubnames was returning ""
+    return path.ToString(); // GetConcatenatedSubnames was returning ""
     
   }
 

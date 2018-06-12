@@ -6,9 +6,11 @@ using System.Reflection;
 
 public class Damage{
     public int health; // HP loss, Negative values heal.
-    
-    public Damage(int health = 0){
+	public string sender; // Actor that is responsible for this damage
+
+    public Damage(int health = 0, string sender = ""){
       this.health = health;
+      this.sender = sender;
     }
 
 }

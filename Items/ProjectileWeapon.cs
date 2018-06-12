@@ -140,6 +140,12 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     ammo--;
     speaker.PlayEffect(Sound.Effects.RifleShot);
     Item projectile = Item.Factory(Item.Types.Bullet, name);
+    Projectile proj = projectile as Projectile;
+    Actor wielderActor = wielder as Actor;
+    if(wielderActor != null){
+      proj.sender = wielderActor.NodePath();
+    }
+    
 
     Vector3 projectilePosition = ProjectilePosition();
     Vector3 globalPosition = this.ToGlobal(projectilePosition);

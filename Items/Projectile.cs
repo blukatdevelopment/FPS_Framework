@@ -3,6 +3,7 @@ using Godot;
 
 public class Projectile : Item {
   int healthDamage = 50;
+  public string sender; // Actor that fired this projectile.
   
   [Remote]
   public override void DoOnCollide(object body){
@@ -19,6 +20,7 @@ public class Projectile : Item {
   void GiveDamage(IReceiveDamage receiver){
     Damage damage = new Damage();
     damage.health = healthDamage;
+    damage.sender = sender;
     receiver.ReceiveDamage(damage);
   }
 }
