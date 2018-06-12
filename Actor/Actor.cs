@@ -399,14 +399,21 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
   
-  public void Die(){
-    GD.Print("Actor Died");
+  public void Die(string source = ""){
+    
     Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
-    SessionEvent evt = new SessionEvent();
-    evt.type = SessionEvent.Types.ActorDied;
-    evt.actors = new Actor[1];
-    evt.actors[0] = this;
+
+    string path = NodePath();
+    GD.Print(path + "died");
+    SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
     Session.session.HandleEvent(evt);
+  }
+
+  public string NodePath(){
+    NodePath path = GetPath();
+    GD.Print("Nodepath" + path);
+    return = path.ToString(); // GetConcatenatedSubnames was returning ""
+    
   }
 
   public int GetHealth(){

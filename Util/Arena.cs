@@ -9,7 +9,7 @@ public class Arena : Spatial {
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
   
-  const float RoundDuration = 3f;
+  const float RoundDuration = 300f;
   const float ScoreDuration = 5f;
   float roundTimeRemaining;
   bool roundTimerActive = false;
@@ -127,20 +127,28 @@ public class Arena : Spatial {
   
   public void HandleEvent(SessionEvent sessionEvent){
     if(sessionEvent.type == SessionEvent.Types.ActorDied ){
-      
-      Actor[] actors = sessionEvent.actors;
-      if(actors != null && actors.Length > 0 && actors[0] != null){
-        Actor.Brains brain = actors[0].brainType;
-        int id = actors[0].netId;
-        GD.Print("Respawning player id " + id);
-        Node actorNode = actors[0] as Node;
-        actorNode.Name = "Deadplayer" + id;
-        actors[0].QueueFree();
-        SpawnActor(brain, id);
-      }
+      HandleActorDead(sessionEvent);
     }
     else if(sessionEvent.type == SessionEvent.Types.Pause){
       TogglePause();
+    }
+  }
+
+  public void HandleActorDead(SessionEvent sessionEvent){
+    string[] actors = sessionEvent.args;
+    if(actors != null && actors.Length > 0 && actors[0] != ""){
+      Node actorNode = GetNode(new NodePath(actors[0]));
+      Actor actor = actorNode as Actor;
+      Actor.Brains brain = actor.brainType;
+      int id = actor.netId;
+      GD.Print("Respawning player id " + id);
+
+      actorNode.Name = "Deadplayer" + id;
+      actor.QueueFree();
+      SpawnActor(brain, id);
+    }
+    else{
+      GD.Print("Arena.HandleActorDead: Insufficient args");
     }
   }
   
