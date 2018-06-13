@@ -9,7 +9,7 @@ public class Arena : Spatial {
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
   
-  const float RoundDuration = 300f;
+  const float RoundDuration = 10f;
   const float ScoreDuration = 5f;
   float roundTimeRemaining;
   bool roundTimerActive = false;
@@ -46,11 +46,27 @@ public class Arena : Spatial {
     }
   }
   
+  public bool PlayerWon(){
+    int max = playerWorldId;
+    foreach(KeyValuePair<int, int> key in scores){
+      int score = key.Value;
+      if(score > scores[max]){
+        max = score;
+      }
+    }
+    if(max == playerWorldId){
+      return true;
+    }
+    return false;
+  }
+
   public string GetObjectiveText(){
     
+
     if(scorePresented){
-      return "score goes here!";
+      return PlayerWon() ? "Victory!" : "Defeat!";
     }
+
     string ret = "Arena\n";
     string timeText = TimeFormat( (int)roundTimeRemaining);
     ret += "Time: " + timeText + "\n";
@@ -73,6 +89,8 @@ public class Arena : Spatial {
   }
   
   public void PresentScore(){
+    TogglePause();
+    Session.session.ChangeMenu(Menu.Menus.HUD);
     GD.Print("Presenting score");
   }
   

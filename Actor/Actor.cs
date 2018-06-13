@@ -503,7 +503,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void Pause(){
     ActorInputHandler inputHandler = brain as ActorInputHandler;
     if(inputHandler == null){
-      GD.Print("AI foregoing pause menu stuff");
+      //GD.Print("AI foregoing pause menu stuff");
       return;
     }
     
