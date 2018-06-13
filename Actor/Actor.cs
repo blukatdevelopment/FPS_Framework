@@ -47,6 +47,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   // Network
   public int netId;
+
+  // World info
+  public int worldId;
   
   // Delayed inventory init.
   float initTimer, initDelay;
@@ -110,7 +113,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   void DeferredInitInventory(string rifleName, string handName){
-    GD.Print("DeferredInitInventory");
+    //GD.Print("DeferredInitInventory");
     items = new List<Item>();
     ReceiveItem(Item.Factory(Item.Types.Hand, handName));
     ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
@@ -225,7 +228,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DoSwitchItem(){
-    GD.Print("Actor: Switched Item");
+    //GD.Print("Actor: Switched Item");
     unarmed = !unarmed;
     if(unarmed){
       EquipItem(0);
@@ -378,7 +381,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DoReceiveDamage(string damageJson){
-    GD.Print("Receiving damage");
     Damage damage = JsonConvert.DeserializeObject<Damage>(damageJson);
     
     if(health <= 0){
@@ -404,14 +406,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
 
     string path = NodePath();
-    GD.Print(path + "died by " + source);
     SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
     Session.session.HandleEvent(evt);
   }
 
   public string NodePath(){
     NodePath path = GetPath();
-    GD.Print("Nodepath" + path);
     return path.ToString(); // GetConcatenatedSubnames was returning ""
     
   }

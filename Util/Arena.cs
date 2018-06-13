@@ -14,11 +14,13 @@ public class Arena : Spatial {
   float roundTimeRemaining;
   bool roundTimerActive = false;
   bool scorePresented = false;
-
+  Dictionary<int, int> scores;
+  public int playerWorldId;
 
   public void Init(bool singlePlayer){
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
+    scores = new Dictionary<int, int>();
     InitTerrain();
     InitSpawnPoints();
     if(singlePlayer){
@@ -51,7 +53,8 @@ public class Arena : Spatial {
     }
     string ret = "Arena\n";
     string timeText = TimeFormat( (int)roundTimeRemaining);
-    ret += "Time: " + timeText;
+    ret += "Time: " + timeText + "\n";
+    ret += "Score: " + scores[playerWorldId];
     return ret;
   }
   
@@ -84,6 +87,12 @@ public class Arena : Spatial {
   }
 
 
+  public int NextWorldId(){
+    int ret = nextId;
+    nextId++;
+    return ret;
+  }
+
   public string NextItemName(){
     string name = "Item_" + nextId;
     nextId++;
@@ -94,10 +103,19 @@ public class Arena : Spatial {
     GD.Print("SinglePlayerInit");
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
-    SpawnActor(Actor.Brains.Player1);
-    SpawnActor(Actor.Brains.Ai);
+
+    InitActor(Actor.Brains.Player1, NextWorldId());
+    InitActor(Actor.Brains.Ai, NextWorldId());
     roundTimeRemaining = RoundDuration;
     roundTimerActive = true;
+  }
+
+  public void InitActor(Actor.Brains brain, int id){
+    SpawnActor(brain, id);
+    scores.Add(id, 0);
+    if(brain == Actor.Brains.Player1){
+      playerWorldId = id;
+    }
   }
 
   public void MultiplayerInit(){
@@ -135,21 +153,33 @@ public class Arena : Spatial {
   }
 
   public void HandleActorDead(SessionEvent sessionEvent){
-    string[] actors = sessionEvent.args;
-    if(actors != null && actors.Length > 0 && actors[0] != ""){
-      Node actorNode = GetNode(new NodePath(actors[0]));
-      Actor actor = actorNode as Actor;
-      Actor.Brains brain = actor.brainType;
-      int id = actor.netId;
-      GD.Print("Respawning player id " + id);
-
-      actorNode.Name = "Deadplayer" + id;
-      actor.QueueFree();
-      SpawnActor(brain, id);
-    }
-    else{
+    string[] actors = sessionEvent.args;  
+    if(actors == null || actors.Length == 0 || actors[0] == ""){
       GD.Print("Arena.HandleActorDead: Insufficient args");
+      return;
     }
+
+    Node actorNode = GetNode(new NodePath(actors[0]));
+    Actor actor = actorNode as Actor;
+    Actor.Brains brain = actor.brainType;
+    
+    int id = actor.worldId;
+    GD.Print("Respawning player id " + id);
+
+    actorNode.Name = "Deadplayer" + id;
+    actor.QueueFree();
+    SpawnActor(brain, id);
+    
+    if(actors.Length < 2 || actors[1] == ""){
+     return; 
+    }
+
+    Node killerNode = GetNode(new NodePath(actors[1]));
+    Actor killer = killerNode as Actor;
+
+    scores[killer.worldId]++;
+    GD.Print("Killer has " + scores[killer.worldId]);
+
   }
   
   public void TogglePause(){
@@ -167,7 +197,6 @@ public class Arena : Spatial {
       Spatial spawnPoint = actorSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.actorSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
-        //GD.Print("Found actor spawn point" + spawnPoint.GetGlobalTransform().origin);
       }
     }
     
@@ -177,7 +206,6 @@ public class Arena : Spatial {
       Spatial spawnPoint = itemSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.itemSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
-        //GD.Print("Found Item spawn point" + spawnPoint.GetGlobalTransform().origin);
       }
     }
   }
@@ -202,7 +230,6 @@ public class Arena : Spatial {
 
   [Remote]
   public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z){
-    GD.Print("Deferred spawn " + name);
     Vector3 pos = new Vector3(x, y, z);
     Item item = Item.Factory(type);
     item.Translation = pos;
@@ -224,6 +251,7 @@ public class Arena : Spatial {
     Vector3 pos = RandomActorSpawn();
     Actor actor = Actor.ActorFactory(brain);
     actor.netId = id;
+    actor.worldId = id;
     actors.Add(actor);
     actor.SetPos(pos);
     Node actorNode = actor as Node;
@@ -247,5 +275,6 @@ public class Arena : Spatial {
     Node instance = ps.Instance();
     return (Arena)instance;
   }
+
 
 }

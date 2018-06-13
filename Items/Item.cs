@@ -81,7 +81,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
       int ownerInt = (int)areaShapeOwners[i];
       for(int j = 0; j < shapes.Count; j++){
         area.ShapeOwnerAddShape(ownerInt, shapes[i].Shape);
-        //GD.Print("Adding shape" + j + " to owner " + i);
       }
     }
     area.Connect("body_entered", this, nameof(OnCollide));
@@ -96,11 +95,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     }
 
     if(!Session.NetActive()){
-      GD.Print("Colliding because !netactive");
+      //GD.Print("Colliding because !netactive");
       DoOnCollide(body);
     }
     else if(Session.IsServer()){
-      GD.Print("Colliding because isserver");
+      //GD.Print("Colliding because isserver");
       DoOnCollide(body);
       string path = bodyNode.GetPath().GetConcatenatedSubnames();
       Rpc(nameof(OnCollideWithPath), path);
