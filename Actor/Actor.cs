@@ -220,14 +220,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void SwitchItem(){
-    DoSwitchItem();
+    DeferredSwitchItem();
     if(Session.NetActive()){
-      Rpc(nameof(DoSwitchItem));
+      Rpc(nameof(DeferredSwitchItem));
     }
   }
 
   [Remote]
-  public void DoSwitchItem(){
+  public void DeferredSwitchItem(){
     //GD.Print("Actor: Switched Item");
     unarmed = !unarmed;
     if(unarmed){
@@ -299,15 +299,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   
   public void Use(Item.Uses use, bool released = false){
-    DoUse(use, released);
+    DeferredUse(use, released);
     if(Session.NetActive()){
-      Rpc(nameof(DoUse), use, released);
+      Rpc(nameof(DeferredUse), use, released);
     }
   }
 
 
   [Remote]
-  public void DoUse(Item.Uses use, bool released = false){
+  public void DeferredUse(Item.Uses use, bool released = false){
     if(activeItem == null){
       GD.Print("No item equipped.");
       return;
