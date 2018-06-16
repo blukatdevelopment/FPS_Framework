@@ -31,6 +31,16 @@ public class NetworkSession : Node {
     playerData = new Dictionary<int, PlayerData>();
   }
 
+  public bool Initialized(){
+    return peer != null;
+  }
+
+  // Update handler methods without disconnecting.
+  public void UpdateServer(Godot.Object obj, string playerJoin, string playerLeave){
+    this.GetTree().Connect("network_peer_connected", obj, playerJoin);
+    this.GetTree().Connect("network_peer_disconnected", obj, playerLeave);
+  }
+
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave, string port = ""){
     GD.Print("Initializing Client");
     isServer = true;
@@ -52,6 +62,13 @@ public class NetworkSession : Node {
     peer.CreateServer(DefaultPort, MaxPlayers);
     this.GetTree().SetNetworkPeer(peer);
     selfPeerId = this.GetTree().GetNetworkUniqueId();
+  }
+
+  // Update handler methods without disconnecting.
+  public void UpdateClient(Godot.Object obj, string success, string peerJoin, string fail){
+    GetTree().Connect("connected_to_server", obj, success);
+    GetTree().Connect("connection_failed", obj, fail);
+    GetTree().Connect("network_peer_connected", obj, peerJoin);
   }
   
   public void InitClient(string address, Godot.Object obj, string success, string peerJoin, string fail, string port = ""){

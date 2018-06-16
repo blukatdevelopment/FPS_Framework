@@ -500,7 +500,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return 0;
   }
   
-  public void Pause(){
+  public bool IsPaused(){
+    return menuActive;
+  }
+
+  public void TogglePause(){
     ActorInputHandler inputHandler = brain as ActorInputHandler;
     if(inputHandler == null){
       //GD.Print("AI foregoing pause menu stuff");

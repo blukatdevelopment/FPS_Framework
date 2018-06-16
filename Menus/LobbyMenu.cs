@@ -71,6 +71,7 @@ public class LobbyMenu : Container
       
       InitNetwork();
 
+      GD.Print("ScaleControls");
       ScaleControls();
     }
 
@@ -79,8 +80,28 @@ public class LobbyMenu : Container
         GD.Print("No network session found in lobby menu");
         return;
       }
-
       NetworkSession netSes = Session.session.netSes;
+
+
+      if(Session.session.netSes.Initialized()){
+        GD.Print("No need to reconnect. Updating server/client");
+        if(netSes.isServer){
+          netSes.UpdateServer(obj: this, playerJoin: nameof(PlayerJoined), playerLeave: nameof(PlayerQuit));
+          ReceiveMessage("Server still using random seed: " + netSes.randomSeed);
+          foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+            string json = JsonConvert.SerializeObject(entry.Value, Formatting.Indented);
+            AddPlayer(json);
+            Rpc(nameof(AddPlayer), json);
+          }
+
+        }
+        else{
+          netSes.UpdateClient(obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected));
+        }
+        BuildPlayers();
+        return;
+      }
+      
       
       myName = "Server";
 
@@ -124,13 +145,6 @@ public class LobbyMenu : Container
     }
     
     public void PlayerJoined(int id){
-      /*
-      foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
-        int datId = entry.Value.id;
-        string datJson = JsonConvert.SerializeObject(entry.Value, Formatting.Indented);
-        RpcId(id, nameof(AddPlayer), datJson);
-      }
-      */
     }
 
     [Remote]
@@ -160,7 +174,6 @@ public class LobbyMenu : Container
       string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
 
       AddPlayer(json);
-      GD.Print("Adding player");
       Rpc(nameof(AddPlayer), json);
 
       string message = myName + " joined!"; 
@@ -211,9 +224,16 @@ public class LobbyMenu : Container
         GD.Print("AddPlayer: No network session detected");
         return; 
       }
+      if(dat.id == netSes.selfPeerId){
+        myName = dat.name;
+      }
+
+      if(!netSes.playerData.ContainsKey(dat.id)){
+        netSes.playerData.Add(dat.id, dat);
+        GD.Print("Added " + json);
+      }
       
-      netSes.playerData.Add(dat.id, dat);
-      GD.Print("Added " + json);
+      
       BuildPlayers();
     }
 

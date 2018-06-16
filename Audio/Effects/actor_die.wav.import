@@ -7,10 +7,7 @@ path="res://.import/actor_die.wav-4faadc12ec12c34db4004f7f01e07816.sample"
 [deps]
 
 source_file="res://Audio/Effects/actor_die.wav"
-source_md5="bea78f713f5c85dca1703289fa171b9b"
-
 dest_files=[ "res://.import/actor_die.wav-4faadc12ec12c34db4004f7f01e07816.sample" ]
-dest_md5="b4eaf05948637a82e23ec8957d185888"
 
 [params]
 

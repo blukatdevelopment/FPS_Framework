@@ -7,10 +7,7 @@ path="res://.import/impact.wav-b0a3060f54a98db261e8158427fe5141.sample"
 [deps]
 
 source_file="res://Audio/Effects/impact.wav"
-source_md5="3984afae142dd310b9959e3acb18afff"
-
 dest_files=[ "res://.import/impact.wav-b0a3060f54a98db261e8158427fe5141.sample" ]
-dest_md5="6f0b5551435025d656e8f87e97079f8a"
 
 [params]
 

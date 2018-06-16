@@ -57,7 +57,7 @@ The following models should be produced. No textures are necessary.
 - ramp
 
 
-## Level Design
+## DONE Level Design
 One map should be designed with the following criteria.
 
 - Falling out of the map should be difficult/impossible
@@ -82,7 +82,7 @@ DONE The following sfx should be produced
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
 
-## Interface Programming
+##DONE Interface Programming
 
 **DONE Main Menu**
 Should allow user to choose a game mode or exit.
@@ -156,13 +156,6 @@ Options
 - Return to main menu
 - Quit
 
-**Round Scores screen**
-Should list the names of all players in a game along with their scores.
-After a specific amount of time, a new game should start.
-
-Options-
-Return to main menu at bottom of screen
-
 **DONE HUD**
 Should display relevant info during gameplay.
 
@@ -171,7 +164,7 @@ Info shown
 - Active item info
 - Objective info (populated via Session)
 
-## Network Programming
+## DONE Network Programming
 Networking architecture should be developed by modifying a single-player
 gamemode.
 

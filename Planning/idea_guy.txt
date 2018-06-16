@@ -209,6 +209,17 @@ One or more players use gamepads and each gets their own dedicated display.
 
 
 
+**********************************************************************
+        Background stuff
+**********************************************************************
+
+**********************************************
+        Logging system
+**********************************************
+Instead of GD.Print(), use a Session.Debug() line to drop text into one or more log files that can
+be tailed and grepped for a better debugging experience. 
+
+
 ********************************************************************************
 Philosophy
 ********************************************************************************

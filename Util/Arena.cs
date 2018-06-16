@@ -11,7 +11,7 @@ public class Arena : Spatial {
   
   const float RoundDuration = 10f;
   const float ScoreDuration = 5f;
-  float roundTimeRemaining;
+  float roundTimeRemaining, secondCounter;
   bool roundTimerActive = false;
   bool scorePresented = false;
   Dictionary<int, int> scores;
@@ -34,16 +34,39 @@ public class Arena : Spatial {
 
   public override void _Process(float delta){
     if(roundTimerActive){
-      roundTimeRemaining -= delta;
+      Timer(delta);
+    }
+  }
+
+  public void Timer(float delta){
+    secondCounter += delta;
+
+    if(secondCounter >= 1.0f){
+      roundTimeRemaining -= secondCounter;
+      secondCounter = 0f;
+
+      if(Session.IsServer()){
+        Rpc(nameof(SyncTime), roundTimeRemaining);
+      }
+
       if(roundTimeRemaining < 0 && !scorePresented){
         PresentScore();
-        scorePresented = true;
+
+        if(Session.IsServer()){
+          Rpc(nameof(PresentScore));
+        }
       }
       if(roundTimeRemaining < -ScoreDuration){
-        roundTimerActive = false;
-        RoundOver();
+        
+        if(Session.IsServer()){
+          Rpc(nameof(RoundOver));
+          RoundOver();
+        }
       }
     }
+
+
+    
   }
   
   public bool PlayerWon(){
@@ -88,19 +111,30 @@ public class Arena : Spatial {
     return minutesText + ":" + secondsText;
   }
   
+  [Remote]
+  public void SyncTime(float newTime){
+    roundTimeRemaining = newTime;
+  }
+
+  [Remote]
   public void PresentScore(){
-    TogglePause();
+    scorePresented = true;
+    SetPause(true);
     Session.session.ChangeMenu(Menu.Menus.HUD);
     GD.Print("Presenting score");
   }
   
+  [Remote]
   public void RoundOver(){
+    roundTimerActive = false;
+
     GD.Print("The round is over!");
     if(this.singlePlayer){
       Session.session.QuitToMainMenu();
     }
     else{
       Session.session.ChangeMenu(Menu.Menus.Lobby);
+      Session.session.ClearGame(true);
     } 
   }
 
@@ -129,29 +163,41 @@ public class Arena : Spatial {
   }
 
   public void InitActor(Actor.Brains brain, int id){
-    SpawnActor(brain, id);
     scores.Add(id, 0);
-    if(brain == Actor.Brains.Player1){
-      playerWorldId = id;
+
+    if(!Session.NetActive()){
+      SpawnActor(brain, id);
+      if(brain == Actor.Brains.Player1){
+        playerWorldId = id;
+      }
+      return;
     }
+
+    if(id == playerWorldId){
+      SpawnActor(Actor.Brains.Player1, id);
+    }
+    else{
+      SpawnActor(brain, id);
+    }
+
+
   }
 
   public void MultiplayerInit(){
     NetworkSession netSes = Session.session.netSes;
 
-    int myId = netSes.selfPeerId;
+    playerWorldId = netSes.selfPeerId;
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
-      if(id == myId && !Session.session.netSes.isServer){
-        
-        SpawnActor(Actor.Brains.Player1, id);
-      }
-      else{
-        SpawnActor(Actor.Brains.Remote, id);
-      }
+      InitActor(Actor.Brains.Remote, id);
     }
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
+
+    if(Session.IsServer()){
+      roundTimeRemaining = RoundDuration;
+      roundTimerActive = true;
+    }
   }
   
   public void InitTerrain(){
@@ -199,10 +245,18 @@ public class Arena : Spatial {
     GD.Print("Killer has " + scores[killer.worldId]);
 
   }
+
+  public void SetPause(bool val){
+    foreach(Actor actor in actors){
+      if(actor.IsPaused() != val){
+        actor.TogglePause();
+      }
+    }
+  }
   
   public void TogglePause(){
     foreach(Actor actor in actors){
-      actor.Pause();
+      actor.TogglePause();
     }
   }
   

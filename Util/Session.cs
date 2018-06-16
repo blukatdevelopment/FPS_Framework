@@ -81,12 +81,12 @@ public class Session : Node {
   }
   
   /* Remove game nodes/variables in order to return it to a menu. */
-  public void ClearGame(){
+  public void ClearGame(bool keepNet = false){
     if(arena != null){
       arena.QueueFree();
       arena = null;
     }
-    if(netSes != null){
+    if(!keepNet && netSes != null){
       netSes.QueueFree();
       netSes = null;
     }
