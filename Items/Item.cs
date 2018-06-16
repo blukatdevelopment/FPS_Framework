@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 
-public class Item : RigidBody, IHasInfo, IUse, IEquip {
+public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   public enum Uses{ 
     A, // Primary use (Left Mouse) 
     B, // Secondary Use(Right Mouse)
@@ -101,7 +101,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip {
     else if(Session.IsServer()){
       //GD.Print("Colliding because isserver");
       DoOnCollide(body);
-      string path = bodyNode.GetPath().GetConcatenatedSubnames();
+      string path = bodyNode.GetPath().ToString();
+      GD.Print("RPCing to path: " + path);
       Rpc(nameof(OnCollideWithPath), path);
     }
   }

@@ -355,9 +355,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       
       Vector3 delta = destination.origin - current.origin;
       KinematicCollision collision = MoveAndCollide(delta);
-      ICollide collider = collision.Collider as ICollide;
-      if(collider != null){
-        collider.OnCollide(this as object);
+      if(collision != null && collision.Collider != null){
+        ICollide collider = collision.Collider as ICollide;
+        if(collider != null){
+          Node colliderNode = collider as Node;
+          collider.OnCollide(this as object);
+        }
       }
       if(!grounded && collision != null && collision.Position.y < GetTranslation().y){
         if(gravityVelocity < 0){

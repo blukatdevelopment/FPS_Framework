@@ -172,7 +172,7 @@ public class LobbyMenu : Container
 
       PlayerData dat = new PlayerData(myName, myId);
       string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
-
+      GD.Print("My Data:" + json);
       AddPlayer(json);
       Rpc(nameof(AddPlayer), json);
 
@@ -182,6 +182,9 @@ public class LobbyMenu : Container
     }
 
     public void PeerConnected(int id){
+      if(id == 1){
+        return; // Don't worry about the server.
+      }
       int myId = Session.session.netSes.selfPeerId;
       PlayerData myDat = Session.session.netSes.playerData[myId];
       string myJson = JsonConvert.SerializeObject(myDat, Formatting.Indented);
