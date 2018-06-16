@@ -82,6 +82,21 @@ DONE The following sfx should be produced
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
 
+**BUG01**
+Can't pick up powerups.
+
+**Bug02**
+Damage not always given when hitting enemies.
+
+**Bug03**
+Match lasts only 10 seconds.
+
+**Bug04**
+When player joins lobbymenu Countdown doesn't stop.
+
+**Bug05**
+Player Ready setting isn't reset after match starts.
+
 ##DONE Interface Programming
 
 **DONE Main Menu**
