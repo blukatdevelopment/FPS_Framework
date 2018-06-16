@@ -82,7 +82,7 @@ DONE The following sfx should be produced
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
 
-**BUG01**
+**FIXED BUG01**
 Can't pick up powerups.
 
 **Bug02**
