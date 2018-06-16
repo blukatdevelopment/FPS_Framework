@@ -9,7 +9,7 @@ public class Arena : Spatial {
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
   
-  const float RoundDuration = 10f;
+  const float RoundDuration = 300f;
   const float ScoreDuration = 5f;
   float roundTimeRemaining, secondCounter;
   bool roundTimerActive = false;

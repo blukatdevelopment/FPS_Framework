@@ -186,6 +186,16 @@ public class LobbyMenu : Container
       PlayerData myDat = Session.session.netSes.playerData[myId];
       string myJson = JsonConvert.SerializeObject(myDat, Formatting.Indented);
       RpcId(id, nameof(AddPlayer), myJson);
+      StopCountDown();
+    }
+
+    [Remote]
+    public void ResetReady(){
+      NetworkSession netSes = Session.session.netSes;
+
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        entry.Value.ready = false;
+      }
     }
 
 
@@ -295,6 +305,7 @@ public class LobbyMenu : Container
     }
 
     public void StartGame(){
+      ResetReady();
       Session.session.MultiPlayerGame();
     }
 
