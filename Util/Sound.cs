@@ -57,7 +57,6 @@ public class Sound {
     }
     
     string fileName = SongFile(song);
-    GD.Print("Playing " + fileName);
     AudioStreamOGGVorbis stream = (AudioStreamOGGVorbis)GD.Load(fileName);
     if(Session.session.jukeBox == null){
       Session.session.InitJukeBox();

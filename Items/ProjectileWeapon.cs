@@ -109,7 +109,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   public override void Use(Item.Uses use, bool released = false){
     switch(use){
       case Uses.A: Fire(); break;
-      case Uses.B: GD.Print("Aim"); break;
+      case Uses.B: break; // Aim logic goes here.
       case Uses.D: Reload(); break;
     }
   }

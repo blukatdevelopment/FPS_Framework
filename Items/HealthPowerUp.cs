@@ -10,7 +10,6 @@ public class HealthPowerUp : PowerUp {
     }
     Damage damage = new Damage(-Health);
     receiver.ReceiveDamage(damage);
-    GD.Print("Health applied");
     this.QueueFree();
   }
 }

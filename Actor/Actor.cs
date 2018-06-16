@@ -14,7 +14,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private Brain brain;
   public Brains brainType;
   private Spatial eyes;
-  public bool debug = false;
   
   const int maxY = 90;
   const int minY = -40;
@@ -113,7 +112,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   void DeferredInitInventory(string rifleName, string handName){
-    //GD.Print("DeferredInitInventory");
     items = new List<Item>();
     ReceiveItem(Item.Factory(Item.Types.Hand, handName));
     ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
@@ -228,7 +226,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredSwitchItem(){
-    //GD.Print("Actor: Switched Item");
     unarmed = !unarmed;
     if(unarmed){
       EquipItem(0);
@@ -472,7 +469,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   
   public void SetPos(Vector3 pos){
-    if(debug){ GD.Print("Actor: Set pos to " + pos); }
     SetTranslation(pos);
     
   }
@@ -503,19 +499,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void TogglePause(){
     ActorInputHandler inputHandler = brain as ActorInputHandler;
     if(inputHandler == null){
-      //GD.Print("AI foregoing pause menu stuff");
       return;
     }
     
     menuActive = !menuActive;
     
     if(menuActive){
-      if(debug){ GD.Print("Actor: Paused"); }
       Session.session.ChangeMenu(Menu.Menus.Pause);
       Input.SetMouseMode(Input.MouseMode.Visible);
     }
     else{
-      if(debug){ GD.Print("Actor: Resumed"); }
       Session.session.ChangeMenu(Menu.Menus.HUD);
       Input.SetMouseMode(Input.MouseMode.Captured);
     }
@@ -537,7 +530,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         actor.eyes = eyeInstance as Spatial;
         break;
       default:
-        GD.Print("Giving default eyes to player");
         Spatial eyeSpat = new Spatial();
         Node eyesNode = eyeSpat as Node;
         eyesNode.Name = "Eyes";

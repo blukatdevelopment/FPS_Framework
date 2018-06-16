@@ -71,7 +71,6 @@ public class LobbyMenu : Container
       
       InitNetwork();
 
-      GD.Print("ScaleControls");
       ScaleControls();
     }
 
@@ -84,7 +83,6 @@ public class LobbyMenu : Container
 
 
       if(Session.session.netSes.Initialized()){
-        GD.Print("No need to reconnect. Updating server/client");
         if(netSes.isServer){
           netSes.UpdateServer(obj: this, playerJoin: nameof(PlayerJoined), playerLeave: nameof(PlayerQuit));
           ReceiveMessage("Server still using random seed: " + netSes.randomSeed);
@@ -150,7 +148,6 @@ public class LobbyMenu : Container
     [Remote]
     public void InitRandomSeed(int randomSeed){
       Session.session.netSes.InitRandom(randomSeed);
-      GD.Print("Random seed initialized as " + randomSeed);
     }
 
     public void PlayerQuit(int id){
@@ -161,7 +158,6 @@ public class LobbyMenu : Container
 
     /* Called before peers connect. */
     public void ConnectionSucceeded(){
-      GD.Print("Connection succeeded!");
       NetworkSession netSes = Session.session.netSes;
       myName = netSes.initName;
       int myId = netSes.selfPeerId;
@@ -172,7 +168,6 @@ public class LobbyMenu : Container
 
       PlayerData dat = new PlayerData(myName, myId);
       string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
-      GD.Print("My Data:" + json);
       AddPlayer(json);
       Rpc(nameof(AddPlayer), json);
 
@@ -243,7 +238,6 @@ public class LobbyMenu : Container
 
       if(!netSes.playerData.ContainsKey(dat.id)){
         netSes.playerData.Add(dat.id, dat);
-        GD.Print("Added " + json);
       }
       
       
@@ -274,7 +268,6 @@ public class LobbyMenu : Container
 
     [Remote]
     public void TogglePlayerReady(int playerId){
-      GD.Print("Toggling player " + playerId);
       PlayerData dat = Session.session.netSes.playerData[playerId];
       
       if(dat == null){
@@ -315,12 +308,10 @@ public class LobbyMenu : Container
     void StopCountDown(){
       countDownActive = false;
       BuildPlayers();
-      GD.Print("Stopping countdown");
     }
 
     [Remote]
     void StartCountDown(){
-      GD.Print("Starting countdown");
       timer = 0f;
       countDown = 10;
       countDownActive = true;
@@ -330,7 +321,6 @@ public class LobbyMenu : Container
     [Remote]
     void PrintPlayer(string dat){
       PlayerData playerDat = JsonConvert.DeserializeObject<PlayerData>(dat);
-      GD.Print("Printing player " + playerDat);
     }
 
 

@@ -42,7 +42,6 @@ public class NetworkSession : Node {
   }
 
   public void InitServer(Godot.Object obj, string playerJoin, string playerLeave, string port = ""){
-    GD.Print("Initializing Client");
     isServer = true;
     peer = new Godot.NetworkedMultiplayerENet();
     this.GetTree().Connect("network_peer_connected", obj, playerJoin);
@@ -72,7 +71,6 @@ public class NetworkSession : Node {
   }
   
   public void InitClient(string address, Godot.Object obj, string success, string peerJoin, string fail, string port = ""){
-    GD.Print("Initializing Client");
     isServer = false;
     GetTree().Connect("connected_to_server", obj, success);
     GetTree().Connect("connection_failed", obj, fail);

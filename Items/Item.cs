@@ -95,13 +95,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     }
 
     if(!Session.NetActive()){
-      //GD.Print("Colliding because !netactive");
       DoOnCollide(body);
     }
     else if(Session.IsServer()){
-      //GD.Print("Colliding because isserver");
       string path = bodyNode.GetPath().ToString();
-      GD.Print("RPCing to path: " + path);
       Rpc(nameof(OnCollideWithPath), path);
       DoOnCollide(body);
     }
@@ -109,7 +106,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
 
   [Remote]
   public void OnCollideWithPath(string path){
-    GD.Print("Colliding with " + path);
     NodePath nodePath = new NodePath(path);
     Node node = GetNode(nodePath);
     object obj = node as object;
@@ -150,7 +146,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   }
   
   public virtual void Use(Uses use, bool released = false){
-    GD.Print("Item used " + use);
   }
   
   public virtual string GetInfo(){

@@ -11,7 +11,6 @@ public class AmmoPowerUp : PowerUp {
     }
     
     receiver.StoreAmmo(ammoType, ammo);
-    GD.Print("Ammo applied");
     this.QueueFree();
   }
 }

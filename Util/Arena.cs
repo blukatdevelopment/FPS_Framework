@@ -121,14 +121,12 @@ public class Arena : Spatial {
     scorePresented = true;
     SetPause(true);
     Session.session.ChangeMenu(Menu.Menus.HUD);
-    GD.Print("Presenting score");
   }
   
   [Remote]
   public void RoundOver(){
     roundTimerActive = false;
 
-    GD.Print("The round is over!");
     if(this.singlePlayer){
       Session.session.QuitToMainMenu();
     }
@@ -152,7 +150,6 @@ public class Arena : Spatial {
   }
 
   public void SinglePlayerInit(){
-    GD.Print("SinglePlayerInit");
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
 
@@ -228,7 +225,6 @@ public class Arena : Spatial {
     Actor.Brains brain = actor.brainType;
     
     int id = actor.worldId;
-    GD.Print("Respawning player id " + id);
 
     actorNode.Name = "Deadplayer" + id;
     actor.QueueFree();
@@ -242,7 +238,6 @@ public class Arena : Spatial {
     Actor killer = killerNode as Actor;
 
     scores[killer.worldId]++;
-    GD.Print("Killer has " + scores[killer.worldId]);
 
   }
 
@@ -261,7 +256,6 @@ public class Arena : Spatial {
   }
   
   public void InitSpawnPoints(){
-    GD.Print("Initializing item spawns");
     SceneTree st = GetTree();
     object[] actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
     this.actorSpawnPoints = new List<Vector3>();

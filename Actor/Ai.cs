@@ -137,7 +137,6 @@ public class Ai : Brain
     List<Actor> targets = GridCastForActor(start, end);
     if(targets.Count > 0){
       target = targets[0];
-      GD.Print("Target acquired! " + target);
     }
   }
   

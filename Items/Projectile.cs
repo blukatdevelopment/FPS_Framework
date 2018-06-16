@@ -7,7 +7,6 @@ public class Projectile : Item {
   
   [Remote]
   public override void DoOnCollide(object body){
-    GD.Print("Projectile:DoOnCollide");
     IReceiveDamage receiver = body as IReceiveDamage;
     if(receiver != null){;
       GiveDamage(receiver);

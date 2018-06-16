@@ -106,7 +106,6 @@ public class Session : Node {
   }
   
   public void SinglePlayerGame(){
-    GD.Print("SinglePlayerGame");
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
     Node arenaNode = Arena.ArenaFactory();
@@ -117,7 +116,6 @@ public class Session : Node {
   }
 
   public void MultiPlayerGame(){
-    GD.Print("MultiplayerGame");
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
     AddChild(arenaNode);
@@ -129,7 +127,6 @@ public class Session : Node {
   }
 
   public void ChangeMenu(Menu.Menus menu){
-    GD.Print("Changed menu to " + menu);
     if(activeMenu != null){
       activeMenu.QueueFree();
       activeMenu = null;
