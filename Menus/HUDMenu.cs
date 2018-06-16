@@ -3,8 +3,6 @@ using System;
 
 public class HUDMenu : Container{
 
-  public Actor player;
-
   public float delay = 0.0f;
 
   Godot.TextEdit healthBox;
@@ -24,11 +22,10 @@ public class HUDMenu : Container{
   }
 
   public void Update(){
-    if(player == null && Session.session.player != null){
-      player = Session.session.player;
-    }
+    Actor player = Session.session.player;
     
     if(player == null){
+      GD.Print("Player 1 doesn't exist.");
       return;
     }
     
