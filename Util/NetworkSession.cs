@@ -1,7 +1,5 @@
 /*
-    The NetworSession is like the Session's little brother that tags along for multiplayer games.
-    The prime purpose of this class is to abstract away networked info and functionality that
-    the Session may not need during singlePlayer games.
+    The NetworSession manages connections between server and client.
 */
 
 using Godot;

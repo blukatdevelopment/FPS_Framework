@@ -1,3 +1,7 @@
+/*
+  ActorInputHandler collects input from a device manager and causes its actor to behave accordingly. 
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;

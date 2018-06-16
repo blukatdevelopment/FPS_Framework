@@ -1,3 +1,7 @@
+/*
+  Base class for all types of items. The inheritance tree is somewhat deep and wide,
+  as it is built to be expanded with custom functionality easily.
+*/
 using Godot;
 using System;
 using System.Collections.Generic;
@@ -15,7 +19,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     G 
   };
   
-  public enum Types{
+  public enum Types{ // For use in factory
     None,
     Hand,
     Rifle,

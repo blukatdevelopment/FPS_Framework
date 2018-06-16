@@ -1,3 +1,6 @@
+/*
+  Disappears after colliding, damage given if possible.
+*/
 using System;
 using Godot;
 

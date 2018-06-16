@@ -1,3 +1,8 @@
+/*
+  This is a primitive AI.
+  It walks in spirals until finds another actor, at which point it pursues and attacks.
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;

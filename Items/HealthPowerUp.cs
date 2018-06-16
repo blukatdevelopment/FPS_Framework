@@ -1,3 +1,6 @@
+/*
+  Provides health when picked up.
+*/
 using Godot;
 
 public class HealthPowerUp : PowerUp {

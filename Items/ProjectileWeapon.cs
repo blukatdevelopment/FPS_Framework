@@ -1,3 +1,7 @@
+/*
+  Instantiates and fires projectiles, launching them forward. 
+  Limited by a store of ammo wich must be reloaded with delay.
+*/
 using Godot;
 using System;
 

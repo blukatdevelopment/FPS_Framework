@@ -2,7 +2,8 @@ using Godot;
 using System;
 /*
     Unless local multiplayer is added in the future, there should only be
-    one instance of this class at a time.
+    one instance of this class at a time. AI and Remote actors should have
+    spatials instead.
 */
 
 public class Eyes : Camera {

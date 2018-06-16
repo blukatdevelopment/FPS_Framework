@@ -1,3 +1,7 @@
+/* 
+  This a centralized storage place for sound effects and music filenames separate
+  from business logic.
+*/
 using Godot;
 
 public class Sound {

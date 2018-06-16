@@ -1,3 +1,7 @@
+/*
+  A speaker plays audio at a 3D point.
+  They are attached to any noise-making class. 
+*/
 using Godot;
 using System;
 using System.Collections.Generic;

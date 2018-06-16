@@ -1,3 +1,4 @@
+// Interface for classes that can be equipped
 using System;
 
 interface IEquip{

@@ -1,3 +1,4 @@
+// Provides a powerup effect on contact.
 using Godot;
 public class PowerUp : Item {
   

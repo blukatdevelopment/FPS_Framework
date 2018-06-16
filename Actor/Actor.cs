@@ -1,3 +1,16 @@
+/*
+  The Actor is a living entity in the game world.
+  Each actor is controlled by a Brain.
+  Items are children of an actor's Eyes.
+  Inventory is crude weapon-switching and ammo count like that in classic FPS games.
+
+
+  RPC calls go like so: (Notice AI is not currently supported)
+  server->client: DeferredInitInventory, 
+  client->others: DeferredUse, DeferredSwitchItem
+
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;

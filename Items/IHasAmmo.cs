@@ -1,3 +1,4 @@
+// Interface for anything that contains an inventory of ammo.
 interface IHasAmmo {
     
     /* Show up to max ammo */

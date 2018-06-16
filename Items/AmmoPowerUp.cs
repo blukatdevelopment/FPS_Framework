@@ -1,3 +1,6 @@
+/*
+  Supplies ammo when picked up.
+*/
 using Godot;
 
 public class AmmoPowerUp : PowerUp {

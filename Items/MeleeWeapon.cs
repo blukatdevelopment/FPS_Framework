@@ -1,3 +1,6 @@
+/*
+  Moves forward, damaging the first thing it hits for it's duration, and then draws back.
+*/
 using Godot;
 using System;
 

@@ -1,3 +1,8 @@
+/*
+	Contains information about the damage an IReceiveDamage will
+	accept.
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;

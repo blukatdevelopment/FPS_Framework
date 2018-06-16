@@ -1,3 +1,9 @@
+/*
+  The Arena is a self-contained game mode.
+  Actors score points by killing other actors
+  over the course of a round's duration.
+*/
+
 using Godot;
 using System;
 using System.Collections.Generic;
