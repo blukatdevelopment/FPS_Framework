@@ -54,7 +54,13 @@ public class DeviceManager {
   /* Returns a list of InputEvents for a given key press */
   private List<InputEvent> KeyEvents(int key, int buttonIndex, InputEvent.Buttons button){
     List<InputEvent> ret = new List<InputEvent>();
+    
     bool press = Input.IsKeyPressed(key);
+    
+    if(key < 4){
+      press = Input.IsMouseButtonPressed(key);
+    }
+    
     if(press && !buttonsDown[buttonIndex]){ 
       ret.Add(Down(button));
       buttonsDown[buttonIndex] = true;
@@ -63,6 +69,7 @@ public class DeviceManager {
       ret.Add(Up(button));
       buttonsDown[buttonIndex] = false;
     }
+    
     return ret;
   }
   
@@ -87,6 +94,8 @@ public class DeviceManager {
     ret.AddRange(KeyEvents(16777218, 13, InputEvent.Buttons.Tab));
     ret.AddRange(KeyEvents(32, 14, InputEvent.Buttons.Space));
     ret.AddRange(KeyEvents(16777237, 15, InputEvent.Buttons.Shift));
+    ret.AddRange(KeyEvents(82, 16, InputEvent.Buttons.R));
+    
     ret.AddRange(MouseEvents());
     return ret;
   }
@@ -108,5 +117,6 @@ public class DeviceManager {
     }
     return ret;
   }
+  
   
 }

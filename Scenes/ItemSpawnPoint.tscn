@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="ItemSpawnPoint" type="Spatial" index="0" groups=[
+"ItemSpawnPoint",
+]]
+
+

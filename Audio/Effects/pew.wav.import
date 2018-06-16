@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/pew.wav-44d441d0f657e2819ede04eeb2b4ef8b.sample"
+
+[deps]
+
+source_file="res://Audio/Effects/pew.wav"
+dest_files=[ "res://.import/pew.wav-44d441d0f657e2819ede04eeb2b4ef8b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=true
+edit/loop=false
+compress/mode=0

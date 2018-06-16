@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh"
+
+[deps]
+
+files=[ "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh" ]
+
+source_file="res://Models/Ammopack.obj"
+dest_files=[ "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh", "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

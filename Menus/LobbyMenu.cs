@@ -2,138 +2,132 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class LobbyMenu : Container
 {
-    private Godot.Button mainMenuButton;
-    private Godot.Button sendButton;
-    private Godot.Button joinButton;
-    private Godot.Button hostButton;
+    Godot.TextEdit messageBox;
+    Godot.TextEdit composeBox;
+    Godot.Button sendButton;
+    Godot.Button mainMenuButton;
+    Godot.TextEdit playersBox;
+    Godot.Button readyButton;
     
-    private Godot.TextEdit composeBox;
-    private Godot.TextEdit messageBox;
-    private Godot.TextEdit addressBox;
-    private Godot.TextEdit nameBox;
-    private Godot.TextEdit playersBox;
-    
+
+    private bool countDownActive = false;
+    private float timer = 0f;
+    private int countDown = 10;
+    private bool isReady = false;
+
+
+    private string myName;
     private List<string> messages;
-    private int myId = 404;
 
     public override void _Ready() {
-        messages = new List<string>();
+      messages = new List<string>();
+    }
+
+    public override void _Process(float delta){
+      if(countDownActive){
+        CountDown(delta);
+      }
+      
+    }
+
+    void CountDown(float delta){
+      timer += delta;
+      if(timer > 1f){
+        countDown--;
+        timer = 0;
+        BuildPlayers();
+      }
+      if(countDown < 1){
+        countDownActive = false;
+        StartGame();
+      }
     }
     
-    public override void _Process(float delta) {
-      Reposition();
+    public void Init(){
+      messageBox = (Godot.TextEdit)Menu.TextBox();
+      messageBox.Readonly = true;
+      AddChild(messageBox);
+      
+      composeBox = (Godot.TextEdit)Menu.TextBox();
+      AddChild(composeBox);
+      
+      sendButton = (Godot.Button)Menu.Button("Send", Send);
+      AddChild(sendButton);
+      
+      mainMenuButton = (Godot.Button)Menu.Button("Main Menu", ReturnToMainMenu);
+      AddChild(mainMenuButton);
+
+      readyButton = (Godot.Button)Menu.Button("Ready", ToggleReady);
+      AddChild(readyButton);
+      
+      playersBox = (Godot.TextEdit)Menu.TextBox("");
+      playersBox.Readonly = true;
+      AddChild(playersBox);
+
+      
+      InitNetwork();
+
+      GD.Print("ScaleControls");
+      ScaleControls();
+    }
+
+    void InitNetwork(){
+      if(Session.session.netSes == null){
+        GD.Print("No network session found in lobby menu");
+        return;
+      }
+      NetworkSession netSes = Session.session.netSes;
+
+
+      if(Session.session.netSes.Initialized()){
+        GD.Print("No need to reconnect. Updating server/client");
+        if(netSes.isServer){
+          netSes.UpdateServer(obj: this, playerJoin: nameof(PlayerJoined), playerLeave: nameof(PlayerQuit));
+          ReceiveMessage("Server still using random seed: " + netSes.randomSeed);
+          foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+            string json = JsonConvert.SerializeObject(entry.Value, Formatting.Indented);
+            AddPlayer(json);
+            Rpc(nameof(AddPlayer), json);
+          }
+
+        }
+        else{
+          netSes.UpdateClient(obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected));
+        }
+        BuildPlayers();
+        return;
+      }
+      
+      
+      myName = "Server";
+
+      if(netSes.isServer){
+        netSes.InitServer(obj: this, playerJoin: nameof(PlayerJoined), playerLeave: nameof(PlayerQuit), port : netSes.initPort);
+        ReceiveMessage("Server initialized with random seed: " + netSes.randomSeed);
+      }
+      else{
+        netSes.InitClient(address: netSes.initAddress, obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected),  port: netSes.initPort);
+      }
+      BuildPlayers();
     }
     
-    /* Scales and positions all controls. */
-    public void Reposition(){
+    void ScaleControls(){
       Rect2 screen = this.GetViewportRect();
       float width = screen.Size.x;
       float height = screen.Size.y;
-      float w = width/10;
-      float h = height/10;
-      Vector2 size;
-      if(mainMenuButton != null){
-        size = new Vector2(w, h);
-        mainMenuButton.SetSize(size);
-        mainMenuButton.SetPosition(new Vector2(0f, size.y * 9));
-      }
-      if(sendButton != null){
-        size = new Vector2(w, h);
-        sendButton.SetSize(size);
-        sendButton.SetPosition(new Vector2(size.x * 9, size.y * 9));
-      }
-      if(hostButton != null){
-        size = new Vector2(w, h);
-        hostButton.SetSize(size);
-        hostButton.SetPosition(new Vector2(size.x * 4, 0));
-      }
-      if(joinButton != null){
-        size = new Vector2(w, h);
-        joinButton.SetSize(size);
-        joinButton.SetPosition(new Vector2(size.x * 5, 0));
-      }
-      if(composeBox != null){
-        size = new Vector2(4* w, 1* h);
-        composeBox.SetSize(size);
-        composeBox.SetPosition(new Vector2(w * 5, h * 9));
-      }
-      if(messageBox != null){
-        size = new Vector2(8 * w, 2 *h);
-        messageBox.SetSize(size);
-        messageBox.SetPosition(new Vector2(w, 7 * h));
-      }
-      if(nameBox != null){
-        size = new Vector2(3 * w, h);
-        nameBox.SetSize(size);
-        nameBox.SetPosition(new Vector2(2 * w, 9 * h));
-      }
+      float wu = width/10; // relative height and width units
+      float hu = height/10;
       
-      if(addressBox != null){
-        size = new Vector2(4 * w, h);
-        addressBox.SetSize(size);
-        addressBox.SetPosition(new Vector2(0, 0));
-      }
-      
-    }
-    
-    public void SetMainMenuButton(Godot.Button button){
-      if(mainMenuButton != null){ mainMenuButton.QueueFree(); }
-      mainMenuButton = button;
-      AddChild(button);
-    }
-    
-    public void SetSendButton(Godot.Button button){
-      if(sendButton != null){ sendButton.QueueFree(); }
-      sendButton = button;
-      AddChild(button);
-    }
-    
-    public void SetHostButton(Godot.Button button){
-      if(hostButton != null){ hostButton.QueueFree(); }
-      hostButton = button;
-      AddChild(button);
-    }
-    
-    public void SetJoinButton(Godot.Button button){
-      if(joinButton != null){ joinButton.QueueFree(); }
-      joinButton = button;
-      AddChild(button);
-    }
-    
-    public void SetComposeBox(Godot.TextEdit box){
-      if(composeBox != null){ composeBox.QueueFree(); }
-      composeBox = box;
-      AddChild(box);  
-    }
-    
-    public void SetMessageBox(Godot.TextEdit box){
-      if(messageBox != null){ messageBox.QueueFree(); }
-      messageBox = box;
-      box.SetReadonly(true);
-      AddChild(box);
-    }
-    
-    public void SetNameBox(Godot.TextEdit box){
-      if(nameBox != null){ nameBox.QueueFree(); }
-      nameBox = box;
-      AddChild(box);
-    }
-    
-    public void SetAddressBox(Godot.TextEdit box){
-      if(addressBox != null){ addressBox.QueueFree(); }
-      addressBox = box;
-      AddChild(box);
-    }
-    
-    public void SetPlayersBox(Godot.TextEdit box){
-      if(playersBox != null){ playersBox.QueueFree(); }
-      addressBox = box;
-      if(box != null){
-        AddChild(box);
-      }
+      Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+      Menu.ScaleControl(composeBox, 6 * wu, 2 * hu, 3 * wu, 8 * hu);
+      Menu.ScaleControl(messageBox, 6 * wu, 8 * hu, 3 * wu, 0);
+      Menu.ScaleControl(sendButton, wu, 2 * hu, 9 * wu, 8 * hu);
+      Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
+      Menu.ScaleControl(readyButton, wu, hu, 2 * wu, 0);
     }
     
     public void ReturnToMainMenu(){
@@ -141,15 +135,77 @@ public class LobbyMenu : Container
     }
     
     public void Send(){
-      if(composeBox != null && composeBox.GetText() != "" && nameBox != null){
-        string name = GetName();
+      if(composeBox != null && composeBox.GetText() != ""){
+        
         string message = composeBox.GetText(); 
-        ReceiveNamedMessage(message, name);
-        Rpc(nameof(ReceiveNamedMessage), message, name);
+        ReceiveNamedMessage(message, myName);
+        Rpc(nameof(ReceiveNamedMessage), message, myName);
         composeBox.SetText("");
       }
     }
     
+    public void PlayerJoined(int id){
+    }
+
+    [Remote]
+    public void InitRandomSeed(int randomSeed){
+      Session.session.netSes.InitRandom(randomSeed);
+      GD.Print("Random seed initialized as " + randomSeed);
+    }
+
+    public void PlayerQuit(int id){
+      //ReceiveMessage("Player " + id + " quit.");
+      RemovePlayer(id);
+      Rpc(nameof(RemovePlayer), id);
+    }
+
+    /* Called before peers connect. */
+    public void ConnectionSucceeded(){
+      GD.Print("Connection succeeded!");
+      NetworkSession netSes = Session.session.netSes;
+      myName = netSes.initName;
+      int myId = netSes.selfPeerId;
+
+      if(myName == "Name"){
+        myName = "Player #" + myId.ToString();
+      }
+
+      PlayerData dat = new PlayerData(myName, myId);
+      string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
+      GD.Print("My Data:" + json);
+      AddPlayer(json);
+      Rpc(nameof(AddPlayer), json);
+
+      string message = myName + " joined!"; 
+      ReceiveMessage(message);
+      Rpc(nameof(ReceiveMessage), message);
+    }
+
+    public void PeerConnected(int id){
+      if(id == 1){
+        return; // Don't worry about the server.
+      }
+      int myId = Session.session.netSes.selfPeerId;
+      PlayerData myDat = Session.session.netSes.playerData[myId];
+      string myJson = JsonConvert.SerializeObject(myDat, Formatting.Indented);
+      RpcId(id, nameof(AddPlayer), myJson);
+      StopCountDown();
+    }
+
+    [Remote]
+    public void ResetReady(){
+      NetworkSession netSes = Session.session.netSes;
+
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        entry.Value.ready = false;
+      }
+    }
+
+
+    public void ConnectionFailed(){
+      ReceiveMessage("Connection failed. :(");
+    }
+
     [Remote]
     public void ReceiveMessage(string message){
       if(messages.Count > 50){ messages.Remove(messages.First()); }
@@ -158,78 +214,140 @@ public class LobbyMenu : Container
       for(int i = 0; i < messages.Count; i++){
         str += messages[i] + "\n";
       }
-      GD.Print(message);
       messageBox.SetText(str);
     }
     
     [Remote]
     public void ReceiveNamedMessage(string message, string name){
-      string fullMessage = name + ":" + message;
+      string fullMessage = name + ": " + message;
       ReceiveMessage(fullMessage);  
     }
     
-    public void Join(){
-      string address = "";
-      if(addressBox != null){
-        address = addressBox.GetText();
-      }
-      ReceiveMessage("Connecting to server: " + address + " on port " + Session.DefaultPort + "...");
-      Session.session.InitClient(address, (Godot.Object)this, nameof(JoinSucceed), nameof(JoinFail));
-    }
-    
-    public string GetName(){
-      string name = "Player";
-      if(nameBox != null){
-        name = nameBox.GetText();  
-      }
-      return name;  
-    }
-    
-    public void JoinSucceed(){
-      ReceiveMessage("Connected.");
-      myId = this.GetTree().GetNetworkUniqueId();
-    }
-    
-    public void JoinFail(){
-      ReceiveMessage("Connection Failed.");
-    }
-    
-    public void Host(){
-      ReceiveMessage("Hosting Server on port " + Session.DefaultPort + ".");
-      Session.session.InitServer((Godot.Object)this, nameof(PlayerJoined), nameof(PlayerLeft));
-    }
-    
-    public void PlayerJoined(int id){
-      string message = "Player with id " + id + " joined";
-      ReceiveMessage(message);
-      Rpc(nameof(ReceiveMessage), message);
-    }
-    
-    /* I'll need to come back to this when I figure out multiple args for Rpc() */
     [Remote]
-    public void RegisterPlayer(int id, List<string> info){
-      string name = "Anonymous";
-      if(info.Count > 0){
-        name = info[0];  
+    public void AddPlayer(string json){
+      PlayerData dat = JsonConvert.DeserializeObject<PlayerData>(json);
+      
+      if(dat == null){
+        GD.Print("AddPlayer: PlayerData null");
+        return;
+      }
+
+      NetworkSession netSes = Session.session.netSes;
+      if(netSes == null){ 
+        GD.Print("AddPlayer: No network session detected");
+        return; 
+      }
+      if(dat.id == netSes.selfPeerId){
+        myName = dat.name;
+      }
+
+      if(!netSes.playerData.ContainsKey(dat.id)){
+        netSes.playerData.Add(dat.id, dat);
+        GD.Print("Added " + json);
       }
       
-      string message = name + " has joined the lobby.";
       
-      Rpc(nameof(ReceiveMessage), message);
-      
-      try{
-        Session.session.playerInfo.Add(id, info);
-      }
-      catch (ArgumentException){
-        Session.session.playerInfo[id] = info;
-      }
+      BuildPlayers();
     }
-    
-    public void PlayerLeft(int id){
-      string message = "Player with id " + id + " left.";
-      ReceiveMessage(message);
-      Rpc(message);
+
+    [Remote]
+    public void RemovePlayer(int id){
+      Session.session.netSes.playerData.Remove(id);
+      BuildPlayers();
+    }
+
+    void ToggleReady(){
+      isReady = !isReady;
+      int myId = Session.session.netSes.selfPeerId;
       
+      TogglePlayerReady(myId);
+      Rpc(nameof(TogglePlayerReady), myId);
+      
+      if(isReady){  
+        readyButton.SetText("Waiting");
+      }
+      else{
+        readyButton.SetText("Ready");
+      }
+
+    }
+
+    [Remote]
+    public void TogglePlayerReady(int playerId){
+      GD.Print("Toggling player " + playerId);
+      PlayerData dat = Session.session.netSes.playerData[playerId];
+      
+      if(dat == null){
+        GD.Print("Player " + playerId + " doesn't exist.");
+        return;
+      }
+
+      dat.ready = !dat.ready;
+      string message = dat.name;
+      message += dat.ready ? " is ready." : " is not ready.";
+
+      if(AllPlayersReady()){
+        StartCountDown();
+
+      }
+      else{
+        StopCountDown();
+      }
+
+      ReceiveMessage(message);
+    }
+
+    public bool AllPlayersReady(){
+      NetworkSession netSes = Session.session.netSes;
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        if(entry.Value.ready == false){
+          return false;
+        }
+      }
+      return true;
+    }
+
+    public void StartGame(){
+      ResetReady();
+      Session.session.MultiPlayerGame();
+    }
+
+    void StopCountDown(){
+      countDownActive = false;
+      BuildPlayers();
+      GD.Print("Stopping countdown");
+    }
+
+    [Remote]
+    void StartCountDown(){
+      GD.Print("Starting countdown");
+      timer = 0f;
+      countDown = 10;
+      countDownActive = true;
+      BuildPlayers();
+    }
+
+    [Remote]
+    void PrintPlayer(string dat){
+      PlayerData playerDat = JsonConvert.DeserializeObject<PlayerData>(dat);
+      GD.Print("Printing player " + playerDat);
+    }
+
+
+    void BuildPlayers(){
+      NetworkSession netSes = Session.session.netSes;
+      string names = "Players(" + netSes.playerData.Count + ")";
+      
+      if(countDownActive){
+        names += " Starting in " + countDown;
+      }
+
+      names += "\n";
+      
+      foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
+        names += entry.Value.name + "\n";
+      }
+      playersBox.SetText(names);
     }
     
 }
