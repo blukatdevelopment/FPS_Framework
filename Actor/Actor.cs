@@ -379,17 +379,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void ReceiveDamage(Damage damage){
-    string damageJson = JsonConvert.SerializeObject(damage, Formatting.Indented);
-    DoReceiveDamage(damageJson);
-    if(Session.NetActive()){
-      Rpc(nameof(DoReceiveDamage), damageJson);
-    }
-  }
-
-  [Remote]
-  public void DoReceiveDamage(string damageJson){
-    Damage damage = JsonConvert.DeserializeObject<Damage>(damageJson);
-    
     if(health <= 0){
       return;
     }

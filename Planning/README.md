@@ -85,7 +85,7 @@ the deliverable can be released.
 **FIXED BUG01**
 Can't pick up powerups.
 
-**Bug02**
+**FIXEDBug02**
 Damage not always given when hitting enemies.
 
 **FIXED Bug03**
@@ -97,7 +97,7 @@ When player joins lobbymenu Countdown doesn't stop.
 **FIXED Bug05**
 Player Ready setting isn't reset after match starts.
 
-**BUG 06**
+**FIXEDBUG 06**
 Player HUD shows 0 health after respawn.
 
 

@@ -9,8 +9,7 @@ public class Projectile : Item {
   public override void DoOnCollide(object body){
     GD.Print("Projectile:DoOnCollide");
     IReceiveDamage receiver = body as IReceiveDamage;
-    if(receiver != null){
-      GD.Print("Giving damage");
+    if(receiver != null){;
       GiveDamage(receiver);
     }
     this.QueueFree();

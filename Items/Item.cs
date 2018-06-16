@@ -100,15 +100,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     }
     else if(Session.IsServer()){
       //GD.Print("Colliding because isserver");
-      DoOnCollide(body);
       string path = bodyNode.GetPath().ToString();
       GD.Print("RPCing to path: " + path);
       Rpc(nameof(OnCollideWithPath), path);
+      DoOnCollide(body);
     }
   }
 
   [Remote]
   public void OnCollideWithPath(string path){
+    GD.Print("Colliding with " + path);
     NodePath nodePath = new NodePath(path);
     Node node = GetNode(nodePath);
     object obj = node as object;
