@@ -3,7 +3,7 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{ None, Main, Lobby};
+  public enum Menus{ None, Main, Multiplayer, Lobby, Pause, HUD};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
@@ -15,29 +15,33 @@ public class Menu{
   }
   
   public static Control Button(string text = "", Action onClick = null){
-    PackedScene button_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/Button.tscn");
-    Node button_instance = button_ps.Instance();
-    Button button = (Button)button_instance;
+    Node buttonInstance = Session.Instance("res://Scenes/Prefabs/Controls/Button.tscn");
+    Button button = (Button)buttonInstance;
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
-    return (Control)button_instance;
+    return (Control)buttonInstance;
   }
   
   public static Control TextBox(string val = ""){
-    PackedScene textBox_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    Node textBox_instance = textBox_ps.Instance();
+    Node textBoxInstance = Session.Instance("res://Scenes/Prefabs/Controls/TextBox.tscn");
     if(val != ""){
-      TextEdit textBox = (Godot.TextEdit)textBox_instance;
+      TextEdit textBox = (Godot.TextEdit)textBoxInstance;
       textBox.SetText(val);
     }
-    return (Control)textBox_instance;
+    return (Control)textBoxInstance;
   }
   
   public static Node MenuFactory(Menus menu){
     Node ret = null;
     switch(menu){
-      case Menus.None: return null; break;
+      case Menus.None: 
+        Sound.PauseSong();
+        return null; 
+        break;
+      case Menus.HUD: ret = HUDMenu(); break;
+      case Menus.Pause: ret = PauseMenu(); break;
       case Menus.Main: ret = MainMenu(); break;
+      case Menus.Multiplayer: ret = MultiplayerMenu(); break;
       case Menus.Lobby: ret = LobbyMenu(); break;
     }
     return ret;
@@ -45,26 +49,48 @@ public class Menu{
   
 
   public static Node MainMenu(){
-    PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/MainMenu.tscn");
-    Node menu_instance = menu_ps.Instance();
-    MainMenu menu = (MainMenu)menu_instance;
-    menu.SetLobbyButton((Godot.Button)Button(text : "Multiplayer", onClick: menu.Lobby));
-    menu.SetQuitButton((Godot.Button)Button(text : "Quit", onClick: menu.Quit));
-    return menu_instance;
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MainMenu.tscn");
+    MainMenu menu = (MainMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static Node MultiplayerMenu(){
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
+    MultiplayerMenu menu = (MultiplayerMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
   }
   
   public static Node LobbyMenu(){
-    PackedScene menu_ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
-    Node menu_instance = menu_ps.Instance();
-    LobbyMenu menu = (LobbyMenu)menu_instance;
-    menu.SetMainMenuButton((Godot.Button)Button(text : "MainMenu", onClick: menu.ReturnToMainMenu));
-    menu.SetSendButton((Godot.Button)Button(text : "Send", onClick: menu.Send));
-    menu.SetJoinButton((Godot.Button)Button(text : "Join", onClick: menu.Join));
-    menu.SetHostButton((Godot.Button)Button(text : "Host", onClick: menu.Host));
-    menu.SetComposeBox((Godot.TextEdit)TextBox());
-    menu.SetMessageBox((Godot.TextEdit)TextBox());
-    menu.SetAddressBox((Godot.TextEdit)TextBox(Session.DefaultServerAddress));
-    menu.SetNameBox((Godot.TextEdit)TextBox("PlayerName"));
-    return menu_instance;
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
+    LobbyMenu menu = (LobbyMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static Node PauseMenu(){
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/PauseMenu.tscn");
+    PauseMenu menu = (PauseMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static Node HUDMenu(){
+    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/HUDMenu.tscn");
+    HUDMenu menu = (HUDMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;
+  }
+  
+  public static void ScaleControl(Control control, float width, float height, float x, float y){
+    if(control == null){ return; }
+    control.SetSize(new Vector2(width, height)); 
+    control.SetPosition(new Vector2(x, y)); 
   }
 }

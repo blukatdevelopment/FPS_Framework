@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh"
+
+[deps]
+
+files=[ "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh" ]
+
+source_file="res://Terrain/008Stairs.obj"
+dest_files=[ "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh", "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

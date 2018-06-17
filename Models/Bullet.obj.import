@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh"
+
+[deps]
+
+files=[ "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh" ]
+
+source_file="res://Models/Bullet.obj"
+dest_files=[ "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh", "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

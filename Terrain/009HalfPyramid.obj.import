@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh"
+
+[deps]
+
+files=[ "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh" ]
+
+source_file="res://Terrain/009HalfPyramid.obj"
+dest_files=[ "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh", "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

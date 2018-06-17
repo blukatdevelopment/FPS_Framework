@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh"
+
+[deps]
+
+files=[ "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh" ]
+
+source_file="res://Terrain/004FlatRamp.obj"
+dest_files=[ "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh", "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )

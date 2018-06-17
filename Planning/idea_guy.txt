@@ -1,162 +1,245 @@
-This file contains info that is subjective in nature and concerns
-game design more than coherent software requirements.
+This file contains ideas that simply don't fit within the current scope of
+development. This file serves as a containment area for ideas awaiting scope
+expansions.
 
 
 
 **********************************************************************
-        Far-Out Features
+        Epics, Stories, Tasks
+**********************************************************************
+These ideas are broken up by level of granularity and scope into 
+Epics- Group of inter-operating features that forms a system in itself. (eg menus, items)
+Stories- Individual feature or mechanic that contains multiple tasks.
+Tasks- A bite-sized piece of functionality that relies on other features or systems.
+
+
+
+**********************************************************************
+        Epic
 **********************************************************************
 
+**********************************************
+        Story
+**********************************************
 
-**Kingdom**
-Port in the Kingdom card game as a minigame.
-
-**Crafting**
-Create menu for turning ingrient items into product items.
-
-**Building**
-Allow Actors to convert collected resources into placeable structures.
-
-**Dialogue system**
-Allow players to traverse speech trees with NPCs with optional voiceovers.
-
-**NPC trading**
-Allow dialogue options to trigger trading menu.
-
-**NPC Quests**
-Allow dialogue options to trigger and (after completion) issue rewards.
-
-**Hunger/Thirst**
-Require food/water to survive. Possible add auto-consume option with "You have
-X days worth of supplies left" warnings to keep this from being tedious.
-
-**Followers**
-Allow player to have a couple NPC followers that maintain a distance from the
-player, assist in combat, and help carry items.
-
-**Squads**
-Allow player to command a set of NPC squad leaders that each have minions.
-Orders would include Move, Attack, Change Rules of Engagement, and Change Pace.
-
-**Generate map**
-Generate a 2D map of the world's terrain so that places that are not loaded 
-can still be viewed in detail.
-
-**Command map**
-Use 2D map to set navpoints and view a squad's calculated path.
-
-**Vehicles**
-A vehicle would store an actor(possibly exposing their body to harm), offer
-storage for items, and have some fancy physics to it. 
+***********************
+        Task
+***********************
 
 
-**********************Conservation of resources*********************************
-This is the general idea that renewable resources can be created, but
-non-renewable resources can only be found.
+**********************************************************************
+        Kingdom
+**********************************************************************
+Port in the kingdom card game as a multiplayer minigame.
 
-**Persistant world**
-All Actors/Items/Buildings should persist in their current state. Nothing should
-respawn nor despawn when a player is absent. Things do not need to remain 
-stationary when left alone, however.
 
-**NPC creation**
-Actor should be able to pro-create to produce children(By living in the same
-house/den) or venture in from a neighboring inaccessible territory.
 
-**Skeletal world representation**
-When unloaded, the world should update a minimal representation of each region
-as a set of ecosystems(wandering Actors), and settlements/dens(Sedentary Actors).
-Weighted random events and actions should decide resource production/harvest, 
-population growth, the outcome of altercations, and the position of NPCs at any
-given time.
+**********************************************************************
+        Crafting
+**********************************************************************
+Craft new items from existing items using blueprints.
 
-********************Multiplayer*************************************************
 
-**Multiplayer Sandbox*
-Client-Server multiplayer would allow multiple clients to drop in and out of a
-persistent world, as is the case in Minecraft.
+**********************************************************************
+        Building
+**********************************************************************
+Produce structures from connecting components using blueprints.
 
-**Local Co-op**
-Player2 could join in using a gamepad. Player2 might play as a follower, squad
-leader, or commander(giving orders from a map filled with info).
 
-**Dual-screen multiplayer**
-Give Player2 monitor 2, reducing screen-peeking and eliminating split-screen
-issues.
+**********************************************************************
+        Procedural Quests
+**********************************************************************
+Complete quests created procedurally according to the conditions and
+wealth(for rewards) of the NPCs that offer them.
 
-**Online Arena Mode**
-Standard matchmaking lobby->static map deathmatch arena with rounds. Gamemodes
-could vary.
 
-**Horde mode**
-Team 1 fights against oncoming waves of NPCs commanded by
-team 2. Each completed wave awards points to both sides. Team 1 uses points for
-upgrades and turrets whilst team 2 purchases upgrades and additional NPCs.
+
+
+
+**********************************************************************
+        Dialogue System
+**********************************************************************
+Traverse dialogue trees to interact with NPCs using speech.
+
+**********************************************
+        Trade
+**********************************************
+Enter trade menu in which player and NPC can exchange goods.
+
+
+**********************************************
+        Followers
+**********************************************
+Unlock dialogue tree for NPCs that lets you give them orders to stay/follow
+and act as pack mules.
+
+**********************************************************************
+        Survival
+**********************************************************************
+Player should be vulnerable to the elements and have certain needs
+that can give stat penalties and worst death.
+
+**********************************************
+        Hunger/Thirst
+**********************************************
+Actors should need to eat and drink to survive.
+
+
+
+**********************************************************************
+        Open World
+**********************************************************************
+The game world should consist of interior and exterior cells
+inter-navigable by doors.
+
+**********************************************
+        2D map
+**********************************************
+A texture should be generated to reflect the overworld.
+
+
+**********************************************
+        Persistent NPCS/structures
+**********************************************
+NPCs and structures should not appear or vanish from thin air
+in a player's absence(aside from initial spawn and Background NPC lifecycle).
+
+
+**********************************************
+        Background: NPC lifecycle
+**********************************************
+NPCs should be born, reproduce, and die accross the overworld according
+to random events with odds influenced by the world and other NPCS.
+
+**********************************************
+        Multiplayer
+**********************************************
+Multiple players should be able to connect to an open world server
+and interact with its world.
+
+**********************************************************************
+        Background: Cities
+**********************************************************************
+Cities should act as entities guided by policy and individual members.
+Cities build buildings, establish trade routes, and can participate in
+wars.
+
+
+**********************************************************************
+        Vehicles
+**********************************************************************
+Players should be able to pilot various kinds of vehicles.
+
+**********************************************
+        Mounted Animal
+**********************************************
+Actors should be able to ride on the backs of certain animals that let
+them climb steeper slopes and move faster.
+
+**********************************************
+        Automobile
+**********************************************
+Actors should be able to drive wheeled vehicles that move quickly over
+smooth surfaces such as roads.
+
+**********************************************
+        Airship/Chopper
+**********************************************
+Slow aircraft containing rooms, passenger seats, or cargo.
+They are meant to take off and land vertically. 
+
+**********************************************
+        Gravjet/Airplane/Jetplane
+**********************************************
+Quick-maneuvering aircraft made for bombing runs and dog fights.
+
+**********************************************************************
+        Real-Time Tactics
+**********************************************************************
+RTT gameplay entails battlefields with humans and AIs issueing orders to
+competing armies.  
+
+**********************************************
+        Squads
+**********************************************
+Squad leaders(NPC or player) should be able to issue movement and rules of engagement
+commands to squadmades(NPC or player).
+
+
+**********************************************
+        Command map
+**********************************************
+A 2D map should allow a commander to select squads/groups and issue orders to their
+squad leaders.
+
+
+**********************************************************************
+        Arena Gamemodes
+**********************************************************************
+
+**********************************************
+        Team mutator
+**********************************************
+Players on the same team will be penalized or prevented from harming
+teammates whilst scoring will be shared with all teammates. AI will
+not attack teammates.
+
+**********************************************
+        Horde Mode
+**********************************************
+Human players fight against incoming waves of enemy NPCs that grow more
+powerful and numerous with each subsequent wave.
+
+
+**********************************************************************
+        Local co-op
+**********************************************************************
+Non-networked, non-lan means of sharing one computer with multiple players
+much like a console video games.
+
+**********************************************
+        Splitscreen multiplayer
+**********************************************
+One or both players use gamepads to play on the same screen.
+
+**********************************************
+        Dual Screen multiplayer
+**********************************************
+One or more players use gamepads and each gets their own dedicated display.
+
+
+
+**********************************************************************
+        Background stuff
+**********************************************************************
+
+**********************************************
+        Logging system
+**********************************************
+Instead of GD.Print(), use a Session.Debug() line to drop text into one or more log files that can
+be tailed and grepped for a better debugging experience. 
 
 
 ********************************************************************************
 Philosophy
 ********************************************************************************
+The following section is mostly empty rhetoric about a non-existant finished product. 
 
-** Naming **
-A successful name is either short, or can be abbreviated or made into a 
-phoenetic acronym. A more successful name captures some fundamental truth about
-the game not only as a player experience, but also as a branding legacy.
 
-Angle A
-A common approach to naming is to fashion a compound word from a noun and 
-descriptor. 
+Name: Manafest
+The name is half-way between "manifest" and "mana". However, it sort of sounds like
+some sort of mage convention. Mana-fest could easily describe such a thing.
 
-Nouns:
-  Mana
-  Magic
-  Theatre( of war)
-  
 
-Descriptors
-  Divine
-  
-Candidte name: manafest
 
 
 ** Pillars of gameplay **
 
+Consquence - 
+All actions should have reactions, human or AI.
+A consistent explanation for events should exist, even if it is obscured
+from the player.
 
-Choice -
-There should be a variety of valid play styles. Every problem should be as much
-about choosing a solution as it is executing one. Pros/cons should balance each
-solution so that it lends itself to a cohesive play style.
-
-Procedural Story -
-A fixed chain or tree of plot nodes allows fine-tailoring of cinematic experiences
-using hand-crafted gameplay sequences. This project will not have access to the
-labor nor creative talent required for such. More importantly, the AAA market
-is heavily saturated with this scheme.
-
-Instead, plot nodes should be defined in terms of objectives that can likewise
-be pursued and achieved by both human players and NPCs. A campaign should consist
-of a series of plot nodes leading toward the resolution of a larger objective.
-Multiple mutually-exclusive campaigns should be active at one time, allowing
-the player to either participate in, or simply watch a unique timeline unfold
-before them. Should the player fail in their aims, the world should not end,
-but instead continue to function with the full consequences of their failure.
-As the complexity of such a world increases, so does the novelty of each 
-gameplay. The competition of two active plot nodes acts as a unique plot node
-in of itself, meaning that the same number of plot nodes in such a procedural
-system can offer a geometric improvement in novelty over linear storytelling.
-
-
-** Roadmapping**
-
-FPS lite-
-Basic fps movement, inventory, and combat.
-
-FPS polish-
-Ragdoll, animations, static arena gamemode.
-
-
-Procedural level design-
-terrain, buildings/scenery placement, dungeon gen.
-
-procedural quests-
-framework, example quest, example AIs.
+Practive AI -
+An AI should take action to stop its opponents, prepare a strategy to do so, 
+and operate with limited information and resources.

@@ -1,0 +1,17 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh"
+
+[deps]
+
+files=[ "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh" ]
+
+source_file="res://Models/Actor.obj"
+dest_files=[ "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh", "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
