@@ -33,17 +33,15 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   public string name;
   public string description;
   public int quantity;
-  public int quantityMax;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
 
-  public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
+  public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.quantity = quantity;
-    this.quantityMax = quantityMax;
     this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
@@ -89,6 +87,61 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     }
     area.Connect("body_entered", this, nameof(OnCollide));
     AddChild(area);
+  }
+
+  public virtual ItemData GetData(){
+    return ItemGetData();
+    
+  }
+
+  public virtual void ReadData(ItemData dat){
+    ItemReadData(dat);
+  }
+
+  // Base Save/Load of ItemData to be used by subclasses
+  public ItemData ItemGetData(){
+    ItemData dat = new ItemData();
+
+    // NON-LIST DATA
+    dat.name = name;
+    dat.description = description;
+    dat.quantity = quantity;
+
+
+    // FLOATS
+    Vector3 position = GetTranslation();
+    dat.floats.Add(position.x); 
+    dat.floats.Add(position.y);
+    dat.floats.Add(position.z);
+
+    // STRINGS
+    dat.strings.Add(name);
+    dat.strings.Add(description)
+
+    // INTS
+    dat.ints.Add(quantity);
+
+
+    return dat;
+  }
+
+  // Should remove every element added by ItemReadData
+  public void ItemReadData(ItemData dat){
+    // FLOATS
+    float x = dat.floats[0];
+    float y = dat.floats[1];
+    float z = dat.floats[2];
+    SetTrasnform( new Vector3(x, y, z));
+    dat.floats.RemoveRange(0, 3);
+
+    // STRINGS
+    name = dat.strings[0];
+    description = dat.strings[1];
+    dat.strings.RemoveRange(0, 2);
+
+    // INTS
+    quantity = dat.ints[0];
+    dat.ints.RemoveRange(0, 1);
   }
 
   public void OnCollide(object body){

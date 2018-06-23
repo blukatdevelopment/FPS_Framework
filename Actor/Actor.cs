@@ -51,6 +51,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private int ammo = 100;
   private int maxAmmo = 999;
   private List<Item> items;
+  private Inventory inventory;
   
   // Handpos
   private float HandPosX = 0;
@@ -100,6 +101,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   
   void InitInventory(){
+    inventory = new Inventory();
     if(Session.NetActive() && !Session.IsServer()){
       return;
     }

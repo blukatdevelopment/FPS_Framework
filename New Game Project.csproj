@@ -86,6 +86,7 @@
     <Compile Include="Items\PowerUp.cs" />
     <Compile Include="Items\HealthPowerUp.cs" />
     <Compile Include="Items\AmmoPowerUp.cs" />
+    <Compile Include="Items\ItemData.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
     <Compile Include="Util\Events\SessionEvent.cs" />
+    <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
