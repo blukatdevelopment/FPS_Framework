@@ -8,6 +8,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
 
 public class Session : Node {
@@ -72,6 +73,8 @@ public class Session : Node {
 
   /* Convenience method for creating nodes. */
   public static Node Instance(string path){
+    byte[] bytes = Encoding.Default.GetBytes(path);
+    path = Encoding.UTF8.GetString(bytes);
     PackedScene packedScene = (PackedScene)GD.Load(path);
     if(packedScene == null){
       GD.Print("Path [" + path + "] is invalid." );
