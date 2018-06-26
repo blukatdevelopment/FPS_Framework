@@ -116,7 +116,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
 
     // STRINGS
     dat.strings.Add(name);
-    dat.strings.Add(description)
+    dat.strings.Add(description);
 
     // INTS
     dat.ints.Add(quantity);
@@ -131,7 +131,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     float x = dat.floats[0];
     float y = dat.floats[1];
     float z = dat.floats[2];
-    SetTrasnform( new Vector3(x, y, z));
+
+    SetTranslation( new Vector3(x, y, z));
     dat.floats.RemoveRange(0, 3);
 
     // STRINGS
