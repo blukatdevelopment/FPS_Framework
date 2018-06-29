@@ -100,6 +100,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   
+
   void InitInventory(){
     inventory = new Inventory();
     if(Session.NetActive() && !Session.IsServer()){
@@ -134,6 +135,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     unarmed = false;
   }
   
+  public object VisibleObject(){
+    float distance = 100f;
+    World world = GetWorld();
+    Vector3 start = HeadPosition();
+    Vector3 end = Forward();
+    end *= distance;
+    end += start;
+    return Util.RayCast(start, end, world);
+  }
+
   /* Show up to max ammo */
   public int CheckAmmo(string ammoType, int max){
     if(this.ammoType != ammoType){
@@ -178,6 +189,17 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public string GetInfo(){
+    switch(brainType){
+      case Brains.Player1:
+        return "You.";
+        break;
+      case Brains.Ai:
+        return "AI";
+        break;
+      case Brains.Remote:
+        return "Online player";
+        break;
+    }
     return "Actor";  
   }
   

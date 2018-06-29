@@ -40,4 +40,19 @@ public class Util{
     float z = ToRadians(degrees.z);
     return new Vector3(x, y, z);
   }
+
+  public static object RayCast (Vector3 start, Vector3 end, World world) {
+
+    PhysicsDirectSpaceState spaceState = world.DirectSpaceState as PhysicsDirectSpaceState;
+    var result = spaceState.IntersectRay(start, end);
+    
+    if(!result.ContainsKey("collider")){
+      return null;
+    }
+    object collider = result["collider"];
+
+    //GD.Print(start + "," + end + ": " + collider);
+
+    return collider;
+  }
 }

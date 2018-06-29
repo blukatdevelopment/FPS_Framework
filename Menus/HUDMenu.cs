@@ -36,6 +36,20 @@ public class HUDMenu : Container{
     itemBox.SetText(itemText);
     
     string objectiveText = Session.session.GetObjectiveText();
+    // IHasInfo infoObj = player.VisibleObject() as IHasInfo;
+    // if(infoObj != null){
+    //   objectiveText = infoObj.GetInfo();
+    //   GD.Print(objectiveText);
+    // }
+    // else{
+    //   GD.Print("Null");
+    // }
+    //GD.Print(player.VisibleObject());
+    
+    object infObj = player.VisibleObject();
+    if(infObj != null){
+      objectiveText = "" + infObj;
+    }
     objectiveBox.SetText(objectiveText);
 
   }

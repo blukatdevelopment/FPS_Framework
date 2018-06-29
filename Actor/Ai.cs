@@ -122,7 +122,6 @@ public class Ai : Brain
         }
       }
     }
-    
     return found;
   }
   
@@ -134,8 +133,8 @@ public class Ai : Brain
   
   void AcquireTarget(){
     float distance = 100f;
-    Vector3 start = actor.HeadPosition();
-    Vector3 end = actor.Forward();
+    Vector3 start = host.HeadPosition();
+    Vector3 end = host.Forward();
     end *= distance; // Move distance
     end += start; // Add starting position
     
