@@ -158,6 +158,9 @@ public class Arena : Spatial {
   public void SinglePlayerInit(){
     SpawnItem(Item.Types.HealthPack);
     SpawnItem(Item.Types.AmmoPack);
+    for(int i = 0; i < 10; i++){
+      SpawnItem(Item.Types.Rifle);
+    }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
     InitActor(Actor.Brains.Ai, NextWorldId());
@@ -316,6 +319,7 @@ public class Arena : Spatial {
   public Vector3 RandomItemSpawn(){
     System.Random rand = Session.GetRandom();
     int randInt = rand.Next(itemSpawnPoints.Count);
+    GD.Print("Random position " + randInt + " from " + itemSpawnPoints.Count + " choices.");
     return itemSpawnPoints[randInt];
   }
   

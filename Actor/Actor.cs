@@ -585,6 +585,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       items.Add(item);
     }
     
+    ItemData dat = item.GetData();
+    GD.Print("ItemData: " + dat.ToString());
+
     return 0;
   }
   

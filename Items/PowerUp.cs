@@ -11,7 +11,7 @@ public class PowerUp : Item {
     
   }
 
-  public virtual void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
+  public override void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
 	ApplyPowerUp(interactor);
   }
   

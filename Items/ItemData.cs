@@ -26,6 +26,12 @@ public class ItemData : IHasInfo {
 	public List<float>  floats;
 
 
+	public ItemData(){
+		ints = new List<int>();
+		strings = new List<string>();
+		floats = new List<float>();
+	}
+
 	public string GetInfo(){
 		return name;
 	}
@@ -44,6 +50,11 @@ public class ItemData : IHasInfo {
 		ret.ints = new List<int>(original.ints as IEnumerable<int>);
 		ret.strings = new List<string>(original.strings as IEnumerable<string>);
 		ret.floats = new List<float>(original.floats as IEnumerable<float>);
+		return ret;
+	}
+
+	public string ToString(){
+		string ret = name + "(" + quantity + "):" + description;
 		return ret;
 	}
 

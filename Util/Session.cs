@@ -16,6 +16,7 @@ public class Session : Node {
   private Node activeMenu;
   public Arena arena;
   public NetworkSession netSes;
+  public Random random;
 
   public JukeBox jukeBox;
   
@@ -53,7 +54,11 @@ public class Session : Node {
     if(Session.session.netSes != null && Session.session.netSes.random != null){
       return Session.session.netSes.random;
     }
-    return new System.Random();
+    if(Session.session.random != null){
+      return Session.session.random;
+    }
+    Session.session.random = new System.Random();
+    return Session.session.random;
   }
 
   public static bool NetActive(){
