@@ -117,6 +117,7 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.M2: actor.Use(Item.Uses.B); break;
       case InputEvent.Buttons.M3: actor.Use(Item.Uses.C); break;
       case InputEvent.Buttons.R: actor.Use(Item.Uses.D); break;
+      case InputEvent.Buttons.E: actor.InitiateInteraction(); break;
     }
   }
 

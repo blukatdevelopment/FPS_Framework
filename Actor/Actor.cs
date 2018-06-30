@@ -230,6 +230,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return "Actor";  
   }
 
+  /* Return which interaction is currently going to take place. */
+  public Item.Uses GetActiveInteraction(){
+    return Item.Uses.A;
+  }
+
   public string GetInteractionText(Item.Uses interaction = Item.Uses.A){
     string ret = "Talk to " + GetInfo() + ".";
     switch(interaction){
@@ -241,6 +246,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         break;
     }
     return ret;
+  }
+
+  public void InitiateInteraction(){
+    IInteract interactor = VisibleObject() as IInteract;
+    if(interactor == null){
+      GD.Print("Nothing in range.");
+      return;
+    }
+    Item.Uses interaction = GetActiveInteraction();
+    interactor.Interact((object)this, interaction);
   }
 
   public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){

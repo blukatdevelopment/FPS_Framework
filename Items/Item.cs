@@ -14,7 +14,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     B, // Secondary Use(Right Mouse)
     C, // Third Use(Middle mouse)
     D, // Fourth Use(R)
-    E,
+    E, // Fifth Use(E)
     F, 
     G 
   };
