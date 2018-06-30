@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IHasAmmo, ILook {
+public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IHasAmmo, ILook, IInteract {
   
   public enum Brains{
     Player1, // Local player leveraging keyboard input.
@@ -228,6 +228,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         break;
     }
     return "Actor";  
+  }
+
+  public string GetInteractionText(Item.Uses interaction = Item.Uses.A){
+    string ret = "Talk to " + GetInfo() + ".";
+    switch(interaction){
+      case Item.Uses.A:
+        ret = "Talk to " + GetInfo() + ".";
+        break;
+      case Item.Uses.B:
+        ret = "Pickpocket " + GetInfo() + ".";
+        break;
+    }
+    return ret;
+  }
+
+  public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
+    GD.Print("Interacted with " + GetInfo() + ".");
   }
   
   public string GetMoreInfo(){

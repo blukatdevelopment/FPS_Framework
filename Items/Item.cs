@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 
-public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
+public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public enum Uses{ 
     A, // Primary use (Left Mouse) 
     B, // Secondary Use(Right Mouse)
@@ -58,6 +58,20 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     if(Session.IsServer()){
       SyncPosition();
     }
+  }
+
+  public virtual string GetInteractionText(Item.Uses interaction = Item.Uses.A){
+    string ret = "Talk to " + name + ".";
+    switch(interaction){
+      case Item.Uses.A:
+        ret = "Pick up " + name + ".";
+        break;
+    }
+    return ret;
+  }
+
+  public virtual void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
+    GD.Print("Interacted with " + name + ".");
   }
 
   public void SyncPosition(){

@@ -75,6 +75,8 @@ public class Ai : Brain
     return aimAngle < AimMargin;
   }
   
+
+  /* TODO: Use the Util.RayCast and move gridcast logic to Util.GridCast() */
   Actor RayCastForActor(Vector3 start, Vector3 end){
     PhysicsDirectSpaceState spaceState = host.GetWorld().DirectSpaceState as PhysicsDirectSpaceState;
     var result = spaceState.IntersectRay(start, end);

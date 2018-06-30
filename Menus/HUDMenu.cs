@@ -8,6 +8,7 @@ public class HUDMenu : Container{
   Godot.TextEdit healthBox;
   Godot.TextEdit itemBox;
   Godot.TextEdit objectiveBox;
+  Godot.TextEdit interactionText;
 
   public override void _Ready(){
       
@@ -41,15 +42,6 @@ public class HUDMenu : Container{
       objectiveText = infoObj.GetInfo();
       GD.Print(objectiveText);
     }
-    else{
-      //GD.Print("Null");
-    }
-    // //GD.Print(player.VisibleObject());
-    
-    // object infObj = player.VisibleObject();
-    // if(infObj != null){
-    //   objectiveText = "" + infObj;
-    // }
     objectiveBox.SetText(objectiveText);
 
   }

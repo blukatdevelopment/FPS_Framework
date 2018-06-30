@@ -50,8 +50,6 @@ public class Util{
       return null;
     }
 
-    GD.Print(result);
-
     object collider = result["collider"];
 
     return collider;
