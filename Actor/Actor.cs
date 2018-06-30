@@ -134,16 +134,43 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     EquipItem(1);
     unarmed = false;
   }
-  
-  public object VisibleObject(){
+
+  /* Return global position of eyes(if available) or body */
+  public Vector3 GlobalHeadPosition(){
+    if(eyes != null){
+      return eyes.GlobalTransform.origin;
+    }
+    return GlobalTransform.origin;
+  }
+
+  /* Returns global transform of eyes(if available) or body */
+  public Transform GlobalHeadTransform(){
+    if(eyes != null){
+      return eyes.GlobalTransform;
+    }
+    return GlobalTransform;
+  }
+
+  /* Global space */
+  public Vector3 Pointer(){
     float distance = 100f;
-    World world = GetWorld();
-    Vector3 start = HeadPosition();
-    Vector3 end = Forward();
+    Vector3 start = GlobalHeadPosition();
+    Transform headTrans = GlobalHeadTransform();
+    Vector3 end = Util.TForward(headTrans);
     end *= distance;
     end += start;
+    return end;
+  }
+
+  public object VisibleObject(){
+
+    Vector3 start = GlobalHeadPosition();
+    Vector3 end = Pointer();
+    World world = GetWorld();
     return Util.RayCast(start, end, world);
   }
+
+
 
   /* Show up to max ammo */
   public int CheckAmmo(string ammoType, int max){
@@ -496,7 +523,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Vector3 headRot = eyes.GetRotationDegrees();
     headRot.x += y;
     if(headRot.x < minY){
-      headRot.x = minY;  
+      headRot.x = minY;
     }
     if(headRot.x > maxY){
       headRot.x = maxY;
@@ -574,7 +601,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         break;
     }
     
-    actor.eyes.Translate(eyesPos);
+    actor.eyes.TranslateObjectLocal(eyesPos);
     actor.AddChild(actor.eyes);
     actor.Init(brain);
     return actor;

@@ -187,6 +187,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
     collisionDisabled = !val;
+    InputRayPickable = val;
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);

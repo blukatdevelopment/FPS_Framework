@@ -6,7 +6,7 @@ using System;
 public class Util{
   
   
-  /* Transform methods */
+  /* Transform methods. IF you pass a global or local transform, it will match.*/
   public static Vector3 TUp(Transform t){
     return t.basis.y;
   }
@@ -50,8 +50,6 @@ public class Util{
       return null;
     }
     object collider = result["collider"];
-
-    //GD.Print(start + "," + end + ": " + collider);
 
     return collider;
   }
