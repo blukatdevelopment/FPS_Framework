@@ -49,6 +49,9 @@ public class Util{
     if(!result.ContainsKey("collider")){
       return null;
     }
+
+    GD.Print(result);
+
     object collider = result["collider"];
 
     return collider;

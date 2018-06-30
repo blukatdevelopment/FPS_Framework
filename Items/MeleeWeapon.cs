@@ -23,7 +23,7 @@ public class MeleeWeapon : Item, IWeapon {
   }
   
   public override void Equip(object wielder){
-    this.wielder = wielder;
+    ItemBaseEquip(wielder);
     this.wieldedPosition = GetTranslation();
     this.forwardPosition = this.wieldedPosition + new Vector3(0, 0, -1);
   }

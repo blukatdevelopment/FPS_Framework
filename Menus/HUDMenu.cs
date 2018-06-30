@@ -39,7 +39,7 @@ public class HUDMenu : Container{
     IHasInfo infoObj = player.VisibleObject() as IHasInfo;
     if(infoObj != null){
       objectiveText = infoObj.GetInfo();
-      //GD.Print(objectiveText);
+      GD.Print(objectiveText);
     }
     else{
       //GD.Print("Null");

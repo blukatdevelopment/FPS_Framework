@@ -37,6 +37,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
+  protected Area area;
 
   public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
     this.name = name;
@@ -74,8 +75,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   }
 
   void InitArea(){
+    if(area != null){
+      return;
+    }
     List<CollisionShape> shapes = GetCollisionShapes();
-    Area area = new Area();
+    this.area = new Area();
     CollisionShape areaShape = new CollisionShape();
     area.AddChild(areaShape);
     object[] areaShapeOwners = area.GetShapeOwners();
@@ -184,10 +188,21 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     return shapes;
   }
   
+  /* Disable or enable collisions. Particularly useful for held items. */
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
     collisionDisabled = !val;
-    InputRayPickable = val;
+    if(area == null){
+      InitArea();
+    }
+    foreach(object owner in area.GetShapeOwners()){
+      int ownerInt = (int)owner;
+      CollisionShape cs = (CollisionShape)area.ShapeOwnerGetOwner(ownerInt);
+      if(cs != null){
+        cs.Disabled = !val;
+      }
+    }
+
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
@@ -267,12 +282,23 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     return ret;
   }
   
-  public virtual void Equip(object wielder){
+  public void ItemBaseEquip(object wielder){
     this.wielder = wielder;
+    SetCollision(false);
+    //this.QueueFree();
+  }
+
+  public void ItemBaseUnequip(){
+    this.wielder = null;
+    SetCollision(true);
+  }
+
+  public virtual void Equip(object wielder){
+    ItemBaseEquip(wielder);
   }
   
   public virtual void Unequip(){
-    this.wielder = null;
+    ItemBaseUnequip();
   }
 
 }

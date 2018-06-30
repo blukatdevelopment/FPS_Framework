@@ -38,7 +38,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float gravityVelocity = 0f;
   
   public bool menuActive = false;
-  
+
   public Speaker speaker;
 
   private int health;
@@ -57,6 +57,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosX = 0;
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
+
 
   // Network
   public int netId;
@@ -163,7 +164,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public object VisibleObject(){
-
     Vector3 start = GlobalHeadPosition();
     Vector3 end = Pointer();
     World world = GetWorld();

@@ -160,7 +160,7 @@ public class Arena : Spatial {
     SpawnItem(Item.Types.AmmoPack);
 
     InitActor(Actor.Brains.Player1, NextWorldId());
-    //InitActor(Actor.Brains.Ai, NextWorldId());
+    InitActor(Actor.Brains.Ai, NextWorldId());
     roundTimeRemaining = RoundDuration;
     roundTimerActive = true;
   }
