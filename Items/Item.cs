@@ -71,7 +71,18 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   public virtual void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
-    GD.Print("Interacted with " + name + ".");
+    IHasItem acquirer = interactor as IHasItem;
+    if(acquirer != null){
+      PickUp(acquirer);
+    }
+  }
+
+  public void PickUp(IHasItem acquirer){
+    int overflow = acquirer.ReceiveItem(this);
+    if(overflow == 0){
+      this.QueueFree();
+    }
+    quantity = overflow;
   }
 
   public void SyncPosition(){

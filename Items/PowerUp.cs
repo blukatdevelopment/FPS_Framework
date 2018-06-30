@@ -10,5 +10,9 @@ public class PowerUp : Item {
   public virtual void ApplyPowerUp(object obj){
     
   }
+
+  public virtual void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
+	ApplyPowerUp(interactor);
+  }
   
 }
