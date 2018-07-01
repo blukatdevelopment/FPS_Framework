@@ -312,7 +312,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void ToggleInventory(){
     if(!menuActive){
       SetMenuActive(true);
-      Session.session.ChangeMenu(Menu.Menus.Inventory);  
+      Session.ChangeMenu(Menu.Menus.Inventory);  
     }
     else{
       SetMenuActive(false);
@@ -547,7 +547,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     string path = NodePath();
     SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
-    Session.session.HandleEvent(evt);
+    Session.Event(evt);
   }
 
   public string NodePath(){
@@ -624,7 +624,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     item.GlobalTransform = trans;
 
     // Notify session
-    Session.session.HandleEvent(SessionEvent.ItemDiscardedEvent(NodePath().ToString()));
+    Session.Event(SessionEvent.ItemDiscardedEvent(NodePath().ToString()));
   }
 
   public int IndexOf(Item.Types type, string name){
@@ -724,7 +724,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       Input.SetMouseMode(Input.MouseMode.Visible);
     }
     else{
-      Session.session.ChangeMenu(Menu.Menus.HUD);
+      Session.ChangeMenu(Menu.Menus.HUD);
       Input.SetMouseMode(Input.MouseMode.Captured);
 
     }
@@ -748,11 +748,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     menuActive = !menuActive;
     
     if(menuActive){
-      Session.session.ChangeMenu(Menu.Menus.Pause);
+      Session.ChangeMenu(Menu.Menus.Pause);
       Input.SetMouseMode(Input.MouseMode.Visible);
     }
     else{
-      Session.session.ChangeMenu(Menu.Menus.HUD);
+      Session.ChangeMenu(Menu.Menus.HUD);
       Input.SetMouseMode(Input.MouseMode.Captured);
     }
   }

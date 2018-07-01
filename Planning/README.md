@@ -27,9 +27,9 @@ should be stored in the inventory when picked up.
 
 # Things that need refactoring or fixing before this branch gets merged:
 - DONE Menu factory needs to stop relying on scene files.
-- Make more session methods static
-- Make sure received ammo is deposited into inventory.
-- De-couple Actor from Arena code, particularly for inventory init.
+- DONE Make more session methods static
+- DONE Make sure received ammo is deposited into inventory.
+- De-couple Actor from Arena code, particularly for awarding the rifle and ammo.
 
 
 ## DONE Design

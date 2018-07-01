@@ -36,7 +36,7 @@ public class HUDMenu : Container{
     string itemText = player.ItemInfo();
     itemBox.SetText(itemText);
     
-    string objectiveText = Session.session.GetObjectiveText();
+    string objectiveText = Session.GetObjectiveText();
     objectiveBox.SetText(objectiveText);
 
     IInteract interactor = player.VisibleObject() as IInteract;

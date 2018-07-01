@@ -35,11 +35,11 @@ public class MainMenu : Container
     }
     
     public void SinglePlayerGame(){
-      Session.session.SinglePlayerGame();
+      Session.SinglePlayerGame();
     }
     
     public void Multiplayer(){
-      Session.session.ChangeMenu(Menu.Menus.Multiplayer);
+      Session.ChangeMenu(Menu.Menus.Multiplayer);
     }
     
     public void Quit(){

@@ -128,7 +128,7 @@ public class Arena : Spatial {
   public void PresentScore(){
     scorePresented = true;
     SetPause(true);
-    Session.session.ChangeMenu(Menu.Menus.HUD);
+    Session.ChangeMenu(Menu.Menus.HUD);
   }
   
   [Remote]
@@ -136,11 +136,11 @@ public class Arena : Spatial {
     roundTimerActive = false;
 
     if(this.singlePlayer){
-      Session.session.QuitToMainMenu();
+      Session.QuitToMainMenu();
     }
     else{
-      Session.session.ChangeMenu(Menu.Menus.Lobby);
-      Session.session.ClearGame(true);
+      Session.ChangeMenu(Menu.Menus.Lobby);
+      Session.ClearGame(true);
     } 
   }
 

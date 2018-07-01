@@ -89,14 +89,15 @@ public class Session : Node {
   }
   
   /* Remove game nodes/variables in order to return it to a menu. */
-  public void ClearGame(bool keepNet = false){
-    if(arena != null){
-      arena.QueueFree();
-      arena = null;
+  public static void ClearGame(bool keepNet = false){
+    Session ses = Session.session;
+    if(ses.arena != null){
+      ses.arena.QueueFree();
+      ses.arena = null;
     }
-    if(!keepNet && netSes != null){
-      netSes.QueueFree();
-      netSes = null;
+    if(!keepNet && ses.netSes != null){
+      ses.netSes.QueueFree();
+      ses.netSes = null;
     }
     Input.SetMouseMode(Input.MouseMode.Visible);
   }
@@ -108,38 +109,41 @@ public class Session : Node {
     return Session.session;
   }
   
-  public void QuitToMainMenu(){
-    ChangeMenu(Menu.Menus.Main);
-    ClearGame();
+  public static void QuitToMainMenu(){
+    Session.ChangeMenu(Menu.Menus.Main);
+    Session.ClearGame();
   }
   
-  public void SinglePlayerGame(){
+  public static void SinglePlayerGame(){
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
+    Session ses = Session.session;
     Node arenaNode = Arena.ArenaFactory();
-    arena = (Arena)arenaNode;
-    AddChild(arenaNode);
-    arena.Init(true);
+    ses.arena = (Arena)arenaNode;
+    ses.AddChild(arenaNode);
+    ses.arena.Init(true);
     
   }
 
-  public void MultiPlayerGame(){
+  public static void MultiPlayerGame(){
+    Session ses = Session.session;
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
-    AddChild(arenaNode);
-    arena = (Arena)arenaNode;
-    arena.Init(false);
-    if(netSes.isServer == false){
+    ses.AddChild(arenaNode);
+    ses.arena = (Arena)arenaNode;
+    ses.arena.Init(false);
+    if(ses.netSes.isServer == false){
       ChangeMenu(Menu.Menus.HUD);
     }
   }
 
-  public void ChangeMenu(Menu.Menus menu){
-    if(activeMenu != null){
-      activeMenu.QueueFree();
-      activeMenu = null;
+  public static void ChangeMenu(Menu.Menus menu){
+    Session ses = Session.session;
+    if(ses.activeMenu != null){
+      ses.activeMenu.QueueFree();
+      ses.activeMenu = null;
     }
-    activeMenu = Menu.MenuFactory(menu);
+    ses.activeMenu = Menu.MenuFactory(menu);
   }
   
   private void EnforceSingleton(){
@@ -181,9 +185,10 @@ public class Session : Node {
     }
   }
   
-  public string GetObjectiveText(){
-    if(arena != null){
-      return arena.GetObjectiveText();
+  public static string GetObjectiveText(){
+    Session ses = Session.session;
+    if(ses.arena != null){
+      return ses.arena.GetObjectiveText();
     }
     return "Fight the enemies.";
   }
