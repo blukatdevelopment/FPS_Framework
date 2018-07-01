@@ -80,9 +80,9 @@ If ItemInReach is not null, display "Pick up " + itemName
 
 ## Network Programming
 
-- Sync initializing inventory.
-- Sync dropping items.
-- Sync eqipping items
+- DONE Sync initializing inventory.
+- DONE Sync dropping items.
+- DONE Sync eqipping items
 - Sync picking up items.
 
 
