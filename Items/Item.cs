@@ -43,6 +43,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public string name;
   public string description;
   public int quantity;
+  public int weight;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
   protected Speaker speaker;
@@ -146,6 +147,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.description = description;
     dat.quantity = quantity;
     dat.type = this.type;
+    dat.weight = this.weight;
 
     // FLOATS
     Vector3 position = GetTranslation();
@@ -159,7 +161,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
     // INTS
     dat.ints.Add(quantity);
-
+    dat.ints.Add(weight);
 
     return dat;
   }
@@ -181,7 +183,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
     // INTS
     quantity = dat.ints[0];
-    dat.ints.RemoveRange(0, 1);
+    weight = dat.ints[1];
+    dat.ints.RemoveRange(0, 2);
   }
 
   public void OnCollide(object body){
@@ -294,6 +297,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         break;
       case Types.Rifle: 
         ret.BaseInit("Rifle", "There are many like it, but this one is yours.");
+        ret.weight = 8;
         break;
       case Types.Bullet:
         ret.BaseInit("Bullet", "Comes out one end of the rifle. Be sure to know which.");
@@ -375,6 +379,18 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
 
     return ret;
+  }
+
+  public int GetWeight(){
+    return weight * quantity;
+  }
+
+  public static int TotalWeight(List<ItemData> items){
+    int total = 0;
+    foreach(ItemData item in items){
+      total += item.GetWeight();
+    }
+    return total;
   }
 
 }

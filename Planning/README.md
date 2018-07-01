@@ -25,9 +25,12 @@ Inventory should allow storage of items limited only by weight.
 By default, the player should have access to their hand. Any other items
 should be stored in the inventory when picked up.
 
+# Things that need refactoring:
+	Menu factory
+	Make more session methods static
 
 
-## Design
+## DONE Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
 
@@ -43,32 +46,34 @@ This should *feel* just like the inventory system in the 3D fallout games.
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
 
-## Interface Programming
+## DONE Interface Programming
 
-**Inventory Menu**
+**DONE Inventory Menu**
 Inventory menu should provide several components.
 
-- scrolling list of potentially infinite number of items.
-- Buttons at the top of the menu should filter list by category.
+- DONE scrolling list of potentially infinite number of items.
+- DONE Buttons at the top of the menu should filter list by category.
 	- Weapons
 	- Apparel
 	- Aid
 	- Misc
 	- Ammo
-- Left clicking item should cause it to be equipped, used, or not.
-- Right clicking an item should drop it.
-- Items should have number "Brick(5)" to indicate stack size.
-- Total weight should be displayed at the top of the menu.
-- Item info should be displayed to top right of item list.
+- DONE Single left click should display item info.
+- DONE Double-clicking item should cause it to be equipped, used, or not.
+- DONE Right clicking an item should drop it.
+- DONE Items should have number "Brick(5)" to indicate stack size.
+- DONE Total weight should be displayed at the top of the menu.
+- DONE Item info should be displayed near item list.
 
-**Quantity menu**
+**ABORTED Quantity menu**
 When dropping a stack of more than 5, quantity sub menu should render.
 
 - Name of item should display at top
 - Quantity and a slider for the quantity should display below
-- A button for the item should 
+This should get pushed out a bit later, after a system to support an
+arbitrary number of sub-menus and popups is available.
 
-**Update HUD: item in reach**
+**DONE Update HUD: item in reach**
 If ItemInReach is not null, display "Pick up " + itemName
 
 ## Network Programming
@@ -79,9 +84,9 @@ If ItemInReach is not null, display "Pick up " + itemName
 - Sync picking up items.
 
 
-## Core Programming
+##DONE Core Programming
 
-**Item category**
+**DONE Item category**
 Items should have a category defaulting to Misc in order to organize them.
 - Weapons
 - Apparel
@@ -89,32 +94,33 @@ Items should have a category defaulting to Misc in order to organize them.
 - Misc
 - Ammo
 
-**Iinteract**
-Interact(Actor actor = null)
+**DONE IInteract**
+Interact(Actor actor = null, Item.Uses interaction)
 
 
-## Gameplay Programming
+## DONE Gameplay Programming
 
-**Actor.InteractionInReach()**
+**DONE Actor.InitiateInteraction()**
 Actor should be able to raycast forward in the center of their vision and return any Iinteract hit. 
 
-**Actor.InteractWith()**
-Pressing Q should interact with InteractionInReach() if possible.
+**DONE Actor.InteractWith()**
+Pressing E should interact with InteractionInReach() if possible.
 
-**Actor.DiscardItem(Item item)**
+**DONE Actor.DiscardItem(Item item)**
 Inventory should call this to drop items onto the ground in front of the actor.
 
-**Actor.DropItem()**
+**ABORTED Actor.DropItem()**
 Pressing Q should drop the equipped item.
+Maybe later. Or not.
 
-**Item**
+**DONE Item**
 - Item should be an Iinteract, 
 - Item.Push(int i = 1), Item.Pop(int i = 1) [Maybe implement IStack]
 
-**Equip/unequip**
+**DONE Equip/unequip**
 When item is not eqipped, actor should default to unarmed melee.
 
-**Powerup**
+**DONE Powerup**
 Interacting with a powerup should cause it to work on the player as if collided with.
 
 ## AI programming

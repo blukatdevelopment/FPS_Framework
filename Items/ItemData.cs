@@ -20,6 +20,7 @@ public class ItemData : IHasInfo {
 	public string name;
 	public string description;
 	public int quantity;
+	public int weight;
 
 	// These should be handled by ReadData/GetData
 	public List<int> ints;
@@ -99,5 +100,9 @@ public class ItemData : IHasInfo {
 		return true;
 	}
 
+
+	public int GetWeight(){
+		return weight * quantity;
+	}
 
 }
