@@ -19,10 +19,12 @@ public class NetworkSession : Node {
   public System.Random random;
 
   // Init variables
+  public int playersReady;
   public bool isServer;
   public string initAddress;
   public string initPort;
   public string initName;
+
 
   
   public override void _Ready(){

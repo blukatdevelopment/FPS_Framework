@@ -27,6 +27,7 @@ public class Arena : Spatial {
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     scores = new Dictionary<int, int>();
+
     InitTerrain();
     InitSpawnPoints();
     if(singlePlayer){
@@ -91,7 +92,6 @@ public class Arena : Spatial {
 
   public string GetObjectiveText(){
     if(playerWorldId == -1){
-      //GD.Print("Player not initialized");
       return "Player not initialized.";
     }
     if(scorePresented){
@@ -158,14 +158,13 @@ public class Arena : Spatial {
   }
 
   public void SinglePlayerInit(){
-    //SpawnItem(Item.Types.HealthPack);
-    //SpawnItem(Item.Types.AmmoPack);
     for(int i = 0; i < 10; i++){
       SpawnItem(Item.Types.AmmoPack, 10);
+      SpawnItem(Item.Types.HealthPack);  
     }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
-    //InitActor(Actor.Brains.Ai, NextWorldId());
+    InitActor(Actor.Brains.Ai, NextWorldId());
     roundTimeRemaining = RoundDuration;
     roundTimerActive = true;
   }
@@ -193,7 +192,7 @@ public class Arena : Spatial {
 
   public void MultiplayerInit(){
     NetworkSession netSes = Session.session.netSes;
-
+    netSes.playersReady = 0;
     playerWorldId = netSes.selfPeerId;
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
@@ -336,10 +335,17 @@ public class Arena : Spatial {
     Node actorNode = actor as Node;
     if(id != 0){
       actorNode.Name = "Player" + id;
-    }
-    
+    } 
     AddChild(actorNode);
+
     return actor;
+  }
+
+  public void InitKit(Actor actor){
+    GD.Print("Arena.Initkit");
+    actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
+    actor.ReceiveItem(Item.Factory(Item.Types.Ammo, "", "Bullet", 100));
+    
   }
   
   public Vector3 RandomActorSpawn(){
@@ -355,5 +361,37 @@ public class Arena : Spatial {
     return (Arena)instance;
   }
 
+  public void PlayerReady(){
+    if(Session.NetActive()){
+      Rpc(nameof(DeferredPlayerReady));
+    }
+  }
+
+  [Remote]
+  public void DeferredPlayerReady(){
+    if(!Session.IsServer()){
+      GD.Print("DeferredPlayerReady: Not server. Aborting.");
+      return;
+    }
+    
+    NetworkSession netSes = Session.session.netSes; 
+    netSes.playersReady++;
+    if(netSes.playersReady != netSes.playerData.Count){
+      GD.Print("Waiting for other players.");
+      return;
+    }
+    //Equip rifle.
+    foreach(Actor actor in actors){
+      int index = actor.IndexOf(Item.Types.Rifle, "Rifle");
+      if(index == -1){
+        GD.Print("Player doesn't have this weapon.");
+      }
+      else{
+        actor.EquipItem(index);
+      }
+
+    }
+    
+  }
 
 }

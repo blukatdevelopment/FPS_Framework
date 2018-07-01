@@ -10,7 +10,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   const int BaseDamage = 10;
   const float ProjectileOffset = 0.1f;
   const float ImpulseStrength = 50f;
-  string ammoType = "bullet";
+  string ammoType = "Bullet";
   int ammo = 0;
   int maxAmmo = 10;
   

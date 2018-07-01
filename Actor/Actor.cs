@@ -1,4 +1,5 @@
 /*
+  TODO: Update this description
   The Actor is a living entity in the game world.
   Each actor is controlled by a Brain.
   Items are children of an actor's Eyes.
@@ -46,12 +47,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   // Inventory
   private Item activeItem;
-  private Item hand; // Weapon for unarmed people.
-  private bool unarmed = true; // True->Hand, False->Rifle
-  private string ammoType = "bullet";
-  private int ammo = 100;
-  private int maxAmmo = 999;
-  private List<Item> items;
+  private Item hand; // Weapon for unarmed actors.
+  private bool unarmed = true; 
   private Inventory inventory;
   
   // Handpos
@@ -65,10 +62,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   // World info
   public int worldId;
   
-  // Delayed inventory init.
+  // Delayed inventory init for netcode.
   float initTimer, initDelay;
   bool initActive = false;
   string initHand, initRifle;
+  float readyTimer, readyDelay;
+  bool readyActive = false;
 
   
   public void Init(Brains b = Brains.Player1){
@@ -116,27 +115,34 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
 
     if(!Session.NetActive()){
-      DeferredInitInventory(rifle, hand);
+      DeferredInitInventory(hand);
     }
     if(Session.IsServer()){
       initTimer = 0f;
       initDelay = 0.25f;
       initActive = true;
       initHand = hand;
-      initRifle = rifle;
     }
   }
 
   [Remote]
-  void DeferredInitInventory(string rifleName, string handName){
-    items = new List<Item>();
+  void DeferredInitInventory(string handName){
     InitHand(handName);
-    ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
+    Session.InitKit(this);
+    readyTimer = 0;
+    readyDelay = 1f;
+    readyActive = true;
   }
 
   public void InitHand(string handName){
     hand = Item.Factory(Item.Types.Hand, handName);
-    EquipHand();
+    if(unarmed && activeItem == null){
+      EquipHand();  
+    }
+    else{
+      GD.Print("Not equipping hand because holding something.");
+    }
+    
   }
 
   /* Return global position of eyes(if available) or body */
@@ -208,7 +214,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public string[] AmmoTypes(){
     
-    return new string[]{"bullet"};
+    return new string[]{"Bullet"};
   }
   
   public string GetInfo(){
@@ -333,11 +339,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredEquipItem(int index){
+    GD.Print("DeferredEquipItem: " + index);
     if(unarmed){
       StashHand();
     }
     else{
-      StashItem();  
+      StashItem();
     }
 
     ItemData dat = inventory.RetrieveItem(index);
@@ -345,6 +352,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Item item = Item.FromData(dat);
 
     if(eyes == null){
+      GD.Print("Not equipping item because eyes don't exist.");
       return;
     }
     
@@ -466,12 +474,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         Gravity(delta);
       }
       if(initActive){
-        initTimer+= delta;
+        initTimer += delta;
         if(initTimer >= initDelay){
           initActive = false;
           initTimer = 0;
-          DeferredInitInventory(initRifle, initHand);
-          Rpc(nameof(DeferredInitInventory), initRifle, initHand);
+          DeferredInitInventory(initHand);
+          Rpc(nameof(DeferredInitInventory), initHand);
+        }
+      }
+      if(readyActive){
+        readyTimer += delta;
+        if(readyTimer >= readyDelay){
+          Session.PlayerReady();
+          readyActive = false;
+          readyTimer = 0;
         }
       }
   }
