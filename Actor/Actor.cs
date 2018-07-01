@@ -322,12 +322,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void DeferredSwitchItem(){
     unarmed = !unarmed;
-    if(unarmed){
-      EquipItem(0);
-    }
-    else{
-      EquipItem(1);
-    }
+    EquipItem(0);
   }
   
   /* Equip item based on inventory index. */
@@ -345,7 +340,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
     
-    GD.Print("Item:" + item);
     eyes.AddChild(item);
     
     item.Mode = RigidBody.ModeEnum.Static;
@@ -365,11 +359,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("activeItem is orphan. Not stashing");
       return;
     }
-    
+    inventory.ReceiveItem(activeItem);
     eyes.RemoveChild(activeItem);
 
     activeItem.QueueFree();
     activeItem = null;
+    GD.Print(inventory.ItemInfo());
   }
   
   /* Finds any attached eyes if eys are not already set by factory.  */

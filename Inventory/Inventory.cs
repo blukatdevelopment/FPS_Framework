@@ -19,7 +19,7 @@ public class Inventory : IHasItem {
 
 	// Doesn't change value.
 	public ItemData GetItem(int index){
-		if(index < 0 || index > items.Count){
+		if(index < 0 || index >= items.Count){
 			return null;
 		}
 		return items[index];
@@ -27,11 +27,14 @@ public class Inventory : IHasItem {
 
 	// Changes value.
 	public ItemData RetrieveItem(int index, int quantity = 1){
-		ItemData item = GetItem(index);
-		if(item == null){
+		if(GetItem(index) == null){
 			return null;
 		}
-		return item.Remove(quantity);
+		ItemData ret = items[index].Remove(quantity);
+		if(items[index].quantity == 0){
+			items.RemoveRange(index, 1);
+		}
+		return ret;
 	}
 
 	/* Returns item based on matching type and name. Returns -1 if not found.*/
