@@ -158,10 +158,10 @@ public class Arena : Spatial {
   }
 
   public void SinglePlayerInit(){
-    SpawnItem(Item.Types.HealthPack);
-    SpawnItem(Item.Types.AmmoPack);
+    //SpawnItem(Item.Types.HealthPack);
+    //SpawnItem(Item.Types.AmmoPack);
     for(int i = 0; i < 10; i++){
-      SpawnItem(Item.Types.Rifle);
+      SpawnItem(Item.Types.Ammo, 10);
     }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
@@ -287,12 +287,13 @@ public class Arena : Spatial {
     }
   }
   
-  public void SpawnItem(Item.Types type){
+  public void SpawnItem(Item.Types type, int quantity = 1){
     if(Session.NetActive() && !Session.IsServer()){
       return;
     }
     Vector3 pos = RandomItemSpawn();
     Item item = Item.Factory(type);
+    item.quantity = quantity;
     item.Translation = pos;
     AddChild(item);
 
@@ -301,15 +302,16 @@ public class Arena : Spatial {
       string name = NextItemName();
       Node itemNode = item as Node;
       itemNode.Name = name;
-      Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z);
+      Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z, quantity);
     }
   }
 
   [Remote]
-  public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z){
+  public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z, int quantity){
     Vector3 pos = new Vector3(x, y, z);
     Item item = Item.Factory(type);
     item.Translation = pos;
+    item.quantity = quantity;
 
     Node itemNode = item as Node;
     itemNode.Name = name;

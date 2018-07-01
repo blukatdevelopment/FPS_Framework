@@ -19,13 +19,14 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     G 
   };
   
-  public enum Types{ // For mapping to classes in the factory
+  public enum Types{ // For mapping to classes in the factory and categories in inventorymenu
     None,
     Hand,
     Rifle,
     Bullet,
     HealthPack,
-    AmmoPack
+    AmmoPack,
+    Ammo
   };
 
 
@@ -72,7 +73,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   public virtual string GetInteractionText(Item.Uses interaction = Item.Uses.A){
-    string ret = "Talk to " + name + ".";
+    string ret = "Pick up " + name + ".";
     switch(interaction){
       case Item.Uses.A:
         ret = "Pick up " + name + ".";
@@ -308,6 +309,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.AmmoPack:
         ret.BaseInit("AmmoPack", "Food for your rifle.");
         break;
+      case Types.Ammo:
+        ret.BaseInit("Bullet", "A casing full of powder capped with a bullet. No further info available.");
+        break;
     }
     ret.type = type;
     if(name != ""){
@@ -326,6 +330,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
       case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
       case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
+      case Types.Ammo: ret = "res://Scenes/Prefabs/Items/Ammo.tscn"; break;
     }
     
     return ret;
@@ -365,6 +370,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         break;
       case Types.AmmoPack:
         return Categories.None;
+        break;
+      case Types.Ammo:
+        return Categories.Ammo;
         break;
     }
     return Categories.None;

@@ -115,6 +115,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("InitInventory: Rifle and hand strings are blank");
     }
 
+    if(!Session.NetActive()){
+      DeferredInitInventory(rifle, hand);
+    }
     if(Session.IsServer()){
       initTimer = 0f;
       initDelay = 0.25f;
@@ -692,6 +695,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public int ReceiveItem(Item item){
     if(!Session.NetActive()){
+      GD.Print("received " + item.quantity + " " + item);
       return inventory.ReceiveItem(item);  
     }
     else if(Session.IsServer()){
@@ -700,8 +704,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       Rpc(nameof(DeferredReceiveItem),json);
       return 0;
     }
-    return 0;
-    
+    else{
+      GD.Print("Online and not server. Not receivingItem");
+      return 0;
+    }
   }
   [Remote]
   public void DeferredReceiveItem(string json){
