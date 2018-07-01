@@ -19,7 +19,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     G 
   };
   
-  public enum Types{ // For use in factory
+  public enum Types{ // For mapping to classes in the factory
     None,
     Hand,
     Rifle,

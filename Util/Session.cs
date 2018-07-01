@@ -190,9 +190,26 @@ public class Session : Node {
   
   /* Trickle events down from the Session */
   public void HandleEvent(SessionEvent sessionEvent){
+    if(Session.NetActive() && sessionEvent.type == SessionEvent.Types.ItemDiscarded){
+      HandleItemDiscardedEvent(sessionEvent); // Refresh inventory when deferred discard item.
+    }
     if(arena != null){
       arena.HandleEvent(sessionEvent);
     }
+  }
+
+  public void HandleItemDiscardedEvent(SessionEvent sessionEvent){
+    GD.Print("handleItemDiscardEvent");
+    if(player.NodePath().ToString() != sessionEvent.args[0]){
+      GD.Print("Your InventoryMenu doesn't need to be updated. Returning.");
+      return;
+    }
+    InventoryMenu invMenu = activeMenu as InventoryMenu;
+    if(invMenu == null){
+      GD.Print("InventoryMenu not active. Not refreshing");
+      return;
+    }
+    invMenu.RefreshInventory();
   }
   
   // Static convenience method.

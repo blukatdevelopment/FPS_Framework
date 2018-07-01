@@ -110,7 +110,7 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.Esc: 
         Session.Event(SessionEvent.PauseEvent());
         break;
-      case InputEvent.Buttons.Tab: actor.SwitchItem(); break;
+      case InputEvent.Buttons.Tab: actor.ToggleInventory(); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.SetSprint(true); break;
       case InputEvent.Buttons.M1: actor.Use(Item.Uses.A); break;

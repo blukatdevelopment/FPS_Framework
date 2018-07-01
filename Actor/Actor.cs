@@ -7,7 +7,7 @@
 
   RPC calls go like so: (Notice AI is not currently supported)
   server->client: DeferredInitInventory, 
-  client->others: DeferredUse, DeferredSwitchItem
+  client->others: DeferredUse, 
 
 */
 
@@ -114,8 +114,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(rifle == "" || hand == ""){
       GD.Print("InitInventory: Rifle and hand strings are blank");
     }
-
-    DeferredInitInventory(rifle, hand);
 
     if(Session.IsServer()){
       initTimer = 0f;
@@ -315,7 +313,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return speed;
   }
   
-  public void SwitchItem(){
+  public void ToggleInventory(){
     if(!menuActive){
       SetMenuActive(true);
       Session.session.ChangeMenu(Menu.Menus.Inventory);  
@@ -323,17 +321,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     else{
       SetMenuActive(false);
     }
-    
-    /*DeferredSwitchItem();
-    if(Session.NetActive()){
-      Rpc(nameof(DeferredSwitchItem));
-    }*/
-  }
-
-  [Remote]
-  public void DeferredSwitchItem(){
-    unarmed = !unarmed;
-    EquipItem(0);
   }
   
   /* Equip item based on inventory index. */
@@ -341,6 +328,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(inventory.GetItem(index) == null){
       return;
     }
+
+    DeferredEquipItem(index);
+    if(Session.NetActive()){
+      Rpc(nameof(DeferredEquipItem), index);
+    }
+  }
+
+  [Remote]
+  public void DeferredEquipItem(int index){
     if(unarmed){
       StashHand();
     }
@@ -364,6 +360,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     activeItem.Equip(this);
     unarmed = false;
   }
+
+
+
   
   /* Removes activeItem from hands. */
   public void StashItem(){
@@ -381,7 +380,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("activeItem is orphan. Not stashing");
       return;
     }
+    DeferredStashItem();
+    if(Session.NetActive()){
+      Rpc(nameof(DeferredStashItem));
+    }
+    
+  }
 
+  [Remote]
+  public void DeferredStashItem(){
     inventory.ReceiveItem(activeItem);
     eyes.RemoveChild(activeItem);
 
@@ -466,6 +473,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         if(initTimer >= initDelay){
           initActive = false;
           initTimer = 0;
+          DeferredInitInventory(initRifle, initHand);
           Rpc(nameof(DeferredInitInventory), initRifle, initHand);
         }
       }
@@ -571,18 +579,55 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void DiscardItem(int index){
-    ItemData data = inventory.RetrieveItem(index);
+    ItemData data = inventory.GetItem(index);
     if(data == null){
+      GD.Print("No item found, not discarding.");
       return;
     }
     
-    Item item = Item.FromData(data);
-    Session.GameNode().AddChild(item);
+    
+    if(!Session.NetActive()){ // Singleplayer should directly call DeferredDiscardItem
+      GD.Print("Discarding item because no net active");
+      string itemName = Session.NextItemId();
+      DeferredDiscardItem(index, itemName);
+    }
+    else{
+      GD.Print("RPC serverdiscarditem");
+      Rpc(nameof(ServerDiscardItem), index);
+    }
+  }
 
+  [Remote]
+  public void ServerDiscardItem(int index){
+    if(Session.NetActive() && !Session.IsServer()){
+      GD.Print("Returning because not server.");
+      return;
+    }
+    GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
+    string itemName = Session.NextItemId();
+    DeferredDiscardItem(index, itemName);
+    Rpc(nameof(DeferredDiscardItem), index, itemName);
+  }
+
+  [Remote]
+  public void DeferredDiscardItem(int index, string itemName){
+    GD.Print("Deferred discard " + index + " " + itemName);
+    ItemData data = inventory.RetrieveItem(index);
+    if(data == null){
+      GD.Print("No item data. Not discarding.");
+      return;
+    }
+
+    Item item = Item.FromData(data);
+    item.Name = itemName;
+    Session.GameNode().AddChild(item);
+    GD.Print(item);
     Transform trans = item.GlobalTransform;
     trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
     item.GlobalTransform = trans;
-    
+
+    // Notify session
+    Session.session.HandleEvent(SessionEvent.ItemDiscardedEvent(NodePath().ToString()));
   }
 
   public int IndexOf(Item.Types type, string name){
@@ -646,10 +691,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public int ReceiveItem(Item item){
-    if(items.Count < 2){
-      items.Add(item);
+    if(!Session.NetActive()){
+      return inventory.ReceiveItem(item);  
     }
-    return inventory.ReceiveItem(item);
+    else if(Session.IsServer()){
+       string json = JsonConvert.SerializeObject(item.GetData(), Formatting.Indented);
+      DeferredReceiveItem(json);
+      Rpc(nameof(DeferredReceiveItem),json);
+      return 0;
+    }
+    return 0;
+    
+  }
+  [Remote]
+  public void DeferredReceiveItem(string json){
+    ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);
+    Item item = Item.FromData(dat);
+    inventory.ReceiveItem(item);
   }
   
   public bool IsPaused(){
