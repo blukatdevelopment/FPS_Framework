@@ -8,4 +8,6 @@ public interface IHasItem{
   /* Returns quantity of overflow, 0 if accepted full quantity. */
   int ReceiveItem(Item item);
   Item PrimaryItem();
+  int ItemCount();
+  List<ItemData> GetAllItems();
 }

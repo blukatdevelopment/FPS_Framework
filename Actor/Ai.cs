@@ -75,6 +75,8 @@ public class Ai : Brain
     return aimAngle < AimMargin;
   }
   
+
+  /* TODO: Use the Util.RayCast and move gridcast logic to Util.GridCast() */
   Actor RayCastForActor(Vector3 start, Vector3 end){
     PhysicsDirectSpaceState spaceState = host.GetWorld().DirectSpaceState as PhysicsDirectSpaceState;
     var result = spaceState.IntersectRay(start, end);
@@ -122,7 +124,6 @@ public class Ai : Brain
         }
       }
     }
-    
     return found;
   }
   
@@ -134,8 +135,8 @@ public class Ai : Brain
   
   void AcquireTarget(){
     float distance = 100f;
-    Vector3 start = actor.HeadPosition();
-    Vector3 end = actor.Forward();
+    Vector3 start = host.HeadPosition();
+    Vector3 end = host.Forward();
     end *= distance; // Move distance
     end += start; // Add starting position
     

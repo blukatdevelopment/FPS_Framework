@@ -8,6 +8,7 @@ public class HUDMenu : Container{
   Godot.TextEdit healthBox;
   Godot.TextEdit itemBox;
   Godot.TextEdit objectiveBox;
+  Godot.TextEdit interactionBox;
 
   public override void _Ready(){
       
@@ -35,8 +36,21 @@ public class HUDMenu : Container{
     string itemText = player.ItemInfo();
     itemBox.SetText(itemText);
     
-    string objectiveText = Session.session.GetObjectiveText();
+    string objectiveText = Session.GetObjectiveText();
     objectiveBox.SetText(objectiveText);
+
+    IInteract interactor = player.VisibleObject() as IInteract;
+    if(interactor == null){
+      interactionBox.Hide();
+    }
+    else{
+      Item.Uses interaction = player.GetActiveInteraction();
+      string interactionText = interactor.GetInteractionText(interaction);
+      interactionBox.Show();
+      interactionBox.SetText(interactionText);
+    }
+
+
 
   }
 
@@ -49,9 +63,13 @@ public class HUDMenu : Container{
     itemBox.Readonly = true;
     AddChild(itemBox);
     
-    objectiveBox = (Godot.TextEdit)Menu.TextBox("Object Info");
+    objectiveBox = (Godot.TextEdit)Menu.TextBox("Objective Info");
     objectiveBox.Readonly = true;
     AddChild(objectiveBox);
+
+    interactionBox = (Godot.TextEdit)Menu.TextBox("Interaction text");
+    interactionBox.Readonly = true;
+    AddChild(interactionBox);
     
     ScaleControls();
   }
@@ -66,6 +84,7 @@ public class HUDMenu : Container{
     Menu.ScaleControl(healthBox, 2 * wu, hu, 0, height - hu);
     Menu.ScaleControl(itemBox, 2 * wu, hu, 8 * wu, 9 * hu);
     Menu.ScaleControl(objectiveBox, 4 * wu, hu, 3 * wu, 0);
+    Menu.ScaleControl(interactionBox, 4 * wu, hu, 3 * wu, 7 * hu);
   }
 
 }

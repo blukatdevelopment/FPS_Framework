@@ -16,14 +16,18 @@ public class MeleeWeapon : Item, IWeapon {
   delegate void OnBusyEnd();
   OnBusyEnd busyEndHandler;
   
-  
+  public override ItemData GetData(){
+    ItemData ret = ItemGetData();
+    ret.description += "\nDamage: " + HealthDamage + "\n";
+    return ret;
+  }
   
   public void Init(){
     
   }
   
   public override void Equip(object wielder){
-    this.wielder = wielder;
+    ItemBaseEquip(wielder);
     this.wieldedPosition = GetTranslation();
     this.forwardPosition = this.wieldedPosition + new Vector3(0, 0, -1);
   }
@@ -98,5 +102,5 @@ public class MeleeWeapon : Item, IWeapon {
     swinging = false;
     busy = false;
     Translation = wieldedPosition;
-  } 
+  }
 }

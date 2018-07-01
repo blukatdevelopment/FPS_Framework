@@ -53,7 +53,7 @@ public class PauseMenu : Container{
   }
   
   public void QuitToMainMenu(){
-    Session.session.QuitToMainMenu();
+    Session.QuitToMainMenu();
   }
 
   public void Resume(){

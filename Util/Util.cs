@@ -6,7 +6,7 @@ using System;
 public class Util{
   
   
-  /* Transform methods */
+  /* Transform methods. IF you pass a global or local transform, it will match.*/
   public static Vector3 TUp(Transform t){
     return t.basis.y;
   }
@@ -39,5 +39,21 @@ public class Util{
     float y = ToRadians(degrees.y);
     float z = ToRadians(degrees.z);
     return new Vector3(x, y, z);
+  }
+
+  public static object RayCast (Vector3 start, Vector3 end, World world) {
+    if(world == null){
+      return null;
+    }
+    PhysicsDirectSpaceState spaceState = world.DirectSpaceState as PhysicsDirectSpaceState;
+    var result = spaceState.IntersectRay(start, end);
+    
+    if(!result.ContainsKey("collider")){
+      return null;
+    }
+
+    object collider = result["collider"];
+
+    return collider;
   }
 }
