@@ -89,12 +89,45 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
   }
 
+  // client -> client
   public void PickUp(IHasItem acquirer){
+    if(!Session.NetActive()){
+      int overflow = acquirer.ReceiveItem(this);
+      if(overflow == 0){
+        this.QueueFree();
+      }
+      quantity = overflow;
+      return;
+    }
+    Node acquirerNode = acquirer as Node;
+    if(acquirerNode == null){
+      GD.Print("Null acquirerNode");
+      return;
+    }
+    string acquirerPath = acquirerNode.GetPath().ToString();
+    DeferredPickup(acquirerPath);
+    Rpc(nameof(DeferredPickup), acquirerPath);
+  }
+
+  [Remote]
+  public void DeferredPickup(string acquirerPath){
+    GD.Print("DeferredPickup");
+    if(acquirerPath == ""){
+      GD.Print("acquirerPath is null");
+    }
+    NodePath path = new NodePath(acquirerPath);
+    Node acquirerNode = Session.session.GetNode(path);
+    IHasItem acquirer = acquirerNode as IHasItem;
+    
+    if(acquirer == null){
+      GD.Print("No acquirer found!");
+    }
+    
     int overflow = acquirer.ReceiveItem(this);
     if(overflow == 0){
       this.QueueFree();
     }
-    quantity = overflow;
+
   }
 
   public void SyncPosition(){

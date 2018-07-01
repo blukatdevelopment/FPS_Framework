@@ -78,12 +78,12 @@ arbitrary number of sub-menus and popups is available.
 **DONE Update HUD: item in reach**
 If ItemInReach is not null, display "Pick up " + itemName
 
-## Network Programming
+## DONE Network Programming
 
 - DONE Sync initializing inventory.
 - DONE Sync dropping items.
 - DONE Sync eqipping items
-- Sync picking up items.
+- DONE Sync picking up items.
 
 
 ##DONE Core Programming

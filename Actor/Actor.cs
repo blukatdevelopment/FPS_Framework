@@ -602,8 +602,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
     GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
     string itemName = Session.NextItemId();
-    DeferredDiscardItem(index, itemName);
     Rpc(nameof(DeferredDiscardItem), index, itemName);
+    DeferredDiscardItem(index, itemName);
   }
 
   [Remote]
@@ -686,7 +686,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
     return "Unequipped";
   }
-  
+
+  // Good for server->client
   public int ReceiveItem(Item item){
     if(!Session.NetActive()){
       GD.Print("received " + item.quantity + " " + item);
@@ -703,6 +704,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return 0;
     }
   }
+
+  // Good for server->client
   [Remote]
   public void DeferredReceiveItem(string json){
     ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);
