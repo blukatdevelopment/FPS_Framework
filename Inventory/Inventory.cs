@@ -22,7 +22,7 @@ public class Inventory : IHasItem {
 		if(index < 0 || index >= items.Count){
 			return null;
 		}
-		return items[index];
+		return ItemData.Clone(items[index]);
 	}
 
 	// Changes value.
@@ -84,6 +84,18 @@ public class Inventory : IHasItem {
 
 	public Item PrimaryItem(){
 		return null;
+	}
+
+	public int ItemCount(){
+		return items.Count;
+	}
+
+	public List<ItemData> GetAllItems(){
+		List<ItemData> ret = new List<ItemData>();
+		foreach(ItemData dat in items){
+			ret.Add(dat);
+		}
+		return ret;
 	}
 
 }

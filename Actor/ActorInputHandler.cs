@@ -73,6 +73,7 @@ public class ActorInputHandler : Brain {
   private void HandleMenuInput(List<InputEvent> events){
     for(int i = 0; i < events.Count; i++){
       if(events[i].button == InputEvent.Buttons.Esc){ HandleButton(events[i]); }
+      if(events[i].button == InputEvent.Buttons.Tab){ HandleButton(events[i]); }
     }
   }
   
