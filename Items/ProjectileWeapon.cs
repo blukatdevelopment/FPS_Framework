@@ -34,6 +34,15 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     }  
   }
   
+  public override ItemData GetData(){
+    ItemData ret = ItemGetData();
+    ret.description += "\nDamage: " + BaseDamage + "\n";
+    ret.description += "Capacity: " + maxAmmo + "\n";
+    ret.description += "Ammo Type: " + ammoType + "\n";
+    ret.description += "Range: " + ImpulseStrength;
+    return ret;
+  }
+
   public override string GetInfo(){
     string ret = name + "[" + ammo + "/" + maxAmmo;
     if(wielder != null){

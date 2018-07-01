@@ -54,7 +54,6 @@ public class ActorInputHandler : Brain {
     }
     else{
       HandleMenuInput(events);
-      
     }
     if(Session.NetActive()){
       NetUpdate();

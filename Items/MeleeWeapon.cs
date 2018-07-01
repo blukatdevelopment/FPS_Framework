@@ -16,7 +16,11 @@ public class MeleeWeapon : Item, IWeapon {
   delegate void OnBusyEnd();
   OnBusyEnd busyEndHandler;
   
-  
+  public override ItemData GetData(){
+    ItemData ret = ItemGetData();
+    ret.description += "\nDamage: " + HealthDamage + "\n";
+    return ret;
+  }
   
   public void Init(){
     
@@ -98,5 +102,5 @@ public class MeleeWeapon : Item, IWeapon {
     swinging = false;
     busy = false;
     Translation = wieldedPosition;
-  } 
+  }
 }

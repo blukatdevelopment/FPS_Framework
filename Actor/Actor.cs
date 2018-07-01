@@ -46,6 +46,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   // Inventory
   private Item activeItem;
+  private Item hand; // Weapon for unarmed people.
   private bool unarmed = true; // True->Hand, False->Rifle
   private string ammoType = "bullet";
   private int ammo = 100;
@@ -123,16 +124,18 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       initHand = hand;
       initRifle = rifle;
     }
-    
   }
 
   [Remote]
   void DeferredInitInventory(string rifleName, string handName){
     items = new List<Item>();
-    ReceiveItem(Item.Factory(Item.Types.Hand, handName));
+    InitHand(handName);
     ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
-    EquipItem(1);
-    unarmed = false;
+  }
+
+  public void InitHand(string handName){
+    hand = Item.Factory(Item.Types.Hand, handName);
+    EquipHand();
   }
 
   /* Return global position of eyes(if available) or body */
@@ -226,7 +229,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         return "Online player";
         break;
     }
-    return "Actor";  
+    return "Actor";
   }
 
   /* Return which interaction is currently going to take place. */
@@ -338,8 +341,13 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(inventory.GetItem(index) == null){
       return;
     }
+    if(unarmed){
+      StashHand();
+    }
+    else{
+      StashItem();  
+    }
 
-    StashItem();
     ItemData dat = inventory.RetrieveItem(index);
     
     Item item = Item.FromData(dat);
@@ -354,10 +362,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     item.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
     activeItem = item;
     activeItem.Equip(this);
+    unarmed = false;
   }
   
   /* Removes activeItem from hands. */
   public void StashItem(){
+    if(unarmed){
+      GD.Print("Unarmed. Not Stashing.");
+      return;
+    }
+
     if(activeItem == null){
       GD.Print("No activeitem. Not stashing.");
       return;
@@ -367,12 +381,39 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("activeItem is orphan. Not stashing");
       return;
     }
+
     inventory.ReceiveItem(activeItem);
     eyes.RemoveChild(activeItem);
 
     activeItem.QueueFree();
+    EquipHand();
+  }
+
+  /* Remove hand in preparation of equipping an item */
+  public void StashHand(){
+    if(activeItem != hand){
+      GD.Print("Hand not out. Not stashing hand.");
+      return;
+    }
+    eyes.RemoveChild(activeItem);
     activeItem = null;
-    GD.Print(inventory.ItemInfo());
+    GD.Print("Stashed hand");
+    unarmed = false;
+  }
+
+  /* Equip hand when unarmed.  */
+  public void EquipHand(){
+    if(activeItem == hand){
+      GD.Print("Hand already out. Not equipping hand.");
+      return;
+    }
+    activeItem = hand;
+    eyes.AddChild(activeItem);
+    activeItem.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
+    activeItem.Mode = RigidBody.ModeEnum.Static;
+    activeItem.Equip(this);
+    unarmed = true;
+    GD.Print("Hand equipped");
   }
   
   /* Finds any attached eyes if eys are not already set by factory.  */
@@ -527,6 +568,25 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     float y = headRot.x;
 
     RpcUnreliable(nameof(SetRotation), x, y);
+  }
+
+  public void DiscardItem(int index){
+    ItemData data = inventory.RetrieveItem(index);
+    if(data == null){
+      return;
+    }
+    
+    Item item = Item.FromData(data);
+    Session.GameNode().AddChild(item);
+
+    Transform trans = item.GlobalTransform;
+    trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
+    item.GlobalTransform = trans;
+    
+  }
+
+  public int IndexOf(Item.Types type, string name){
+    return inventory.IndexOf(type, name);
   }
 
   [Remote]
