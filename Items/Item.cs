@@ -27,6 +27,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     HealthPack,
     AmmoPack
   };
+
+
+  public enum Categories { // Inventory categories.
+    None,
+    Weapons,
+    Apparel,
+    Aid,
+    Misc,
+    Ammo
+  };
   
   
   public Types type;
@@ -333,6 +343,38 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual void Unequip(){
     ItemBaseUnequip();
+  }
+
+  public static Categories TypeCategory(Types type){
+    switch(type){
+      case Types.Hand:
+        return Categories.Weapons;
+        break;
+      case Types.Rifle:
+        return Categories.Weapons;
+        break;
+      case Types.Bullet:
+        return Categories.None;
+        break;
+      case Types.HealthPack:  // Powerups are not aid because they are used on contact
+        return Categories.None;
+        break;
+      case Types.AmmoPack:
+        return Categories.None;
+        break;
+    }
+    return Categories.None;
+  }
+
+  public static List<ItemData> FilterByCategory(List<ItemData> unsorted, Categories category){
+    List<ItemData> ret = new List<ItemData>();
+    foreach(ItemData item in unsorted){
+      if(TypeCategory(item.type) == category){
+        ret.Add(item);
+      }
+    }
+
+    return ret;
   }
 
 }
