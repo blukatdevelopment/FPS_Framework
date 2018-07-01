@@ -69,6 +69,7 @@
     <Compile Include="Menus\HUDMenu.cs" />
     <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Menus\TextBox.cs" />
+    <Compile Include="Menus\InventoryMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />

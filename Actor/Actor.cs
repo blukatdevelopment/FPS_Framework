@@ -313,10 +313,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void SwitchItem(){
-    DeferredSwitchItem();
+    SetMenuActive(true);
+    Session.session.ChangeMenu(Menu.Menus.Inventory);
+    /*DeferredSwitchItem();
     if(Session.NetActive()){
       Rpc(nameof(DeferredSwitchItem));
-    }
+    }*/
   }
 
   [Remote]
@@ -586,6 +588,18 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public bool IsPaused(){
     return menuActive;
+  }
+
+  public void SetMenuActive(bool val){
+    menuActive = val;
+
+    if(menuActive){
+      Input.SetMouseMode(Input.MouseMode.Visible);
+    }
+    else{
+      Input.SetMouseMode(Input.MouseMode.Captured);
+    }
+    
   }
 
   public void TogglePause(){

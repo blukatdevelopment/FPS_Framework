@@ -6,8 +6,7 @@
 using Godot;
 using System;
 
-public class MultiplayerMenu : Container
-{
+public class MultiplayerMenu : Container {
     Godot.Button mainMenuButton;
     
     Godot.Button selectionButton;
