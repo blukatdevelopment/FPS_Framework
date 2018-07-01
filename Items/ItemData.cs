@@ -15,6 +15,7 @@ public class ItemData : IHasInfo {
 	
 
 	// These should be used by classes like Inventory, but NOT for ReadData
+	// When searching an inventory for an item, (type, name) are the primary key.
 	public Item.Types type;
 	public string name;
 	public string description;
@@ -54,7 +55,7 @@ public class ItemData : IHasInfo {
 	}
 
 	public string ToString(){
-		string ret = name + "(" + quantity + "):" + description;
+		string ret = name + "(" + quantity + ")";
 		return ret;
 	}
 

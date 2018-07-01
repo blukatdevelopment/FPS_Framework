@@ -58,7 +58,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
 
-
   // Network
   public int netId;
 
@@ -331,20 +330,22 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
   
-  /* Equip item based on index in items. */
+  /* Equip item based on inventory index. */
   public void EquipItem(int index){
-    if(index >= items.Count){
-      GD.Print("Invalid index " + index);
+    if(inventory.GetItem(index) == null){
       return;
     }
-    
+
     StashItem();
-    Item item = items[index];
+    ItemData dat = inventory.RetrieveItem(index);
     
+    Item item = Item.FromData(dat);
+
     if(eyes == null){
       return;
     }
     
+    GD.Print("Item:" + item);
     eyes.AddChild(item);
     
     item.Mode = RigidBody.ModeEnum.Static;
@@ -356,17 +357,18 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Removes activeItem from hands. */
   public void StashItem(){
     if(activeItem == null){
-      GD.Print("No activeitem");
+      GD.Print("No activeitem. Not stashing.");
       return;
     }
     
     if(activeItem.GetParent() == null){
-      GD.Print("activeItem is orphan");
+      GD.Print("activeItem is orphan. Not stashing");
       return;
     }
     
     eyes.RemoveChild(activeItem);
-    
+
+    activeItem.QueueFree();
     activeItem = null;
   }
   
@@ -584,11 +586,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(items.Count < 2){
       items.Add(item);
     }
-    
-    ItemData dat = item.GetData();
-    GD.Print("ItemData: " + dat.ToString());
-
-    return 0;
+    return inventory.ReceiveItem(item);
   }
   
   public bool IsPaused(){

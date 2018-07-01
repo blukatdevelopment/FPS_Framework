@@ -42,7 +42,9 @@ public class Util{
   }
 
   public static object RayCast (Vector3 start, Vector3 end, World world) {
-
+    if(world == null){
+      return null;
+    }
     PhysicsDirectSpaceState spaceState = world.DirectSpaceState as PhysicsDirectSpaceState;
     var result = spaceState.IntersectRay(start, end);
     

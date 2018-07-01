@@ -21,7 +21,7 @@ public class Arena : Spatial {
   bool roundTimerActive = false;
   bool scorePresented = false;
   Dictionary<int, int> scores;
-  public int playerWorldId;
+  public int playerWorldId = -1;
 
   public void Init(bool singlePlayer){
     this.singlePlayer = singlePlayer;
@@ -90,8 +90,10 @@ public class Arena : Spatial {
   }
 
   public string GetObjectiveText(){
-    
-
+    if(playerWorldId == -1){
+      //GD.Print("Player not initialized");
+      return "Player not initialized.";
+    }
     if(scorePresented){
       return PlayerWon() ? "Victory!" : "Defeat!";
     }
@@ -163,7 +165,7 @@ public class Arena : Spatial {
     }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
-    InitActor(Actor.Brains.Ai, NextWorldId());
+    //InitActor(Actor.Brains.Ai, NextWorldId());
     roundTimeRemaining = RoundDuration;
     roundTimerActive = true;
   }
@@ -319,7 +321,6 @@ public class Arena : Spatial {
   public Vector3 RandomItemSpawn(){
     System.Random rand = Session.GetRandom();
     int randInt = rand.Next(itemSpawnPoints.Count);
-    GD.Print("Random position " + randInt + " from " + itemSpawnPoints.Count + " choices.");
     return itemSpawnPoints[randInt];
   }
   

@@ -135,7 +135,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.name = name;
     dat.description = description;
     dat.quantity = quantity;
-
+    dat.type = this.type;
 
     // FLOATS
     Vector3 position = GetTranslation();
@@ -259,6 +259,15 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual void DoOnCollide(object body){}
   
+  /* Convert ItemData to Item */
+  public static Item FromData(ItemData data){
+    Item item = Factory(data.type, data.name);
+    if(item != null){
+      item.ReadData(data);
+    }
+    return item;
+  }
+
   /* Returns a base/simple item by it's name. */
   public static Item Factory(Types type, string name = ""){
     Item ret = null;
@@ -286,6 +295,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         ret.BaseInit("AmmoPack", "Food for your rifle.");
         break;
     }
+    ret.type = type;
     if(name != ""){
       Node retNode = ret as Node;
       retNode.Name = name;
@@ -310,7 +320,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public void ItemBaseEquip(object wielder){
     this.wielder = wielder;
     SetCollision(false);
-    //this.QueueFree();
   }
 
   public void ItemBaseUnequip(){
