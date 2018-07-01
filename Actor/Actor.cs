@@ -198,19 +198,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   /* Store up to max ammo, returning overflow. */
   public int StoreAmmo(string ammoType, int max){
-    if(ammoType != this.ammoType){
-      return max;
-    }
-    int amount = max + ammo;
-    if(maxAmmo <= amount){
-      ammo = maxAmmo;
-      amount -= ammo;
-    }
-    else{
-      ammo += amount;
-      amount = 0;
-    }
-    return amount;
+    Item ammo = Item.Factory(Item.Types.Ammo, "TemporaryName", ammoType, max);
+    ReceiveItem(ammo);
+    return 0;
+
+    // if(ammoType != this.ammoType){
+    //   return max;
+    // }
+    // int amount = max + ammo;
+    // if(maxAmmo <= amount){
+    //   ammo = maxAmmo;
+    //   amount -= ammo;
+    // }
+    // else{
+    //   ammo += amount;
+    //   amount = 0;
+    // }
+    // return amount;
   }
   
   public string[] AmmoTypes(){

@@ -283,7 +283,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type, string name = ""){
+  public static Item Factory(Types type, string name = "", string overrideName = "", int quantity = 1){
     Item ret = null;
     if(type == Types.None){
       return null;
@@ -318,6 +318,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       Node retNode = ret as Node;
       retNode.Name = name;
     }
+    if(overrideName != ""){
+      ret.name = overrideName;
+    }
+    ret.quantity = quantity;
+
     return ret;
   }
   

@@ -161,7 +161,7 @@ public class Arena : Spatial {
     //SpawnItem(Item.Types.HealthPack);
     //SpawnItem(Item.Types.AmmoPack);
     for(int i = 0; i < 10; i++){
-      SpawnItem(Item.Types.Ammo, 10);
+      SpawnItem(Item.Types.AmmoPack, 10);
     }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
