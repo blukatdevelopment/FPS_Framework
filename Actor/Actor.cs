@@ -177,27 +177,26 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   /* Show up to max ammo */
   public int CheckAmmo(string ammoType, int max){
-    if(this.ammoType != ammoType){
+    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
+    if(index == -1){
       return 0;
     }
-    if(max < 0){
-      return ammo;
-    }
-    if(max > ammo){
-      return ammo;
-    }
-    return max;
+    return inventory.GetItem(index).quantity;
   }
   
   /* Return up to max ammo, removing that ammo from inventory. */
   public int RequestAmmo(string ammoType, int max){
-    int amount = CheckAmmo(ammoType, max);
-    ammo -= amount;
-    return amount;
+    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
+    if(index == -1){
+      return 0;
+    }
+    return inventory.RetrieveItem(index, max).quantity;
+
   }
   
   /* Store up to max ammo, returning overflow. */
   public int StoreAmmo(string ammoType, int max){
+    GD.Print("Storing ammo " + ammoType + "(" + max + ")");
     Item ammo = Item.Factory(Item.Types.Ammo, "TemporaryName", ammoType, max);
     ReceiveItem(ammo);
     return 0;
@@ -396,6 +395,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredStashItem(){
+    activeItem.Unequip();
     inventory.ReceiveItem(activeItem);
     eyes.RemoveChild(activeItem);
 

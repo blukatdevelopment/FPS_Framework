@@ -11,7 +11,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   const float ProjectileOffset = 0.1f;
   const float ImpulseStrength = 50f;
   string ammoType = "bullet";
-  int ammo = 10;
+  int ammo = 0;
   int maxAmmo = 10;
   
   float busyDelay = 0f;
@@ -175,6 +175,24 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     destination.Translated(new Vector3(0, 0, 1));
     Vector3 impulse = start.origin - destination.origin;
     projectile.SetAxisVelocity(impulse * ImpulseStrength);
+  }
+
+  public override void Equip(object wielder){
+    ItemBaseEquip(wielder);
+    IHasAmmo ammoHolder = wielder as IHasAmmo;
+    if(ammoHolder != null){
+      ammo = ammoHolder.RequestAmmo(ammoType, maxAmmo);
+    }
+    
+  }
+
+  public override void Unequip(){
+    IHasAmmo ammoHolder = wielder as IHasAmmo;
+    if(ammoHolder != null){
+      ammoHolder.StoreAmmo(ammoType, ammo);
+    }
+    ammo = 0;
+    ItemBaseUnequip();
   }
   
   private void Reload(){
