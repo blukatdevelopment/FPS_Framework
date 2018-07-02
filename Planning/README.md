@@ -32,15 +32,11 @@ complexity. This balance must be attended to
 Minimalistic multiplayer arena shooter.
 
 
-# Database Stuff
-This feature branch should establish some CRUD operations with SQLite that can be built
-upon for future data storage needs. This test is merely to prove these libraries work
-before trying to do heavy lifting.
+# Settings menu
 
-There are only three tasks
-- Create a database with a table (maybe last_played)
-- Store something in it
-- Update that thing.
+The settings menu should provide some basic configuration for the player provided initial values on
+first install using its own database file and database handler with related queries. The menu should
+provide some basic options loaded by the Session upon startup.
 
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
@@ -56,11 +52,41 @@ criteria that can be marked complete or ready for review.
 	All features should be tested thoroughly to diagnose and resolve bugs.
 
 ## Interface Programming
+**Settings Menu**
+Make sure the following features exist
+- Field validation if necessary
+- Save button that gives confirmation upon success
+- Prepopulate existing fields
+
+Include the following fields for use
+- mouse_sensitivity_x SLIDER 0, 1
+- mouse_sensitivity_y SLIDER 0, 1
+- username
+- master volume SLIDER 0, 1
+- sfx volume SLIDER 0, 1
+- musc volume SLIDER 0, 1
+
 
 ## Network Programming
 
 ## Core Programming
 
+**SettingsDb**
+Settings Db should have the following features/methods
+- Use separate db file.
+- StoreSetting(name, value)
+- string RetrieveSetting(name)
+- First-time init
+
+**Session init settings**
+Session should initialize using settings provide by SettingsDb
+
+**Volume**
+-Speakers should use volume pulled from Session
+-Jukebox should use volume pulled from Session
+
+**Mouse sensitivity**
+ActorInputHandler should pull these settings from Session
 ## Gameplay Programming
 
 ## AI programming
