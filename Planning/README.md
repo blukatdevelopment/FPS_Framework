@@ -65,6 +65,7 @@ Include the following fields for use
 - master volume SLIDER 0, 1
 - sfx volume SLIDER 0, 1
 - musc volume SLIDER 0, 1
+- first_login date
 
 
 ## Network Programming

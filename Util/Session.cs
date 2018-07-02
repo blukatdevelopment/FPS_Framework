@@ -17,7 +17,6 @@ public class Session : Node {
   public Arena arena;
   public NetworkSession netSes;
   public Random random;
-  public Db db;
   public JukeBox jukeBox;
   
 
@@ -33,16 +32,22 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    db = Db.Init();
+    InitSettings();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
+
+  public void InitSettings(){
+    GD.Print("InitSettings");
+    SettingsDb db = SettingsDb.Init();
+    float masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
+    float sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
+    float musicVolume = Util.ToFloat(db.SelectSetting("music_volume"));
+    db.Close();
+  }
   
   public void Quit(){
-    if(Session.session.db != null){
-      Session.session.db.Clear();
-    }
     GetTree().Quit();  
   }
   

@@ -958,15 +958,5 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.VisualScriptEditor.AddCustomNode(System.String,System.String,Godot.Script)">
-            <summary>
-            Add a custom Visual Script node to the editor. It'll be placed under "Custom Nodes" with the [code]category[/code] as the parameter.
-            </summary>
-        </member>
-        <member name="M:Godot.VisualScriptEditor.RemoveCustomNode(System.String,System.String)">
-            <summary>
-            Remove a custom Visual Script node from the editor. Custom nodes already placed on scripts won't be removed.
-            </summary>
-        </member>
     </members>
 </doc>

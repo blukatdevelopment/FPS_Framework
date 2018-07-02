@@ -106,8 +106,8 @@
     <Compile Include="Util\PlayerData.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
-    <Compile Include="Util\Db.cs" />
     <Compile Include="Util\Events\SessionEvent.cs" />
+    <Compile Include="Db\SettingsDb.cs" />
     <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
