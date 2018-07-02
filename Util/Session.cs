@@ -17,7 +17,7 @@ public class Session : Node {
   public Arena arena;
   public NetworkSession netSes;
   public Random random;
-
+  public Db db;
   public JukeBox jukeBox;
   
 
@@ -33,12 +33,16 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
+    db = Db.Init();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
   
   public void Quit(){
+    if(Session.session.db != null){
+      Session.session.db.Clear();
+    }
     GetTree().Quit();  
   }
   
