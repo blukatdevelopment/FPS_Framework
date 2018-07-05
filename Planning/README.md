@@ -25,6 +25,8 @@ complexity. This balance must be attended to
 - Menus use default skin.
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
+- Main menu needs a refactor like crazy.
+- Menu system might benefit from some inheritance.
 
 # Completed Milestones
 

@@ -1,18 +1,21 @@
 using Godot;
 using System;
 
-public class MainMenu : Container
-{
+public class MainMenu : Container {
     
     public Godot.Button startButton;
     public Godot.Button lobbyButton;
+    public Godot.Button settingsButton;
     public Godot.Button quitButton;
+
     
     
     public void Init(){
       SetSinglePlayerButton((Godot.Button)Menu.Button(text : "Single Player", onClick: SinglePlayerGame));
       SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Multiplayer));
       SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
+      settingsButton = (Godot.Button)Menu.Button(text : "Settings", onClick : Settings);
+      AddChild(settingsButton);
       Sound.PlaySong(Sound.Songs.FloatingHorizons);
     }
     
@@ -41,6 +44,11 @@ public class MainMenu : Container
     public void Multiplayer(){
       Session.ChangeMenu(Menu.Menus.Multiplayer);
     }
+
+    public void Settings(){
+      GD.Print("Settings menu");
+      Session.ChangeMenu(Menu.Menus.Settings);
+    }
     
     public void Quit(){
         Session.session.Quit();
@@ -66,10 +74,14 @@ public class MainMenu : Container
         lobbyButton.SetSize(size);
         lobbyButton.SetPosition(new Vector2(0f, size.y * 1));
       }
+      size = new Vector2( width/10, height/10);
+      settingsButton.SetSize(size);
+      settingsButton.SetPosition(new Vector2(0f, size.y*2));
       if(quitButton != null){
         size = new Vector2(width/10, height/10);
         quitButton.SetSize(size);
-        quitButton.SetPosition(new Vector2(0f, size.y*2));
+        quitButton.SetPosition(new Vector2(0f, size.y*3));
       }
+
     }
 }

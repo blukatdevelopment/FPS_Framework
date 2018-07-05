@@ -18,6 +18,11 @@ public class Session : Node {
   public NetworkSession netSes;
   public Random random;
   public JukeBox jukeBox;
+
+  // Settings
+  public float masterVolume, sfxVolume, musicVolume;
+  public string userName;
+  public float mouseSensitivityX, mouseSensitivityY;
   
 
   public Actor player;
@@ -41,9 +46,12 @@ public class Session : Node {
   public void InitSettings(){
     GD.Print("InitSettings");
     SettingsDb db = SettingsDb.Init();
-    float masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
-    float sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
-    float musicVolume = Util.ToFloat(db.SelectSetting("music_volume"));
+    masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
+    sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
+    musicVolume = Util.ToFloat(db.SelectSetting("music_volume"));
+    userName = db.SelectSetting("username");
+    mouseSensitivityX = Util.ToFloat(db.SelectSetting("mouse_sensitivity_x"));
+    mouseSensitivityY = Util.ToFloat(db.SelectSetting("mouse_sensitivity_y"));
     db.Close();
   }
   

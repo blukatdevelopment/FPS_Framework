@@ -46,7 +46,7 @@ public class Util{
       GD.Print("ToFloat: Blank String");
       return 0.0f;
     }
-    GD.Print("Converting " + val + " into a float");
+    
     double ret = 0;
     if(Double.TryParse(val, out ret)){
       return (float)ret;

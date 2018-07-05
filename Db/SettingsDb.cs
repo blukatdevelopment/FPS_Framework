@@ -20,6 +20,7 @@ public class SettingsDb{
         conn = new SqliteConnection("URI=file:" + DefaultFile);
         cmd = conn.CreateCommand();
         conn.Open();
+        PrintSettings();
     }
 
     public void PrintSettings(){

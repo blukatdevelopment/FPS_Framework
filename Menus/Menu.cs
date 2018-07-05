@@ -3,7 +3,15 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{ None, Main, Multiplayer, Lobby, Pause, HUD, Inventory};
+  public enum Menus{
+    None, 
+    Main, 
+    Multiplayer, 
+    Settings,
+    Lobby, 
+    Pause, 
+    HUD, 
+    Inventory};
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
@@ -44,6 +52,7 @@ public class Menu{
       case Menus.Multiplayer: ret = NewMultiplayerMenu(); break;
       case Menus.Lobby: ret = NewLobbyMenu(); break;
       case Menus.Inventory: ret = NewInventoryMenu(); break;
+      case Menus.Settings: ret = NewSettingsMenu(); break;
     }
     return ret;
   }
@@ -96,6 +105,15 @@ public class Menu{
     Session.session.AddChild(menu);
     menu.Init();
     return menuInstance; 
+  }
+
+  public static Node NewSettingsMenu(){
+    Node menuInstance = new SettingsMenu();
+    menuInstance.Name = "SettingsMenu";
+    SettingsMenu menu = (SettingsMenu)menuInstance;
+    Session.session.AddChild(menu);
+    menu.Init();
+    return menuInstance;  
   }
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){
