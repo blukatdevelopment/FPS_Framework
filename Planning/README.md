@@ -25,6 +25,8 @@ complexity. This balance must be attended to
 - Menus use default skin.
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
+- Menu system might benefit from some inheritance.
+- BUG: Melee damage isn't being triggered.
 
 # Completed Milestones
 
@@ -38,10 +40,6 @@ The settings menu should provide some basic configuration for the player provide
 first install using its own database file and database handler with related queries. The menu should
 provide some basic options loaded by the Session upon startup.
 
-As with the last feature, this one will come with some badly-needed refactors/fixes.
-- Main menu needs a refactor like crazy.
-- Menu system might benefit from some inheritance.
-- menu control mini factories should return their relevant class.
 
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
@@ -58,19 +56,19 @@ criteria that can be marked complete or ready for review.
 
 ## Interface Programming
 **Settings Menu**
-Make sure the following features exist
+DONE Make sure the following features exist
 - Field validation if necessary
 - Save button that gives confirmation upon success
 - Prepopulate existing fields
 
-Include the following fields for use
+DONE Include the following fields for use
 - mouse_sensitivity_x SLIDER 0, 1
 - mouse_sensitivity_y SLIDER 0, 1
 - username
 - master volume SLIDER 0, 1
 - sfx volume SLIDER 0, 1
 - musc volume SLIDER 0, 1
-- first_login date
+- first_login date (Don't allow player to change)
 
 
 ## Network Programming

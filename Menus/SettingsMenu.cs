@@ -18,50 +18,55 @@ public class SettingsMenu : Container {
     Godot.HSlider mouseYSlider;
     Godot.TextEdit mouseYLabel;
 
+    Godot.TextEdit userNameBox;
+
     public void Init(){
       InitControls();
       ScaleControls();
     }
 
     public void InitControls(){
-      mainMenuButton = (Godot.Button)Menu.Button("Main Menu", MainMenu);
+      mainMenuButton = Menu.Button("Main Menu", MainMenu);
       AddChild(mainMenuButton);
 
-      revertButton = (Godot.Button)Menu.Button("Revert", RevertSettings);
+      revertButton = Menu.Button("Revert", RevertSettings);
       AddChild(revertButton);
 
-      saveButton = (Godot.Button)Menu.Button("Save", SaveSettings);
+      saveButton = Menu.Button("Save", SaveSettings);
       AddChild(saveButton);      
 
-      masterVolumeSlider = (Godot.HSlider)Menu.HSlider(0f, 1.0f, Session.session.masterVolume, 0.05f);
+      masterVolumeSlider = Menu.HSlider(0f, 1.0f, Session.session.masterVolume, 0.05f);
       AddChild(masterVolumeSlider);
       masterVolumeSlider.Connect("value_changed", this, nameof(UpdateMasterVolume));
       masterVolumeLabel = (Godot.TextEdit)Menu.TextBox("Master Volume: " + Session.session.masterVolume, false);
       AddChild(masterVolumeLabel);
 
-      sfxVolumeSlider = (Godot.HSlider)Menu.HSlider(0f, 1.0f, Session.session.sfxVolume, 0.05f);
+      sfxVolumeSlider = Menu.HSlider(0f, 1.0f, Session.session.sfxVolume, 0.05f);
       AddChild(sfxVolumeSlider);
       sfxVolumeSlider.Connect("value_changed", this, nameof(UpdateSfxVolume));
       sfxVolumeLabel = (Godot.TextEdit)Menu.TextBox("Sound Effects Volume: " + Session.session.sfxVolume, false);
       AddChild(sfxVolumeLabel);
 
-      musicVolumeSlider = (Godot.HSlider)Menu.HSlider(0f, 1.0f, Session.session.musicVolume, 0.05f);
+      musicVolumeSlider = Menu.HSlider(0f, 1.0f, Session.session.musicVolume, 0.05f);
       AddChild(musicVolumeSlider);
       musicVolumeSlider.Connect("value_changed", this, nameof(UpdateMusicVolume));
       musicVolumeLabel = (Godot.TextEdit)Menu.TextBox("Music Volume: " + Session.session.musicVolume, false);
       AddChild(musicVolumeLabel);
 
-      mouseXSlider = (Godot.HSlider)Menu.HSlider(0f, 1.0f, Session.session.mouseSensitivityX, 0.05f);
+      mouseXSlider = Menu.HSlider(0f, 1.0f, Session.session.mouseSensitivityX, 0.05f);
       AddChild(mouseXSlider);
       mouseXSlider.Connect("value_changed", this, nameof(UpdateMouseX));
       mouseXLabel = (Godot.TextEdit)Menu.TextBox("Mouse Sensitivity X: " + Session.session.mouseSensitivityX, false);
       AddChild(mouseXLabel);
 
-      mouseYSlider = (Godot.HSlider)Menu.HSlider(0f, 1.0f, Session.session.mouseSensitivityY, 0.05f);
+      mouseYSlider = Menu.HSlider(0f, 1.0f, Session.session.mouseSensitivityY, 0.05f);
       AddChild(mouseYSlider);
       mouseYSlider.Connect("value_changed", this, nameof(UpdateMouseY));
-      mouseYLabel = (Godot.TextEdit)Menu.TextBox("Mouse Sensitivity Y: " + Session.session.mouseSensitivityY, false);
+      mouseYLabel = Menu.TextBox("Mouse Sensitivity Y: " + Session.session.mouseSensitivityY, false);
       AddChild(mouseYLabel);
+
+      userNameBox = Menu.TextBox(Session.session.userName, false);
+      AddChild(userNameBox);
     }
 
     void ScaleControls(){
@@ -89,6 +94,8 @@ public class SettingsMenu : Container {
 
       Menu.ScaleControl(mouseYLabel, 2 * wu, 0.5f * hu, 0, 6 * hu);
       Menu.ScaleControl(mouseYSlider, 2 * wu, 0.5f * hu, 0, 6.5f * hu);
+
+      Menu.ScaleControl(userNameBox, 2 * wu, 0.5f * hu, 0, 7 * hu);
     }
 
     public void MainMenu(){
@@ -127,6 +134,8 @@ public class SettingsMenu : Container {
       Session.session.musicVolume = musicVolumeSlider.Value;
       Session.session.mouseSensitivityX = mouseXSlider.Value;
       Session.session.mouseSensitivityY = mouseYSlider.Value;
+      Session.session.userName = userNameBox.GetText();
+      Sound.RefreshVolume();
       Session.SaveSettings();
     }
 
@@ -136,5 +145,6 @@ public class SettingsMenu : Container {
       musicVolumeSlider.Value = Session.session.musicVolume;
       mouseXSlider.Value = Session.session.mouseSensitivityX;
       mouseYSlider.Value = Session.session.mouseSensitivityY;
+      userNameBox.SetText(Session.session.userName);
     }
 }

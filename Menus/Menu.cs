@@ -13,41 +13,29 @@ public class Menu{
     HUD, 
     Inventory};
   
-  /* Returns instances of desired control. */
-  public static Control ControlFactory(Controls control){
-    switch(control){
-      case Controls.Button: return Button(); break;
-      case Controls.TextBox: return TextBox(); break;
-    }
-    return null;
-  }
-  
-  public static Control Button(string text = "", Action onClick = null){
-    Node buttonInstance = Session.Instance("res://Scenes/Prefabs/Controls/Button.tscn");
-    Button button = (Button)buttonInstance;
+  public static Button Button(string text = "", Action onClick = null){
+    Button button = new Button();
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
-    return (Control)buttonInstance;
+    return button;
   }
   
-  public static Control TextBox(string val = "", bool readOnly = true){
-    Node textBoxInstance = Session.Instance("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    
-    TextEdit textBox = (Godot.TextEdit)textBoxInstance;
+  public static TextEdit TextBox(string val = "", bool readOnly = true){    
+    TextEdit textBox = new TextEdit();
     textBox.SetText(val);
     textBox.Readonly = readOnly;
   
-    return (Control)textBoxInstance;
+    return textBox;
   }
 
-  public static Control HSlider(float min, float max, float val, float step){    
+  public static HSlider HSlider(float min, float max, float val, float step){    
     HSlider slider = new HSlider();
     slider.MinValue = min;
     slider.MaxValue = max;
     slider.Value = val;
     slider.Step = step;
     
-    return (Control)slider;
+    return slider;
   }
   
   public static Node MenuFactory(Menus menu){

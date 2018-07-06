@@ -15,6 +15,7 @@ public class Speaker : AudioStreamPlayer3D{
   
   public void PlayEffect(Sound.Effects effect){
     this.Stop();
+    MaxDb = Sound.VolumeMath(Session.session.sfxVolume);
     LoadEffect(effect);
     this.Play();
   }

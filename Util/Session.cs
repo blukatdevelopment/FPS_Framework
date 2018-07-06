@@ -37,6 +37,7 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
+    InitJukeBox();
     InitSettings();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
@@ -61,19 +62,21 @@ public class Session : Node {
     db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
     db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
     db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
+    db.StoreSetting("username", Session.session.userName);
     db.Close();
+    Sound.RefreshVolume();
   }
   
   public void Quit(){
     GetTree().Quit(); 
   }
   
-  public void InitJukeBox(){
-    if(jukeBox != null){
+  public static void InitJukeBox(){
+    if(Session.session.jukeBox != null){
       return;
     }
-    jukeBox = (JukeBox)Instance("res://Scenes/JukeBox.tscn");
-    AddChild(jukeBox);
+    Session.session.jukeBox = new JukeBox();
+    Session.session.AddChild(Session.session.jukeBox);
   }
   
   public static System.Random GetRandom(){
