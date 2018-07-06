@@ -123,9 +123,11 @@ public class ActorInputHandler : Brain {
 
 
   private void HandleAxis(InputEvent evt){
+    float wx = Session.session.mouseSensitivityX;
+    float wy = Session.session.mouseSensitivityY;
     if(evt.axis == InputEvent.Axes.Mouse){
-      actor.Turn(evt.x, evt.y);
+      actor.Turn(evt.x * wx, evt.y * wy);
     }
-    actor.Turn(evt.x, evt.y);
+    actor.Turn(evt.x * wx, evt.y * wy);
   }
 }

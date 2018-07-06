@@ -50,8 +50,6 @@ public class HUDMenu : Container{
       interactionBox.SetText(interactionText);
     }
 
-
-
   }
 
   public void Init(){

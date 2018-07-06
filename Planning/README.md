@@ -61,7 +61,7 @@ DONE Make sure the following features exist
 - Save button that gives confirmation upon success
 - Prepopulate existing fields
 
-DONE Include the following fields for use
+ Include the following fields for use
 - mouse_sensitivity_x SLIDER 0, 1
 - mouse_sensitivity_y SLIDER 0, 1
 - username
@@ -75,21 +75,21 @@ DONE Include the following fields for use
 
 ## Core Programming
 
-**SettingsDb**
+**DONE SettingsDb**
 Settings Db should have the following features/methods
 - Use separate db file.
 - StoreSetting(name, value)
 - string RetrieveSetting(name)
 - First-time init
 
-**Session init settings**
+**DONE Session init settings**
 Session should initialize using settings provide by SettingsDb
 
-**Volume**
+**DONE Volume**
 -Speakers should use volume pulled from Session
 -Jukebox should use volume pulled from Session
 
-**Mouse sensitivity**
+**DONE Mouse sensitivity**
 ActorInputHandler should pull these settings from Session
 ## Gameplay Programming
 

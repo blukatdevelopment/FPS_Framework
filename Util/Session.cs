@@ -54,6 +54,7 @@ public class Session : Node {
     mouseSensitivityX = Util.ToFloat(db.SelectSetting("mouse_sensitivity_x"));
     mouseSensitivityY = Util.ToFloat(db.SelectSetting("mouse_sensitivity_y"));
     db.Close();
+    Sound.RefreshVolume();
   }
 
   public static void SaveSettings(){
