@@ -20,11 +20,4 @@ public class Speaker : AudioStreamPlayer3D{
     this.Play();
   }
   
-  /* Oh look, it's a pseudo-constructor. */
-  public static Speaker Instance(){
-    Speaker ret = (Speaker)Session.Instance("res://Scenes/Speaker.tscn");
-    
-    return ret;
-  }
-  
 }

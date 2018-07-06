@@ -89,7 +89,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(eyes != null){
       eyes.SetRotationDegrees(new Vector3(0, 0, 0));  
     }
-    speaker = Speaker.Instance();
+    speaker = new Speaker();
     AddChild(speaker);
     health = 100;
     InitInventory();
