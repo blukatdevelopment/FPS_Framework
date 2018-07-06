@@ -26,19 +26,11 @@ complexity. This balance must be attended to
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
 - Menu system might benefit from some inheritance.
-- BUG: Melee damage isn't being triggered.
 
 # Completed Milestones
 
 **Version 0.0.1 Arena**
 Minimalistic multiplayer arena shooter.
-
-
-# Settings menu
-
-The settings menu should provide some basic configuration for the player provided initial values on
-first install using its own database file and database handler with related queries. The menu should
-provide some basic options loaded by the Session upon startup.
 
 
 ## Design
@@ -55,42 +47,11 @@ criteria that can be marked complete or ready for review.
 	All features should be tested thoroughly to diagnose and resolve bugs.
 
 ## Interface Programming
-**Settings Menu**
-DONE Make sure the following features exist
-- Field validation if necessary
-- Save button that gives confirmation upon success
-- Prepopulate existing fields
-
- Include the following fields for use
-- mouse_sensitivity_x SLIDER 0, 1
-- mouse_sensitivity_y SLIDER 0, 1
-- username
-- master volume SLIDER 0, 1
-- sfx volume SLIDER 0, 1
-- musc volume SLIDER 0, 1
-- first_login date (Don't allow player to change)
-
 
 ## Network Programming
 
 ## Core Programming
 
-**DONE SettingsDb**
-Settings Db should have the following features/methods
-- Use separate db file.
-- StoreSetting(name, value)
-- string RetrieveSetting(name)
-- First-time init
-
-**DONE Session init settings**
-Session should initialize using settings provide by SettingsDb
-
-**DONE Volume**
--Speakers should use volume pulled from Session
--Jukebox should use volume pulled from Session
-
-**DONE Mouse sensitivity**
-ActorInputHandler should pull these settings from Session
 ## Gameplay Programming
 
 ## AI programming
