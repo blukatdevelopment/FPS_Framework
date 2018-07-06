@@ -58,7 +58,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
-    speaker = Speaker.Instance();
+    speaker = new Speaker();
     AddChild(speaker);
   }
   

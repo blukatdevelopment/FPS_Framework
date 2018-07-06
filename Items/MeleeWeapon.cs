@@ -96,11 +96,13 @@ public class MeleeWeapon : Item, IWeapon {
     busyEndHandler = endSwing;
     swinging = true;
     Translation = forwardPosition;
+    SetCollision(true);
   }
    
   private void EndSwing(){
     swinging = false;
     busy = false;
     Translation = wieldedPosition;
+    SetCollision(false);
   }
 }

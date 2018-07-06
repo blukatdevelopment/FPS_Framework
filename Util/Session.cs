@@ -17,8 +17,12 @@ public class Session : Node {
   public Arena arena;
   public NetworkSession netSes;
   public Random random;
-  public Db db;
   public JukeBox jukeBox;
+
+  // Settings
+  public float masterVolume, sfxVolume, musicVolume;
+  public string userName;
+  public float mouseSensitivityX, mouseSensitivityY;
   
 
   public Actor player;
@@ -33,25 +37,47 @@ public class Session : Node {
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    db = Db.Init();
+    InitJukeBox();
+    InitSettings();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
-  
-  public void Quit(){
-    if(Session.session.db != null){
-      Session.session.db.Clear();
-    }
-    GetTree().Quit();  
+
+  public void InitSettings(){
+    GD.Print("InitSettings");
+    SettingsDb db = SettingsDb.Init();
+    masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
+    sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
+    musicVolume = Util.ToFloat(db.SelectSetting("music_volume"));
+    userName = db.SelectSetting("username");
+    mouseSensitivityX = Util.ToFloat(db.SelectSetting("mouse_sensitivity_x"));
+    mouseSensitivityY = Util.ToFloat(db.SelectSetting("mouse_sensitivity_y"));
+    db.Close();
+    Sound.RefreshVolume();
+  }
+
+  public static void SaveSettings(){
+    SettingsDb db = SettingsDb.Init();
+    db.StoreSetting("master_volume", "" + Session.session.masterVolume);
+    db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
+    db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
+    db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
+    db.StoreSetting("username", Session.session.userName);
+    db.Close();
+    Sound.RefreshVolume();
   }
   
-  public void InitJukeBox(){
-    if(jukeBox != null){
+  public void Quit(){
+    GetTree().Quit(); 
+  }
+  
+  public static void InitJukeBox(){
+    if(Session.session.jukeBox != null){
       return;
     }
-    jukeBox = (JukeBox)Instance("res://Scenes/JukeBox.tscn");
-    AddChild(jukeBox);
+    Session.session.jukeBox = new JukeBox();
+    Session.session.AddChild(Session.session.jukeBox);
   }
   
   public static System.Random GetRandom(){

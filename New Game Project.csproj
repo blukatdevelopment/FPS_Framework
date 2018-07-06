@@ -79,6 +79,7 @@
     <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Menus\TextBox.cs" />
     <Compile Include="Menus\InventoryMenu.cs" />
+    <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />
@@ -106,8 +107,8 @@
     <Compile Include="Util\PlayerData.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
-    <Compile Include="Util\Db.cs" />
     <Compile Include="Util\Events\SessionEvent.cs" />
+    <Compile Include="Db\SettingsDb.cs" />
     <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

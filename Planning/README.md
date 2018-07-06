@@ -25,22 +25,13 @@ complexity. This balance must be attended to
 - Menus use default skin.
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
+- Menu system might benefit from some inheritance.
 
 # Completed Milestones
 
 **Version 0.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
-
-# Database Stuff
-This feature branch should establish some CRUD operations with SQLite that can be built
-upon for future data storage needs. This test is merely to prove these libraries work
-before trying to do heavy lifting.
-
-There are only three tasks
-- Create a database with a table (maybe last_played)
-- Store something in it
-- Update that thing.
 
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
