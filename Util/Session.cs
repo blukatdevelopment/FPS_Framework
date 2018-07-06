@@ -54,9 +54,18 @@ public class Session : Node {
     mouseSensitivityY = Util.ToFloat(db.SelectSetting("mouse_sensitivity_y"));
     db.Close();
   }
+
+  public static void SaveSettings(){
+    SettingsDb db = SettingsDb.Init();
+    db.StoreSetting("master_volume", "" + Session.session.masterVolume);
+    db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
+    db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
+    db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
+    db.Close();
+  }
   
   public void Quit(){
-    GetTree().Quit();  
+    GetTree().Quit(); 
   }
   
   public void InitJukeBox(){

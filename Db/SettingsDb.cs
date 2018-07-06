@@ -20,7 +20,6 @@ public class SettingsDb{
         conn = new SqliteConnection("URI=file:" + DefaultFile);
         cmd = conn.CreateCommand();
         conn.Open();
-        PrintSettings();
     }
 
     public void PrintSettings(){
@@ -49,6 +48,7 @@ public class SettingsDb{
         ";
         cmd.CommandText = sql;
         cmd.ExecuteNonQuery();
+        GD.Print("Created tables.");
     }
 
     public void InitSettings(){
@@ -93,13 +93,15 @@ public class SettingsDb{
 
     public static SettingsDb Init(){
         if(System.IO.File.Exists(DefaultFile)){
+            GD.Print(DefaultFile + " already exists. Connecting.");
             return new SettingsDb();
         }
+        GD.Print(DefaultFile + " doesn't exist. Creating.");
         CreateFile(DefaultFile);
         SettingsDb db = new SettingsDb();
         db.CreateTables();
         db.InitSettings();
-        //db.PrintSettings();
+        db.PrintSettings();
         return db;
     }
     

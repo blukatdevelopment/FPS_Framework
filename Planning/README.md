@@ -25,8 +25,6 @@ complexity. This balance must be attended to
 - Menus use default skin.
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
-- Main menu needs a refactor like crazy.
-- Menu system might benefit from some inheritance.
 
 # Completed Milestones
 
@@ -39,6 +37,11 @@ Minimalistic multiplayer arena shooter.
 The settings menu should provide some basic configuration for the player provided initial values on
 first install using its own database file and database handler with related queries. The menu should
 provide some basic options loaded by the Session upon startup.
+
+As with the last feature, this one will come with some badly-needed refactors/fixes.
+- Main menu needs a refactor like crazy.
+- Menu system might benefit from some inheritance.
+- menu control mini factories should return their relevant class.
 
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance

@@ -30,13 +30,24 @@ public class Menu{
     return (Control)buttonInstance;
   }
   
-  public static Control TextBox(string val = ""){
+  public static Control TextBox(string val = "", bool readOnly = true){
     Node textBoxInstance = Session.Instance("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    if(val != ""){
-      TextEdit textBox = (Godot.TextEdit)textBoxInstance;
-      textBox.SetText(val);
-    }
+    
+    TextEdit textBox = (Godot.TextEdit)textBoxInstance;
+    textBox.SetText(val);
+    textBox.Readonly = readOnly;
+  
     return (Control)textBoxInstance;
+  }
+
+  public static Control HSlider(float min, float max, float val, float step){    
+    HSlider slider = new HSlider();
+    slider.MinValue = min;
+    slider.MaxValue = max;
+    slider.Value = val;
+    slider.Step = step;
+    
+    return (Control)slider;
   }
   
   public static Node MenuFactory(Menus menu){
