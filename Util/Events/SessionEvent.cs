@@ -6,8 +6,7 @@ public class SessionEvent {
   public enum Types { 
   	None,		// Default 
   	ActorDied,  // Death of an actor
-  	Pause, 		// Toggling pause
-    ItemDiscarded // Actor dropped an item from inventory.
+  	Pause 		// Toggling pause
   };
   
   public SessionEvent() {
@@ -21,7 +20,6 @@ public class SessionEvent {
   	return se;
   }
 
-  // Used for scoring kills in the arena
   public static SessionEvent ActorDiedEvent(string dead, string killer){
   	SessionEvent se = new SessionEvent();
   	se.type = Types.ActorDied;
@@ -29,14 +27,5 @@ public class SessionEvent {
   	se.args[0] = dead;
   	se.args[1] = killer;
   	return se;
-  }
-
-  // Used for updating UI when online and using DeferredDiscardItem
-  public static SessionEvent ItemDiscardedEvent(string actor){
-    SessionEvent se = new SessionEvent();
-    se.type = Types.ItemDiscarded;
-    se.args = new string[1];
-    se.args[0] = actor;
-    return se;
   }
 }

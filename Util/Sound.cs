@@ -24,7 +24,7 @@ public class Sound {
     string ret = "";
     switch(song){
       case Songs.FloatingHorizons: 
-        ret = "res://Audio/Songs/floating_horizons.ogg";
+        ret = "res://Audio/Songs/floating_horizons.ogg"; 
         break;
     }
     return ret;
@@ -54,20 +54,6 @@ public class Sound {
     }
     return ret;
   }
-
-  public static void RefreshVolume(){
-    float musicVolume = Sound.VolumeMath(Session.session.musicVolume);
-    Session.session.jukeBox.VolumeDb = musicVolume;
-  }
-
-  public static float VolumeMath(float val){
-    val *= Session.session.masterVolume;
-    val *= 100f;
-    float remainder = 100f - val; // The distance from 100%
-    val = 0f - remainder; // volume should be -distance decibals
-    return val;
-  }
-
   
   public static void PlaySong(Songs song){
     if(song == Songs.None){
@@ -76,7 +62,9 @@ public class Sound {
     
     string fileName = SongFile(song);
     AudioStreamOGGVorbis stream = (AudioStreamOGGVorbis)GD.Load(fileName);
-    Session.InitJukeBox();
+    if(Session.session.jukeBox == null){
+      Session.session.InitJukeBox();
+    }
     Session.session.jukeBox.Stream = stream;
     Session.session.jukeBox.Playing = true;
   }

@@ -9,10 +9,7 @@ path="res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh"
 files=[ "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh" ]
 
 source_file="res://Terrain/004FlatRamp.obj"
-source_md5="224f06255ac7eeef14608764823f5bef"
-
 dest_files=[ "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh", "res://.import/004FlatRamp.obj-6a320d48faeab169e19232720e37029a.mesh" ]
-dest_md5="0af3ddc7e5bbdd395948261907f020d0"
 
 [params]
 

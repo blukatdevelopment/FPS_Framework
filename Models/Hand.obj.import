@@ -9,10 +9,7 @@ path="res://.import/Hand.obj-f0a34e37d14f9792035c4e83aee8686b.mesh"
 files=[ "res://.import/Hand.obj-f0a34e37d14f9792035c4e83aee8686b.mesh" ]
 
 source_file="res://Models/Hand.obj"
-source_md5="be57e7f53d8202cdafb24310238e21e4"
-
 dest_files=[ "res://.import/Hand.obj-f0a34e37d14f9792035c4e83aee8686b.mesh", "res://.import/Hand.obj-f0a34e37d14f9792035c4e83aee8686b.mesh" ]
-dest_md5="54e08c7fd440056b7e05221f34a91dfd"
 
 [params]
 

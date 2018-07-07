@@ -9,10 +9,7 @@ path="res://.import/006FullRamp.obj-babc2ad487c45a565890a2d5583d2121.mesh"
 files=[ "res://.import/006FullRamp.obj-babc2ad487c45a565890a2d5583d2121.mesh" ]
 
 source_file="res://Terrain/006FullRamp.obj"
-source_md5="fb9e906733c6cf7b750e55454248b54b"
-
 dest_files=[ "res://.import/006FullRamp.obj-babc2ad487c45a565890a2d5583d2121.mesh", "res://.import/006FullRamp.obj-babc2ad487c45a565890a2d5583d2121.mesh" ]
-dest_md5="f3074a6d219739acae419af4c7e78e0f"
 
 [params]
 

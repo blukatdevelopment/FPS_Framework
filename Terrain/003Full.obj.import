@@ -9,10 +9,7 @@ path="res://.import/003Full.obj-72528020a5d25225f18d565a651e6ec6.mesh"
 files=[ "res://.import/003Full.obj-72528020a5d25225f18d565a651e6ec6.mesh" ]
 
 source_file="res://Terrain/003Full.obj"
-source_md5="8e4b265370104373d5a508f7fcc9547b"
-
 dest_files=[ "res://.import/003Full.obj-72528020a5d25225f18d565a651e6ec6.mesh", "res://.import/003Full.obj-72528020a5d25225f18d565a651e6ec6.mesh" ]
-dest_md5="9670ede53ac55b8e68232827ea05a094"
 
 [params]
 

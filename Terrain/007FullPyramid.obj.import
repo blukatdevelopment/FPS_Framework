@@ -9,10 +9,7 @@ path="res://.import/007FullPyramid.obj-3f515d44a1598e8a0e76eb2a52f43e7e.mesh"
 files=[ "res://.import/007FullPyramid.obj-3f515d44a1598e8a0e76eb2a52f43e7e.mesh" ]
 
 source_file="res://Terrain/007FullPyramid.obj"
-source_md5="f641f1c54efa62eeca214280f7c55525"
-
 dest_files=[ "res://.import/007FullPyramid.obj-3f515d44a1598e8a0e76eb2a52f43e7e.mesh", "res://.import/007FullPyramid.obj-3f515d44a1598e8a0e76eb2a52f43e7e.mesh" ]
-dest_md5="3747531999ce737a07e47f680ff35227"
 
 [params]
 

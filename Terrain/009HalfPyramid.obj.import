@@ -9,10 +9,7 @@ path="res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh"
 files=[ "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh" ]
 
 source_file="res://Terrain/009HalfPyramid.obj"
-source_md5="a8ca06e73bee239c02ced4fbf60993fd"
-
 dest_files=[ "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh", "res://.import/009HalfPyramid.obj-4d8725f545a085feebdcd42ec114688b.mesh" ]
-dest_md5="6a67e64a6c9d41d1a415a626d4ea6e59"
 
 [params]
 

@@ -95,8 +95,7 @@ public class DeviceManager {
     ret.AddRange(KeyEvents(32, 14, InputEvent.Buttons.Space));
     ret.AddRange(KeyEvents(16777237, 15, InputEvent.Buttons.Shift));
     ret.AddRange(KeyEvents(82, 16, InputEvent.Buttons.R));
-    ret.AddRange(KeyEvents(69, 17, InputEvent.Buttons.E));
-
+    
     ret.AddRange(MouseEvents());
     return ret;
   }
