@@ -91,6 +91,7 @@
     <Compile Include="Items\IEquip.cs" />
     <Compile Include="Items\ICollide.cs" />
     <Compile Include="Items\IInteract.cs" />
+    <Compile Include="Items\IConsume.cs" />
     <Compile Include="Items\IWeapon.cs" />
     <Compile Include="Items\MeleeWeapon.cs" />
     <Compile Include="Items\ProjectileWeapon.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Items\HealthPowerUp.cs" />
     <Compile Include="Items\AmmoPowerUp.cs" />
     <Compile Include="Items\ItemData.cs" />
+    <Compile Include="Items\HealthAid.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />

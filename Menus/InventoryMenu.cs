@@ -171,11 +171,30 @@ public override void _Ready(){
   }
 
   public void UseItem(int selected){
-    GD.Print("Used " + selected);
+    if(activeFilter == Item.Categories.Misc  || activeFilter == Item.Categories.Ammo){
+      GD.Print("Nothing to do with these.");
+      return;
+    }
     ItemData dat = itemData[selected];
     Actor player = Session.session.player;
     int playerItemIndex = player.IndexOf(dat.type, dat.name);
-    player.EquipItem(playerItemIndex);
+    switch(activeFilter){
+      case Item.Categories.Weapons:
+        player.EquipItem(playerItemIndex); 
+        break;
+      case Item.Categories.Apparel: 
+        player.EquipItem(playerItemIndex);
+        break;
+      case Item.Categories.Aid:
+        ItemData retrieved = player.RetrieveItem(playerItemIndex);
+        IConsume consumable = Item.FromData(retrieved) as IConsume;
+        if(consumable != null){
+          consumable.Consume(player);
+        }
+        break;
+    }
+
+    
     RefreshInventory();
     RefreshStashItemInfo();
   }

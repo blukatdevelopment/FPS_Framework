@@ -159,8 +159,9 @@ public class Arena : Spatial {
 
   public void SinglePlayerInit(){
     for(int i = 0; i < 10; i++){
-      SpawnItem(Item.Types.AmmoPack, 10);
-      SpawnItem(Item.Types.HealthPack);  
+      //SpawnItem(Item.Types.AmmoPack, 10);
+      //SpawnItem(Item.Types.HealthPack);  
+      SpawnItem(Item.Types.AidHealthPack);  
     }
 
     InitActor(Actor.Brains.Player1, NextWorldId());
@@ -198,8 +199,12 @@ public class Arena : Spatial {
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
     }
-    SpawnItem(Item.Types.HealthPack);
-    SpawnItem(Item.Types.AmmoPack);
+    //SpawnItem(Item.Types.HealthPack);
+    //SpawnItem(Item.Types.AmmoPack);
+    for(int i = 0; i < 10; i++){
+      SpawnItem(Item.Types.AidHealthPack);
+    }
+    
 
     if(Session.IsServer()){
       roundTimeRemaining = RoundDuration;

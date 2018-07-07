@@ -32,7 +32,6 @@ complexity. This balance must be attended to
 **Version 0.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
-
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
@@ -44,7 +43,6 @@ criteria that can be marked complete or ready for review.
 ## Sound engineering
 
 ## Testing
-	All features should be tested thoroughly to diagnose and resolve bugs.
 
 ## Interface Programming
 

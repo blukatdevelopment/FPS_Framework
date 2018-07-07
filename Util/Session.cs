@@ -61,6 +61,7 @@ public class Session : Node {
     SettingsDb db = SettingsDb.Init();
     db.StoreSetting("master_volume", "" + Session.session.masterVolume);
     db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
+    db.StoreSetting("music_volume", "" + Session.session.musicVolume);
     db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
     db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
     db.StoreSetting("username", Session.session.userName);
