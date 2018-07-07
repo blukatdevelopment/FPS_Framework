@@ -9,10 +9,7 @@ path="res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh"
 files=[ "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh" ]
 
 source_file="res://Models/Actor.obj"
-source_md5="4fd308c0ef92fbc10af52c6f72851601"
-
 dest_files=[ "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh", "res://.import/Actor.obj-7c6e3fe4698c8557498be85713eca469.mesh" ]
-dest_md5="b80a64734442b951bee29c7e40870dcb"
 
 [params]
 

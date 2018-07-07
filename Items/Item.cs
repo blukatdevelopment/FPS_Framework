@@ -8,35 +8,24 @@ using System.Collections.Generic;
 using System.Reflection;
 
 
-public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
+public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   public enum Uses{ 
     A, // Primary use (Left Mouse) 
     B, // Secondary Use(Right Mouse)
     C, // Third Use(Middle mouse)
     D, // Fourth Use(R)
-    E, // Fifth Use(E)
+    E,
     F, 
     G 
   };
   
-  public enum Types{ // For mapping to classes in the factory and categories in inventorymenu
+  public enum Types{ // For use in factory
     None,
     Hand,
     Rifle,
     Bullet,
     HealthPack,
-    AmmoPack,
-    Ammo
-  };
-
-
-  public enum Categories { // Inventory categories.
-    None,
-    Weapons,
-    Apparel,
-    Aid,
-    Misc,
-    Ammo
+    AmmoPack
   };
   
   
@@ -44,21 +33,21 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public string name;
   public string description;
   public int quantity;
-  public int weight;
+  public int quantityMax;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
-  protected Area area;
 
-  public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
+  public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.quantity = quantity;
+    this.quantityMax = quantityMax;
     this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
-    speaker = new Speaker();
+    speaker = Speaker.Instance();
     AddChild(speaker);
   }
   
@@ -70,64 +59,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     if(Session.IsServer()){
       SyncPosition();
     }
-  }
-
-  public virtual string GetInteractionText(Item.Uses interaction = Item.Uses.A){
-    string ret = "Pick up " + name + ".";
-    switch(interaction){
-      case Item.Uses.A:
-        ret = "Pick up " + name + ".";
-        break;
-    }
-    return ret;
-  }
-
-  public virtual void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
-    IHasItem acquirer = interactor as IHasItem;
-    if(acquirer != null){
-      PickUp(acquirer);
-    }
-  }
-
-  // client -> client
-  public void PickUp(IHasItem acquirer){
-    if(!Session.NetActive()){
-      int overflow = acquirer.ReceiveItem(this);
-      if(overflow == 0){
-        this.QueueFree();
-      }
-      quantity = overflow;
-      return;
-    }
-    Node acquirerNode = acquirer as Node;
-    if(acquirerNode == null){
-      GD.Print("Null acquirerNode");
-      return;
-    }
-    string acquirerPath = acquirerNode.GetPath().ToString();
-    DeferredPickup(acquirerPath);
-    Rpc(nameof(DeferredPickup), acquirerPath);
-  }
-
-  [Remote]
-  public void DeferredPickup(string acquirerPath){
-    GD.Print("DeferredPickup");
-    if(acquirerPath == ""){
-      GD.Print("acquirerPath is null");
-    }
-    NodePath path = new NodePath(acquirerPath);
-    Node acquirerNode = Session.session.GetNode(path);
-    IHasItem acquirer = acquirerNode as IHasItem;
-    
-    if(acquirer == null){
-      GD.Print("No acquirer found!");
-    }
-    
-    int overflow = acquirer.ReceiveItem(this);
-    if(overflow == 0){
-      this.QueueFree();
-    }
-
   }
 
   public void SyncPosition(){
@@ -145,11 +76,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   void InitArea(){
-    if(area != null){
-      return;
-    }
     List<CollisionShape> shapes = GetCollisionShapes();
-    this.area = new Area();
+    Area area = new Area();
     CollisionShape areaShape = new CollisionShape();
     area.AddChild(areaShape);
     object[] areaShapeOwners = area.GetShapeOwners();
@@ -161,64 +89,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
     area.Connect("body_entered", this, nameof(OnCollide));
     AddChild(area);
-  }
-
-  public virtual ItemData GetData(){
-    return ItemGetData();
-    
-  }
-
-  public virtual void ReadData(ItemData dat){
-    ItemReadData(dat);
-  }
-
-  // Base Save/Load of ItemData to be used by subclasses
-  public ItemData ItemGetData(){
-    ItemData dat = new ItemData();
-
-    // NON-LIST DATA
-    dat.name = name;
-    dat.description = description;
-    dat.quantity = quantity;
-    dat.type = this.type;
-    dat.weight = this.weight;
-
-    // FLOATS
-    Vector3 position = GetTranslation();
-    dat.floats.Add(position.x); 
-    dat.floats.Add(position.y);
-    dat.floats.Add(position.z);
-
-    // STRINGS
-    dat.strings.Add(name);
-    dat.strings.Add(description);
-
-    // INTS
-    dat.ints.Add(quantity);
-    dat.ints.Add(weight);
-
-    return dat;
-  }
-
-  // Should remove every element added by ItemReadData
-  public void ItemReadData(ItemData dat){
-    // FLOATS
-    float x = dat.floats[0];
-    float y = dat.floats[1];
-    float z = dat.floats[2];
-
-    SetTranslation( new Vector3(x, y, z));
-    dat.floats.RemoveRange(0, 3);
-
-    // STRINGS
-    name = dat.strings[0];
-    description = dat.strings[1];
-    dat.strings.RemoveRange(0, 2);
-
-    // INTS
-    quantity = dat.ints[0];
-    weight = dat.ints[1];
-    dat.ints.RemoveRange(0, 2);
   }
 
   public void OnCollide(object body){
@@ -260,21 +130,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return shapes;
   }
   
-  /* Disable or enable collisions. Particularly useful for held items. */
   public void SetCollision(bool val){
     object[] owners = GetShapeOwners();
     collisionDisabled = !val;
-    if(area == null){
-      InitArea();
-    }
-    foreach(object owner in area.GetShapeOwners()){
-      int ownerInt = (int)owner;
-      CollisionShape cs = (CollisionShape)area.ShapeOwnerGetOwner(ownerInt);
-      if(cs != null){
-        cs.Disabled = !val;
-      }
-    }
-
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
@@ -306,17 +164,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual void DoOnCollide(object body){}
   
-  /* Convert ItemData to Item */
-  public static Item FromData(ItemData data){
-    Item item = Factory(data.type, data.name);
-    if(item != null){
-      item.ReadData(data);
-    }
-    return item;
-  }
-
   /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type, string name = "", string overrideName = "", int quantity = 1){
+  public static Item Factory(Types type, string name = ""){
     Item ret = null;
     if(type == Types.None){
       return null;
@@ -331,7 +180,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         break;
       case Types.Rifle: 
         ret.BaseInit("Rifle", "There are many like it, but this one is yours.");
-        ret.weight = 8;
         break;
       case Types.Bullet:
         ret.BaseInit("Bullet", "Comes out one end of the rifle. Be sure to know which.");
@@ -342,20 +190,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.AmmoPack:
         ret.BaseInit("AmmoPack", "Food for your rifle.");
         break;
-      case Types.Ammo:
-        ret.BaseInit("Bullet", "A casing full of powder capped with a bullet. No further info available.");
-        break;
     }
-    ret.type = type;
     if(name != ""){
       Node retNode = ret as Node;
       retNode.Name = name;
     }
-    if(overrideName != ""){
-      ret.name = overrideName;
-    }
-    ret.quantity = quantity;
-
     return ret;
   }
   
@@ -368,75 +207,17 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
       case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
       case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
-      case Types.Ammo: ret = "res://Scenes/Prefabs/Items/Ammo.tscn"; break;
     }
     
     return ret;
   }
   
-  public void ItemBaseEquip(object wielder){
-    this.wielder = wielder;
-    SetCollision(false);
-  }
-
-  public void ItemBaseUnequip(){
-    this.wielder = null;
-    SetCollision(true);
-  }
-
   public virtual void Equip(object wielder){
-    ItemBaseEquip(wielder);
+    this.wielder = wielder;
   }
   
   public virtual void Unequip(){
-    ItemBaseUnequip();
-  }
-
-  public static Categories TypeCategory(Types type){
-    switch(type){
-      case Types.Hand:
-        return Categories.Weapons;
-        break;
-      case Types.Rifle:
-        return Categories.Weapons;
-        break;
-      case Types.Bullet:
-        return Categories.None;
-        break;
-      case Types.HealthPack:  // Powerups are not aid because they are used on contact
-        return Categories.None;
-        break;
-      case Types.AmmoPack:
-        return Categories.None;
-        break;
-      case Types.Ammo:
-        return Categories.Ammo;
-        break;
-    }
-    return Categories.None;
-  }
-
-  public static List<ItemData> FilterByCategory(List<ItemData> unsorted, Categories category){
-    List<ItemData> ret = new List<ItemData>();
-    foreach(ItemData item in unsorted){
-      if(TypeCategory(item.type) == category){
-        ret.Add(item);
-      }
-    }
-
-    return ret;
-  }
-
-  public int GetWeight(){
-    return weight * quantity;
-  }
-
-  public static int TotalWeight(List<ItemData> items){
-    int total = 0;
-    foreach(ItemData item in items){
-      total += item.GetWeight();
-    }
-    return total;
+    this.wielder = null;
   }
 
 }

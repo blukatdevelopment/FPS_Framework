@@ -9,10 +9,7 @@ path="res://.import/005HalfRamp.obj-793c9c923841b866c31ab4b3a3616f84.mesh"
 files=[ "res://.import/005HalfRamp.obj-793c9c923841b866c31ab4b3a3616f84.mesh" ]
 
 source_file="res://Terrain/005HalfRamp.obj"
-source_md5="03f91fe271763a6745193c38916443dd"
-
 dest_files=[ "res://.import/005HalfRamp.obj-793c9c923841b866c31ab4b3a3616f84.mesh", "res://.import/005HalfRamp.obj-793c9c923841b866c31ab4b3a3616f84.mesh" ]
-dest_md5="652d8d898c0017c9f7dd368f605a95dd"
 
 [params]
 

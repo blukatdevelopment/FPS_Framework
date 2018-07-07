@@ -9,10 +9,7 @@ path="res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh"
 files=[ "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh" ]
 
 source_file="res://Terrain/008Stairs.obj"
-source_md5="c48a3a96523f383a223b7d37bb5e1bd5"
-
 dest_files=[ "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh", "res://.import/008Stairs.obj-a00faa45caf927a9b672711c6da38124.mesh" ]
-dest_md5="88fe5af98e63986efd5dfe240b44794e"
 
 [params]
 

@@ -9,10 +9,7 @@ path="res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh"
 files=[ "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh" ]
 
 source_file="res://Models/Bullet.obj"
-source_md5="f28f89d4c978de041c497b4d2f202286"
-
 dest_files=[ "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh", "res://.import/Bullet.obj-fa088d7d313762e5c32e51043e9895bc.mesh" ]
-dest_md5="4c1af67dc8f07ee5c5ef2d9c75560fb8"
 
 [params]
 

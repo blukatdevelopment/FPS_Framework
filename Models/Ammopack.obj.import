@@ -9,10 +9,7 @@ path="res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh"
 files=[ "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh" ]
 
 source_file="res://Models/Ammopack.obj"
-source_md5="7658c26dd15a85b100a5e4d922cd5a84"
-
 dest_files=[ "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh", "res://.import/Ammopack.obj-1e14922aecb205016a471c53e25cc36c.mesh" ]
-dest_md5="b45eba38e679cbd60f9e4bf73ee9fab8"
 
 [params]
 

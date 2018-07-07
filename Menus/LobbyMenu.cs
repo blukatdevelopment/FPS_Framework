@@ -129,7 +129,7 @@ public class LobbyMenu : Container
     }
     
     public void ReturnToMainMenu(){
-      Session.ChangeMenu(Menu.Menus.Main);
+      Session.session.ChangeMenu(Menu.Menus.Main);
     }
     
     public void Send(){
@@ -302,7 +302,7 @@ public class LobbyMenu : Container
 
     public void StartGame(){
       ResetReady();
-      Session.MultiPlayerGame();
+      Session.session.MultiPlayerGame();
     }
 
     void StopCountDown(){
