@@ -15,15 +15,9 @@ public class Speaker : AudioStreamPlayer3D{
   
   public void PlayEffect(Sound.Effects effect){
     this.Stop();
+    MaxDb = Sound.VolumeMath(Session.session.sfxVolume);
     LoadEffect(effect);
     this.Play();
-  }
-  
-  /* Oh look, it's a pseudo-constructor. */
-  public static Speaker Instance(){
-    Speaker ret = (Speaker)Session.Instance("res://Scenes/Speaker.tscn");
-    
-    return ret;
   }
   
 }

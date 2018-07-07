@@ -50,7 +50,16 @@
       <HintPath>$(ProjectDir)/.mono/assemblies/Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Data.SQLite" Condition=" '$(Configuration)' == 'Tools' ">
+      <HintPath>$(ProjectDir)/.mono/assemblies/System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite" Condition=" '$(Configuration)' == 'Tools' ">
+      <HintPath>$(ProjectDir)/.mono/assemblies/Mono.Data.Sqlite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
@@ -69,6 +78,8 @@
     <Compile Include="Menus\HUDMenu.cs" />
     <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Menus\TextBox.cs" />
+    <Compile Include="Menus\InventoryMenu.cs" />
+    <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />
@@ -79,6 +90,7 @@
     <Compile Include="Items\IHasInfo.cs" />
     <Compile Include="Items\IEquip.cs" />
     <Compile Include="Items\ICollide.cs" />
+    <Compile Include="Items\IInteract.cs" />
     <Compile Include="Items\IWeapon.cs" />
     <Compile Include="Items\MeleeWeapon.cs" />
     <Compile Include="Items\ProjectileWeapon.cs" />
@@ -86,6 +98,7 @@
     <Compile Include="Items\PowerUp.cs" />
     <Compile Include="Items\HealthPowerUp.cs" />
     <Compile Include="Items\AmmoPowerUp.cs" />
+    <Compile Include="Items\ItemData.cs" />
     <Compile Include="Util\Arena.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
@@ -95,6 +108,8 @@
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
     <Compile Include="Util\Events\SessionEvent.cs" />
+    <Compile Include="Db\SettingsDb.cs" />
+    <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

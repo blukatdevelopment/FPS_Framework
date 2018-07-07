@@ -54,7 +54,6 @@ public class ActorInputHandler : Brain {
     }
     else{
       HandleMenuInput(events);
-      
     }
     if(Session.NetActive()){
       NetUpdate();
@@ -73,6 +72,7 @@ public class ActorInputHandler : Brain {
   private void HandleMenuInput(List<InputEvent> events){
     for(int i = 0; i < events.Count; i++){
       if(events[i].button == InputEvent.Buttons.Esc){ HandleButton(events[i]); }
+      if(events[i].button == InputEvent.Buttons.Tab){ HandleButton(events[i]); }
     }
   }
   
@@ -110,21 +110,24 @@ public class ActorInputHandler : Brain {
       case InputEvent.Buttons.Esc: 
         Session.Event(SessionEvent.PauseEvent());
         break;
-      case InputEvent.Buttons.Tab: actor.SwitchItem(); break;
+      case InputEvent.Buttons.Tab: actor.ToggleInventory(); break;
       case InputEvent.Buttons.Space: actor.Jump(); break;
       case InputEvent.Buttons.Shift: actor.SetSprint(true); break;
       case InputEvent.Buttons.M1: actor.Use(Item.Uses.A); break;
       case InputEvent.Buttons.M2: actor.Use(Item.Uses.B); break;
       case InputEvent.Buttons.M3: actor.Use(Item.Uses.C); break;
       case InputEvent.Buttons.R: actor.Use(Item.Uses.D); break;
+      case InputEvent.Buttons.E: actor.InitiateInteraction(); break;
     }
   }
 
 
   private void HandleAxis(InputEvent evt){
+    float wx = Session.session.mouseSensitivityX;
+    float wy = Session.session.mouseSensitivityY;
     if(evt.axis == InputEvent.Axes.Mouse){
-      actor.Turn(evt.x, evt.y);
+      actor.Turn(evt.x * wx, evt.y * wy);
     }
-    actor.Turn(evt.x, evt.y);
+    actor.Turn(evt.x * wx, evt.y * wy);
   }
 }

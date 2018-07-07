@@ -6,8 +6,7 @@
 using Godot;
 using System;
 
-public class MultiplayerMenu : Container
-{
+public class MultiplayerMenu : Container {
     Godot.Button mainMenuButton;
     
     Godot.Button selectionButton;
@@ -147,7 +146,7 @@ public class MultiplayerMenu : Container
       netSes.isServer = false;
       netSes.initName = nameBox.GetText();
 
-      Session.session.ChangeMenu(Menu.Menus.Lobby);
+      Session.ChangeMenu(Menu.Menus.Lobby);
     }
     
     
@@ -161,13 +160,13 @@ public class MultiplayerMenu : Container
       netSes.isServer = true;
       netSes.initPort = portBox.GetText();
 
-      Session.session.ChangeMenu(Menu.Menus.Lobby);
+      Session.ChangeMenu(Menu.Menus.Lobby);
     }
 
 
     
     public void MainMenu(){
-      Session.session.ChangeMenu(Menu.Menus.Main);
+      Session.ChangeMenu(Menu.Menus.Main);
     }
     
     

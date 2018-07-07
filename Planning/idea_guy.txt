@@ -53,18 +53,12 @@ Complete quests created procedurally according to the conditions and
 wealth(for rewards) of the NPCs that offer them.
 
 
-
-
-
 **********************************************************************
         Dialogue System
 **********************************************************************
 Traverse dialogue trees to interact with NPCs using speech.
 
-**********************************************
-        Trade
-**********************************************
-Enter trade menu in which player and NPC can exchange goods.
+
 
 
 **********************************************
@@ -207,6 +201,48 @@ One or both players use gamepads to play on the same screen.
 **********************************************
 One or more players use gamepads and each gets their own dedicated display.
 
+
+
+**********************************************************************
+        Very near-scope features
+**********************************************************************
+Some features could be implemented tomorrow in under 10 hours.
+
+**********************************************
+        Containers
+**********************************************
+Item transfer menu allows player to transfer
+items between their inventory and containers
+such as chests and corpses that have their own
+inventories.
+
+
+**********************************************
+        Trading
+**********************************************
+The trade menu provides fixed buy/sell prices to
+exchange items between two Actor's inventories.
+
+**********************************************
+        Speech
+**********************************************
+Json files should be parsed into speech trees
+consisting of speech nodes. A speech node should consist
+of a list of body texts read to player through clicking, 
+a list of options. Each option has a list of properties
+used in rendering it as well as a list of actions performed
+when said option is selected.
+
+The other side is a menu in order to display a loaded
+speech node and perform its actions when an option is selected.
+Actions:
+go <Speech node id>
+give <item> <quantity>
+set-property <speech id> <option id> <property> <value>
+Properties:
+visible: <bool> // If false, option does not appear.
+evaluate-method: <method name> // method that decides whether effects take place.
+action-evaluate: <action> // Corresponding actions for this option only apply when evaluation method returns true.
 
 
 **********************************************************************

@@ -5,7 +5,7 @@ using Godot;
 
 public class AmmoPowerUp : PowerUp {
   public int ammo = 50;
-  public string ammoType = "bullet";
+  public string ammoType = "Bullet";
   
   public override void ApplyPowerUp(object obj){
     IHasAmmo receiver = obj as IHasAmmo;
