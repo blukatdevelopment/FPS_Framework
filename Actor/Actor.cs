@@ -99,7 +99,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem;
   }
   
-  
 
   void InitInventory(){
     inventory = new Inventory();
@@ -190,6 +189,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return inventory.GetItem(index).quantity;
   }
   
+
   /* Return up to max ammo, removing that ammo from inventory. */
   public int RequestAmmo(string ammoType, int max){
     int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
@@ -538,7 +538,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
   }
 
+  [Remote]
+  public void RemoteReceiveDamage(string json){
+    Damage dmg = JsonConvert.DeserializeObject<Damage>(json);
+    if(dmg != null){
+      ReceiveDamage(dmg);
+    }
+  }
+  
   public void ReceiveDamage(Damage damage){
+    GD.Print("Received damage " + damage.health);
     if(health <= 0){
       return;
     }
@@ -645,6 +654,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   public int IndexOf(Item.Types type, string name){
     return inventory.IndexOf(type, name);
+  }
+
+  public ItemData RetrieveItem(int index){
+    return inventory.RetrieveItem(index); 
   }
 
   [Remote]

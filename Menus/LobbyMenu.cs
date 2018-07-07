@@ -52,7 +52,7 @@ public class LobbyMenu : Container
       messageBox.Readonly = true;
       AddChild(messageBox);
       
-      composeBox = (Godot.TextEdit)Menu.TextBox();
+      composeBox = (Godot.TextEdit)Menu.TextBox("", false);
       AddChild(composeBox);
       
       sendButton = (Godot.Button)Menu.Button("Send", Send);

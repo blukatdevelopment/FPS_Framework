@@ -26,7 +26,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     Bullet,
     HealthPack,
     AmmoPack,
-    Ammo
+    Ammo,
+    AidHealthPack
   };
 
 
@@ -345,6 +346,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.Ammo:
         ret.BaseInit("Bullet", "A casing full of powder capped with a bullet. No further info available.");
         break;
+      case Types.AidHealthPack:
+        ret.BaseInit("HealthPack", "Heals what ails you.");
+        break;
     }
     ret.type = type;
     if(name != ""){
@@ -369,6 +373,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
       case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
       case Types.Ammo: ret = "res://Scenes/Prefabs/Items/Ammo.tscn"; break;
+      case Types.AidHealthPack: ret = "res://Scenes/Prefabs/Items/AidHealthPack.tscn"; break;
     }
     
     return ret;
@@ -411,6 +416,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         break;
       case Types.Ammo:
         return Categories.Ammo;
+        break;
+      case Types.AidHealthPack:
+        return Categories.Aid;
         break;
     }
     return Categories.None;
