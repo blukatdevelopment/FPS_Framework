@@ -39,6 +39,18 @@ Port in the kingdom card game as a multiplayer minigame.
 **********************************************************************
 Craft new items from existing items using blueprints.
 
+**********************************************
+        Crafting menu
+**********************************************
+A menu would either require viwing recipes, or allow freeform 
+combination of materials as in minecraft.
+
+**********************************************
+        Recipe config
+**********************************************
+Recipes could either be stored in an sqlite database or in a
+JSON file.
+
 
 **********************************************************************
         Building
@@ -118,6 +130,66 @@ Cities should act as entities guided by policy and individual members.
 Cities build buildings, establish trade routes, and can participate in
 wars.
 
+**********************************************************************
+        Humanoid actor animations
+**********************************************************************
+The player and other humanoid NPCs would need
+a set of animations.
+
+***********************
+        Aim
+***********************
+Actor models should bend at the spine programmatically
+
+***********************
+        Walking
+***********************
+Forward/backward/side/side animations
+
+***********************
+        Running
+***********************
+Forward/backward/side/side animations
+
+***********************
+        Crouch walking
+***********************
+Forward/backward/side/side animations
+
+***********************
+        Transition from crouch walking to crouch running
+***********************
+Forward/backward/side/side animations
+
+***********************
+        Jumping
+***********************
+Jump animation.
+
+***********************
+        One hand animations
+***********************
+Punch/slash/stab/hold
+
+***********************
+        Two hand animations
+***********************
+Swing/hold
+
+**********************************************************************
+        Feral actor animations
+**********************************************************************
+
+***********************
+        Walking
+***********************
+Forward/backward animations
+
+***********************
+        Actions
+***********************
+Bite/Bark/lick animations
+
 
 **********************************************************************
         Vehicles
@@ -151,7 +223,7 @@ Quick-maneuvering aircraft made for bombing runs and dog fights.
         Real-Time Tactics
 **********************************************************************
 RTT gameplay entails battlefields with humans and AIs issueing orders to
-competing armies.  
+their own armies.  
 
 **********************************************
         Squads
@@ -181,25 +253,30 @@ not attack teammates.
 **********************************************
         Horde Mode
 **********************************************
-Human players fight against incoming waves of enemy NPCs that grow more
+Defenders fight against incoming waves of enemy NPCs that grow more
 powerful and numerous with each subsequent wave.
 
 
 **********************************************************************
         Local co-op
 **********************************************************************
-Non-networked, non-lan means of sharing one computer with multiple players
-much like a console video games.
+Sharing the same machine to play together.
+
+**********************************************
+        Dual instance online multiplayer
+**********************************************
+Figure out how to share focus between two or more windows, probably by associating one
+with keyboard/mouse and the others with gamepads.
 
 **********************************************
         Splitscreen multiplayer
 **********************************************
-One or both players use gamepads to play on the same screen.
+One or both players use gamepads to play on the same game instance.
 
 **********************************************
         Dual Screen multiplayer
 **********************************************
-One or more players use gamepads and each gets their own dedicated display.
+Utilize multiple displays for split screen
 
 
 
@@ -260,14 +337,6 @@ be tailed and grepped for a better debugging experience.
 Philosophy
 ********************************************************************************
 The following section is mostly empty rhetoric about a non-existant finished product. 
-
-
-Name: Manafest
-The name is half-way between "manifest" and "mana". However, it sort of sounds like
-some sort of mage convention. Mana-fest could easily describe such a thing.
-
-
-
 
 ** Pillars of gameplay **
 
