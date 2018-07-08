@@ -64,6 +64,10 @@ public class Menu{
         ret = new MainMenu();
         ret.Name = "Main"; 
         break;
+      case Menus.Singleplayer: 
+        ret = new SingleplayerMenu(); 
+        ret.Name = "Singleplayer";
+        break;
       case Menus.Multiplayer: 
         ret = new MultiplayerMenu(); 
         ret.Name = "Multiplayer";

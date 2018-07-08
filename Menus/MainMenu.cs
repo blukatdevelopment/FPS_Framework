@@ -27,7 +27,7 @@ public class MainMenu : Container, IMenu {
     
 
     void InitControls(){
-      soloButton = Menu.Button(text : "Single Player", onClick : SinglePlayerGame);
+      soloButton = Menu.Button(text : "Solo", onClick : SinglePlayerGame);
       AddChild(soloButton);
       multiplayerButton = Menu.Button(text : "Multiplayer", onClick : Multiplayer);
       AddChild(multiplayerButton);
@@ -52,7 +52,7 @@ public class MainMenu : Container, IMenu {
     }
     
     public void SinglePlayerGame(){
-      Session.SinglePlayerGame();
+      Session.ChangeMenu(Menu.Menus.Singleplayer);
     }
     
     public void Multiplayer(){

@@ -364,7 +364,7 @@ public class LobbyMenu : Container, IMenu {
 
   public void StartGame(){
     ResetReady();
-    Session.MultiPlayerGame();
+    Session.MultiplayerArena();
   }
 
   void StopCountDown(){

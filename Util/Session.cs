@@ -146,7 +146,7 @@ public class Session : Node {
     Session.ClearGame();
   }
   
-  public static void SinglePlayerGame(){
+  public static void SinglePlayerArena(){
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
     Session ses = Session.session;
@@ -157,7 +157,7 @@ public class Session : Node {
     
   }
 
-  public static void MultiPlayerGame(){
+  public static void MultiplayerArena(){
     Session ses = Session.session;
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
