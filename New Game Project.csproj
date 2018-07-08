@@ -104,6 +104,7 @@
     <Compile Include="Items\ItemData.cs" />
     <Compile Include="Items\HealthAid.cs" />
     <Compile Include="Util\Arena.cs" />
+    <Compile Include="Util\ArenaSettings.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />

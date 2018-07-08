@@ -1,5 +1,5 @@
 /*
-  This pseudo-singleton is a dumping place for session-specific data and methods.
+  This pseudo-singleton is the focal point for the active session's state.
   The Session should be the root of the scene in the game. If it's null, things simply
   won't work.
 
@@ -20,6 +20,7 @@ public class Session : Node {
   public JukeBox jukeBox;
 
   // Settings
+  public ArenaSettings arenaSettings; // Set up just before Arena game
   public float masterVolume, sfxVolume, musicVolume;
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;

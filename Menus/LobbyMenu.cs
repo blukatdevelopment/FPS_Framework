@@ -11,6 +11,9 @@ public class LobbyMenu : Container, IMenu {
   Godot.Button mainMenuButton;
   Godot.TextEdit playersBox;
   Godot.Button readyButton;
+
+  // Server stuff
+  IMenu arenaConfig;
   
 
   private bool countDownActive = false;
@@ -110,6 +113,10 @@ public class LobbyMenu : Container, IMenu {
     playersBox = (Godot.TextEdit)Menu.TextBox("");
     playersBox.Readonly = true;
     AddChild(playersBox);
+
+    Node arenaConfigNode = Menu.SubMenuFactory(Menu.SubMenus.ArenaConfig);
+    AddChild(arenaConfigNode);
+    arenaConfig = arenaConfigNode as IMenu;
   }
 
   void InitNetwork(){
@@ -174,8 +181,10 @@ public class LobbyMenu : Container, IMenu {
     float hu = height/10;
     
     Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
-    Menu.ScaleControl(messageBox, 6 * wu, 8 * hu, 3 * wu, 0);
+    Menu.ScaleControl(messageBox, 6 * wu, hu, 3 * wu, 0);
     Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
+
+    arenaConfig.Init(2 * wu, hu, width, height);
   }
   
   public void ReturnToMainMenu(){

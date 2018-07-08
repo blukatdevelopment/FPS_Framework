@@ -3,15 +3,22 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{
+  public enum Menus{ // Parented by Session.session
     None, 
-    Main, 
+    Main,
+    Singleplayer,
     Multiplayer, 
     Settings,
     Lobby, 
     Pause, 
     HUD, 
-    Inventory};
+    Inventory
+  };
+
+  public enum SubMenus{ // Parented by menu
+    None,
+    ArenaConfig
+  }
   
   public static Button Button(string text = "", Action onClick = null){
     Button button = new Button();
@@ -78,6 +85,20 @@ public class Menu{
     IMenu menuInstance = ret as IMenu;
     if(menuInstance != null){
       menuInstance.Init(0, 0, 0, 0); // Assuiming these are not subMenus
+    }
+    return ret;
+  }
+
+  public static Node SubMenuFactory(SubMenus menu){
+    Node ret = null;
+    switch(menu){
+      case SubMenus.None: 
+        return null;
+        break;
+      case SubMenus.ArenaConfig:
+        ret = new ArenaConfigMenu();
+        ret.Name = "ArenaConfig";
+        break;
     }
     return ret;
   }
