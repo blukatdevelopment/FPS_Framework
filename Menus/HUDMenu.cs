@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class HUDMenu : Container{
+public class HUDMenu : Container, IMenu{
 
   public float delay = 0.0f;
 
@@ -9,10 +9,6 @@ public class HUDMenu : Container{
   Godot.TextEdit itemBox;
   Godot.TextEdit objectiveBox;
   Godot.TextEdit interactionBox;
-
-  public override void _Ready(){
-      
-  }
   
   public override void _Process(float delta){
     delay += delta;
@@ -20,6 +16,23 @@ public class HUDMenu : Container{
       delay -= 0.033f;
       Update();
     }
+  }
+
+  public void Init(float minX, float minY, float maxX, float maxY){
+    InitControls();
+    ScaleControls();
+  }
+  
+  public void Resize(float minX, float minY, float maxX, float maxY){
+
+  }
+
+  public bool IsSubMenu(){
+    return false;
+  }
+
+  public void Clear(){
+    this.QueueFree();
   }
 
   public void Update(){
@@ -52,7 +65,8 @@ public class HUDMenu : Container{
 
   }
 
-  public void Init(){
+  void InitControls(){
+
     healthBox = (Godot.TextEdit)Menu.TextBox("health");
     healthBox.Readonly = true;
     AddChild(healthBox);
@@ -68,8 +82,6 @@ public class HUDMenu : Container{
     interactionBox = (Godot.TextEdit)Menu.TextBox("Interaction text");
     interactionBox.Readonly = true;
     AddChild(interactionBox);
-    
-    ScaleControls();
   }
 
   public void ScaleControls(){

@@ -74,6 +74,7 @@
     <Compile Include="Menus\LobbyMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\Menu.cs" />
+    <Compile Include="Menus\IMenu.cs" />
     <Compile Include="Menus\MultiplayerMenu.cs" />
     <Compile Include="Menus\HUDMenu.cs" />
     <Compile Include="Menus\PauseMenu.cs" />

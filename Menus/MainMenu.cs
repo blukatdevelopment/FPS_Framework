@@ -1,19 +1,30 @@
 using Godot;
 using System;
 
-public class MainMenu : Container {
+public class MainMenu : Container, IMenu {
     
     public Godot.Button soloButton;
     public Godot.Button multiplayerButton;
     public Godot.Button settingsButton;
     public Godot.Button quitButton;
 
-    
-    
-    public void Init(){
+    public void Init(float minX, float minY, float maxX, float maxY){
       InitControls();
       ScaleControls();
     }
+    
+    public void Resize(float minX, float minY, float maxX, float maxY){
+
+    }
+
+    public bool IsSubMenu(){
+      return false;
+    }
+
+    public void Clear(){
+      this.QueueFree();
+    }
+    
 
     void InitControls(){
       soloButton = Menu.Button(text : "Single Player", onClick : SinglePlayerGame);

@@ -45,74 +45,41 @@ public class Menu{
         Sound.PauseSong();
         return null; 
         break;
-      case Menus.HUD: ret = NewHUDMenu(); break;
-      case Menus.Pause: ret = NewPauseMenu(); break;
-      case Menus.Main: ret = NewMainMenu(); break;
-      case Menus.Multiplayer: ret = NewMultiplayerMenu(); break;
-      case Menus.Lobby: ret = NewLobbyMenu(); break;
-      case Menus.Inventory: ret = NewInventoryMenu(); break;
-      case Menus.Settings: ret = NewSettingsMenu(); break;
+      case Menus.HUD: 
+        ret = new HUDMenu(); 
+        ret.Name = "Pause";
+        break;
+      case Menus.Pause: 
+        ret = new PauseMenu();
+        ret.Name = "Pause"; 
+      break;
+      case Menus.Main: 
+        ret = new MainMenu();
+        ret.Name = "Main"; 
+        break;
+      case Menus.Multiplayer: 
+        ret = new MultiplayerMenu(); 
+        ret.Name = "Multiplayer";
+        break;
+      case Menus.Lobby: 
+        ret = new LobbyMenu(); 
+        ret.Name = "Lobby";
+        break;
+      case Menus.Inventory: 
+        ret = new InventoryMenu(); 
+        ret.Name = "Inventory";
+        break;
+      case Menus.Settings: 
+        ret = new SettingsMenu(); 
+        ret.Name = "Settings";
+        break;
+    }
+    Session.session.AddChild(ret);
+    IMenu menuInstance = ret as IMenu;
+    if(menuInstance != null){
+      menuInstance.Init(0, 0, 0, 0); // Assuiming these are not subMenus
     }
     return ret;
-  }
-  
-
-  public static Node NewMainMenu(){
-    Node menuInstance = new MainMenu();
-    MainMenu menu = (MainMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node NewMultiplayerMenu(){
-    Node menuInstance = new MultiplayerMenu();
-    MultiplayerMenu menu = (MultiplayerMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node NewLobbyMenu(){
-    Node menuInstance = new LobbyMenu();
-    LobbyMenu menu = (LobbyMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node NewPauseMenu(){
-    Node menuInstance = new PauseMenu();
-    PauseMenu menu = (PauseMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node NewHUDMenu(){
-    Node menuInstance = new HUDMenu();
-    HUDMenu menu = (HUDMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-
-  public static Node NewInventoryMenu(){
-    Node menuInstance = new InventoryMenu();
-    menuInstance.Name = "InventoryMenu";
-    InventoryMenu menu = (InventoryMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance; 
-  }
-
-  public static Node NewSettingsMenu(){
-    Node menuInstance = new SettingsMenu();
-    menuInstance.Name = "SettingsMenu";
-    SettingsMenu menu = (SettingsMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;  
   }
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){

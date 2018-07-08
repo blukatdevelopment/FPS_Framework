@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public class SettingsMenu : Container {
+public class SettingsMenu : Container, IMenu {
     Godot.Button mainMenuButton;
     Godot.Button revertButton;
     Godot.Button saveButton;
@@ -20,10 +20,24 @@ public class SettingsMenu : Container {
 
     Godot.TextEdit userNameBox;
 
-    public void Init(){
+    public void Init(float minX, float minY, float maxX, float maxY){
       InitControls();
       ScaleControls();
     }
+    
+    public void Resize(float minX, float minY, float maxX, float maxY){
+
+    }
+
+    public bool IsSubMenu(){
+      return false;
+    }
+
+    public void Clear(){
+      this.QueueFree();
+    }
+
+
 
     public void InitControls(){
       mainMenuButton = Menu.Button("Main Menu", MainMenu);

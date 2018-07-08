@@ -5,89 +5,96 @@ using Godot;
 using System.Collections.Generic;
 using System;
 
-public class InventoryMenu : Container {
+public class InventoryMenu : Container, IMenu {
 
-public Godot.Button closeButton;
-public Godot.ItemList itemList;
-public Godot.TextEdit itemInfo;
-public Godot.Button useButton;
-public Godot.Button dropButton;
-public Godot.Button stashButton;
-public Godot.TextEdit weightInfo;
+  public Godot.Button closeButton;
+  public Godot.ItemList itemList;
+  public Godot.TextEdit itemInfo;
+  public Godot.Button useButton;
+  public Godot.Button dropButton;
+  public Godot.Button stashButton;
+  public Godot.TextEdit weightInfo;
 
-// Category buttons.
-public Godot.Button weaponsButton;
-public Godot.Button apparelButton;
-public Godot.Button aidButton;
-public Godot.Button miscButton;
-public Godot.Button ammoButton;
+  // Category buttons.
+  public Godot.Button weaponsButton;
+  public Godot.Button apparelButton;
+  public Godot.Button aidButton;
+  public Godot.Button miscButton;
+  public Godot.Button ammoButton;
 
+  public Item.Categories activeFilter;
+  public List<ItemData> itemData;
+  public int itemSelected;
 
+  public void Init(float minX, float minY, float maxX, float maxY){
+    InitControls();
+    UpdateFilter(Item.Categories.Weapons);
+    ScaleControls();
+  }
+  
+  public void Resize(float minX, float minY, float maxX, float maxY){
 
+  }
 
-public Item.Categories activeFilter;
+  public bool IsSubMenu(){
+    return false;
+  }
 
-public List<ItemData> itemData;
-public int itemSelected;
+  public void Clear(){
+    this.QueueFree();
+  }
+  
 
-public override void _Ready(){
-
-}
-
-  public void Init(){
+  void InitControls(){
     activeFilter = Item.Categories.Weapons;
 
-  	closeButton = (Godot.Button)Menu.Button(text : "Close", onClick : Close);
-  	AddChild(closeButton);
+    closeButton = (Godot.Button)Menu.Button(text : "Close", onClick : Close);
+    AddChild(closeButton);
 
-  	itemList = new ItemList();
-  	AddChild(itemList);
-  	itemList.AllowRmbSelect = true;
-  	itemList.Connect("item_selected", this, nameof(SelectItem));
-  	itemList.Connect("item_activated", this, nameof(UseItem));
-  	itemList.Connect("item_rmb_selected", this, nameof(DropItem));
+    itemList = new ItemList();
+    AddChild(itemList);
+    itemList.AllowRmbSelect = true;
+    itemList.Connect("item_selected", this, nameof(SelectItem));
+    itemList.Connect("item_activated", this, nameof(UseItem));
+    itemList.Connect("item_rmb_selected", this, nameof(DropItem));
 
-  	itemInfo = (Godot.TextEdit)Menu.TextBox("");
+    itemInfo = (Godot.TextEdit)Menu.TextBox("");
     itemInfo.Readonly = true;
     itemInfo.Hide();
     AddChild(itemInfo);
 
     useButton = (Godot.Button)Menu.Button(text : "Use", onClick : UseItemAdapter);
-  	AddChild(useButton);
-  	useButton.Hide();
+    AddChild(useButton);
+    useButton.Hide();
 
-  	dropButton = (Godot.Button)Menu.Button(text : "Drop", onClick : DropItemAdapter);
-  	AddChild(dropButton);
-  	dropButton.Hide();
+    dropButton = (Godot.Button)Menu.Button(text : "Drop", onClick : DropItemAdapter);
+    AddChild(dropButton);
+    dropButton.Hide();
 
-  	stashButton = (Godot.Button)Menu.Button(text : "Stash", onClick : StashItem);
-  	AddChild(stashButton);
-  	RefreshStashItemInfo();
+    stashButton = (Godot.Button)Menu.Button(text : "Stash", onClick : StashItem);
+    AddChild(stashButton);
+    RefreshStashItemInfo();
 
-  	weaponsButton = (Godot.Button)Menu.Button(text : "Weapons", onClick : FilterWeapons);
-  	AddChild(weaponsButton);
+    weaponsButton = (Godot.Button)Menu.Button(text : "Weapons", onClick : FilterWeapons);
+    AddChild(weaponsButton);
 
-  	apparelButton = (Godot.Button)Menu.Button(text : "Apparel", onClick : FilterApparel);
-  	AddChild(apparelButton);
+    apparelButton = (Godot.Button)Menu.Button(text : "Apparel", onClick : FilterApparel);
+    AddChild(apparelButton);
 
-  	aidButton = (Godot.Button)Menu.Button(text : "Aid", onClick : FilterAid);
-  	AddChild(aidButton);
+    aidButton = (Godot.Button)Menu.Button(text : "Aid", onClick : FilterAid);
+    AddChild(aidButton);
 
-  	miscButton = (Godot.Button)Menu.Button(text : "Misc", onClick : FilterMisc);
-  	AddChild(miscButton);
+    miscButton = (Godot.Button)Menu.Button(text : "Misc", onClick : FilterMisc);
+    AddChild(miscButton);
 
-  	ammoButton = (Godot.Button)Menu.Button(text : "Ammo", onClick : FilterAmmo);
-  	AddChild(ammoButton);
+    ammoButton = (Godot.Button)Menu.Button(text : "Ammo", onClick : FilterAmmo);
+    AddChild(ammoButton);
 
-  	weightInfo = (Godot.TextEdit)Menu.TextBox("WeightInfo");
+    weightInfo = (Godot.TextEdit)Menu.TextBox("WeightInfo");
     weightInfo.Readonly = true;
     AddChild(weightInfo);
-
-  	UpdateFilter(Item.Categories.Weapons);
-
-    ScaleControls();
   }
-  
+
   void ScaleControls(){
       Rect2 screen = this.GetViewportRect();
       float width = screen.Size.x;

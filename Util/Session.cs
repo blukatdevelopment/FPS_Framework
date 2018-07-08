@@ -171,9 +171,16 @@ public class Session : Node {
   public static void ChangeMenu(Menu.Menus menu){
     Session ses = Session.session;
     if(ses.activeMenu != null){
-      ses.activeMenu.QueueFree();
+      IMenu menuInstance = ses.activeMenu as IMenu;
+      if(menuInstance != null){
+        menuInstance.Clear();
+      }
+      else{
+        ses.activeMenu.QueueFree();
+      }
       ses.activeMenu = null;
     }
+
     ses.activeMenu = Menu.MenuFactory(menu);
   }
   
