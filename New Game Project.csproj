@@ -81,6 +81,7 @@
     <Compile Include="Menus\TextBox.cs" />
     <Compile Include="Menus\InventoryMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\ArenaConfigMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />

@@ -47,9 +47,21 @@ public class LobbyMenu : Container, IMenu {
   }
 
   public void Init(float minX, float minY, float maxX, float maxY){
-    InitControls();
+    NetworkSession netSes = Session.session.netSes;
+    if(netSes.isServer){
+      InitServerControls();
+    }
+    else{
+      InitControls();
+    } 
     InitNetwork();
-    ScaleControls();
+    if(netSes.isServer){
+      ScaleServerControls();
+    }
+    else{
+      ScaleControls();
+    }
+    
   }
   
   public void Resize(float minX, float minY, float maxX, float maxY){
@@ -80,6 +92,20 @@ public class LobbyMenu : Container, IMenu {
 
     readyButton = (Godot.Button)Menu.Button("Ready", ToggleReady);
     AddChild(readyButton);
+    
+    playersBox = (Godot.TextEdit)Menu.TextBox("");
+    playersBox.Readonly = true;
+    AddChild(playersBox);
+  }
+
+  void InitServerControls(){
+    messageBox = (Godot.TextEdit)Menu.TextBox();
+    messageBox.Readonly = true;
+    AddChild(messageBox);
+    
+    
+    mainMenuButton = (Godot.Button)Menu.Button("Main Menu", ReturnToMainMenu);
+    AddChild(mainMenuButton);
     
     playersBox = (Godot.TextEdit)Menu.TextBox("");
     playersBox.Readonly = true;
@@ -138,6 +164,18 @@ public class LobbyMenu : Container, IMenu {
     Menu.ScaleControl(sendButton, wu, 2 * hu, 9 * wu, 8 * hu);
     Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
     Menu.ScaleControl(readyButton, wu, hu, 2 * wu, 0);
+  }
+
+  void ScaleServerControls(){
+    Rect2 screen = this.GetViewportRect();
+    float width = screen.Size.x;
+    float height = screen.Size.y;
+    float wu = width/10; // relative height and width units
+    float hu = height/10;
+    
+    Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+    Menu.ScaleControl(messageBox, 6 * wu, 8 * hu, 3 * wu, 0);
+    Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
   }
   
   public void ReturnToMainMenu(){
@@ -215,6 +253,9 @@ public class LobbyMenu : Container, IMenu {
 
   [Remote]
   public void ReceiveMessage(string message){
+    if(messageBox == null){
+      return;
+    }
     if(messages.Count > 50){ messages.Remove(messages.First()); }
     messages.Add(message);
     string str = "";
