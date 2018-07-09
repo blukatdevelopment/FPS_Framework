@@ -128,9 +128,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   void DeferredInitInventory(string handName){
     InitHand(handName);
     Session.InitKit(this);
-    readyTimer = 0;
-    readyDelay = 1f;
-    readyActive = true;
+    if(Session.NetActive()){
+      readyTimer = 0;
+      readyDelay = 1f;
+      readyActive = true;
+    }
+    else{ // Forego delaying the equip of this inventory.
+      Session.PlayerReady();
+    }
   }
 
   public void InitHand(string handName){

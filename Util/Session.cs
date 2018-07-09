@@ -1,5 +1,5 @@
 /*
-  This pseudo-singleton is a dumping place for session-specific data and methods.
+  This pseudo-singleton is the focal point for the active session's state.
   The Session should be the root of the scene in the game. If it's null, things simply
   won't work.
 
@@ -20,6 +20,7 @@ public class Session : Node {
   public JukeBox jukeBox;
 
   // Settings
+  public ArenaSettings arenaSettings; // Set up just before Arena game
   public float masterVolume, sfxVolume, musicVolume;
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;
@@ -145,7 +146,7 @@ public class Session : Node {
     Session.ClearGame();
   }
   
-  public static void SinglePlayerGame(){
+  public static void SinglePlayerArena(){
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
     Session ses = Session.session;
@@ -156,7 +157,7 @@ public class Session : Node {
     
   }
 
-  public static void MultiPlayerGame(){
+  public static void MultiplayerArena(){
     Session ses = Session.session;
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
@@ -171,9 +172,16 @@ public class Session : Node {
   public static void ChangeMenu(Menu.Menus menu){
     Session ses = Session.session;
     if(ses.activeMenu != null){
-      ses.activeMenu.QueueFree();
+      IMenu menuInstance = ses.activeMenu as IMenu;
+      if(menuInstance != null){
+        menuInstance.Clear();
+      }
+      else{
+        ses.activeMenu.QueueFree();
+      }
       ses.activeMenu = null;
     }
+
     ses.activeMenu = Menu.MenuFactory(menu);
   }
   

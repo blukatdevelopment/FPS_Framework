@@ -1,21 +1,33 @@
 using Godot;
 using System;
 
-public class PauseMenu : Container{
+public class PauseMenu : Container, IMenu {
   
   public Godot.Button quitButton;
   public Godot.Button mainMenuButton;
   public Godot.Button resumeButton;
+
+  public void Init(float minX, float minY, float maxX, float maxY){
+    InitControls();
+    ScaleControls();
+  }
   
-  public override void _Ready(){
-    
+  public void Resize(float minX, float minY, float maxX, float maxY){
+
   }
 
-  public void Init(){
+  public bool IsSubMenu(){
+    return false;
+  }
+
+  public void Clear(){
+    this.QueueFree();
+  }
+
+  void InitControls(){
     SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick : Quit));
     SetMainMenuButton((Godot.Button)Menu.Button(text : "Main Menu", onClick : QuitToMainMenu));
     SetResumeButton((Godot.Button)Menu.Button(text : "Resume", onClick : Resume));
-    ScaleControls();
   }
   
   void ScaleControls(){

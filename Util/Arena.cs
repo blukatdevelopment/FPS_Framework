@@ -7,6 +7,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class Arena : Spatial {
   bool singlePlayer;
@@ -14,6 +15,8 @@ public class Arena : Spatial {
   Spatial terrain;
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
+
+  public ArenaSettings settings;
   
   const float RoundDuration = 300f;
   const float ScoreDuration = 5f;
@@ -23,7 +26,15 @@ public class Arena : Spatial {
   Dictionary<int, int> scores;
   public int playerWorldId = -1;
 
+  // used for singleplayer
+  int playersReady = 0;
+
   public void Init(bool singlePlayer){
+    settings = Session.session.arenaSettings;
+    if(settings == null){
+      GD.Print("Using default arena settings.");
+      settings = new ArenaSettings();
+    }
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     scores = new Dictionary<int, int>();
@@ -158,16 +169,28 @@ public class Arena : Spatial {
   }
 
   public void SinglePlayerInit(){
-    for(int i = 0; i < 10; i++){
-      //SpawnItem(Item.Types.AmmoPack, 10);
-      //SpawnItem(Item.Types.HealthPack);  
-      SpawnItem(Item.Types.AidHealthPack);  
+    if(settings.usePowerups){
+      for(int i = 0; i < 10; i++){
+        SpawnItem(Item.Types.AmmoPack, 10);
+        SpawnItem(Item.Types.HealthPack);  
+      }
     }
 
+
     InitActor(Actor.Brains.Player1, NextWorldId());
-    InitActor(Actor.Brains.Ai, NextWorldId());
-    roundTimeRemaining = RoundDuration;
+    for(int i = 0; i < settings.bots; i++){
+      InitActor(Actor.Brains.Ai, NextWorldId());
+    }
+
+    roundTimeRemaining = settings.duration * 60;
+    if(settings.useKits){
+      foreach(Actor actor in actors){
+        EquipActor(actor, Item.Types.Rifle, "Rifle");
+      }
+    }
+
     roundTimerActive = true;
+
   }
 
   public void InitActor(Actor.Brains brain, int id){
@@ -192,6 +215,22 @@ public class Arena : Spatial {
   }
 
   public void MultiplayerInit(){
+    if(!Session.IsServer()){
+      return;
+    }
+    string json = JsonConvert.SerializeObject(Session.session.arenaSettings, Formatting.Indented);
+
+    DeferredMultiplayerInit(json);
+    Rpc(nameof(DeferredMultiplayerInit), json);
+  }
+
+  // Make sure clients 
+  [Remote]
+  public void DeferredMultiplayerInit(string json){
+    if(!Session.IsServer()){
+      settings = JsonConvert.DeserializeObject<ArenaSettings>(json);
+      Session.session.arenaSettings = settings;
+    }
     NetworkSession netSes = Session.session.netSes;
     netSes.playersReady = 0;
     playerWorldId = netSes.selfPeerId;
@@ -199,15 +238,16 @@ public class Arena : Spatial {
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
     }
-    //SpawnItem(Item.Types.HealthPack);
-    //SpawnItem(Item.Types.AmmoPack);
-    for(int i = 0; i < 10; i++){
-      SpawnItem(Item.Types.AidHealthPack);
+    
+    if(settings.usePowerups){
+      for(int i = 0; i < 10; i++){
+        SpawnItem(Item.Types.HealthPack);
+        SpawnItem(Item.Types.AmmoPack);
+      }
     }
     
-
     if(Session.IsServer()){
-      roundTimeRemaining = RoundDuration;
+      roundTimeRemaining = settings.duration * 60;
       roundTimerActive = true;
     }
   }
@@ -347,6 +387,9 @@ public class Arena : Spatial {
   }
 
   public void InitKit(Actor actor){
+    if(!settings.useKits){
+      GD.Print();
+    }
     GD.Print("Arena.Initkit");
     actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
     actor.ReceiveItem(Item.Factory(Item.Types.Ammo, "", "Bullet", 100));
@@ -372,10 +415,23 @@ public class Arena : Spatial {
     }
   }
 
+
+  public void EquipActor(Actor actor, Item.Types itemType, string itemName){
+    int index = actor.IndexOf(itemType, itemName);
+    if(index == -1){
+      GD.Print("Actor doesn't have this weapon.");
+    }
+    else{
+      GD.Print("Equipping Actor");
+      actor.EquipItem(index);
+    }
+  }
+
+
   [Remote]
   public void DeferredPlayerReady(){
     if(!Session.IsServer()){
-      GD.Print("DeferredPlayerReady: Not server. Aborting.");
+      GD.Print("DeferredPlayerReady: Online and not server. Aborting.");
       return;
     }
     
@@ -386,15 +442,10 @@ public class Arena : Spatial {
       return;
     }
     //Equip rifle.
-    foreach(Actor actor in actors){
-      int index = actor.IndexOf(Item.Types.Rifle, "Rifle");
-      if(index == -1){
-        GD.Print("Player doesn't have this weapon.");
+    if(settings.useKits){
+      foreach(Actor actor in actors){
+        EquipActor(actor, Item.Types.Rifle, "Rifle");
       }
-      else{
-        actor.EquipItem(index);
-      }
-
     }
     
   }
