@@ -48,10 +48,27 @@ criteria that can be marked complete or ready for review.
 ## Interface Programming
 
 ## Network Programming
-Make sure the multiplayer settings menu changes only for the Server.
+
+AI should send out RPC calls for their actions when network is active.
+
 
 ## Core Programming
+    Boxcast should get fixed up and added to util.
 
 ## Gameplay Programming
 
 ## AI programming
+
+**Fix the raycasting**
+Use util methods exclusively.
+
+**Fix nulls**
+AI should not hold null pointers if it can be avoided.
+Else they should check for nulls when running.
+
+**Netcode**
+AI should work in multiplayer.
+
+**Performance**
+Play with the mix between performance and interaction.
+Currently 16 AI causes a significant amount of lag.
