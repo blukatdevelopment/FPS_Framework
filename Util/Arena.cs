@@ -7,6 +7,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class Arena : Spatial {
   bool singlePlayer;
@@ -214,6 +215,22 @@ public class Arena : Spatial {
   }
 
   public void MultiplayerInit(){
+    if(!Session.IsServer()){
+      return;
+    }
+    string json = JsonConvert.SerializeObject(Session.session.arenaSettings, Formatting.Indented);
+
+    DeferredMultiplayerInit(json);
+    Rpc(nameof(DeferredMultiplayerInit), json);
+  }
+
+  // Make sure clients 
+  [Remote]
+  public void DeferredMultiplayerInit(string json){
+    if(!Session.IsServer()){
+      settings = JsonConvert.DeserializeObject<ArenaSettings>(json);
+      Session.session.arenaSettings = settings;
+    }
     NetworkSession netSes = Session.session.netSes;
     netSes.playersReady = 0;
     playerWorldId = netSes.selfPeerId;
@@ -221,15 +238,16 @@ public class Arena : Spatial {
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
     }
-    //SpawnItem(Item.Types.HealthPack);
-    //SpawnItem(Item.Types.AmmoPack);
-    for(int i = 0; i < 10; i++){
-      SpawnItem(Item.Types.AidHealthPack);
+    
+    if(settings.usePowerups){
+      for(int i = 0; i < 10; i++){
+        SpawnItem(Item.Types.HealthPack);
+        SpawnItem(Item.Types.AmmoPack);
+      }
     }
     
-
     if(Session.IsServer()){
-      roundTimeRemaining = RoundDuration;
+      roundTimeRemaining = settings.duration * 60;
       roundTimerActive = true;
     }
   }
@@ -424,8 +442,10 @@ public class Arena : Spatial {
       return;
     }
     //Equip rifle.
-    foreach(Actor actor in actors){
-      EquipActor(actor, Item.Types.Rifle, "Rifle");
+    if(settings.useKits){
+      foreach(Actor actor in actors){
+        EquipActor(actor, Item.Types.Rifle, "Rifle");
+      }
     }
     
   }
