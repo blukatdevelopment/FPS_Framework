@@ -33,11 +33,6 @@ complexity. This balance must be attended to
 **Version 0.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
-# Arena Settings
-
-Before starting a single player game and hosting a multiplayer game, a settings menu
-should allow customizing how the game will be played. 
-
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
@@ -51,42 +46,12 @@ criteria that can be marked complete or ready for review.
 ## Testing
 
 ## Interface Programming
-**Single player settings menu**
-The following options should be available.
-- Number of bots
-- Starting kit?
-- Spawn powerups?
-- round duration
-
-**Multiplayer settings menu**
-The following options should be available.
-- Number of bots (Not used at moment.)
-- Starting kit?
-- Spawn powerups?
-- round duration
 
 ## Network Programming
 Make sure the multiplayer settings menu changes only for the Server.
 
 ## Core Programming
 
-**ArenaSettings**
-Session.session should have an ArenaSettings object that contains all the 
-configuration. This object should be initialized by the menus, then
-attached to the Session.session instance for the Arena to draw upon when it inits.
-
-**Sub Menu**
-If convenient, figure out how to nest menus and apply that to the game settings menu
-to prevent code duplication and overall menu complexity in the future.
-
 ## Gameplay Programming
-
-Arena should load settings from Session.session.arenaSettings if it is available, 
-and otherwise init with default values. These setting shsould influence the following
-behaviors:
-- Number of bots
-- Starting kit?
-- Spawn powerups?
-- round duration
 
 ## AI programming
