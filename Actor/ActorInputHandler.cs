@@ -79,10 +79,12 @@ public class ActorInputHandler : Brain {
   private void HandleMovement(){
     int dx = 0;
     int dz = 0;
+    
     if(held[InputEvent.Buttons.W]){ dz--; }
     if(held[InputEvent.Buttons.A]){ dx--; }
     if(held[InputEvent.Buttons.S]){ dz++; }
     if(held[InputEvent.Buttons.D]){ dx++; }
+
     if(dx != 0 || dz != 0){
       Vector3 movement = new Vector3(dx, 0, dz);
       movement *= actor.GetMovementSpeed(); 

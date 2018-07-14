@@ -165,9 +165,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return GlobalTransform;
   }
 
-  /* Global space */
-  public Vector3 Pointer(){
-    float distance = 100f;
+  /* Global space 
+    Point at end of ray in looking direction.
+  */
+  public Vector3 Pointer(float distance = 100f){
     Vector3 start = GlobalHeadPosition();
     Transform headTrans = GlobalHeadTransform();
     Vector3 end = Util.TForward(headTrans);

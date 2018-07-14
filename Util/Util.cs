@@ -2,6 +2,7 @@
 
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class Util{
   
@@ -80,7 +81,7 @@ public class Util{
     return false;
   }
 
-  public static object RayCast (Vector3 start, Vector3 end, World world) {
+  public static object RayCast(Vector3 start, Vector3 end, World world) {
     if(world == null){
       return null;
     }
@@ -94,5 +95,43 @@ public class Util{
     object collider = result["collider"];
 
     return collider;
+  }
+
+  // Alternative to boxcasting that respects cover. Returns a list of unique
+  // objects sighted.
+  public static List<object> GridCast(
+    Vector3 start,
+    Vector3 end,
+    World world,
+    int scale = 3, // Used for height and width of grid
+    float spacing = 0.5f // How far apart will each raycast be from one another
+  ){
+    List<object> ret = new List<object>();
+    
+    // Negative scale is converted to positive.
+    if(scale < 0){
+      scale *= -1;
+    }
+
+    float offX, offY; // Offsets for each raycast.
+
+    for(int i = -scale; i < scale; i++){
+      for(int j = -scale; j < scale; j++){
+        Vector3 otherStart = start;
+        Vector3 otherEnd = end;
+
+        offX = spacing * j;
+        offY = spacing * i;
+        
+        otherStart += new Vector3(offX, offY, 0f);
+        otherEnd += new Vector3(offX, offY, 0f);
+
+        object candidate = RayCast(otherStart, otherEnd, world);
+        if(candidate != null && !ret.Contains(candidate)){
+          ret.Add(candidate);
+        }
+      }
+    }
+    return ret;
   }
 }

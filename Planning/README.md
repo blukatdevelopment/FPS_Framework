@@ -11,7 +11,7 @@ for this project.
 The first iteration of development is completed. This creates room for
 two kinds of growth: refinement of existing features and the introduction
 of new features. The former includes consists mostly of granular changes
-as well as architectural review to reduce complexity. The second introduces
+as well as architectural review to reducOptimization will be a priority that will come only after things are feature complete.  However, that might be something worth noting. e complexity. The second introduces
 complexity. This balance must be attended to 
 
 # Areas lacking polish
@@ -27,6 +27,7 @@ complexity. This balance must be attended to
 - Lack of item variety. (Currently no apparel, aid, or misc)
 - Menu system might benefit from some inheritance.
 - BUG: Can pick up own hand
+- BUG: Score in multiplayer arena not updating when killing AI
 
 # Completed Milestones
 
@@ -48,7 +49,6 @@ criteria that can be marked complete or ready for review.
 ## Interface Programming
 
 ## Network Programming
-Make sure the multiplayer settings menu changes only for the Server.
 
 ## Core Programming
 
