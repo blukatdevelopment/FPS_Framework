@@ -231,11 +231,9 @@ public class Arena : Spatial {
 
     foreach(int id in settings.botIds){
       if(Session.IsServer()){
-        GD.Print("Server create bot: " + id);
         InitActor(Actor.Brains.Ai, id);
       }
       else{
-        GD.Print("Client create bot: " + id);
         InitActor(Actor.Brains.Remote, id);
       }
     }

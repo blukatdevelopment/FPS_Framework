@@ -11,7 +11,7 @@ for this project.
 The first iteration of development is completed. This creates room for
 two kinds of growth: refinement of existing features and the introduction
 of new features. The former includes consists mostly of granular changes
-as well as architectural review to reduce complexity. The second introduces
+as well as architectural review to reducOptimization will be a priority that will come only after things are feature complete.  However, that might be something worth noting. e complexity. The second introduces
 complexity. This balance must be attended to 
 
 # Areas lacking polish
@@ -27,6 +27,7 @@ complexity. This balance must be attended to
 - Lack of item variety. (Currently no apparel, aid, or misc)
 - Menu system might benefit from some inheritance.
 - BUG: Can pick up own hand
+- BUG: Score in multiplayer arena not updating when killing AI
 
 # Completed Milestones
 
@@ -49,26 +50,8 @@ criteria that can be marked complete or ready for review.
 
 ## Network Programming
 
-AI should send out RPC calls for their actions when network is active.
-
-
 ## Core Programming
-    Boxcast should get fixed up and added to util.
 
 ## Gameplay Programming
 
 ## AI programming
-
-**Fix the raycasting**
-Use util methods exclusively.
-
-**Fix nulls**
-AI should not hold null pointers if it can be avoided.
-Else they should check for nulls when running.
-
-**Netcode**
-AI should work in multiplayer.
-
-**Performance**
-Play with the mix between performance and interaction.
-Currently 16 AI causes a significant amount of lag.
