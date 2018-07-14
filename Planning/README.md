@@ -34,6 +34,19 @@ complexity. This balance must be attended to
 **Version 0.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
+# Major netcode revision
+
+Right now RPC calls have one of three trajectories:
+Server->Client
+Client->Server
+Client->Client
+
+The Adventure mode will necessarily involve each client machine having a subset
+of the Server's node tree. Client->Client RPC calls will be problematic, as Nodes
+on one client's machine may not match up with Nodes on another client's machine. 
+Consequently, all Client->Client calls must be changed to Client->Server->Client
+calls so that the server has the authority to limit the audience for each RPC call.
+
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
@@ -49,6 +62,9 @@ criteria that can be marked complete or ready for review.
 ## Interface Programming
 
 ## Network Programming
+
+**RPC call changes**
+Change all Client->Client calls to Client->Server->Client calls
 
 ## Core Programming
 
