@@ -14,7 +14,7 @@ public class Ai : Brain
   const float AimMargin = 0.5f; 
   
   float remainingDelay = 0f;
-  const float Delay = 0.5f; 
+  const float Delay = 0.03f; 
   public Ai(Actor actor, Spatial eyes) : base (actor, eyes){
     host = actor;
     target = null;
@@ -30,7 +30,7 @@ public class Ai : Brain
       }
       catch(NullReferenceException ex){
         target = null;
-        //GD.Print("Forgetting target because of null reference");
+        
       }
     }
     
@@ -43,9 +43,19 @@ public class Ai : Brain
   
   /* Follow target blindly */
   void Pursue(float delta){
+    Vector3 pos = host.Translation;
+    Vector3 potentialPos = host.Pointer(1f);
     Vector3 targetPos = target.Translation;
+
     AimAt(targetPos);
-    host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
+
+    float currentDist = pos.DistanceTo(targetPos);
+    float potentialDist = potentialPos.DistanceTo(targetPos);
+    
+    if(currentDist > potentialDist){
+      host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
+    }
+    
   }
   
   void AimAt(Vector3 point){
@@ -63,7 +73,6 @@ public class Ai : Brain
     Vector3 lookingRot = lookingAt.basis.GetEuler();
     lookingRot = Util.ToDegrees(lookingRot);
     Vector3 turnRot = (lookingRot - hostRot).Normalized();
-    
     host.Turn(turnRot.y, turnRot.x);
   }
   
@@ -80,10 +89,6 @@ public class Ai : Brain
   void See(){
     if(target == null){
       AcquireTarget();
-      //GD.Print("Acquiring a target");
-    }
-    else{
-      //GD.Print("Target found");
     }
   }
   
@@ -95,8 +100,11 @@ public class Ai : Brain
     end += start; // Add starting position
     
     List<Actor> targets = SeeActors();//GridCastForActor(start, end);
-    if(targets.Count > 0){
-      target = targets[0];
+    foreach(Actor targ in targets){
+      if(targ != null && targ != host){
+        target = targ;
+        return;
+      }
     }
 
   }
@@ -126,10 +134,12 @@ public class Ai : Brain
       return;
     }
 
-    if(!AimingAt(target.Translation)){
+    Vector3 targetPos = target.Translation;
+    if(!AimingAt(targetPos)){
       Pursue(delta);
       return;
     }
+    
     actor.Use(Item.Uses.A);
     
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;

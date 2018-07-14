@@ -51,6 +51,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected Speaker speaker;
   protected object wielder;
   protected Area area;
+  private stopColliding = false;
 
   public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
     this.name = name;
