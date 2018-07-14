@@ -14,7 +14,7 @@ public class Ai : Brain
   const float AimMargin = 0.5f; 
   
   float remainingDelay = 0f;
-  const float Delay = 0.03f; 
+  const float Delay = 0.5f; 
   public Ai(Actor actor, Spatial eyes) : base (actor, eyes){
     host = actor;
     target = null;
@@ -24,24 +24,25 @@ public class Ai : Brain
     remainingDelay -= delta;
     if(remainingDelay <= 0f && !actor.IsBusy()){
       remainingDelay = Delay;
-      See();
-      Act(delta);
+      try{
+        See();
+        Act(delta);
+      }
+      catch(NullReferenceException ex){
+        target = null;
+        //GD.Print("Forgetting target because of null reference");
+      }
     }
     
   }
   
   void Wander(float delta){
-    return;
     host.Turn(1f, 0f);
     host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
   }
   
   /* Follow target blindly */
   void Pursue(float delta){
-    if(target == null){
-      return;
-    }
-    
     Vector3 targetPos = target.Translation;
     AimAt(targetPos);
     host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
@@ -79,6 +80,10 @@ public class Ai : Brain
   void See(){
     if(target == null){
       AcquireTarget();
+      //GD.Print("Acquiring a target");
+    }
+    else{
+      //GD.Print("Target found");
     }
   }
   
@@ -120,12 +125,12 @@ public class Ai : Brain
       Wander(delta);
       return;
     }
+
     if(!AimingAt(target.Translation)){
       Pursue(delta);
       return;
     }
     actor.Use(Item.Uses.A);
-    target = null;
     
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
     if(ammoHaver != null){
