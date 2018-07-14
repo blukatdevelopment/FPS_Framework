@@ -162,6 +162,12 @@ public class Arena : Spatial {
     return ret;
   }
 
+  public string NextBotName(){
+    string name = "Bot_" + nextId;
+    nextId++;
+    return name;
+  }
+
   public string NextItemName(){
     string name = "Item_" + nextId;
     nextId++;
@@ -193,31 +199,15 @@ public class Arena : Spatial {
 
   }
 
-  public void InitActor(Actor.Brains brain, int id){
-    scores.Add(id, 0);
-
-    if(!Session.NetActive()){
-      SpawnActor(brain, id);
-      if(brain == Actor.Brains.Player1){
-        playerWorldId = id;
-      }
-      return;
-    }
-
-    if(id == playerWorldId){
-      SpawnActor(Actor.Brains.Player1, id);
-    }
-    else{
-      SpawnActor(brain, id);
-    }
-
-
-  }
-
   public void MultiplayerInit(){
     if(!Session.IsServer()){
       return;
     }
+
+    for(int i = 0; i < settings.bots; i++){
+      settings.botIds.Add(NextWorldId());
+    }
+
     string json = JsonConvert.SerializeObject(Session.session.arenaSettings, Formatting.Indented);
 
     DeferredMultiplayerInit(json);
@@ -238,6 +228,17 @@ public class Arena : Spatial {
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
     }
+
+    foreach(int id in settings.botIds){
+      if(Session.IsServer()){
+        GD.Print("Server create bot: " + id);
+        InitActor(Actor.Brains.Ai, id);
+      }
+      else{
+        GD.Print("Client create bot: " + id);
+        InitActor(Actor.Brains.Remote, id);
+      }
+    }
     
     if(settings.usePowerups){
       for(int i = 0; i < 10; i++){
@@ -245,12 +246,34 @@ public class Arena : Spatial {
         SpawnItem(Item.Types.AmmoPack);
       }
     }
-    
+
     if(Session.IsServer()){
       roundTimeRemaining = settings.duration * 60;
       roundTimerActive = true;
     }
   }
+
+  public void InitActor(Actor.Brains brain, int id){
+    scores.Add(id, 0);
+
+    if(!Session.NetActive()){
+      SpawnActor(brain, id);
+      if(brain == Actor.Brains.Player1){
+        playerWorldId = id;
+      }
+      return;
+    }
+
+    if(id == playerWorldId){
+      SpawnActor(Actor.Brains.Player1, id);
+    }
+    else {
+      SpawnActor(brain, id);
+    }
+
+
+  }
+
   
   public void InitTerrain(){
     PackedScene ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Terrain.tscn");

@@ -15,6 +15,11 @@ public class Ai : Brain
   
   float remainingDelay = 0f;
   const float Delay = 0.03f; 
+
+  private float syncTimer = 0f;
+  public const float syncRate = 0.05f;
+
+
   public Ai(Actor actor, Spatial eyes) : base (actor, eyes){
     host = actor;
     target = null;
@@ -22,6 +27,7 @@ public class Ai : Brain
   
   public override void Update(float delta){
     remainingDelay -= delta;
+    
     if(remainingDelay <= 0f && !actor.IsBusy()){
       remainingDelay = Delay;
       try{
@@ -33,7 +39,18 @@ public class Ai : Brain
         
       }
     }
-    
+    if(Session.IsServer() && Session.NetActive()){
+      NetUpdate(delta);
+    }
+  }
+
+  public void NetUpdate(float delta){
+    syncTimer += delta;
+    if(syncTimer >= syncRate){
+      syncTimer = 0f;
+      actor.SyncPosition();
+      actor.SyncAim();
+    }
   }
   
   void Wander(float delta){
