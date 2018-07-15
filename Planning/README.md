@@ -28,6 +28,7 @@ complexity. This balance must be attended to
 - Menu system might benefit from some inheritance.
 - BUG: Can pick up own hand
 - BUG: Score in multiplayer arena not updating when killing AI
+- BUG: After respawning in multiplayer, actors are not equipping their kit item.
 
 # Completed Milestones
 

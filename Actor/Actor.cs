@@ -338,8 +338,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
 
     DeferredEquipItem(index);
-    if(Session.NetActive()){
+    if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
+    }
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerEquipItem), Session.session.netSes.selfPeerId, index);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerEquipItem(int caller, int index){
+    DeferredEquipItem(index);
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredEquipItem), index);
+      }
     }
   }
 
@@ -391,10 +406,24 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
     DeferredStashItem();
-    if(Session.NetActive()){
+    if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredStashItem));
     }
-    
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerStashItem), Session.session.netSes.selfPeerId);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerStashItem(int caller){
+    DeferredStashItem();
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredStashItem));
+      }
+    }
   }
 
   [Remote]
@@ -457,8 +486,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void Use(Item.Uses use, bool released = false){
     DeferredUse(use, released);
-    if(Session.NetActive()){
+    if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredUse), use, released);
+    }
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerUse), Session.session.netSes.selfPeerId, use, released);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerUse(int caller, Item.Uses use, bool released){
+    DeferredUse(use, released);
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredUse), use, released);
+      }
     }
   }
 
@@ -739,6 +783,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return 0;
     }
   }
+
+  
 
   // Good for server->client
   [Remote]
