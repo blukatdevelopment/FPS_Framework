@@ -258,6 +258,13 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
     Item.Uses interaction = GetActiveInteraction();
+
+    Item item = interactor as Item;
+    if(item != null && (item == hand || item == activeItem)){
+      GD.Print("Don't interact with your active item or hand. Returning.");
+      return;
+    }    
+
     interactor.Interact((object)this, interaction);
   }
 

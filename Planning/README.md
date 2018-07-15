@@ -26,7 +26,6 @@ complexity. This balance must be attended to
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel, aid, or misc)
 - Menu system might benefit from some inheritance.
-- BUG: Can pick up own hand
 
 # Completed Milestones
 
