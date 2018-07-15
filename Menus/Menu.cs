@@ -3,7 +3,26 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
+<<<<<<< HEAD
   public enum Menus{ None, Main, Multiplayer, Lobby, Pause, HUD};
+=======
+  public enum Menus{ // Parented by Session.session
+    None, 
+    Main,
+    Singleplayer,
+    Multiplayer, 
+    Settings,
+    Lobby, 
+    Pause, 
+    HUD, 
+    Inventory
+  };
+
+  public enum SubMenus{ // Parented by menu
+    None,
+    ArenaConfig
+  }
+>>>>>>> develop
   
   /* Returns instances of desired control. */
   public static Control ControlFactory(Controls control){
@@ -30,6 +49,12 @@ public class Menu{
     }
     return (Control)textBoxInstance;
   }
+
+  public static Label Label(string text = ""){
+    Label label = new Label();
+    label.Text = text;   
+    return label;
+  }
   
   public static Node MenuFactory(Menus menu){
     Node ret = null;
@@ -38,16 +63,56 @@ public class Menu{
         Sound.PauseSong();
         return null; 
         break;
+<<<<<<< HEAD
       case Menus.HUD: ret = HUDMenu(); break;
       case Menus.Pause: ret = PauseMenu(); break;
       case Menus.Main: ret = MainMenu(); break;
       case Menus.Multiplayer: ret = MultiplayerMenu(); break;
       case Menus.Lobby: ret = LobbyMenu(); break;
+=======
+      case Menus.HUD: 
+        ret = new HUDMenu(); 
+        ret.Name = "Pause";
+        break;
+      case Menus.Pause: 
+        ret = new PauseMenu();
+        ret.Name = "Pause"; 
+      break;
+      case Menus.Main: 
+        ret = new MainMenu();
+        ret.Name = "Main"; 
+        break;
+      case Menus.Singleplayer: 
+        ret = new SingleplayerMenu(); 
+        ret.Name = "Singleplayer";
+        break;
+      case Menus.Multiplayer: 
+        ret = new MultiplayerMenu(); 
+        ret.Name = "Multiplayer";
+        break;
+      case Menus.Lobby: 
+        ret = new LobbyMenu(); 
+        ret.Name = "Lobby";
+        break;
+      case Menus.Inventory: 
+        ret = new InventoryMenu(); 
+        ret.Name = "Inventory";
+        break;
+      case Menus.Settings: 
+        ret = new SettingsMenu(); 
+        ret.Name = "Settings";
+        break;
+    }
+    Session.session.AddChild(ret);
+    IMenu menuInstance = ret as IMenu;
+    if(menuInstance != null){
+      menuInstance.Init(0, 0, 0, 0); // Assuiming these are not subMenus
+>>>>>>> develop
     }
     return ret;
   }
-  
 
+<<<<<<< HEAD
   public static Node MainMenu(){
     Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MainMenu.tscn");
     MainMenu menu = (MainMenu)menuInstance;
@@ -86,6 +151,20 @@ public class Menu{
     Session.session.AddChild(menu);
     menu.Init();
     return menuInstance;
+=======
+  public static Node SubMenuFactory(SubMenus menu){
+    Node ret = null;
+    switch(menu){
+      case SubMenus.None: 
+        return null;
+        break;
+      case SubMenus.ArenaConfig:
+        ret = new ArenaConfigMenu();
+        ret.Name = "ArenaConfig";
+        break;
+    }
+    return ret;
+>>>>>>> develop
   }
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){

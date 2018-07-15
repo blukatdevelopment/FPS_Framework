@@ -1,18 +1,53 @@
 using Godot;
 using System;
 
+<<<<<<< HEAD
 public class MainMenu : Container
 {
+=======
+public class MainMenu : Container, IMenu {
+>>>>>>> develop
     
     public Godot.Button startButton;
     public Godot.Button lobbyButton;
     public Godot.Button quitButton;
+<<<<<<< HEAD
     
     
     public void Init(){
       SetSinglePlayerButton((Godot.Button)Menu.Button(text : "Single Player", onClick: SinglePlayerGame));
       SetLobbyButton((Godot.Button)Menu.Button(text : "Multiplayer", onClick: Multiplayer));
       SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick: Quit));
+=======
+
+    public void Init(float minX, float minY, float maxX, float maxY){
+      InitControls();
+      ScaleControls();
+    }
+    
+    public void Resize(float minX, float minY, float maxX, float maxY){
+
+    }
+
+    public bool IsSubMenu(){
+      return false;
+    }
+
+    public void Clear(){
+      this.QueueFree();
+    }
+    
+
+    void InitControls(){
+      soloButton = Menu.Button(text : "Solo", onClick : SinglePlayerGame);
+      AddChild(soloButton);
+      multiplayerButton = Menu.Button(text : "Multiplayer", onClick : Multiplayer);
+      AddChild(multiplayerButton);
+      quitButton = Menu.Button(text : "Quit", onClick : Quit);
+      AddChild(quitButton);
+      settingsButton = (Godot.Button)Menu.Button(text : "Settings", onClick : Settings);
+      AddChild(settingsButton);
+>>>>>>> develop
       Sound.PlaySong(Sound.Songs.FloatingHorizons);
     }
     
@@ -35,7 +70,11 @@ public class MainMenu : Container
     }
     
     public void SinglePlayerGame(){
+<<<<<<< HEAD
       Session.session.SinglePlayerGame();
+=======
+      Session.ChangeMenu(Menu.Menus.Singleplayer);
+>>>>>>> develop
     }
     
     public void Multiplayer(){

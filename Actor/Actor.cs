@@ -4,11 +4,14 @@
   Items are children of an actor's Eyes.
   Inventory is crude weapon-switching and ammo count like that in classic FPS games.
 
+<<<<<<< HEAD
 
   RPC calls go like so: (Notice AI is not currently supported)
   server->client: DeferredInitInventory, 
   client->others: DeferredUse, DeferredSwitchItem
 
+=======
+>>>>>>> develop
 */
 
 using Godot;
@@ -98,7 +101,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem;
   }
   
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> develop
   void InitInventory(){
     if(Session.NetActive() && !Session.IsServer()){
       return;
@@ -118,11 +125,39 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       initDelay = 0.25f;
       initActive = true;
       initHand = hand;
+<<<<<<< HEAD
       initRifle = rifle;
+=======
+    }
+  }
+
+  [Remote]
+  void DeferredInitInventory(string handName){
+    InitHand(handName);
+    Session.InitKit(this);
+    if(Session.NetActive()){
+      readyTimer = 0;
+      readyDelay = 1f;
+      readyActive = true;
+    }
+    else{ // Forego delaying the equip of this inventory.
+      Session.PlayerReady();
+    }
+  }
+
+  public void InitHand(string handName){
+    hand = Item.Factory(Item.Types.Hand, handName);
+    if(unarmed && activeItem == null){
+      EquipHand();  
+    }
+    else{
+      GD.Print("Not equipping hand because holding something.");
+>>>>>>> develop
     }
     
   }
 
+<<<<<<< HEAD
   [Remote]
   void DeferredInitInventory(string rifleName, string handName){
     items = new List<Item>();
@@ -130,6 +165,41 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     ReceiveItem(Item.Factory(Item.Types.Rifle, rifleName));
     EquipItem(1);
     unarmed = false;
+=======
+  /* Return global position of eyes(if available) or body */
+  public Vector3 GlobalHeadPosition(){
+    if(eyes != null){
+      return eyes.GlobalTransform.origin;
+    }
+    return GlobalTransform.origin;
+  }
+
+  /* Returns global transform of eyes(if available) or body */
+  public Transform GlobalHeadTransform(){
+    if(eyes != null){
+      return eyes.GlobalTransform;
+    }
+    return GlobalTransform;
+  }
+
+  /* Global space 
+    Point at end of ray in looking direction.
+  */
+  public Vector3 Pointer(float distance = 100f){
+    Vector3 start = GlobalHeadPosition();
+    Transform headTrans = GlobalHeadTransform();
+    Vector3 end = Util.TForward(headTrans);
+    end *= distance;
+    end += start;
+    return end;
+  }
+
+  public object VisibleObject(){
+    Vector3 start = GlobalHeadPosition();
+    Vector3 end = Pointer();
+    World world = GetWorld();
+    return Util.RayCast(start, end, world);
+>>>>>>> develop
   }
   
   /* Show up to max ammo */
@@ -146,6 +216,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return max;
   }
   
+
   /* Return up to max ammo, removing that ammo from inventory. */
   public int RequestAmmo(string ammoType, int max){
     int amount = CheckAmmo(ammoType, max);
@@ -176,7 +247,61 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public string GetInfo(){
+<<<<<<< HEAD
     return "Actor";  
+=======
+    switch(brainType){
+      case Brains.Player1:
+        return "You.";
+        break;
+      case Brains.Ai:
+        return "AI";
+        break;
+      case Brains.Remote:
+        return "Online player";
+        break;
+    }
+    return "Actor";
+  }
+
+  /* Return which interaction is currently going to take place. */
+  public Item.Uses GetActiveInteraction(){
+    return Item.Uses.A;
+  }
+
+  public string GetInteractionText(Item.Uses interaction = Item.Uses.A){
+    string ret = "Talk to " + GetInfo() + ".";
+    switch(interaction){
+      case Item.Uses.A:
+        ret = "Talk to " + GetInfo() + ".";
+        break;
+      case Item.Uses.B:
+        ret = "Pickpocket " + GetInfo() + ".";
+        break;
+    }
+    return ret;
+  }
+
+  public void InitiateInteraction(){
+    IInteract interactor = VisibleObject() as IInteract;
+    if(interactor == null){
+      GD.Print("Nothing in range.");
+      return;
+    }
+    Item.Uses interaction = GetActiveInteraction();
+
+    Item item = interactor as Item;
+    if(item != null && (item == hand || item == activeItem)){
+      GD.Print("Don't interact with your active item or hand. Returning.");
+      return;
+    }    
+
+    interactor.Interact((object)this, interaction);
+  }
+
+  public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
+    GD.Print("Interacted with " + GetInfo() + ".");
+>>>>>>> develop
   }
   
   public string GetMoreInfo(){
@@ -230,10 +355,47 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return speed;
   }
   
+<<<<<<< HEAD
   public void SwitchItem(){
     DeferredSwitchItem();
     if(Session.NetActive()){
       Rpc(nameof(DeferredSwitchItem));
+=======
+  public void ToggleInventory(){
+    if(!menuActive){
+      SetMenuActive(true);
+      Session.ChangeMenu(Menu.Menus.Inventory);  
+    }
+    else{
+      SetMenuActive(false);
+    }
+  }
+  
+  /* Equip item based on inventory index. */
+  public void EquipItem(int index){
+    if(inventory.GetItem(index) == null){
+      return;
+    }
+
+    DeferredEquipItem(index);
+    if(Session.NetActive() && Session.IsServer()){
+      Rpc(nameof(DeferredEquipItem), index);
+>>>>>>> develop
+    }
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerEquipItem), Session.session.netSes.selfPeerId, index);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerEquipItem(int caller, int index){
+    DeferredEquipItem(index);
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredEquipItem), index);
+      }
     }
   }
 
@@ -281,7 +443,47 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("activeItem is orphan");
       return;
     }
+<<<<<<< HEAD
     
+=======
+    DeferredStashItem();
+    if(Session.NetActive() && Session.IsServer()){
+      Rpc(nameof(DeferredStashItem));
+    }
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerStashItem), Session.session.netSes.selfPeerId);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerStashItem(int caller){
+    DeferredStashItem();
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredStashItem));
+      }
+    }
+  }
+
+  [Remote]
+  public void DeferredStashItem(){
+    activeItem.Unequip();
+    inventory.ReceiveItem(activeItem);
+    eyes.RemoveChild(activeItem);
+
+    activeItem.QueueFree();
+    EquipHand();
+  }
+
+  /* Remove hand in preparation of equipping an item */
+  public void StashHand(){
+    if(activeItem != hand){
+      GD.Print("Hand not out. Not stashing hand.");
+      return;
+    }
+>>>>>>> develop
     eyes.RemoveChild(activeItem);
     
     activeItem = null;
@@ -310,8 +512,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void Use(Item.Uses use, bool released = false){
     DeferredUse(use, released);
-    if(Session.NetActive()){
+    if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredUse), use, released);
+    }
+    else if(Session.NetActive()){
+      RpcId(1, nameof(ServerUse), Session.session.netSes.selfPeerId, use, released);
+    }
+  }
+
+  // Client -> Server -> Client
+  [Remote]
+  public void ServerUse(int caller, Item.Uses use, bool released){
+    DeferredUse(use, released);
+
+    foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
+      if(caller != entry.Key){
+        RpcId(entry.Key, nameof(DeferredUse), use, released);
+      }
     }
   }
 
@@ -388,7 +605,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
   }
 
+  [Remote]
+  public void RemoteReceiveDamage(string json){
+    Damage dmg = JsonConvert.DeserializeObject<Damage>(json);
+    if(dmg != null){
+      ReceiveDamage(dmg);
+    }
+  }
+  
   public void ReceiveDamage(Damage damage){
+    GD.Print("Received damage " + damage.health);
     if(health <= 0){
       return;
     }
@@ -441,6 +667,69 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     RpcUnreliable(nameof(SetRotation), x, y);
   }
 
+<<<<<<< HEAD
+=======
+  public void DiscardItem(int index){
+    ItemData data = inventory.GetItem(index);
+    if(data == null){
+      GD.Print("No item found, not discarding.");
+      return;
+    }
+    
+    
+    if(!Session.NetActive()){ // Singleplayer should directly call DeferredDiscardItem
+      GD.Print("Discarding item because no net active");
+      string itemName = Session.NextItemId();
+      DeferredDiscardItem(index, itemName);
+    }
+    else{
+      GD.Print("RPC serverdiscarditem");
+      Rpc(nameof(ServerDiscardItem), index);
+    }
+  }
+
+  [Remote]
+  public void ServerDiscardItem(int index){
+    if(Session.NetActive() && !Session.IsServer()){
+      GD.Print("Returning because not server.");
+      return;
+    }
+    GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
+    string itemName = Session.NextItemId();
+    Rpc(nameof(DeferredDiscardItem), index, itemName);
+    DeferredDiscardItem(index, itemName);
+  }
+
+  [Remote]
+  public void DeferredDiscardItem(int index, string itemName){
+    GD.Print("Deferred discard " + index + " " + itemName);
+    ItemData data = inventory.RetrieveItem(index);
+    if(data == null){
+      GD.Print("No item data. Not discarding.");
+      return;
+    }
+
+    Item item = Item.FromData(data);
+    item.Name = itemName;
+    Session.GameNode().AddChild(item);
+    GD.Print(item);
+    Transform trans = item.GlobalTransform;
+    trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
+    item.GlobalTransform = trans;
+
+    // Notify session
+    Session.Event(SessionEvent.ItemDiscardedEvent(NodePath().ToString()));
+  }
+
+  public int IndexOf(Item.Types type, string name){
+    return inventory.IndexOf(type, name);
+  }
+
+  public ItemData RetrieveItem(int index){
+    return inventory.RetrieveItem(index); 
+  }
+
+>>>>>>> develop
   [Remote]
   public void SetRotation(float x, float y){
     Vector3 bodyRot = this.GetRotationDegrees();
@@ -501,8 +790,25 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(items.Count < 2){
       items.Add(item);
     }
+<<<<<<< HEAD
     
     return 0;
+=======
+    else{
+      GD.Print("Online and not server. Not receivingItem");
+      return 0;
+    }
+  }
+
+  
+
+  // Good for server->client
+  [Remote]
+  public void DeferredReceiveItem(string json){
+    ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);
+    Item item = Item.FromData(dat);
+    inventory.ReceiveItem(item);
+>>>>>>> develop
   }
   
   public bool IsPaused(){

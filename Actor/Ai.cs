@@ -15,6 +15,11 @@ public class Ai : Brain
   
   float remainingDelay = 0f;
   const float Delay = 0.03f; 
+
+  private float syncTimer = 0f;
+  public const float syncRate = 0.05f;
+
+
   public Ai(Actor actor, Spatial eyes) : base (actor, eyes){
     host = actor;
     target = null;
@@ -22,12 +27,30 @@ public class Ai : Brain
   
   public override void Update(float delta){
     remainingDelay -= delta;
+    
     if(remainingDelay <= 0f && !actor.IsBusy()){
       remainingDelay = Delay;
-      See();
-      Act(delta);
+      try{
+        See();
+        Act(delta);
+      }
+      catch(NullReferenceException ex){
+        target = null;
+        
+      }
     }
-    
+    if(Session.IsServer() && Session.NetActive()){
+      NetUpdate(delta);
+    }
+  }
+
+  public void NetUpdate(float delta){
+    syncTimer += delta;
+    if(syncTimer >= syncRate){
+      syncTimer = 0f;
+      actor.SyncPosition();
+      actor.SyncAim();
+    }
   }
   
   void Wander(float delta){
@@ -37,13 +60,19 @@ public class Ai : Brain
   
   /* Follow target blindly */
   void Pursue(float delta){
-    if(target == null){
-      return;
+    Vector3 pos = host.Translation;
+    Vector3 potentialPos = host.Pointer(1f);
+    Vector3 targetPos = target.Translation;
+
+    AimAt(targetPos);
+
+    float currentDist = pos.DistanceTo(targetPos);
+    float potentialDist = potentialPos.DistanceTo(targetPos);
+    
+    if(currentDist > potentialDist){
+      host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
     }
     
-    Vector3 targetPos = target.Translation;
-    AimAt(targetPos);
-    host.Move(new Vector3(0, 0, -host.GetMovementSpeed()), delta);
   }
   
   void AimAt(Vector3 point){
@@ -61,7 +90,6 @@ public class Ai : Brain
     Vector3 lookingRot = lookingAt.basis.GetEuler();
     lookingRot = Util.ToDegrees(lookingRot);
     Vector3 turnRot = (lookingRot - hostRot).Normalized();
-    
     host.Turn(turnRot.y, turnRot.x);
   }
   
@@ -75,6 +103,7 @@ public class Ai : Brain
     return aimAngle < AimMargin;
   }
   
+<<<<<<< HEAD
   Actor RayCastForActor(Vector3 start, Vector3 end){
     PhysicsDirectSpaceState spaceState = host.GetWorld().DirectSpaceState as PhysicsDirectSpaceState;
     var result = spaceState.IntersectRay(start, end);
@@ -126,6 +155,8 @@ public class Ai : Brain
     return found;
   }
   
+=======
+>>>>>>> develop
   void See(){
     if(target == null){
       AcquireTarget();
@@ -139,10 +170,33 @@ public class Ai : Brain
     end *= distance; // Move distance
     end += start; // Add starting position
     
-    List<Actor> targets = GridCastForActor(start, end);
-    if(targets.Count > 0){
-      target = targets[0];
+    List<Actor> targets = SeeActors();//GridCastForActor(start, end);
+    foreach(Actor targ in targets){
+      if(targ != null && targ != host){
+        target = targ;
+        return;
+      }
     }
+
+  }
+
+  List<Actor> SeeActors(){
+    Vector3 start = host.GlobalHeadPosition();
+    Vector3 end = host.Pointer();
+    World world = host.GetWorld();
+
+    List<object> objects = Util.GridCast(start, end, world, 3, 0.5f);
+
+    List<Actor> ret = new List<Actor>();
+
+    foreach(object obj in objects){
+      Actor sighted = obj as Actor;
+      if(sighted != null){
+        ret.Add(sighted);
+      }
+    }
+
+    return ret;
   }
   
   void Act(float delta){
@@ -150,12 +204,14 @@ public class Ai : Brain
       Wander(delta);
       return;
     }
-    if(!AimingAt(target.Translation)){
+
+    Vector3 targetPos = target.Translation;
+    if(!AimingAt(targetPos)){
       Pursue(delta);
       return;
     }
+    
     actor.Use(Item.Uses.A);
-    target = null;
     
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
     if(ammoHaver != null){

@@ -11,18 +11,32 @@ for this project.
 The first iteration of development is completed. This creates room for
 two kinds of growth: refinement of existing features and the introduction
 of new features. The former includes consists mostly of granular changes
-as well as architectural review to reduce complexity. The second introduces
+as well as architectural review to reducOptimization will be a priority that will come only after things are feature complete.  However, that might be something worth noting. e complexity. The second introduces
 complexity. This balance must be attended to 
 
+<<<<<<< HEAD
+=======
+# Areas lacking polish
+- AI is currently not smart.
+- There is only one placeholder Arena map.
+- Items rely on Scenes for initialization.
+- Menus use default skin and is hideous.
+- Actors lack humanoid models with animations.
+- Lack of item variety. (Currently no apparel or misc)
+- BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
+>>>>>>> develop
 
 # Completed Milestones
 
-**Version 0.0.1 Arena**
+**Version 1.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
+<<<<<<< HEAD
 # TBD
 The next scope expansion has not yet been decided.
 
+=======
+>>>>>>> develop
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
@@ -34,8 +48,11 @@ criteria that can be marked complete or ready for review.
 ## DONE Sound engineering
 
 ## Testing
+<<<<<<< HEAD
 - Each programming user story or task should be tested and approved before
 the deliverable can be released.
+=======
+>>>>>>> develop
 
 ##DONE Interface Programming
 

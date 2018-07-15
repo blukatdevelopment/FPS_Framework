@@ -25,7 +25,23 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
     Rifle,
     Bullet,
     HealthPack,
+<<<<<<< HEAD
     AmmoPack
+=======
+    AmmoPack,
+    Ammo,
+    AidHealthPack
+  };
+
+
+  public enum Categories { // Inventory categories.
+    None,
+    Weapons,
+    Apparel,
+    Aid,
+    Misc,
+    Ammo
+>>>>>>> develop
   };
   
   
@@ -38,6 +54,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
+<<<<<<< HEAD
+=======
+  protected Area area;
+  protected bool stopColliding = false; // Stop applying OnCollide effect
+>>>>>>> develop
 
   public void BaseInit(string name, string description, int quantity = 1, int quantityMax = 1, bool allowCollision = true){
     this.name = name;
@@ -190,6 +211,15 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
       case Types.AmmoPack:
         ret.BaseInit("AmmoPack", "Food for your rifle.");
         break;
+<<<<<<< HEAD
+=======
+      case Types.Ammo:
+        ret.BaseInit("Bullet", "A casing full of powder capped with a bullet. No further info available.");
+        break;
+      case Types.AidHealthPack:
+        ret.BaseInit("HealthPack", "Heals what ails you.");
+        break;
+>>>>>>> develop
     }
     if(name != ""){
       Node retNode = ret as Node;
@@ -207,6 +237,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
       case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
       case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
       case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
+<<<<<<< HEAD
+=======
+      case Types.Ammo: ret = "res://Scenes/Prefabs/Items/Ammo.tscn"; break;
+      case Types.AidHealthPack: ret = "res://Scenes/Prefabs/Items/AidHealthPack.tscn"; break;
+>>>>>>> develop
     }
     
     return ret;
@@ -217,7 +252,61 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide {
   }
   
   public virtual void Unequip(){
+<<<<<<< HEAD
     this.wielder = null;
+=======
+    ItemBaseUnequip();
+  }
+
+  public static Categories TypeCategory(Types type){
+    switch(type){
+      case Types.Hand:
+        return Categories.Weapons;
+        break;
+      case Types.Rifle:
+        return Categories.Weapons;
+        break;
+      case Types.Bullet:
+        return Categories.None;
+        break;
+      case Types.HealthPack:  // Powerups are not aid because they are used on contact
+        return Categories.None;
+        break;
+      case Types.AmmoPack:
+        return Categories.None;
+        break;
+      case Types.Ammo:
+        return Categories.Ammo;
+        break;
+      case Types.AidHealthPack:
+        return Categories.Aid;
+        break;
+    }
+    return Categories.None;
+  }
+
+  public static List<ItemData> FilterByCategory(List<ItemData> unsorted, Categories category){
+    List<ItemData> ret = new List<ItemData>();
+    foreach(ItemData item in unsorted){
+      if(TypeCategory(item.type) == category){
+        ret.Add(item);
+      }
+    }
+
+    return ret;
+  }
+
+  public int GetWeight(){
+    return weight * quantity;
+  }
+
+  public static int TotalWeight(List<ItemData> items){
+    int total = 0;
+    foreach(ItemData item in items){
+      total += item.GetWeight();
+    }
+    return total;
+>>>>>>> develop
   }
 
 }

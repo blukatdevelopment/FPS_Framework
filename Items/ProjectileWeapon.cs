@@ -111,6 +111,9 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
   
   public override void Use(Item.Uses use, bool released = false){
+    if(busy){
+      return;
+    }
     switch(use){
       case Uses.A: Fire(); break;
       case Uses.B: break; // Aim logic goes here.

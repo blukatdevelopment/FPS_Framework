@@ -65,10 +65,18 @@
     <Compile Include="Menus\LobbyMenu.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Menus\Menu.cs" />
+    <Compile Include="Menus\IMenu.cs" />
+    <Compile Include="Menus\SingleplayerMenu.cs" />
     <Compile Include="Menus\MultiplayerMenu.cs" />
     <Compile Include="Menus\HUDMenu.cs" />
     <Compile Include="Menus\PauseMenu.cs" />
     <Compile Include="Menus\TextBox.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Menus\InventoryMenu.cs" />
+    <Compile Include="Menus\SettingsMenu.cs" />
+    <Compile Include="Menus\ArenaConfigMenu.cs" />
+>>>>>>> develop
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />
@@ -79,6 +87,11 @@
     <Compile Include="Items\IHasInfo.cs" />
     <Compile Include="Items\IEquip.cs" />
     <Compile Include="Items\ICollide.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="Items\IInteract.cs" />
+    <Compile Include="Items\IConsume.cs" />
+>>>>>>> develop
     <Compile Include="Items\IWeapon.cs" />
     <Compile Include="Items\MeleeWeapon.cs" />
     <Compile Include="Items\ProjectileWeapon.cs" />
@@ -86,7 +99,14 @@
     <Compile Include="Items\PowerUp.cs" />
     <Compile Include="Items\HealthPowerUp.cs" />
     <Compile Include="Items\AmmoPowerUp.cs" />
+<<<<<<< HEAD
     <Compile Include="Util\Arena.cs" />
+=======
+    <Compile Include="Items\ItemData.cs" />
+    <Compile Include="Items\HealthAid.cs" />
+    <Compile Include="Arena\Arena.cs" />
+    <Compile Include="Arena\ArenaSettings.cs" />
+>>>>>>> develop
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
@@ -94,7 +114,13 @@
     <Compile Include="Util\PlayerData.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
+<<<<<<< HEAD
     <Compile Include="Util\Events\SessionEvent.cs" />
+=======
+    <Compile Include="Util\SessionEvent.cs" />
+    <Compile Include="Db\SettingsDb.cs" />
+    <Compile Include="Inventory\Inventory.cs" />
+>>>>>>> develop
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

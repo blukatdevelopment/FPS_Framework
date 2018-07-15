@@ -11,10 +11,16 @@ to recreate common FPS game mechanics using Unity3d.
 
 # Development 
 
-The Release Arena_0.0.1 release branch serves as a starting point for
-those interested in using Godot to make simple FPS games.
+The 1.1.0 release includes some additional features not present in 1.0.1 such as settings menu, arena configuration, and bots in multiplayer. An inventory menu now exists for equipping, stashing, and dropping items.
 
-With the basic architecture in place for FPS gameplay and networking, 
-the FPS_Project will undergo planning for the next steps in development.
+The next major milestone will be an Adventure gamemode centered around players exploring a persistant open world. 
 
-See Planning/README.md on develop or feature branches for more details about the current state of development.
+See Planning/README.md on develop or feature branches for more granular information.
+
+
+![MainMenu](/Screenshots/main_menu.png)
+![TwoAi](/Screenshots/two_ai.png)
+![Lobbymenu](/Screenshots/lobby_menu.png)
+![InventoryMenu](/Screenshots/inventory_menu.png)
+![SettingsMenu](/Screenshots/settings_menu.png)
+![ArenaConfig](/Screenshots/arena_config.png)

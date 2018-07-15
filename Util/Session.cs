@@ -1,5 +1,5 @@
 /*
-  This pseudo-singleton is a dumping place for session-specific data and methods.
+  This pseudo-singleton is the focal point for the active session's state.
   The Session should be the root of the scene in the game. If it's null, things simply
   won't work.
 
@@ -17,7 +17,15 @@ public class Session : Node {
   public Arena arena;
   public NetworkSession netSes;
 
+<<<<<<< HEAD
   public JukeBox jukeBox;
+=======
+  // Settings
+  public ArenaSettings arenaSettings; // Set up just before Arena game
+  public float masterVolume, sfxVolume, musicVolume;
+  public string userName;
+  public float mouseSensitivityX, mouseSensitivityY;
+>>>>>>> develop
   
 
   public Actor player;
@@ -36,6 +44,34 @@ public class Session : Node {
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
   }
+<<<<<<< HEAD
+=======
+
+  public void InitSettings(){
+    GD.Print("InitSettings");
+    SettingsDb db = SettingsDb.Init();
+    masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
+    sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
+    musicVolume = Util.ToFloat(db.SelectSetting("music_volume"));
+    userName = db.SelectSetting("username");
+    mouseSensitivityX = Util.ToFloat(db.SelectSetting("mouse_sensitivity_x"));
+    mouseSensitivityY = Util.ToFloat(db.SelectSetting("mouse_sensitivity_y"));
+    db.Close();
+    Sound.RefreshVolume();
+  }
+
+  public static void SaveSettings(){
+    SettingsDb db = SettingsDb.Init();
+    db.StoreSetting("master_volume", "" + Session.session.masterVolume);
+    db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
+    db.StoreSetting("music_volume", "" + Session.session.musicVolume);
+    db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
+    db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
+    db.StoreSetting("username", Session.session.userName);
+    db.Close();
+    Sound.RefreshVolume();
+  }
+>>>>>>> develop
   
   public void Quit(){
     GetTree().Quit();  
@@ -108,7 +144,11 @@ public class Session : Node {
     ClearGame();
   }
   
+<<<<<<< HEAD
   public void SinglePlayerGame(){
+=======
+  public static void SinglePlayerArena(){
+>>>>>>> develop
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
     Node arenaNode = Arena.ArenaFactory();
@@ -118,7 +158,12 @@ public class Session : Node {
     
   }
 
+<<<<<<< HEAD
   public void MultiPlayerGame(){
+=======
+  public static void MultiplayerArena(){
+    Session ses = Session.session;
+>>>>>>> develop
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
     AddChild(arenaNode);
@@ -129,12 +174,29 @@ public class Session : Node {
     }
   }
 
+<<<<<<< HEAD
   public void ChangeMenu(Menu.Menus menu){
     if(activeMenu != null){
       activeMenu.QueueFree();
       activeMenu = null;
     }
     activeMenu = Menu.MenuFactory(menu);
+=======
+  public static void ChangeMenu(Menu.Menus menu){
+    Session ses = Session.session;
+    if(ses.activeMenu != null){
+      IMenu menuInstance = ses.activeMenu as IMenu;
+      if(menuInstance != null){
+        menuInstance.Clear();
+      }
+      else{
+        ses.activeMenu.QueueFree();
+      }
+      ses.activeMenu = null;
+    }
+
+    ses.activeMenu = Menu.MenuFactory(menu);
+>>>>>>> develop
   }
   
   private void EnforceSingleton(){

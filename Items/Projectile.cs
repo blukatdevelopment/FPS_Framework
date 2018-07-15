@@ -17,11 +17,15 @@ public class Projectile : Item {
     this.QueueFree();
   }
 
-  
+  // Should only occur once. 
   void GiveDamage(IReceiveDamage receiver){
+    if(stopColliding){
+      return;
+    }
     Damage damage = new Damage();
     damage.health = healthDamage;
     damage.sender = sender;
     receiver.ReceiveDamage(damage);
+    stopColliding = true;
   }
 }
