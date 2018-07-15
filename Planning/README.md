@@ -15,25 +15,17 @@ as well as architectural review to reducOptimization will be a priority that wil
 complexity. This balance must be attended to 
 
 # Areas lacking polish
-- AI needs to to rely on Util.RayCast and move AI.BoxCast to Util.BoxCast
-- AI does not support netcode.
 - AI is currently not smart.
-- There's no settings menu to configure volume, mouse sensitivity, etc.
 - There is only one placeholder Arena map.
-- There are no options to configure single or mutliplayer games.
 - Items rely on Scenes for initialization.
-- Menus use default skin.
+- Menus use default skin and is hideous.
 - Actors lack humanoid models with animations.
-- Lack of item variety. (Currently no apparel, aid, or misc)
-- Menu system might benefit from some inheritance.
-- BUG: Can use rifle when reloading it.
-- BUG: Clicking repeatedly highlights HUD
-- BUG: When you die, your inventory screen stays open.
-- BUG: When a match ends and new match starts, arena is not initialized properly.
+- Lack of item variety. (Currently no apparel or misc)
+- BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
 
 # Completed Milestones
 
-**Version 0.0.1 Arena**
+**Version 1.0.1 Arena**
 Minimalistic multiplayer arena shooter.
 
 ## Design

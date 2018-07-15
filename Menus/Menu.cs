@@ -44,6 +44,12 @@ public class Menu{
     
     return slider;
   }
+
+  public static Label Label(string text = ""){
+    Label label = new Label();
+    label.Text = text;   
+    return label;
+  }
   
   public static Node MenuFactory(Menus menu){
     Node ret = null;

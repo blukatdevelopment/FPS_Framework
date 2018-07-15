@@ -5,10 +5,10 @@ public class HUDMenu : Container, IMenu{
 
   public float delay = 0.0f;
 
-  Godot.TextEdit healthBox;
-  Godot.TextEdit itemBox;
-  Godot.TextEdit objectiveBox;
-  Godot.TextEdit interactionBox;
+  Godot.Label healthBox;
+  Godot.Label itemBox;
+  Godot.Label objectiveBox;
+  Godot.Label interactionBox;
   
   public override void _Process(float delta){
     delay += delta;
@@ -44,13 +44,13 @@ public class HUDMenu : Container, IMenu{
     }
     
     string healthText = "Health: " + player.GetHealth();
-    healthBox.SetText(healthText);
+    healthBox.Text = healthText;
 
     string itemText = player.ItemInfo();
-    itemBox.SetText(itemText);
+    itemBox.Text = itemText;
     
     string objectiveText = Session.GetObjectiveText();
-    objectiveBox.SetText(objectiveText);
+    objectiveBox.Text = objectiveText;
 
     IInteract interactor = player.VisibleObject() as IInteract;
     if(interactor == null){
@@ -67,20 +67,16 @@ public class HUDMenu : Container, IMenu{
 
   void InitControls(){
 
-    healthBox = (Godot.TextEdit)Menu.TextBox("health");
-    healthBox.Readonly = true;
+    healthBox = Menu.Label("health");
     AddChild(healthBox);
 
-    itemBox = (Godot.TextEdit)Menu.TextBox("item");
-    itemBox.Readonly = true;
+    itemBox = Menu.Label("item");
     AddChild(itemBox);
     
-    objectiveBox = (Godot.TextEdit)Menu.TextBox("Objective Info");
-    objectiveBox.Readonly = true;
+    objectiveBox = Menu.Label("Objective Info");
     AddChild(objectiveBox);
 
-    interactionBox = (Godot.TextEdit)Menu.TextBox("Interaction text");
-    interactionBox.Readonly = true;
+    interactionBox = Menu.Label("Interaction text");
     AddChild(interactionBox);
   }
 

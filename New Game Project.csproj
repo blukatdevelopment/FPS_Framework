@@ -104,8 +104,8 @@
     <Compile Include="Items\AmmoPowerUp.cs" />
     <Compile Include="Items\ItemData.cs" />
     <Compile Include="Items\HealthAid.cs" />
-    <Compile Include="Util\Arena.cs" />
-    <Compile Include="Util\ArenaSettings.cs" />
+    <Compile Include="Arena\Arena.cs" />
+    <Compile Include="Arena\ArenaSettings.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Util\PlayerData.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
-    <Compile Include="Util\Events\SessionEvent.cs" />
+    <Compile Include="Util\SessionEvent.cs" />
     <Compile Include="Db\SettingsDb.cs" />
     <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
