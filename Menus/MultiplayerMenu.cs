@@ -52,16 +52,16 @@ public class MultiplayerMenu : Container, IMenu {
     selectionButton = (Godot.Button)Menu.Button("Back", ShowSelection);
     AddChild(selectionButton);
     
-    portBox = (Godot.TextEdit)Menu.TextBox("" + NetworkSession.DefaultPort);
+    portBox = (Godot.TextEdit)Menu.TextBox("" + NetworkSession.DefaultPort, false);
     AddChild(portBox);
     
     startServerButton = (Godot.Button)Menu.Button("Host Game", StartServer);
     AddChild(startServerButton);
     
-    addressBox = (Godot.TextEdit)Menu.TextBox(NetworkSession.DefaultServerAddress);
+    addressBox = (Godot.TextEdit)Menu.TextBox(NetworkSession.DefaultServerAddress, false);
     AddChild(addressBox);
     
-    nameBox = (Godot.TextEdit)Menu.TextBox("Name");
+    nameBox = (Godot.TextEdit)Menu.TextBox("Name", false);
     AddChild(nameBox);
     
     startClientButton = (Godot.Button)Menu.Button("Join Game", StartClient);
