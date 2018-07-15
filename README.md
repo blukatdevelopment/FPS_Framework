@@ -18,9 +18,9 @@ The next major milestone will be an Adventure gamemode centered around players e
 See Planning/README.md on develop or feature branches for more granular information.
 
 
-![MainMenu](https://drive.google.com/open?id=1EuWNmpAUawmro0QBx5ldPPz03g8rpJyd)
-![TwoAi](https://drive.google.com/open?id=1d5RTBTCjCZpNvA2gjqjmHY9UOCduoyGw)
-![Lobbymenu](https://drive.google.com/open?id=1qNqT6iPXNDuim8DeDdagdw4V9RN5laiT)
-![InventoryMenu](https://drive.google.com/open?id=1qNqT6iPXNDuim8DeDdagdw4V9RN5laiT)
-![SettingsMenu](https://drive.google.com/open?id=1kOWGaIrUeJ-z14gtSVEMrAnwEAkMUHtH)
-![ArenaConfig](https://drive.google.com/open?id=1swZHEoPm6_H0Z7p0uH-mlK89JIiuOA_c)
+![MainMenu](/Screenshots/main_menu.png)
+![TwoAi](/Screenshots/two_ai.png)
+![Lobbymenu](/Screenshots/lobby_menu.png)
+![InventoryMenu](/Screenshots/inventory_menu.png)
+![SettingsMenu](/Screenshots/settings_menu.png)
+![ArenaConfig](/Screenshots/arena_config.png)
