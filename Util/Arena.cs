@@ -177,7 +177,7 @@ public class Arena : Spatial {
 
   public void SinglePlayerInit(){
     if(settings.usePowerups){
-      for(int i = 0; i < 10; i++){
+      for(int i = 0; i < 1; i++){
         SpawnItem(Item.Types.AmmoPack, 10);
         SpawnItem(Item.Types.HealthPack);  
       }
@@ -240,7 +240,7 @@ public class Arena : Spatial {
     }
     
     if(settings.usePowerups){
-      for(int i = 0; i < 10; i++){
+      for(int i = 0; i < 1; i++){
         SpawnItem(Item.Types.HealthPack);
         SpawnItem(Item.Types.AmmoPack);
       }
