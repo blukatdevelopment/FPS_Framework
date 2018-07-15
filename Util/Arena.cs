@@ -312,13 +312,22 @@ public class Arena : Spatial {
 
     
     if(actors.Length < 2 || actors[1] == ""){
+     GD.Print("HandleActorDead: Insufficient arguments");
      return; 
     }
 
     Node killerNode = GetNode(new NodePath(actors[1]));
     Actor killer = killerNode as Actor;
 
-    scores[killer.worldId]++;
+    if(killer != null){
+      GD.Print("Killer:" + killer.worldId);
+      scores[killer.worldId]++;
+    }
+    else{
+      GD.Print("HandleActorDead: Killer null");
+    }
+    
+    
 
   }
 

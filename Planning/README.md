@@ -27,7 +27,6 @@ complexity. This balance must be attended to
 - Lack of item variety. (Currently no apparel, aid, or misc)
 - Menu system might benefit from some inheritance.
 - BUG: Can pick up own hand
-- BUG: Score in multiplayer arena not updating when killing AI
 
 # Completed Milestones
 
