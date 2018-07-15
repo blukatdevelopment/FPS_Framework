@@ -15,6 +15,7 @@ public class Arena : Spatial {
   Spatial terrain;
   List<Vector3> actorSpawnPoints, itemSpawnPoints;
   int nextId = -2147483648;
+  public bool gameStarted = false;
 
   public ArenaSettings settings;
   
@@ -251,7 +252,7 @@ public class Arena : Spatial {
     }
   }
 
-  public void InitActor(Actor.Brains brain, int id){
+  public Actor InitActor(Actor.Brains brain, int id){
     scores.Add(id, 0);
 
     if(!Session.NetActive()){
@@ -259,17 +260,19 @@ public class Arena : Spatial {
       if(brain == Actor.Brains.Player1){
         playerWorldId = id;
       }
-      return;
+      return null;
     }
+
+    Actor ret = null;
 
     if(id == playerWorldId){
-      SpawnActor(Actor.Brains.Player1, id);
+      ret = SpawnActor(Actor.Brains.Player1, id);
     }
     else {
-      SpawnActor(brain, id);
+      ret = SpawnActor(brain, id);
     }
 
-
+    return ret; 
   }
 
   
@@ -304,7 +307,9 @@ public class Arena : Spatial {
 
     actorNode.Name = "Deadplayer" + id;
     actor.QueueFree();
-    SpawnActor(brain, id);
+    actor = SpawnActor(brain, id);
+    
+
     
     if(actors.Length < 2 || actors[1] == ""){
      return; 
@@ -414,6 +419,7 @@ public class Arena : Spatial {
     GD.Print("Arena.Initkit");
     actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
     actor.ReceiveItem(Item.Factory(Item.Types.Ammo, "", "Bullet", 100));
+    EquipActor(actor, Item.Types.Rifle, "Rifle");
     
   }
   
@@ -462,6 +468,7 @@ public class Arena : Spatial {
       GD.Print("Waiting for other players.");
       return;
     }
+    gameStarted = true;
     //Equip rifle.
     if(settings.useKits){
       foreach(Actor actor in actors){

@@ -5,11 +5,6 @@
   Items are children of an actor's Eyes.
   Inventory is crude weapon-switching and ammo count like that in classic FPS games.
 
-
-  RPC calls go like so: (Notice AI is not currently supported)
-  server->client: DeferredInitInventory, 
-  client->others: DeferredUse, 
-
 */
 
 using Godot;
