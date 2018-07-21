@@ -42,7 +42,7 @@ Things that need to be done:
 
 The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
 
-## Step 1: Access
+## DONE Step 1: Access
 
 Set up menus to navigate to adventure mode
 - Multiplayer Server lobby
