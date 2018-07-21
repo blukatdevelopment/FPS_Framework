@@ -111,8 +111,9 @@ public class Menu{
         ret.Name = "ArenaConfig";
         break;
       case SubMenus.AdventureConfig:
-      ret = new AdventureConfigMenu();
-      ret.Name = "AdventureConfig";
+        ret = new AdventureConfigMenu();
+        ret.Name = "AdventureConfig";
+        break;
     }
     return ret;
   }

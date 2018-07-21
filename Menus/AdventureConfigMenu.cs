@@ -42,7 +42,8 @@ public class AdventureConfigMenu : Container, IMenu {
   }
 
   void InitControls(){
-    
+    adventureLabel = Menu.Label("Adventure Mode");
+    AddChild(adventureLabel);
 
   }
 
