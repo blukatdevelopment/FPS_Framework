@@ -17,7 +17,8 @@ public class Menu{
 
   public enum SubMenus{ // Parented by menu
     None,
-    ArenaConfig
+    ArenaConfig,
+    AdventureConfig
   }
   
   public static Button Button(string text = "", Action onClick = null){
@@ -109,6 +110,9 @@ public class Menu{
         ret = new ArenaConfigMenu();
         ret.Name = "ArenaConfig";
         break;
+      case SubMenus.AdventureConfig:
+      ret = new AdventureConfigMenu();
+      ret.Name = "AdventureConfig";
     }
     return ret;
   }

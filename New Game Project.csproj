@@ -83,6 +83,7 @@
     <Compile Include="Menus\InventoryMenu.cs" />
     <Compile Include="Menus\SettingsMenu.cs" />
     <Compile Include="Menus\ArenaConfigMenu.cs" />
+    <Compile Include="Menus\AdventureConfigMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Items\Damage.cs" />
     <Compile Include="Items\IHasAmmo.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Items\HealthAid.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaSettings.cs" />
+    <Compile Include="Adventure\AdventureSettings.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />

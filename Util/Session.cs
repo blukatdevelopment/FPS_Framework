@@ -21,10 +21,17 @@ public class Session : Node {
 
   // Settings
   public ArenaSettings arenaSettings; // Set up just before Arena game
+  public AdventureSettings adventureSettings; // Set up for an adventure game
   public float masterVolume, sfxVolume, musicVolume;
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;
   
+
+  public enum Gamemodes{
+    None,
+    Arena,
+    Adventure
+  };
 
   public Actor player;
 
