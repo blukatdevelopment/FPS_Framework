@@ -50,7 +50,7 @@ Set up menus to navigate to adventure mode
 - AdventureConfigMenu
 
 
-## Step 2: Prototypes
+## DONE Step 2: Prototypes
 
 Build up some prototype classes with dummy methods and comments
 - Overworld
@@ -58,9 +58,14 @@ Build up some prototype classes with dummy methods and comments
 - Treadmill
 - Cartographer - Generates the overworld's terrain.
 - TerrainCell - Unit of overworld terrain controlling one GridMap
-- TerrainCellRecord - Data from one Terrain Cell
+- TerrainCellData - Data from one Terrain Cell
 - IAgent - 
 - MonsterAgent
+
+New classes discovered after setting up dummy code:
+- OverworldData
+- ItemQuery
+- TerrainBlock
 
 ## Step 3: Hello, world!
 
@@ -117,11 +122,6 @@ criteria that can be marked complete or ready for review.
 ## Testing
 
 ## Interface Programming
-
-**AdventureConfigMenu**
-No settings, just a label to say "Adventure Mode"
-
-Frame this into SinglePlayerMenu and Lobbymenu to toggle between gamemodes.
 
 ## Network Programming
 

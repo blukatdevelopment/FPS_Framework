@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actor\Actor.cs" />
+    <Compile Include="Actor\ActorData.cs" />
     <Compile Include="Actor\ActorInputHandler.cs" />
     <Compile Include="Actor\Ai.cs" />
     <Compile Include="Actor\Eyes.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Items\IHasAmmo.cs" />
     <Compile Include="Items\IReceiveDamage.cs" />
     <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemQuery.cs" />
     <Compile Include="Items\IUse.cs" />
     <Compile Include="Items\IHasItem.cs" />
     <Compile Include="Items\IHasInfo.cs" />
@@ -108,6 +110,15 @@
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaSettings.cs" />
     <Compile Include="Adventure\AdventureSettings.cs" />
+    <Compile Include="Adventure\Overworld.cs" />
+    <Compile Include="Adventure\OverworldData.cs" />
+    <Compile Include="Adventure\Treadmill.cs" />
+    <Compile Include="Adventure\Cartographer.cs" />
+    <Compile Include="Adventure\TerrainCell.cs" />
+    <Compile Include="Adventure\TerrainCellData.cs" />
+    <Compile Include="Adventure\TerrainBlock.cs" />
+    <Compile Include="Adventure\IAgent.cs" />
+    <Compile Include="Adventure\MonsterAgent.cs" />
     <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
