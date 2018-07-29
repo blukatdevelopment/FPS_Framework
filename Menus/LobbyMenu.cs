@@ -426,7 +426,7 @@ public class LobbyMenu : Container, IMenu {
         Session.MultiplayerArena();
         break;
       case Session.Gamemodes.Adventure:
-        GD.Print("Starting adventure");
+        Session.MultiplayerAdventure();
         break;
     }
     

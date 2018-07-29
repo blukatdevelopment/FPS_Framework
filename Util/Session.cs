@@ -15,6 +15,7 @@ public class Session : Node {
   public static Session session;
   private Node activeMenu;
   public Arena arena;
+  public Overworld adventure; // Overworld manages adventure mode.
   public NetworkSession netSes;
   public Random random;
   public JukeBox jukeBox;
@@ -161,7 +162,20 @@ public class Session : Node {
     ses.arena = (Arena)arenaNode;
     ses.AddChild(arenaNode);
     ses.arena.Init(true);
-    
+  }
+
+  public static void SinglePlayerAdventure(){
+    GD.Print("SinglePlayerAdventure");
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
+  }
+
+  public static void MultiplayerAdventure(){
+    GD.Print("MultiplayerAdventure Server:" + Session.IsServer());
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
   }
 
   public static void MultiplayerArena(){

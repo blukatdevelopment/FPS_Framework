@@ -14,7 +14,7 @@ of new features. The former includes consists mostly of granular changes
 as well as architectural review to reducOptimization will be a priority that will come only after things are feature complete.  However, that might be something worth noting. e complexity. The second introduces
 complexity. This balance must be attended to 
 
-# Areas lacking polish
+# Areas lacking polish or needing refactor
 - AI is currently not smart.
 - There is only one placeholder Arena map.
 - Items rely on Scenes for initialization.
@@ -22,6 +22,7 @@ complexity. This balance must be attended to
 - Actors lack humanoid models with animations.
 - Lack of item variety. (Currently no apparel or misc)
 - BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
+- Add <string, string> variable to ItemQuery and replace ItemData with it to simplify adding/removing data.
 
 # Completed Milestones
 
@@ -30,7 +31,6 @@ Minimalistic multiplayer arena shooter.
 
 
 # Adventure Gamemode
-
 
 Things that need to be done:
 - Menus to access and configure adventure mode
@@ -112,6 +112,16 @@ Look into options for loading database into memory and saving it to file.
 ## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
+
+This iteration should, in itself, contain a few steps.
+
+0. Set up camera to view these steps.
+1. Generate single flat Gridmap (Perhaps with one cube poking up to show tile boundaries.)
+2. Generate map comprised of these Gridmaps in dormant form.
+3. Render a 3x3 grid of these Gridmaps.
+4. get treadmill to watch for player leaving center gridmap
+5. treadmill should determine which gridmaps will be released/requested.
+
 
 ## Art
 

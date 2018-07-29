@@ -65,7 +65,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   bool readyActive = false;
 
   
-  public void Init(Brains b = Brains.Player1){
+  public void Init(Brains b = Brains.Player1, bool initHealth = true){
     InitChildren();
     this.brainType = b;
     switch(b){
@@ -86,8 +86,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
     speaker = new Speaker();
     AddChild(speaker);
-    health = 100;
+    if(initHealth){
+      health = 100;
+    }
     InitInventory();
+  }
+
+  public void LoadData(ActorData dat){
+    // FIXME add remaining fields to ActorData and this method
+    health = dat.health;
+    healthMax = dat.healthMax;
+    Translation = dat.pos;
+
+  }
+
+  public ActorData GetData(){
+    GD.Print("Actor.GetData not implemented");
+    return new ActorData();
   }
   
   public Item PrimaryItem(){

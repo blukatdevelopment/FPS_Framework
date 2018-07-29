@@ -99,7 +99,7 @@ public class SingleplayerMenu : Container, IMenu {
         Session.SinglePlayerArena();
         break;
       case Session.Gamemodes.Adventure:
-        GD.Print("Play singleplayer adventure mode");
+        Session.SinglePlayerAdventure();
         break;
     }
   }
