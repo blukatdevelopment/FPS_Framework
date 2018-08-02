@@ -19,15 +19,24 @@ public class Treadmill {
 		this.actor = CreatePlayer(actor);
 		this.center = world.RequestCell(coords);
 
+		List<string> missingArgs = new List<string>();
 		if(world == null){
-			GD.Print("Treadmill: World null");
+			missingArgs.Add("world");
 		}
 		if(actor == null){
-			GD.Print("Treadmill: Actor null");
+			missingArgs.Add("actor");
 		}
 		if(center == null){
-			GD.Print("Treadmill: Center null");
+			missingArgs.Add("center");
 		}
+		if(missingArgs.Count > 0){
+			foreach(string arg in missingArgs){
+				GD.Print("Treadmill: Arg is null: " + arg);
+			}
+			return;
+		}
+
+
 	}
 
 	public Actor CreatePlayer(ActorData dat){

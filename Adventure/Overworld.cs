@@ -132,6 +132,14 @@ public class Overworld : Spatial {
 		return y * WorldWidth + x;
 	}
 
+	/* Returns id for given TerrainCell coordinates,
+	 or -1 for invalid coordinates */
+	public int CoordsToCellId(Vector2 coords){
+		int x = (int)coords.x;
+		int y = (int)coords.y;
+		return CoordsToCellId(x, y);
+	}
+
 	/*
 		Determine what cell a given position falls in.
 	*/
@@ -139,6 +147,7 @@ public class Overworld : Spatial {
 		GD.Print("Overworld.PositionToCellId not implemented");
 		return -1;
 	}
+
 
 	public int GetWorldWidth(){
 		return WorldWidth;
@@ -156,7 +165,7 @@ public class Overworld : Spatial {
 			########################################################################
 														Treadmill management
 			########################################################################
-	*
+	*/
 
 	/* Remove dormant actor so it can be rendered. */
 	public ActorData RequestActorData(int peerId, int actorId = -1){
@@ -217,6 +226,25 @@ public class Overworld : Spatial {
 	/* Locates or creates TerrainCell and returns it. */
 	public TerrainCell RequestCell(Vector2 coords){
 		GD.Print("Overworld.RequestCell not implemented");
+		if(coords == null){
+			return null;
+		}
+		int id = PositionToCellId(coords);
+		
+		
+		if(dormantCells.ContainsKey(id)){
+			TerrainCellData dormant = dormantCells[id];
+			dormantCells.Remove(id);
+
+			TerrainCell active = new TerrainCell(dormant);
+			activeCells.Add(id, active);
+			return active;
+		}
+		if(activeCells.ContainsKey(id)){
+			return activeCells[id];
+		}
+
+
 		return null;
 	}
 

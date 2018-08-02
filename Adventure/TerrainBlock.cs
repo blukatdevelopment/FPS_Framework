@@ -15,4 +15,14 @@ public class TerrainBlock {
 		orientation = new Vector3();
 		grid_position = new Vector3();
 	}
+
+	public override string ToString(){
+		string ret = "Block:[";
+		int x = (int)grid_position.x;
+		int y = (int)grid_position.y;
+		int z = (int)grid_position.z;
+		ret += x + "," + y + "," + z + "]";
+		ret += "meshId: " + meshId;
+		return ret;
+	}
 }
