@@ -38,7 +38,12 @@ public class TerrainCell : GridMap{
 
 			SetCellItem(x, y, z, meshId);
 		}
-		
+	}
+
+	public void SetPos(Vector3 pos, int cellSize){
+		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
+		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
+		Translation = pos - offset;
 	}
 
 }

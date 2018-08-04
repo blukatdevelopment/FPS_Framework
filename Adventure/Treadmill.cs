@@ -19,6 +19,9 @@ public class Treadmill {
 		this.world = world;
 		this.pos = pos;
 		this.center = world.RequestCell(coords);
+		this.center.SetPos(pos, world.GetCellSize());
+
+
 		actorData.pos = pos + new Vector3(0, 10f, 0); // TODO: Make this not hardcoded.
 		this.actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
 		Session.ChangeMenu(Menu.Menus.HUD);

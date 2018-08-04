@@ -301,7 +301,7 @@ public class Overworld : Spatial {
   }
 
   public string GetObjectiveText(){
-  	return "Adventure mode";
+  	return "Take a look around.";
   }
 
 }
