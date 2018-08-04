@@ -44,8 +44,8 @@ public class Cartographer {
 		for(int i = 0; i < cellSize; i++){
 			for(int j = 0; j < cellSize; j++){
 				TerrainBlock block = new TerrainBlock();
-				block.grid_position = new Vector3(i, 0, j);
-				block.meshId = 1;
+				block.gridPosition = new Vector3(i, 0, j);
+				block.blockId = TerrainBlock.Blocks.Dirt;
 				data.blocks.Add(block);
 			}
 		}

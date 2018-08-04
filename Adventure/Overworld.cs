@@ -29,6 +29,7 @@ public class Overworld : Spatial {
 	public Overworld(){
 		treadmills = new List<Treadmill>();
 		activeActors = new List<Actor>();
+		activeCells = new Dictionary<int, TerrainCell>();
 
 		Name = "Adventure";
 		if(Session.IsServer()){
@@ -54,7 +55,7 @@ public class Overworld : Spatial {
 		GD.Print("SinglePlayerInit");
 		InitWorld();
 		ActorData actor = LoadDormantActor(-1);
-		Treadmill treadmill = new Treadmill(-1, this, actor, new Vector2(), 1);
+		Treadmill treadmill = new Treadmill(-1, this, actor, new Vector2(), 1, new Vector3());
 		treadmills.Add(treadmill);
 	}
 
@@ -75,8 +76,8 @@ public class Overworld : Spatial {
 	// This can go away once player is moving around in world.
 	Camera debugCam;
 	public void DebugInit(){
-		debugCam = new Camera();
-		AddChild(debugCam);
+		//debugCam = new Camera();
+		//AddChild(debugCam);
 		InspectWorld();
 	}
 
@@ -127,6 +128,7 @@ public class Overworld : Spatial {
 	 or -1 for invalid coordinates */
 	public int CoordsToCellId(int x, int y){
 		if(y < 0 || y >= WorldHeight || x < 0 || x >= WorldWidth){
+			GD.Print("Invalid coords:" + x + ", " + y);
 			return -1;
 		}
 		return y * WorldWidth + x;
@@ -167,6 +169,7 @@ public class Overworld : Spatial {
 			########################################################################
 	*/
 
+
 	/* Remove dormant actor so it can be rendered. */
 	public ActorData RequestActorData(int peerId, int actorId = -1){
 		GD.Print("Overworld.RequestActor not implemented");
@@ -201,9 +204,23 @@ public class Overworld : Spatial {
 		return null;
 	}
 
+	// Creates Actor from ActorData
+	public Actor ActivateActorData(Actor.Brains brain, ActorData data){
+		Actor ret = Actor.ActorFactory(brain, data);
+		AddChild(ret);
+		activeActors.Add(ret);
+		return ret;
+	}
+
 	// Keep track of externally-created actor.
 	public void RegisterActiveActor(Actor actor){
 		activeActors.Add(actor);
+	}
+
+
+	public List<Treadmill> CellUsers(int cellId){
+		GD.Print("CellUsers not implemented");
+		return new List<Treadmill>();
 	}
 
 	/*
@@ -227,24 +244,28 @@ public class Overworld : Spatial {
 	public TerrainCell RequestCell(Vector2 coords){
 		GD.Print("Overworld.RequestCell not implemented");
 		if(coords == null){
+			GD.Print("RequestCell: Coords null");
 			return null;
 		}
-		int id = PositionToCellId(coords);
+		int id = CoordsToCellId(coords);
 		
-		
+		GD.Print("Coords: " + coords + " id" + id);
+
+		if(activeCells.ContainsKey(id)){
+			GD.Print("Active Cell Found");
+			return activeCells[id];
+		}
 		if(dormantCells.ContainsKey(id)){
+			GD.Print("Dormant Cell Found");
 			TerrainCellData dormant = dormantCells[id];
 			dormantCells.Remove(id);
 
 			TerrainCell active = new TerrainCell(dormant);
 			activeCells.Add(id, active);
+			AddChild(active);
 			return active;
 		}
-		if(activeCells.ContainsKey(id)){
-			return activeCells[id];
-		}
-
-
+		
 		return null;
 	}
 
@@ -252,5 +273,35 @@ public class Overworld : Spatial {
 	public void ReleaseCell(Vector2 coords){
 		GD.Print("Overworld.ReleaseCell not implemented");
 	}
+
+
+	/*
+			########################################################################
+														Session interactions
+			########################################################################
+	*/
+
+	public void HandleEvent(SessionEvent sessionEvent){
+    if(sessionEvent.type == SessionEvent.Types.ActorDied ){
+      HandleActorDead(sessionEvent);
+    }
+    else if(sessionEvent.type == SessionEvent.Types.Pause){
+     	TogglePause();
+    }
+  }
+
+  public void HandleActorDead(SessionEvent sessionEvent){
+  	GD.Print("HandleActorDead not implemented");
+  }
+
+  public void TogglePause(){
+    foreach(Actor actor in activeActors){
+      actor.TogglePause();
+    }
+  }
+
+  public string GetObjectiveText(){
+  	return "Adventure mode";
+  }
 
 }

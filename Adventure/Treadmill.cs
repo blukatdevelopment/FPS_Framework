@@ -12,12 +12,17 @@ public class Treadmill {
 	public Actor actor; // Actor to monitor.
 	public TerrainCell center; // cell at center of treadmill.
 	public int radius; // How many layers of Cells should be  modified.
+	public Vector3 pos;
 
-	public Treadmill(int id, Overworld world, ActorData actor, Vector2 coords, int radius){
+	public Treadmill(int id, Overworld world, ActorData actorData, Vector2 coords, int radius, Vector3 pos){
 		this.id = id;
 		this.world = world;
-		this.actor = CreatePlayer(actor);
+		this.pos = pos;
 		this.center = world.RequestCell(coords);
+		actorData.pos = pos + new Vector3(0, 10f, 0); // TODO: Make this not hardcoded.
+		this.actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
+		Session.ChangeMenu(Menu.Menus.HUD);
+		
 
 		List<string> missingArgs = new List<string>();
 		if(world == null){
@@ -35,12 +40,6 @@ public class Treadmill {
 			}
 			return;
 		}
-
-
-	}
-
-	public Actor CreatePlayer(ActorData dat){
-		return null;
 	}
 
 	// Returns true when item's position is inside treadmill.

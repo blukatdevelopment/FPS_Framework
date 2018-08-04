@@ -54,8 +54,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   // Network
   public int netId;
 
-  // World info
+  // World info TODO: Create an NPCCharacter module for personality stuff.
   public int worldId;
+  public string name; 
   
   // Delayed inventory init for netcode.
   float initTimer, initDelay;
@@ -97,7 +98,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     health = dat.health;
     healthMax = dat.healthMax;
     Translation = dat.pos;
-
+    name = dat.name;
+    worldId = dat.id;
   }
 
   public ActorData GetData(){
@@ -109,7 +111,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem;
   }
   
-
+  // TODO: Remove hardcoded equipping code
   void InitInventory(){
     inventory = new Inventory();
     if(Session.NetActive() && !Session.IsServer()){
@@ -710,7 +712,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Item item = Item.FromData(data);
     item.Name = itemName;
     Session.GameNode().AddChild(item);
-    GD.Print(item);
+    GD.Print("Item:" + item);
     Transform trans = item.GlobalTransform;
     trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
     item.GlobalTransform = trans;
@@ -856,7 +858,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
-  public static Actor ActorFactory(Brains brain = Brains.Player1){
+  public static Actor ActorFactory(Brains brain = Brains.Player1, ActorData data = null){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
     
@@ -881,6 +883,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     actor.eyes.TranslateObjectLocal(eyesPos);
     actor.AddChild(actor.eyes);
     actor.Init(brain);
+    if(data != null){
+      actor.LoadData(data);
+    }
     return actor;
   }
 }

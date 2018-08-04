@@ -7,22 +7,34 @@
 using Godot;
 
 public class TerrainBlock {
+	public enum Blocks{
+    Air,
+    Dirt
+  };
 	public Vector3 orientation;
-	public Vector3 grid_position; 
-	public int meshId;
+	public Vector3 gridPosition; 
+	public Blocks blockId;
+
 
 	public TerrainBlock(){
 		orientation = new Vector3();
-		grid_position = new Vector3();
+		gridPosition = new Vector3();
 	}
 
 	public override string ToString(){
 		string ret = "Block:[";
-		int x = (int)grid_position.x;
-		int y = (int)grid_position.y;
-		int z = (int)grid_position.z;
+		int x = (int)gridPosition.x;
+		int y = (int)gridPosition.y;
+		int z = (int)gridPosition.z;
 		ret += x + "," + y + "," + z + "]";
-		ret += "meshId: " + meshId;
+		ret += "blockId: " + blockId;
 		return ret;
 	}
+
+	// TODO: Find a non-hardcoded way to configure this.
+	public static MeshLibrary GetTheme(){
+		MeshLibrary ret = ResourceLoader.Load("res://Terrain/Terrain.meshlib") as MeshLibrary;
+		return ret;
+	}
+
 }

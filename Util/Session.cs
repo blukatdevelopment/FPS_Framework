@@ -135,6 +135,10 @@ public class Session : Node {
       ses.arena.QueueFree();
       ses.arena = null;
     }
+    if(ses.adventure != null){
+      ses.adventure.QueueFree();
+      ses.adventure = null;
+    }
     if(!keepNet && ses.netSes != null){
       ses.netSes.QueueFree();
       ses.netSes = null;
@@ -250,6 +254,9 @@ public class Session : Node {
     if(ses.arena != null){
       return ses.arena.GetObjectiveText();
     }
+    if(ses.adventure != null){
+      return ses.adventure.GetObjectiveText();
+    }
     return "Fight the enemies.";
   }
   
@@ -260,6 +267,9 @@ public class Session : Node {
     }
     if(arena != null){
       arena.HandleEvent(sessionEvent);
+    }
+    if(adventure != null){
+      adventure.HandleEvent(sessionEvent);
     }
   }
 
