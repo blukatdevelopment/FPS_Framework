@@ -9,8 +9,9 @@ using Godot;
 public class TerrainBlock {
 	public enum Blocks{
     Air,
-    Dirt
+    Dirt = 2 // Hardcoded to full block
   };
+  
 	public Vector3 orientation;
 	public Vector3 gridPosition; 
 	public Blocks blockId;

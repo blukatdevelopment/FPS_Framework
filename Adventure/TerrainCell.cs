@@ -9,15 +9,17 @@ public class TerrainCell : GridMap{
 	public Vector2 coords;
 
 	public TerrainCell(){
-		Theme = TerrainBlock.GetTheme();
-		GD.Print("Theme: " + Theme);
-		coords = new Vector2(-1, -1);
+		BaseInit();
 	}
 
 	public TerrainCell(TerrainCellData data){
-		Theme = TerrainBlock.GetTheme();
-		GD.Print("Theme: " + Theme);
+		BaseInit();
 		LoadData(data);
+	}
+
+	private void BaseInit(){
+		Theme = TerrainBlock.GetTheme();
+		CellSize = new Vector3(1, 1, 1) * 6; // Hardcoded for this meshLibrary
 	}
 
 	public TerrainCellData GetData(){

@@ -50,6 +50,12 @@ public class Cartographer {
 			}
 		}
 
+		// Assymetical block to show different cells.
+		TerrainBlock aBlock = new TerrainBlock();
+		aBlock.gridPosition = new Vector3(1, 1, 1);
+		aBlock.blockId = TerrainBlock.Blocks.Dirt;
+		data.blocks.Add(aBlock);
+
 		return data;
 	}
 

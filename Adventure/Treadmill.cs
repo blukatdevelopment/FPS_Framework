@@ -45,6 +45,15 @@ public class Treadmill {
 		}
 	}
 
+	// Find position for a given grid relative to center.
+	public Vector3 GridToPos(Vector2 coords){
+		int centerX = (int)center.coords.x;
+		int centerY = (int)center.coords.y;
+		return new Vector3();
+
+
+	}
+
 	// Returns true when item's position is inside treadmill.
 	public bool UsingItem(Item item){
 		GD.Print("UsingItem not implemented.");
