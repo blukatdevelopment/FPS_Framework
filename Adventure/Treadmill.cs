@@ -52,7 +52,6 @@ public class Treadmill {
 
 	public void Init(){
 		PopulateCells();
-		ReleaseCells(center.coords);
 	}
 
 	public void Update(float delta){
@@ -79,9 +78,13 @@ public class Treadmill {
 	}
 
 	// Release cells surrounding arbitrary central coordinates
-	public void ReleaseCells(Vector2 aCenter){
+	public void DePopulateCells(Vector2 aCenter){
 		List<Vector2> coordsToRelease = UsedCoords(aCenter);
 		foreach(Vector2 coords in coordsToRelease){
+			if(UsingCell(coords)){
+				GD.Print("Still using this cell. No need to ask overworld to release");
+				continue;
+			}
 			world.ReleaseCell(coords);
 		}
 	}
@@ -98,10 +101,23 @@ public class Treadmill {
 			Vector2 newCenter = PosToGrid(actor.Translation);
 			List<Vector2> newCoords =  UsedCoords(newCenter);
 			GD.Print("Player has escaped to " + newCenter);
-			foreach(Vector2 coord in newCoords){
-				GD.Print("New Coord: " + coord);
-			}
+			Recenter(newCenter);
 		}
+	}
+
+	public void Recenter(Vector2 newCenterCoords){
+		Vector2 oldCenterCoords = center.coords;
+		TerrainCell newCenter = world.RequestCell(newCenterCoords);
+		
+		if(newCenter == null){
+			GD.Print("Couldn't request new center. Aborting recenter to " + newCenterCoords);	
+			return;		
+		}
+
+		center = newCenter;
+		PopulateCells();
+		DePopulateCells(oldCenterCoords);
+		GD.Print("Recenter complete.");
 	}
 
 	// Find grid coords based on position relative to center terrainCell
@@ -180,11 +196,11 @@ public class Treadmill {
 		List<Vector2> usedCoords = UsedCoords();
 		foreach(Vector2 used in usedCoords){
 			if(used.x == coords.x && used.y == coords.y){
-				GD.Print("Found cell at " + coords);
+				//GD.Print("Found cell at " + coords);
 				return true;
 			}
 		}
-		GD.Print("Didn't find cell at " + coords);
+		//GD.Print("Didn't find cell at " + coords);
 		return false;
 	}
 }
