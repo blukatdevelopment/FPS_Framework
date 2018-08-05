@@ -61,6 +61,7 @@ public class Overworld : Spatial {
 		ActorData actor = LoadDormantActor(-1);
 		Treadmill treadmill = new Treadmill(-1, this, actor, new Vector2(), 1, new Vector3());
 		treadmills.Add(treadmill);
+		treadmill.Init();
 	}
 
 	/* Asks the cartographer to make a new world
@@ -132,7 +133,7 @@ public class Overworld : Spatial {
 	 or -1 for invalid coordinates */
 	public int CoordsToCellId(int x, int y){
 		if(y < 0 || y >= WorldHeight || x < 0 || x >= WorldWidth){
-			GD.Print("Invalid coords:" + x + ", " + y);
+			//GD.Print("Invalid coords:" + x + ", " + y);
 			return -1;
 		}
 		return y * WorldWidth + x;
@@ -251,36 +252,64 @@ public class Overworld : Spatial {
 
 	/* Locates or creates TerrainCell and returns it. */
 	public TerrainCell RequestCell(Vector2 coords){
-		GD.Print("Overworld.RequestCell not implemented");
 		if(coords == null){
-			GD.Print("RequestCell: Coords null");
+			//GD.Print("RequestCell: Coords null");
 			return null;
 		}
 		int id = CoordsToCellId(coords);
 		
-		GD.Print("Coords: " + coords + " id" + id);
+		//GD.Print("Coords: " + coords + " id" + id);
 
 		if(activeCells.ContainsKey(id)){
-			GD.Print("Active Cell Found");
+			//GD.Print("Active Cell Found for " + coords);
 			return activeCells[id];
 		}
 		if(dormantCells.ContainsKey(id)){
-			GD.Print("Dormant Cell Found");
+			//GD.Print("Dormant Cell Found for" + coords + "," + id);
 			TerrainCellData dormant = dormantCells[id];
 			dormantCells.Remove(id);
 
 			TerrainCell active = new TerrainCell(dormant, GetCellSize());
 			activeCells.Add(id, active);
 			AddChild(active);
+			//GD.Print("Returning new ");
 			return active;
 		}
-		
+	
+		//GD.Print("Couldn't find dormant cell for " + coords + ", " + id);
 		return null;
 	}
 
 	/* Check if cell is still used, and if not store or queue for storage. */
 	public void ReleaseCell(Vector2 coords){
-		GD.Print("Overworld.ReleaseCell not implemented");
+		foreach(Treadmill treadmill in treadmills){
+			if(treadmill.UsingCell(coords)){
+				GD.Print("Cell at " + coords + " still in use.");
+				return;
+			}
+		}
+		int id = CoordsToCellId(coords);
+		if(id == -1){
+			GD.Print(coords + " is invalid, ignoring." );
+			return;
+		}
+		StoreCell(id); // TODO: Delay this action so player can be pursued.
+	}
+
+	public void StoreCell(int id){
+		if(!activeCells.ContainsKey(id)){
+			GD.Print("Cell " + id + " is not active, not storing.");
+			return;
+		}
+		TerrainCell cell = activeCells[id];
+		activeCells.Remove(id);
+		TerrainCellData data = cell.GetData();
+		if(dormantCells.ContainsKey(data.id)){
+			GD.Print("Cell " + data.id + " already stored, not storing.");
+			return;
+		}
+		GD.Print("Storing cell " + data.id);
+		dormantCells.Add(data.id, data);
 	}
 
 

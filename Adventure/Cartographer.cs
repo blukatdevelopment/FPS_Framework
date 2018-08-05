@@ -27,9 +27,13 @@ public class Cartographer {
 
 	// Fill out grid of world 
 	public void GenerateTerrain(){
-		GD.Print("Cartographer.GenerateTerrain not implemented");
 		cells = new Dictionary<int, TerrainCellData>();
-		cells.Add(0, GenerateCell(new Vector2()));
+		for(int i = 0; i < worldHeight; i++){ // y
+			for(int j = 0; j < worldWidth; j++){ // x
+				TerrainCellData tcd = GenerateCell(new Vector2(j, i));
+				cells.Add(tcd.id, tcd);
+			}
+		}
 	}
 
 	// Determine cell gen algo to use for these coords.
@@ -40,6 +44,8 @@ public class Cartographer {
 	public TerrainCellData GenerateFlatCell(Vector2 coords){
 		TerrainCellData data = new TerrainCellData();
 		data.coords = coords;
+		data.id = world.CoordsToCellId((int)coords.x, (int)coords.y);
+
 
 		for(int i = 0; i < cellSize; i++){
 			for(int j = 0; j < cellSize; j++){
@@ -50,12 +56,12 @@ public class Cartographer {
 			}
 		}
 
-		// Assymetical block to show different cells.
-		TerrainBlock aBlock = new TerrainBlock();
-		aBlock.gridPosition = new Vector3(1, 1, 1);
-		aBlock.blockId = TerrainBlock.Blocks.Dirt;
-		data.blocks.Add(aBlock);
-
+		// Add blocks to each corner
+		data.blocks.Add(new TerrainBlock(new Vector3(1, 1, 1)));
+		data.blocks.Add(new TerrainBlock(new Vector3(cellSize-2, 1, 1)));
+		data.blocks.Add(new TerrainBlock(new Vector3(1, 1, cellSize-2)));
+		data.blocks.Add(new TerrainBlock(new Vector3(cellSize-2, 1, cellSize-2)));
+		
 		return data;
 	}
 

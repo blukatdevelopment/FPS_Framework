@@ -3,15 +3,18 @@
 */
 using System;
 using Godot;
+using System.Collections.Generic;
 
 public class TerrainCell : GridMap{
 	public int id; // id according to overworld.
 	public Vector2 coords;
 	public int cellSize;
+	public List<TerrainBlock> blockData;
 
 	public TerrainCell(int cellSize = 1){
 		BaseInit();
 		this.cellSize = cellSize;
+		this.blockData = new List<TerrainBlock>();
 	}
 
 	public TerrainCell(TerrainCellData data, int cellSize = 1){
@@ -25,14 +28,9 @@ public class TerrainCell : GridMap{
 		CellSize = new Vector3(1, 1, 1) * 6; // Hardcoded for this meshLibrary
 	}
 
-	public TerrainCellData GetData(){
-		GD.Print("TerrainCell.GetData not implemented");
-		coords = new Vector2();
-		return null;
-	}
 
 	// Return width of this  in world unitys
-	public float Width(){
+	public float GetWidth(){
 		return CellSize.x * cellSize;
 	}
 
@@ -61,11 +59,20 @@ public class TerrainCell : GridMap{
 		ret += new Vector3(scale, scale, scale);
 		return ret;
 	}
+
+
+	public TerrainCellData GetData(){
+		TerrainCellData data = new TerrainCellData();
+		data.coords = coords;
+		data.id = id;
+		data.blocks = blockData;
+		return data;
+	}
 	
 	public void LoadData(TerrainCellData data){
-		GD.Print("TerrainCell.LoadData not implemented");
 		coords = data.coords;
 		id = data.id;
+		blockData = data.blocks;
 		foreach(TerrainBlock block in data.blocks){
 			int x = (int)block.gridPosition.x;
 			int y = (int)block.gridPosition.y;
@@ -76,6 +83,7 @@ public class TerrainCell : GridMap{
 		}
 	}
 
+	// Returns center of this terrain cell
 	public Vector3 GetCenterPos(){
 		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
 		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);

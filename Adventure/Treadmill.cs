@@ -50,11 +50,39 @@ public class Treadmill {
 		}
 	}
 
+	public void Init(){
+		PopulateCells();
+		ReleaseCells(center.coords);
+	}
+
 	public void Update(float delta){
 		timer += delta;
 		if(timer >= timerMax){
 			timer = 0;
 			CheckPlayerPos();
+		}
+	}
+
+	// Populates cells surrounding Center
+	public void PopulateCells(){
+		List<Vector2> usedCoords = UsedCoords();
+		foreach(Vector2 used in usedCoords) {
+			TerrainCell terrainCell = world.RequestCell(used);
+			if(terrainCell == null){
+				//GD.Print(used + " couldn't be requested");
+				continue;
+			}
+			Vector3 position = GridToPos(used);
+			terrainCell.SetPos(position);
+			//GD.Print("Set");
+		}
+	}
+
+	// Release cells surrounding arbitrary central coordinates
+	public void ReleaseCells(Vector2 aCenter){
+		List<Vector2> coordsToRelease = UsedCoords(aCenter);
+		foreach(Vector2 coords in coordsToRelease){
+			world.ReleaseCell(coords);
 		}
 	}
 
@@ -83,7 +111,7 @@ public class Treadmill {
 		}
 		Vector3 centerPos = center.GetCenterPos();
 		Vector3 distance =  pos - centerPos;
-		float width = center.Width();
+		float width = center.GetWidth();
 
 		// offsets in X and Y coords
 		int xDiff = (int)distance.x/(int)width;
@@ -128,10 +156,11 @@ public class Treadmill {
 
 	// Find position for a given grid relative to center.
 	public Vector3 GridToPos(Vector2 coords){
-		GD.Print("Treadmill.GridToPos not implemented");
-		int centerX = (int)center.coords.x;
-		int centerY = (int)center.coords.y;
-		return new Vector3();
+		Vector2 dCoords = coords - center.coords; // Diff in coordinates
+		Vector2 dUnits = dCoords * center.GetWidth(); // diff in world space
+		Vector3 start = center.GetCenterPos();
+		Vector3 end = start + new Vector3(dUnits.x, 0f, dUnits.y);
+		return end;
 	}
 
 	// Returns true when item's position is inside treadmill.
@@ -148,7 +177,14 @@ public class Treadmill {
 
 	// Returns true if cell is in 
 	public bool UsingCell(Vector2 coords){
-		GD.Print("UsingCell not implemented.");
-		return true;
+		List<Vector2> usedCoords = UsedCoords();
+		foreach(Vector2 used in usedCoords){
+			if(used.x == coords.x && used.y == coords.y){
+				GD.Print("Found cell at " + coords);
+				return true;
+			}
+		}
+		GD.Print("Didn't find cell at " + coords);
+		return false;
 	}
 }

@@ -13,13 +13,26 @@ public class TerrainBlock {
   };
   
 	public Vector3 orientation;
-	public Vector3 gridPosition; 
+	public Vector3 gridPosition; // Not currently used
 	public Blocks blockId;
 
 
 	public TerrainBlock(){
 		orientation = new Vector3();
 		gridPosition = new Vector3();
+	}
+
+	public TerrainBlock(Vector3 gridPosition, Vector3 orientation, Blocks blockId = Blocks.Dirt){
+		this.gridPosition = gridPosition;
+		this.orientation = orientation;
+		this.blockId = blockId;
+	}
+
+	// Because a Vector3 cannot be an optional argument
+	public TerrainBlock(Vector3 gridPosition, Blocks blockId = Blocks.Dirt){
+		this.gridPosition = gridPosition;
+		this.orientation = new Vector3();
+		this.blockId = blockId;
 	}
 
 	public override string ToString(){
