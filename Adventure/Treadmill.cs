@@ -7,6 +7,10 @@ using System;
 using System.Collections.Generic;
 
 public class Treadmill {
+
+	public float timer = 0f;
+	public float timerMax = 0.5f;
+
 	public Overworld world;
 	public int id; // Should match client's peerId in multiplayer.
 	public Actor actor; // Actor to monitor.
@@ -19,7 +23,8 @@ public class Treadmill {
 		this.world = world;
 		this.pos = pos;
 		this.center = world.RequestCell(coords);
-		this.center.SetPos(pos, world.GetCellSize());
+		this.center.SetPos(pos);
+		this.radius = radius;
 
 
 		actorData.pos = pos + new Vector3(0, 10f, 0); // TODO: Make this not hardcoded.
@@ -45,13 +50,88 @@ public class Treadmill {
 		}
 	}
 
+	public void Update(float delta){
+		timer += delta;
+		if(timer >= timerMax){
+			timer = 0;
+			CheckPlayerPos();
+		}
+	}
+
+	public void CheckPlayerPos(){
+		if(actor == null){
+			GD.Print("Treadmill.CheckPlayerPos: Actor null");
+			return;
+		}
+		if(center.InBounds(actor.Translation)){
+			return;
+		}
+		else{
+			Vector2 newCenter = PosToGrid(actor.Translation);
+			List<Vector2> newCoords =  UsedCoords(newCenter);
+			GD.Print("Player has escaped to " + newCenter);
+			foreach(Vector2 coord in newCoords){
+				GD.Print("New Coord: " + coord);
+			}
+		}
+	}
+
+	// Find grid coords based on position relative to center terrainCell
+	public Vector2 PosToGrid(Vector3 pos){
+		if(center.InBounds(pos)){
+			return center.coords;
+		}
+		Vector3 centerPos = center.GetCenterPos();
+		Vector3 distance =  pos - centerPos;
+		float width = center.Width();
+
+		// offsets in X and Y coords
+		int xDiff = (int)distance.x/(int)width;
+		int yDiff = (int)distance.z/(int)width;
+
+		if(xDiff == 0 && distance.x > width/2f){
+			xDiff = 1;
+		}
+		else if(xDiff == 0 && distance.x < width/-2f){
+			xDiff = -1;
+		}
+		if(yDiff == 0 && distance.z > width/2f){
+			yDiff = 1;
+		}
+		else if(yDiff == 0 && distance.z < width/-2f){
+			yDiff = -1;
+		}
+
+		Vector2 diff = new Vector2(xDiff, yDiff);
+		return center.coords + diff;
+	}
+
+	// All coordinates this treadmill cares about.
+	public List<Vector2> UsedCoords(){
+
+		List<Vector2> ret = UsedCoords(center.coords);
+		GD.Print("ret" + ret);
+		return ret;
+	}
+
+	public List<Vector2> UsedCoords(Vector2 centerCoords){
+		List<Vector2> ret = new List<Vector2>();
+		for(int i = -radius; i <= radius; i++){
+			for(int j = -radius; j <= radius; j++){
+				Vector2 offset = new Vector2(i, j);
+				Vector2 coord = centerCoords + offset;
+				ret.Add(coord);
+			}
+		}
+		return ret;
+	}
+
 	// Find position for a given grid relative to center.
 	public Vector3 GridToPos(Vector2 coords){
+		GD.Print("Treadmill.GridToPos not implemented");
 		int centerX = (int)center.coords.x;
 		int centerY = (int)center.coords.y;
 		return new Vector3();
-
-
 	}
 
 	// Returns true when item's position is inside treadmill.

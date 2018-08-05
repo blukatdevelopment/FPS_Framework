@@ -7,13 +7,16 @@ using Godot;
 public class TerrainCell : GridMap{
 	public int id; // id according to overworld.
 	public Vector2 coords;
+	public int cellSize;
 
-	public TerrainCell(){
+	public TerrainCell(int cellSize = 1){
 		BaseInit();
+		this.cellSize = cellSize;
 	}
 
-	public TerrainCell(TerrainCellData data){
+	public TerrainCell(TerrainCellData data, int cellSize = 1){
 		BaseInit();
+		this.cellSize = cellSize;	
 		LoadData(data);
 	}
 
@@ -26,6 +29,37 @@ public class TerrainCell : GridMap{
 		GD.Print("TerrainCell.GetData not implemented");
 		coords = new Vector2();
 		return null;
+	}
+
+	// Return width of this  in world unitys
+	public float Width(){
+		return CellSize.x * cellSize;
+	}
+
+	public bool InBounds(Vector3 pos){
+		Vector3 min = GetMinBounds();
+		Vector3 max = GetMaxBounds();
+		
+		if(pos.x < min.x || pos.y < min.y || pos.z < min.z){
+			return false;
+		}
+		
+		if(pos.x > max.x || pos.y > max.y || pos.z > max.z){
+			return false;
+		}
+
+		return true;
+	}
+
+	public Vector3 GetMinBounds(){
+		return Translation;
+	}
+
+	public Vector3 GetMaxBounds(){
+		Vector3 ret = Translation;
+		float scale = CellSize.x * cellSize;
+		ret += new Vector3(scale, scale, scale);
+		return ret;
 	}
 	
 	public void LoadData(TerrainCellData data){
@@ -42,7 +76,13 @@ public class TerrainCell : GridMap{
 		}
 	}
 
-	public void SetPos(Vector3 pos, int cellSize){
+	public Vector3 GetCenterPos(){
+		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
+		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
+		return Translation + offset;
+	}
+
+	public void SetPos(Vector3 pos){
 		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
 		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
 		Translation = pos - offset;

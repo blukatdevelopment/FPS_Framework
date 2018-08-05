@@ -43,6 +43,10 @@ public class Overworld : Spatial {
 		}
 	}
 
+	public override void _Process(float delta){
+		UpdateTreadmills(delta);
+	}
+
 	public void ServerInit(){
 		GD.Print("Server init");
 	}
@@ -181,6 +185,11 @@ public class Overworld : Spatial {
 		GD.Print("Overworld.StoreActorData not implemented");
 	}
 
+	public void UpdateTreadmills(float delta){
+		foreach(Treadmill treadmill in treadmills){
+			treadmill.Update(delta);
+		}
+	}
 
 	public ActorData LoadDormantActor(int peerId, int actorId = -1){
 		ActorData dat = null;
@@ -260,7 +269,7 @@ public class Overworld : Spatial {
 			TerrainCellData dormant = dormantCells[id];
 			dormantCells.Remove(id);
 
-			TerrainCell active = new TerrainCell(dormant);
+			TerrainCell active = new TerrainCell(dormant, GetCellSize());
 			activeCells.Add(id, active);
 			AddChild(active);
 			return active;
