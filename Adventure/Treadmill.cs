@@ -115,9 +115,21 @@ public class Treadmill {
 		}
 
 		center = newCenter;
+		ClearBoundaries();
 		PopulateCells();
 		DePopulateCells(oldCenterCoords);
+		PopulateBoundaries();
 		GD.Print("Recenter complete.");
+	}
+
+	// Clear out all boundaries
+	public void ClearBoundaries(){
+		GD.Print("Treadmill.ClearBoundaries not implemented");
+	}
+
+	// Create invisible walls in invalid or unused grid positions surrounding treadmill
+	public void PopulateBoundaries(){
+		GD.Print("Treadmill.PopulateBoundaries not implemented");
 	}
 
 	// Find grid coords based on position relative to center terrainCell

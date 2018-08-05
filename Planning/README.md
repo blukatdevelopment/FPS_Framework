@@ -115,13 +115,16 @@ criteria that can be marked complete or ready for review.
 
 This iteration should, in itself, contain a few steps.
 
-0. Set up camera to view these steps.
-1. Generate single flat Gridmap (Perhaps with one cube poking up to show tile boundaries.)
-2. Generate map comprised of these Gridmaps in dormant form.
-3. Render a 3x3 grid of these Gridmaps.
-4. get treadmill to watch for player leaving center gridmap
-5. treadmill should determine which gridmaps will be released/requested.
-
+0. DONE Set up camera to view these steps.
+1. DONE Generate single flat Gridmap (Perhaps with one cube poking up to show tile boundaries.)
+2. DONE Generate map comprised of these Gridmaps in dormant form.
+3. DONE Render a 3x3 grid of these Gridmaps.
+4. DONE get treadmill to watch for player leaving center gridmap
+5. DONE treadmills should determine which gridmaps will be released/requested.
+6. recenter cells to treadmill position after recenter when possible
+7. save/activate items and actors along with terrain cells (Handle via overworld)
+8. Create invisible walls on unused boundaries of treadmill
+9. Perform Populate and DePopulate in background or on another thread.
 
 ## Art
 

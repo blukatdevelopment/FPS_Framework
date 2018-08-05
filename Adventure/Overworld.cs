@@ -304,6 +304,8 @@ public class Overworld : Spatial {
 		TerrainCell cell = activeCells[id];
 		activeCells.Remove(id);
 		TerrainCellData data = cell.GetData();
+		// TODO: Store cell's items/NPCs here.
+		cell.QueueFree();
 		if(dormantCells.ContainsKey(data.id)){
 			GD.Print("Cell " + data.id + " already stored, not storing.");
 			return;
