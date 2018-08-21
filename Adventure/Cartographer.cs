@@ -14,15 +14,30 @@ public class Cartographer {
 	public Dictionary<int, ActorData> actors;
 
 	public int worldWidth, worldHeight, cellSize;
+	public int nextItemId, nextActorId;
 
 	public void GenerateWorld(Overworld world){
 		this.world = world;
 		worldWidth = world.GetWorldWidth();
 		worldHeight = world.GetWorldWidth();
 		cellSize = world.GetCellSize();
+		nextItemId = 0;
+		nextActorId = 0;
 		GenerateTerrain();
 		GenerateActors();
 		GenerateItems();
+	}
+
+	public int NextActorId(){
+		int ret = nextActorId;
+		nextActorId++;
+		return ret;
+	}
+
+	public int NextItemId(){
+		int ret = nextItemId;
+		nextItemId++;
+		return ret;
 	}
 
 	// Fill out grid of world 
@@ -66,14 +81,20 @@ public class Cartographer {
 	}
 
 	public void GenerateItems(){
-		GD.Print("Cartographer.GenerateItems not implemented");
 		items = new Dictionary<int, ItemData>();
+		for(int i = 0; i < 10; i++){
+			ItemData item = GenerateItem(Item.Types.Rifle, "rifle", new Vector3(0, i, 0));
+			items.Add(item.id, item);
+		}
 	}
 
 	// Place an Item 
-	public ItemData GenerateItem(TerrainCellData cell){
-		GD.Print("Cartographer.GenerateItem not implemented");
-		return null;
+	public ItemData GenerateItem(Item.Types type, string name, Vector3 pos){
+		Item item = Item.Factory(type, name);
+		ItemData data = item.GetData();
+		data.id = NextItemId();
+		data.pos = pos;
+		return data;
 	}
 
 	public void GenerateActors(){

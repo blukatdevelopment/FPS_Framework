@@ -113,7 +113,7 @@ Look into options for loading database into memory and saving it to file.
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
 
-This iteration should, in itself, contain a few steps.
+This iteration should, in itself, contain a few steps(These are not necessarily sequential).
 
 0. DONE Set up camera to view these steps.
 1. DONE Generate single flat Gridmap (Perhaps with one cube poking up to show tile boundaries.)
@@ -125,6 +125,8 @@ This iteration should, in itself, contain a few steps.
 7. save/activate items and actors along with terrain cells (Handle via overworld)
 8. Create invisible walls on unused boundaries of treadmill
 9. Perform Populate and DePopulate in background or on another thread.
+10. Populate items/Actors in active space.
+11. Maintain dormant space separately from active space.
 
 ## Art
 

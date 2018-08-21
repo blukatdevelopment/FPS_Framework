@@ -40,7 +40,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     Ammo
   };
   
-  
+  public int id;
   public Types type;
   public string name;
   public string description;
@@ -198,6 +198,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     // INTS
     dat.ints.Add(quantity);
     dat.ints.Add(weight);
+
+    // Position
+    dat.pos = Session.WorldPosition(this);
 
     return dat;
   }

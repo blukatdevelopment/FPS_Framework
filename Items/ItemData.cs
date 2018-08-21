@@ -16,11 +16,14 @@ public class ItemData : IHasInfo {
 
 	// These should be used by classes like Inventory, but NOT for ReadData
 	// When searching an inventory for an item, (type, name) are the primary key.
+	public int id;
 	public Item.Types type;
 	public string name;
 	public string description;
 	public int quantity;
 	public int weight;
+	public Vector3 pos;
+
 
 	// These should be handled by ReadData/GetData
 	public List<int> ints;
@@ -32,6 +35,7 @@ public class ItemData : IHasInfo {
 		ints = new List<int>();
 		strings = new List<string>();
 		floats = new List<float>();
+		pos = new Vector3();
 	}
 
 	public string GetInfo(){

@@ -14,6 +14,7 @@ public class Overworld : Spatial {
 
 
 	public List<Actor> activeActors;
+	public List<Item> activeItems;
 
 	public Dictionary<int, TerrainCellData> dormantCells;
 	public Dictionary<int, ItemData> dormantItems;
@@ -30,6 +31,7 @@ public class Overworld : Spatial {
 		treadmills = new List<Treadmill>();
 		activeActors = new List<Actor>();
 		activeCells = new Dictionary<int, TerrainCell>();
+		activeItems = new List<Item>();
 
 		Name = "Adventure";
 		if(Session.IsServer()){
@@ -125,6 +127,7 @@ public class Overworld : Spatial {
 	/* Return a new item with next id */
 	public ItemData CreateItem(){
 		int id = NextItemId();
+		
 		GD.Print("Overworld.CreateItem not implemented");
 		return null;
 	}
@@ -228,9 +231,31 @@ public class Overworld : Spatial {
 	}
 
 
+	public List<Treadmill> CellUsers(Vector2 coords){
+		int id = CoordsToCellId(coords);
+		return CellUsers(id);
+	}
+
 	public List<Treadmill> CellUsers(int cellId){
-		GD.Print("CellUsers not implemented");
-		return new List<Treadmill>();
+		if(cellId == -1){
+			//GD.Print("Overworld.CellUsers: Invalid cellID:" + cellId);
+			return new List<Treadmill>();
+		}
+		if(!activeCells.ContainsKey(cellId)){
+			GD.Print("Overworld.CellUsers: Cell not active:" + cellId);
+			return new List<Treadmill>();	
+		}
+		TerrainCell cell = activeCells[cellId];
+		Vector2 coords = cell.coords;
+
+		List<Treadmill> users = new List<Treadmill>();
+		foreach( Treadmill treadmill in treadmills){
+			if(treadmill.UsingCell(coords)){
+				users.Add(treadmill);
+			}
+		}
+		return users;
+		
 	}
 
 	/*
@@ -269,7 +294,7 @@ public class Overworld : Spatial {
 			TerrainCellData dormant = dormantCells[id];
 			dormantCells.Remove(id);
 
-			TerrainCell active = new TerrainCell(dormant, GetCellSize());
+			TerrainCell active = new TerrainCell(this, dormant, GetCellSize());
 			activeCells.Add(id, active);
 			AddChild(active);
 			//GD.Print("Returning new ");
@@ -290,7 +315,7 @@ public class Overworld : Spatial {
 		}
 		int id = CoordsToCellId(coords);
 		if(id == -1){
-			GD.Print(coords + " is invalid, ignoring." );
+			//GD.Print(coords + " is invalid, ignoring." );
 			return;
 		}
 		StoreCell(id); // TODO: Delay this action so player can be pursued.
@@ -310,8 +335,28 @@ public class Overworld : Spatial {
 			GD.Print("Cell " + data.id + " already stored, not storing.");
 			return;
 		}
-		GD.Print("Storing cell " + data.id);
+		//GD.Print("Storing cell " + data.id);
 		dormantCells.Add(data.id, data);
+	}
+
+	public List<Item> ActiveItemsInBounds(TerrainCell tc){
+		List<Item> ret = new List<Item>();
+		foreach(Item item in activeItems){
+			if(tc.InBounds(item.Translation)){
+				ret.Add(item);
+			}
+		}
+		return ret;
+	}
+
+	public List<Actor> ActiveActorsInBounds(TerrainCell tc){
+		List<Actor> ret = new List<Actor>();
+		foreach(Actor actor in activeActors){
+			if(tc.InBounds(actor.Translation)){
+				ret.Add(actor);
+			}
+		}
+		return ret;
 	}
 
 

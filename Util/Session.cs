@@ -305,4 +305,9 @@ public class Session : Node {
       arena.PlayerReady();
     }
   }
+
+  // TODO: Pass off this logic to Overworld or Arena.
+  public static Vector3 WorldPosition(Item item){
+    return item.Translation;
+  }
 }
