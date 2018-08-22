@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 public class ActorInputHandler : Brain {
   private DeviceManager device;
-  private Dictionary<InputEvent.Buttons, bool> held; 
+  private System.Collections.Generic.Dictionary<InputEvent.Buttons, bool> held; 
   private float delta = 1f;
   private float syncTimer = 0f;
   public const float syncRate = 0.05f;
@@ -32,7 +32,7 @@ public class ActorInputHandler : Brain {
   
   
   private void InitHeld(){
-    held = new Dictionary<InputEvent.Buttons, bool>();
+    held = new System.Collections.Generic.Dictionary<InputEvent.Buttons, bool>();
     foreach(InputEvent.Buttons button in Enum.GetValues(typeof(InputEvent.Buttons))){
       held.Add(button, false);
     }

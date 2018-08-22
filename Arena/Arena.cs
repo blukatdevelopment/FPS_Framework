@@ -24,7 +24,7 @@ public class Arena : Spatial {
   float roundTimeRemaining, secondCounter;
   bool roundTimerActive = false;
   bool scorePresented = false;
-  Dictionary<int, int> scores;
+  System.Collections.Generic.Dictionary<int, int> scores;
   public int playerWorldId = -1;
 
   // used for singleplayer
@@ -38,7 +38,7 @@ public class Arena : Spatial {
     }
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
-    scores = new Dictionary<int, int>();
+    scores = new System.Collections.Generic.Dictionary<int, int>();
 
     InitTerrain();
     InitSpawnPoints();
@@ -347,18 +347,18 @@ public class Arena : Spatial {
   
   public void InitSpawnPoints(){
     SceneTree st = GetTree();
-    object[] actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
+    Godot.Array actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
     this.actorSpawnPoints = new List<Vector3>();
-    for(int i = 0; i < actorSpawns.Length; i++){
+    for(int i = 0; i < actorSpawns.Count; i++){
       Spatial spawnPoint = actorSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.actorSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
       }
     }
     
-    object[] itemSpawns = st.GetNodesInGroup("ItemSpawnPoint");
+    Godot.Array itemSpawns = st.GetNodesInGroup("ItemSpawnPoint");
     this.itemSpawnPoints = new List<Vector3>();
-    for(int i = 0; i < itemSpawns.Length; i++){
+    for(int i = 0; i < itemSpawns.Count; i++){
       Spatial spawnPoint = itemSpawns[i] as Spatial;
       if(spawnPoint != null){
         this.itemSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);

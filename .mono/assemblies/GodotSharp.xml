@@ -2322,6 +2322,500 @@
             <summary>
             </summary>
         </member>
+        <member name="M:Godot.Mathf.PosMod(System.Single,System.Single)">
+            <summary>
+            Performs a canonical Modulus operation, where the output is on the range [0, b).
+            </summary>
+        </member>
+        <member name="M:Godot.Mathf.PosMod(System.Int32,System.Int32)">
+            <summary>
+            Performs a canonical Modulus operation, where the output is on the range [0, b).
+            </summary>
+        </member>
+        <member name="T:Godot.Node">
+            <summary>
+            Nodes are Godot's building blocks. They can be assigned as the child of another node, resulting in a tree arrangement. A given node can contain any number of nodes as children with the requirement that all siblings (direct children of a node) should have unique names.
+            A tree of nodes is called a [i]scene[/i]. Scenes can be saved to the disk and then instanced into other scenes. This allows for very high flexibility in the architecture and data model of Godot projects. Nodes can also optionally be added to groups. This makes it possible to access a number of nodes from code (an "enemies" group, for example) to perform grouped actions.
+            [b]Scene tree:[/b] The [SceneTree] contains the active tree of nodes. When a node is added to the scene tree, it receives the NOTIFICATION_ENTER_TREE notification and its [method _enter_tree] callback is triggered. Child nodes are always added [i]after[/i] their parent node, i.e. the [method _enter_tree] callback of a parent node will be triggered before its child's.
+            Once all nodes have been added in the scene tree, they receive the NOTIFICATION_READY notification and their respective [method _ready] callbacks are triggered. For groups of nodes, the [method _ready] callback is called in reverse order, starting with the children and moving up to the parent nodes.
+            This means that when adding a node to the scene tree, the following order will be used for the callbacks: [method _enter_tree] of the parent, [method _enter_tree] of the children, [method _ready] of the children and finally [method _ready] of the parent (recursively for the entire scene tree).
+            [b]Processing:[/b] Nodes can override the "process" state, so that they receive a callback on each frame requesting them to process (do something). Normal processing (callback [method _process], toggled with [method set_process]) happens as fast as possible and is dependent on the frame rate, so the processing time [i]delta[/i] is passed as an argument. Physics processing (callback [method _physics_process], toggled with [method set_physics_process]) happens a fixed number of times per second (60 by default) and is useful for code related to the physics engine.
+            Nodes can also process input events. When present, the [method _input] function will be called for each input that the program receives. In many cases, this can be overkill (unless used for simple projects), and the [method _unhandled_input] function might be preferred; it is called when the input event was not handled by anyone else (typically, GUI [Control] nodes), ensuring that the node only receives the events that were meant for it.
+            To keep track of the scene hierarchy (especially when instancing scenes into other scenes), an "owner" can be set for the node with [method set_owner]. This keeps track of who instanced what. This is mostly useful when writing editors and tools, though.
+            Finally, when a node is freed with [method free] or [method queue_free], it will also free all its children.
+            [b]Groups:[/b] Nodes can be added to as many groups as you want to be easy to manage, you could create groups like "enemies" or "collectables" for example, depending on your game. See [method add_to_group], [method is_in_group] and [method remove_from_group]. You can then retrieve all nodes in these groups, iterate them and even call methods on groups via the methods on [SceneTree].
+            [b]Networking with nodes:[/b] After connecting to a server (or making one, see [NetworkedMultiplayerENet]) it is possible to use the built-in RPC (remote procedure call) system to communicate over the network. By calling [method rpc] with a method name, it will be called locally and in all connected peers (peers = clients and the server that accepts connections). To identify which node receives the RPC call Godot will use its [NodePath] (make sure node names are the same on all peers). Also take a look at the high-level networking tutorial and corresponding demos.
+            </summary>
+        </member>
+        <member name="P:Godot.Node.PauseMode">
+            <summary>
+            Pause mode. How the node will behave if the [SceneTree] is paused.
+            </summary>
+        </member>
+        <member name="P:Godot.Node.Name">
+            <summary>
+            The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed
+            </summary>
+        </member>
+        <member name="P:Godot.Node.Filename">
+            <summary>
+            When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
+            </summary>
+        </member>
+        <member name="P:Godot.Node.Owner">
+            <summary>
+            The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using [PackedScene]) all the nodes it owns will be saved with it. This allows for the creation of complex [SceneTree]s, with instancing and subinstancing.
+            </summary>
+        </member>
+        <member name="M:Godot.Node._EnterTree">
+            <summary>
+            Called when the node enters the [SceneTree] (e.g. upon instancing, scene changing, or after calling [method add_child] in a script). If the node has children, its [method _enter_tree] callback will be called first, and then that of the children.
+            Corresponds to the NOTIFICATION_ENTER_TREE notification in [method Object._notification].
+            </summary>
+        </member>
+        <member name="M:Godot.Node._ExitTree">
+            <summary>
+            Called when the node is about to leave the [SceneTree] (e.g. upon freeing, scene changing, or after calling [method remove_child] in a script). If the node has children, its [method _exit_tree] callback will be called last, after all its children have left the tree.
+            Corresponds to the NOTIFICATION_EXIT_TREE notification in [method Object._notification] and signal [signal tree_exiting]. To get notified when the node has already left the active tree, connect to the [signal tree_exited]
+            </summary>
+        </member>
+        <member name="M:Godot.Node._Input(Godot.InputEvent)">
+            <summary>
+            Called when there is an input event. The input event propagates through the node tree until a node consumes it.
+            It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_input].
+            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
+            For gameplay input, [method _unhandled_input] and [method _unhandled_key_input] are usually a better fit as they allow the GUI to intercept the events first.
+            </summary>
+        </member>
+        <member name="M:Godot.Node._PhysicsProcess(System.Single)">
+            <summary>
+            Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the [code]delta[/code] variable should be constant.
+            It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_physics_process].
+            Corresponds to the NOTIFICATION_PHYSICS_PROCESS notification in [method Object._notification].
+            </summary>
+        </member>
+        <member name="M:Godot.Node._Process(System.Single)">
+            <summary>
+            Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the [code]delta[/code] time since the previous frame is not constant.
+            It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process].
+            Corresponds to the NOTIFICATION_PROCESS notification in [method Object._notification].
+            </summary>
+        </member>
+        <member name="M:Godot.Node._Ready">
+            <summary>
+            Called when the node is "ready", i.e. when both the node and its children have entered the scene tree. If the node has children, their [method _ready] callbacks get triggered first, and the parent node will receive the ready notification afterwards.
+            Corresponds to the NOTIFICATION_READY notification in [method Object._notification]. See also the [code]onready[/code] keyword for variables.
+            Usually used for initialization. For even earlier initialization, [method Object._init] may be used. Also see [method _enter_tree].
+            </summary>
+        </member>
+        <member name="M:Godot.Node._UnhandledInput(Godot.InputEvent)">
+            <summary>
+            Propagated to all nodes when the previous [InputEvent] is not consumed by any nodes.
+            It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_input].
+            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
+            For gameplay input, this and [method _unhandled_key_input] are usually a better fit than [method _input] as they allow the GUI to intercept the events first.
+            </summary>
+        </member>
+        <member name="M:Godot.Node._UnhandledKeyInput(Godot.InputEventKey)">
+            <summary>
+            Propagated to all nodes when the previous [InputEventKey] is not consumed by any nodes.
+            It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_key_input].
+            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
+            For gameplay input, this and [method _unhandled_input] are usually a better fit than [method _input] as they allow the GUI to intercept the events first.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.AddChildBelowNode(Godot.Node,Godot.Node,System.Boolean)">
+            <summary>
+            Adds a child node. The child is placed below the given node in the list of children.
+            Setting "legible_unique_name" [code]true[/code] creates child nodes with human-readable names, based on the name of the node being instanced instead of its type.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.AddChild(Godot.Node,System.Boolean)">
+            <summary>
+            Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
+            Setting "legible_unique_name" [code]true[/code] creates child nodes with human-readable names, based on the name of the node being instanced instead of its type.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RemoveChild(Godot.Node)">
+            <summary>
+            Removes a child node. The node is NOT deleted and must be deleted manually.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetChildCount">
+            <summary>
+            Returns the number of child nodes.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetChildren">
+            <summary>
+            Returns an array of references to node's children.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetChild(System.Int32)">
+            <summary>
+            Returns a child node by its index (see [method get_child_count]). This method is often used for iterating all children of a node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.HasNode(Godot.NodePath)">
+            <summary>
+            Returns [code]true[/code] if the node that the [NodePath] points to exists.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetNode(Godot.NodePath)">
+            <summary>
+            Fetches a node. The [NodePath] can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, a [code]null instance[/code] is returned and attempts to access it will result in an "Attempt to call &lt;method&gt; on a null instance." error.
+            Note: fetching absolute paths only works when the node is inside the scene tree (see [method is_inside_tree]).
+            [i]Example:[/i] Assume your current node is Character and the following tree:
+            [codeblock]
+            /root
+            /root/Character
+            /root/Character/Sword
+            /root/Character/Backpack/Dagger
+            /root/MyGame
+            /root/Swamp/Alligator
+            /root/Swamp/Mosquito
+            /root/Swamp/Goblin
+            [/codeblock]
+            Possible paths are:
+            [codeblock]
+            get_node("Sword")
+            get_node("Backpack/Dagger")
+            get_node("../Swamp/Alligator")
+            get_node("/root/MyGame")
+            [/codeblock]
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetParent">
+            <summary>
+            Returns the parent node of the current node, or an empty [code]Node[/code] if the node lacks a parent.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.FindNode(System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Finds a descendant of this node whose name matches [code]mask[/code] as in [method String.match] (i.e. case sensitive, but '*' matches zero or more characters and '?' matches any single character except '.'). Note that it does not match against the full path, just against individual node names.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.HasNodeAndResource(Godot.NodePath)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetNodeAndResource(Godot.NodePath)">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsInsideTree">
+            <summary>
+            Returns [code]true[/code] if this node is currently inside a [SceneTree].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsAParentOf(Godot.Node)">
+            <summary>
+            Returns [code]true[/code] if the given node is a direct or indirect child of the current node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsGreaterThan(Godot.Node)">
+            <summary>
+            Returns [code]true[/code] if the given node occurs later in the scene hierarchy than the current node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetPath">
+            <summary>
+            Returns the absolute path of the current node. This only works if the current node is inside the scene tree (see [method is_inside_tree]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetPathTo(Godot.Node)">
+            <summary>
+            Returns the relative [NodePath] from this node to the specified [code]node[/code]. Both nodes must be in the same scene or the function will fail.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.AddToGroup(System.String,System.Boolean)">
+            <summary>
+            Adds the node to a group. Groups are helpers to name and organize a subset of nodes, for example "enemies" or "collectables". A node can be in any number of groups. Nodes can be assigned a group at any time, but will not be added until they are inside the scene tree (see [method is_inside_tree]). See notes in the description, and the group methods in [SceneTree].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RemoveFromGroup(System.String)">
+            <summary>
+            Removes a node from a group. See notes in the description, and the group methods in [SceneTree].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsInGroup(System.String)">
+            <summary>
+            Returns [code]true[/code] if this node is in the specified group. See notes in the description, and the group methods in [SceneTree].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.MoveChild(Godot.Node,System.Int32)">
+            <summary>
+            Moves a child node to a different position (order) amongst the other children. Since calls, signals, etc are performed by tree order, changing the order of children nodes may be useful.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetGroups">
+            <summary>
+            Returns an array listing the groups that the node is a member of.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.Raise">
+            <summary>
+            Moves this node to the top of the array of nodes of the parent node. This is often useful in GUIs ([Control] nodes), because their order of drawing depends on their order in the tree.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RemoveAndSkip">
+            <summary>
+            Removes a node and sets all its children as children of the parent node (if it exists). All event subscriptions that pass by the removed node will be unsubscribed.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetIndex">
+            <summary>
+            Returns the node's index, i.e. its position among the siblings of its parent.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.PrintTree">
+            <summary>
+            Prints the tree to stdout. Used mainly for debugging purposes. This version displays the path relative to the current node, and is good for copy/pasting into the [method get_node] function. Example output:
+            [codeblock]
+            TheGame
+            TheGame/Menu
+            TheGame/Menu/Label
+            TheGame/Menu/Camera2D
+            TheGame/SplashScreen
+            TheGame/SplashScreen/Camera2D
+            [/codeblock]
+            </summary>
+        </member>
+        <member name="M:Godot.Node.PrintTreePretty">
+            <summary>
+            Similar to [method print_tree], this prints the tree to stdout. This version displays a more graphical representation similar to what is displayed in the scene inspector. It is useful for inspecting larger trees. Example output:
+            [codeblock]
+            ┖╴TheGame
+            ┠╴Menu
+            ┃  ┠╴Label
+            ┃  ┖╴Camera2D
+            ┖-SplashScreen
+            ┖╴Camera2D
+            [/codeblock]
+            </summary>
+        </member>
+        <member name="M:Godot.Node.PropagateNotification(System.Int32)">
+            <summary>
+            Notifies the current node and all its children recursively by calling notification() on all of them.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.PropagateCall(System.String,Godot.Array,System.Boolean)">
+            <summary>
+            Calls the given method (if present) with the arguments given in [code]args[/code] on this node and recursively on all its children. If the parent_first argument is [code]true[/code] then the method will be called on the current node first, then on all children. If it is [code]false[/code] then the children will be called first.
+            &lt;param name="args"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetPhysicsProcess(System.Boolean)">
+            <summary>
+            Enables or disables physics (i.e. fixed framerate) processing. When a node is being processed, it will receive a NOTIFICATION_PHYSICS_PROCESS at a fixed (usually 60 fps, see [OS] to change) interval (and the [method _physics_process] callback will be called if exists). Enabled automatically if [method _physics_process] is overridden. Any calls to this before [method _ready] will be ignored.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetPhysicsProcessDeltaTime">
+            <summary>
+            Returns the time elapsed since the last physics-bound frame (see [method _physics_process]). This is always a constant value in physics processing unless the frames per second is changed in [OS].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsPhysicsProcessing">
+            <summary>
+            Returns [code]true[/code] if physics processing is enabled (see [method set_physics_process]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetProcessDeltaTime">
+            <summary>
+            Returns the time elapsed (in seconds) since the last process callback. This value may vary from frame to frame.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetProcess(System.Boolean)">
+            <summary>
+            Enables or disables processing. When a node is being processed, it will receive a NOTIFICATION_PROCESS on every drawn frame (and the [method _process] callback will be called if exists). Enabled automatically if [method _process] is overridden. Any calls to this before [method _ready] will be ignored.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsProcessing">
+            <summary>
+            Returns [code]true[/code] if processing is enabled (see [method set_process]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetProcessInput(System.Boolean)">
+            <summary>
+            Enables or disables input processing. This is not required for GUI controls! Enabled automatically if [method _input] is overridden. Any calls to this before [method _ready] will be ignored.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsProcessingInput">
+            <summary>
+            Returns [code]true[/code] if the node is processing input (see [method set_process_input]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetProcessUnhandledInput(System.Boolean)">
+            <summary>
+            Enables unhandled input processing. This is not required for GUI controls! It enables the node to receive all input that was not previously handled (usually by a [Control]). Enabled automatically if [method _unhandled_input] is overridden. Any calls to this before [method _ready] will be ignored.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsProcessingUnhandledInput">
+            <summary>
+            Returns [code]true[/code] if the node is processing unhandled input (see [method set_process_unhandled_input]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetProcessUnhandledKeyInput(System.Boolean)">
+            <summary>
+            Enables unhandled key input processing. Enabled automatically if [method _unhandled_key_input] is overridden. Any calls to this before [method _ready] will be ignored.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsProcessingUnhandledKeyInput">
+            <summary>
+            Returns [code]true[/code] if the node is processing unhandled key input (see [method set_process_unhandled_key_input]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.CanProcess">
+            <summary>
+            Returns [code]true[/code] if the node can process while the scene tree is paused (see [method set_pause_mode]). Always returns [code]true[/code] if the scene tree is not paused, and [code]false[/code] if the node is not in the tree. FIXME: Why FAIL_COND?
+            </summary>
+        </member>
+        <member name="M:Godot.Node.PrintStrayNodes">
+            <summary>
+            Prints all stray nodes (nodes outside the [SceneTree]). Used for debugging. Works only in debug builds.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetPositionInParent">
+            <summary>
+            Returns the node's order in the scene tree branch. For example, if called on the first child node the position is [code]0[/code].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetDisplayFolded(System.Boolean)">
+            <summary>
+            Sets the folded state of the node in the Scene dock.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsDisplayedFolded">
+            <summary>
+            Returns [code]true[/code] if the node is folded (collapsed) in the Scene dock.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetProcessInternal(System.Boolean)">
+            <summary>
+            Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal [method]_process[/code] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting ([method set_process]). Only useful for advanced uses to manipulate built-in nodes behaviour.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsProcessingInternal">
+            <summary>
+            Returns [code]true[/code] if internal processing is enabled (see [method set_process_internal]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetPhysicsProcessInternal(System.Boolean)">
+            <summary>
+            Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal [method]_physics_process[/code] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting ([method set_physics_process]). Only useful for advanced uses to manipulate built-in nodes behaviour.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsPhysicsProcessingInternal">
+            <summary>
+            Returns [code]true[/code] if internal physics processing is enabled (see [method set_physics_process_internal]).
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetTree">
+            <summary>
+            Returns the [SceneTree] that contains this node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.Duplicate(System.Int32)">
+            <summary>
+            Duplicates the node, returning a new node.
+            You can fine-tune the behavior using the [code]flags[/code]. See DUPLICATE_* constants.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.ReplaceBy(Godot.Node,System.Boolean)">
+            <summary>
+            Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetSceneInstanceLoadPlaceholder(System.Boolean)">
+            <summary>
+            Sets whether this is an instance load placeholder. See [InstancePlaceholder].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetSceneInstanceLoadPlaceholder">
+            <summary>
+            Returns [code]true[/code] if this is an instance load placeholder. See [InstancePlaceholder].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetViewport">
+            <summary>
+            Returns the node's [Viewport].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.QueueFree">
+            <summary>
+            Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to [method Object.free]. Use [method Object.is_queued_for_deletion] to check whether a node will be deleted at the end of the frame.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RequestReady">
+            <summary>
+            Requests that [code]_ready[/code] be called again.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.SetNetworkMaster(System.Int32,System.Boolean)">
+            <summary>
+            Sets the node's network master to the peer with the given peer ID. The network master is the peer that has authority over the node on the network. Useful in conjunction with the [code]master[/code] and [code]slave[/code] keywords. Inherited from the parent node by default, which ultimately defaults to peer ID 1 (the server). If [code]recursive[/code], the given peer is recursively set as the master for all children of this node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.GetNetworkMaster">
+            <summary>
+            Returns the peer ID of the network master for this node. See [method set_network_master].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.IsNetworkMaster">
+            <summary>
+            Returns [code]true[/code] if the local system is the master of this node.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RpcConfig(System.String,Godot.Node.RPCMode)">
+            <summary>
+            Changes the RPC mode for the given [code]method[/code] to the given [code]mode[/code]. See [enum RPCMode]. An alternative is annotating methods and properties with the corresponding keywords ([code]remote[/code], [code]sync[/code], [code]master[/code], [code]slave[/code]). By default, methods are not exposed to networking (and RPCs). Also see [method rset] and [method rset_config] for properties.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RsetConfig(System.String,Godot.Node.RPCMode)">
+            <summary>
+            Changes the RPC mode for the given [code]property[/code] to the given [code]mode[/code]. See [enum RPCMode]. An alternative is annotating methods and properties with the corresponding keywords ([code]remote[/code], [code]sync[/code], [code]master[/code], [code]slave[/code]). By default, properties are not exposed to networking (and RPCs). Also see [method rpc] and [method rpc_config] for methods.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.Rpc(System.String,System.Object[])">
+            <summary>
+            Sends a remote procedure call request for the given [code]method[/code] to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same [NodePath], including the exact same node name. Behaviour depends on the RPC configuration for the given method, see [method rpc_config]. Methods are not exposed to RPCs by default. Also see [method rset] and [method rset_config] for properties. Returns an empty [Variant]. Note that you can only safely use RPCs on clients after you received the [code]connected_to_server[/code] signal from the [SceneTree]. You also need to keep track of the connection state, either by the [SceneTree] signals like [code]server_disconnected[/code] or by checking [code]SceneTree.network_peer.get_connection_status() == CONNECTION_CONNECTED[/code].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RpcUnreliable(System.String,System.Object[])">
+            <summary>
+            Sends a [method rpc] using an unreliable protocol. Returns an empty [Variant].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RpcId(System.Int32,System.String,System.Object[])">
+            <summary>
+            Sends a [method rpc] to a specific peer identified by [code]peer_id[/code]. Returns an empty [Variant].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RpcUnreliableId(System.Int32,System.String,System.Object[])">
+            <summary>
+            Sends a [method rpc] to a specific peer identified by [code]peer_id[/code] using an unreliable protocol. Returns an empty [Variant].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.Rset(System.String,System.Object)">
+            <summary>
+            Remotely changes a property's value on other peers (and locally). Behaviour depends on the RPC configuration for the given property, see [method rset_config]. Also see [method rpc] for RPCs for methods, most information applies to this method as well.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RsetId(System.Int32,System.String,System.Object)">
+            <summary>
+            Remotely changes the property's value on a specific peer identified by [code]peer_id[/code].
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RsetUnreliable(System.String,System.Object)">
+            <summary>
+            Remotely changes the property's value on other peers (and locally) using an unreliable protocol.
+            </summary>
+        </member>
+        <member name="M:Godot.Node.RsetUnreliableId(System.Int32,System.String,System.Object)">
+            <summary>
+            Remotely changes property's value on a specific peer identified by [code]peer_id[/code] using an unreliable protocol.
+            </summary>
+        </member>
         <member name="M:Godot.StringExtensions.Length(System.String)">
             <summary>
             Return the length of the string in characters.
@@ -3427,14 +3921,14 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.ArrayMesh.AddSurfaceFromArrays(Godot.Mesh.PrimitiveType,System.Object[],System.Object[],System.Int32)">
+        <member name="M:Godot.ArrayMesh.AddSurfaceFromArrays(Godot.Mesh.PrimitiveType,Godot.Array,Godot.Array,System.Int32)">
             <summary>
             Creates a new surface.
             Surfaces are created to be rendered using a "primitive", which may be PRIMITIVE_POINTS, PRIMITIVE_LINES, PRIMITIVE_LINE_STRIP, PRIMITIVE_LINE_LOOP, PRIMITIVE_TRIANGLES, PRIMITIVE_TRIANGLE_STRIP, PRIMITIVE_TRIANGLE_FAN. See [Mesh] for details. (As a note, when using indices, it is recommended to only use points, lines or triangles). [method get_surface_count] will become the surf_idx for this new surface.
             The [code]arrays[/code] argument is an array of arrays. See [enum ArrayType] for the values used in this array. For example, [code]arrays[0][/code] is the array of vertices. That first vertex sub-array is always required; the others are optional. Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data and the index array defines the vertex order. All sub-arrays must have the same length as the vertex array or be empty, except for [code]ARRAY_INDEX[/code] if it is used.
             Adding an index array puts this function into "index mode" where the vertex and other arrays become the sources of data, and the index array defines the order of the vertices.
             Godot uses clockwise winding order for front faces of triangle primitive modes.
-            &lt;param name="blendShapes"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="blendShapes"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.ArrayMesh.GetSurfaceCount">
@@ -8776,7 +9270,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.GDNative.CallNative(System.String,System.String,System.Object[])">
+        <member name="M:Godot.GDNative.CallNative(System.String,System.String,Godot.Array)">
             <summary>
             </summary>
         </member>
@@ -9188,7 +9682,7 @@
             Checks if the segment ([code]from[/code], [code]to[/code]) intersects the cylinder with height [code]height[/code] that is centered at the origin and has radius [code]radius[/code]. If no, returns an empty [PoolVector3Array]. If an intersection takes place, the returned array contains the point of intersection and the cylinder's normal at the point of intersection.
             </summary>
         </member>
-        <member name="M:Godot.Geometry.SegmentIntersectsConvex(Godot.Vector3,Godot.Vector3,System.Object[])">
+        <member name="M:Godot.Geometry.SegmentIntersectsConvex(Godot.Vector3,Godot.Vector3,Godot.Array)">
             <summary>
             Given a convex hull defined though the [Plane]s in the array [code]planes[/code], tests if the segment ([code]from[/code], [code]to[/code]) intersects with that hull. If an intersection is found, returns a [PoolVector3Array] containing the point the intersection and the hull's normal. If no intersecion is found, an the returned array is empty.
             </summary>
@@ -9997,7 +10491,7 @@
             This needs to be called in order to have any request processed. Check results with [method get_status]
             </summary>
         </member>
-        <member name="M:Godot.HTTPClient.QueryStringFromDict(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.HTTPClient.QueryStringFromDict(Godot.Dictionary)">
             <summary>
             Generates a GET/POST application/x-www-form-urlencoded style query string from a provided dictionary, e.g.:
             [codeblock]
@@ -12526,7 +13020,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.MeshLibrary.SetItemShapes(System.Int32,System.Object[])">
+        <member name="M:Godot.MeshLibrary.SetItemShapes(System.Int32,Godot.Array)">
             <summary>
             </summary>
         </member>
@@ -13081,490 +13575,6 @@
             Doesn't do anything at the time of writing.
             </summary>
         </member>
-        <member name="T:Godot.Node">
-            <summary>
-            Nodes are Godot's building blocks. They can be assigned as the child of another node, resulting in a tree arrangement. A given node can contain any number of nodes as children with the requirement that all siblings (direct children of a node) should have unique names.
-            A tree of nodes is called a [i]scene[/i]. Scenes can be saved to the disk and then instanced into other scenes. This allows for very high flexibility in the architecture and data model of Godot projects. Nodes can also optionally be added to groups. This makes it possible to access a number of nodes from code (an "enemies" group, for example) to perform grouped actions.
-            [b]Scene tree:[/b] The [SceneTree] contains the active tree of nodes. When a node is added to the scene tree, it receives the NOTIFICATION_ENTER_TREE notification and its [method _enter_tree] callback is triggered. Child nodes are always added [i]after[/i] their parent node, i.e. the [method _enter_tree] callback of a parent node will be triggered before its child's.
-            Once all nodes have been added in the scene tree, they receive the NOTIFICATION_READY notification and their respective [method _ready] callbacks are triggered. For groups of nodes, the [method _ready] callback is called in reverse order, starting with the children and moving up to the parent nodes.
-            This means that when adding a node to the scene tree, the following order will be used for the callbacks: [method _enter_tree] of the parent, [method _enter_tree] of the children, [method _ready] of the children and finally [method _ready] of the parent (recursively for the entire scene tree).
-            [b]Processing:[/b] Nodes can override the "process" state, so that they receive a callback on each frame requesting them to process (do something). Normal processing (callback [method _process], toggled with [method set_process]) happens as fast as possible and is dependent on the frame rate, so the processing time [i]delta[/i] is passed as an argument. Physics processing (callback [method _physics_process], toggled with [method set_physics_process]) happens a fixed number of times per second (60 by default) and is useful for code related to the physics engine.
-            Nodes can also process input events. When present, the [method _input] function will be called for each input that the program receives. In many cases, this can be overkill (unless used for simple projects), and the [method _unhandled_input] function might be preferred; it is called when the input event was not handled by anyone else (typically, GUI [Control] nodes), ensuring that the node only receives the events that were meant for it.
-            To keep track of the scene hierarchy (especially when instancing scenes into other scenes), an "owner" can be set for the node with [method set_owner]. This keeps track of who instanced what. This is mostly useful when writing editors and tools, though.
-            Finally, when a node is freed with [method free] or [method queue_free], it will also free all its children.
-            [b]Groups:[/b] Nodes can be added to as many groups as you want to be easy to manage, you could create groups like "enemies" or "collectables" for example, depending on your game. See [method add_to_group], [method is_in_group] and [method remove_from_group]. You can then retrieve all nodes in these groups, iterate them and even call methods on groups via the methods on [SceneTree].
-            [b]Networking with nodes:[/b] After connecting to a server (or making one, see [NetworkedMultiplayerENet]) it is possible to use the built-in RPC (remote procedure call) system to communicate over the network. By calling [method rpc] with a method name, it will be called locally and in all connected peers (peers = clients and the server that accepts connections). To identify which node receives the RPC call Godot will use its [NodePath] (make sure node names are the same on all peers). Also take a look at the high-level networking tutorial and corresponding demos.
-            </summary>
-        </member>
-        <member name="P:Godot.Node.PauseMode">
-            <summary>
-            Pause mode. How the node will behave if the [SceneTree] is paused.
-            </summary>
-        </member>
-        <member name="P:Godot.Node.Name">
-            <summary>
-            The name of the node. This name is unique among the siblings (other child nodes from the same parent). When set to an existing name, the node will be automatically renamed
-            </summary>
-        </member>
-        <member name="P:Godot.Node.Filename">
-            <summary>
-            When a scene is instanced from a file, its topmost node contains the filename from which it was loaded.
-            </summary>
-        </member>
-        <member name="P:Godot.Node.Owner">
-            <summary>
-            The node owner. A node can have any other node as owner (as long as it is a valid parent, grandparent, etc. ascending in the tree). When saving a node (using [PackedScene]) all the nodes it owns will be saved with it. This allows for the creation of complex [SceneTree]s, with instancing and subinstancing.
-            </summary>
-        </member>
-        <member name="M:Godot.Node._EnterTree">
-            <summary>
-            Called when the node enters the [SceneTree] (e.g. upon instancing, scene changing, or after calling [method add_child] in a script). If the node has children, its [method _enter_tree] callback will be called first, and then that of the children.
-            Corresponds to the NOTIFICATION_ENTER_TREE notification in [method Object._notification].
-            </summary>
-        </member>
-        <member name="M:Godot.Node._ExitTree">
-            <summary>
-            Called when the node is about to leave the [SceneTree] (e.g. upon freeing, scene changing, or after calling [method remove_child] in a script). If the node has children, its [method _exit_tree] callback will be called last, after all its children have left the tree.
-            Corresponds to the NOTIFICATION_EXIT_TREE notification in [method Object._notification] and signal [signal tree_exiting]. To get notified when the node has already left the active tree, connect to the [signal tree_exited]
-            </summary>
-        </member>
-        <member name="M:Godot.Node._Input(Godot.InputEvent)">
-            <summary>
-            Called when there is an input event. The input event propagates through the node tree until a node consumes it.
-            It is only called if input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_input].
-            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
-            For gameplay input, [method _unhandled_input] and [method _unhandled_key_input] are usually a better fit as they allow the GUI to intercept the events first.
-            </summary>
-        </member>
-        <member name="M:Godot.Node._PhysicsProcess(System.Single)">
-            <summary>
-            Called during the physics processing step of the main loop. Physics processing means that the frame rate is synced to the physics, i.e. the [code]delta[/code] variable should be constant.
-            It is only called if physics processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_physics_process].
-            Corresponds to the NOTIFICATION_PHYSICS_PROCESS notification in [method Object._notification].
-            </summary>
-        </member>
-        <member name="M:Godot.Node._Process(System.Single)">
-            <summary>
-            Called during the processing step of the main loop. Processing happens at every frame and as fast as possible, so the [code]delta[/code] time since the previous frame is not constant.
-            It is only called if processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process].
-            Corresponds to the NOTIFICATION_PROCESS notification in [method Object._notification].
-            </summary>
-        </member>
-        <member name="M:Godot.Node._Ready">
-            <summary>
-            Called when the node is "ready", i.e. when both the node and its children have entered the scene tree. If the node has children, their [method _ready] callbacks get triggered first, and the parent node will receive the ready notification afterwards.
-            Corresponds to the NOTIFICATION_READY notification in [method Object._notification]. See also the [code]onready[/code] keyword for variables.
-            Usually used for initialization. For even earlier initialization, [method Object._init] may be used. Also see [method _enter_tree].
-            </summary>
-        </member>
-        <member name="M:Godot.Node._UnhandledInput(Godot.InputEvent)">
-            <summary>
-            Propagated to all nodes when the previous [InputEvent] is not consumed by any nodes.
-            It is only called if unhandled input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_input].
-            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
-            For gameplay input, this and [method _unhandled_key_input] are usually a better fit than [method _input] as they allow the GUI to intercept the events first.
-            </summary>
-        </member>
-        <member name="M:Godot.Node._UnhandledKeyInput(Godot.InputEventKey)">
-            <summary>
-            Propagated to all nodes when the previous [InputEventKey] is not consumed by any nodes.
-            It is only called if unhandled key input processing is enabled, which is done automatically if this method is overridden, and can be toggled with [method set_process_unhandled_key_input].
-            To consume the input event and stop it propagating further to other nodes, [method SceneTree.set_input_as_handled] can be called.
-            For gameplay input, this and [method _unhandled_input] are usually a better fit than [method _input] as they allow the GUI to intercept the events first.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.AddChildBelowNode(Godot.Node,Godot.Node,System.Boolean)">
-            <summary>
-            Adds a child node. The child is placed below the given node in the list of children.
-            Setting "legible_unique_name" [code]true[/code] creates child nodes with human-readable names, based on the name of the node being instanced instead of its type.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.AddChild(Godot.Node,System.Boolean)">
-            <summary>
-            Adds a child node. Nodes can have any number of children, but every child must have a unique name. Child nodes are automatically deleted when the parent node is deleted, so an entire scene can be removed by deleting its topmost node.
-            Setting "legible_unique_name" [code]true[/code] creates child nodes with human-readable names, based on the name of the node being instanced instead of its type.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RemoveChild(Godot.Node)">
-            <summary>
-            Removes a child node. The node is NOT deleted and must be deleted manually.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetChildCount">
-            <summary>
-            Returns the number of child nodes.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetChildren">
-            <summary>
-            Returns an array of references to node's children.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetChild(System.Int32)">
-            <summary>
-            Returns a child node by its index (see [method get_child_count]). This method is often used for iterating all children of a node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.HasNode(Godot.NodePath)">
-            <summary>
-            Returns [code]true[/code] if the node that the [NodePath] points to exists.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetNode(Godot.NodePath)">
-            <summary>
-            Fetches a node. The [NodePath] can be either a relative path (from the current node) or an absolute path (in the scene tree) to a node. If the path does not exist, a [code]null instance[/code] is returned and attempts to access it will result in an "Attempt to call &lt;method&gt; on a null instance." error.
-            Note: fetching absolute paths only works when the node is inside the scene tree (see [method is_inside_tree]).
-            [i]Example:[/i] Assume your current node is Character and the following tree:
-            [codeblock]
-            /root
-            /root/Character
-            /root/Character/Sword
-            /root/Character/Backpack/Dagger
-            /root/MyGame
-            /root/Swamp/Alligator
-            /root/Swamp/Mosquito
-            /root/Swamp/Goblin
-            [/codeblock]
-            Possible paths are:
-            [codeblock]
-            get_node("Sword")
-            get_node("Backpack/Dagger")
-            get_node("../Swamp/Alligator")
-            get_node("/root/MyGame")
-            [/codeblock]
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetParent">
-            <summary>
-            Returns the parent node of the current node, or an empty [code]Node[/code] if the node lacks a parent.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.FindNode(System.String,System.Boolean,System.Boolean)">
-            <summary>
-            Finds a descendant of this node whose name matches [code]mask[/code] as in [method String.match] (i.e. case sensitive, but '*' matches zero or more characters and '?' matches any single character except '.'). Note that it does not match against the full path, just against individual node names.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.HasNodeAndResource(Godot.NodePath)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetNodeAndResource(Godot.NodePath)">
-            <summary>
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsInsideTree">
-            <summary>
-            Returns [code]true[/code] if this node is currently inside a [SceneTree].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsAParentOf(Godot.Node)">
-            <summary>
-            Returns [code]true[/code] if the given node is a direct or indirect child of the current node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsGreaterThan(Godot.Node)">
-            <summary>
-            Returns [code]true[/code] if the given node occurs later in the scene hierarchy than the current node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetPath">
-            <summary>
-            Returns the absolute path of the current node. This only works if the current node is inside the scene tree (see [method is_inside_tree]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetPathTo(Godot.Node)">
-            <summary>
-            Returns the relative [NodePath] from this node to the specified [code]node[/code]. Both nodes must be in the same scene or the function will fail.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.AddToGroup(System.String,System.Boolean)">
-            <summary>
-            Adds the node to a group. Groups are helpers to name and organize a subset of nodes, for example "enemies" or "collectables". A node can be in any number of groups. Nodes can be assigned a group at any time, but will not be added until they are inside the scene tree (see [method is_inside_tree]). See notes in the description, and the group methods in [SceneTree].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RemoveFromGroup(System.String)">
-            <summary>
-            Removes a node from a group. See notes in the description, and the group methods in [SceneTree].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsInGroup(System.String)">
-            <summary>
-            Returns [code]true[/code] if this node is in the specified group. See notes in the description, and the group methods in [SceneTree].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.MoveChild(Godot.Node,System.Int32)">
-            <summary>
-            Moves a child node to a different position (order) amongst the other children. Since calls, signals, etc are performed by tree order, changing the order of children nodes may be useful.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetGroups">
-            <summary>
-            Returns an array listing the groups that the node is a member of.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.Raise">
-            <summary>
-            Moves this node to the top of the array of nodes of the parent node. This is often useful in GUIs ([Control] nodes), because their order of drawing depends on their order in the tree.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RemoveAndSkip">
-            <summary>
-            Removes a node and sets all its children as children of the parent node (if it exists). All event subscriptions that pass by the removed node will be unsubscribed.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetIndex">
-            <summary>
-            Returns the node's index, i.e. its position among the siblings of its parent.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.PrintTree">
-            <summary>
-            Prints the tree to stdout. Used mainly for debugging purposes. This version displays the path relative to the current node, and is good for copy/pasting into the [method get_node] function. Example output:
-            [codeblock]
-            TheGame
-            TheGame/Menu
-            TheGame/Menu/Label
-            TheGame/Menu/Camera2D
-            TheGame/SplashScreen
-            TheGame/SplashScreen/Camera2D
-            [/codeblock]
-            </summary>
-        </member>
-        <member name="M:Godot.Node.PrintTreePretty">
-            <summary>
-            Similar to [method print_tree], this prints the tree to stdout. This version displays a more graphical representation similar to what is displayed in the scene inspector. It is useful for inspecting larger trees. Example output:
-            [codeblock]
-            ┖╴TheGame
-            ┠╴Menu
-            ┃  ┠╴Label
-            ┃  ┖╴Camera2D
-            ┖-SplashScreen
-            ┖╴Camera2D
-            [/codeblock]
-            </summary>
-        </member>
-        <member name="M:Godot.Node.PropagateNotification(System.Int32)">
-            <summary>
-            Notifies the current node and all its children recursively by calling notification() on all of them.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.PropagateCall(System.String,System.Object[],System.Boolean)">
-            <summary>
-            Calls the given method (if present) with the arguments given in [code]args[/code] on this node and recursively on all its children. If the parent_first argument is [code]true[/code] then the method will be called on the current node first, then on all children. If it is [code]false[/code] then the children will be called first.
-            &lt;param name="args"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetPhysicsProcess(System.Boolean)">
-            <summary>
-            Enables or disables physics (i.e. fixed framerate) processing. When a node is being processed, it will receive a NOTIFICATION_PHYSICS_PROCESS at a fixed (usually 60 fps, see [OS] to change) interval (and the [method _physics_process] callback will be called if exists). Enabled automatically if [method _physics_process] is overridden. Any calls to this before [method _ready] will be ignored.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetPhysicsProcessDeltaTime">
-            <summary>
-            Returns the time elapsed since the last physics-bound frame (see [method _physics_process]). This is always a constant value in physics processing unless the frames per second is changed in [OS].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsPhysicsProcessing">
-            <summary>
-            Returns [code]true[/code] if physics processing is enabled (see [method set_physics_process]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetProcessDeltaTime">
-            <summary>
-            Returns the time elapsed (in seconds) since the last process callback. This value may vary from frame to frame.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetProcess(System.Boolean)">
-            <summary>
-            Enables or disables processing. When a node is being processed, it will receive a NOTIFICATION_PROCESS on every drawn frame (and the [method _process] callback will be called if exists). Enabled automatically if [method _process] is overridden. Any calls to this before [method _ready] will be ignored.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsProcessing">
-            <summary>
-            Returns [code]true[/code] if processing is enabled (see [method set_process]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetProcessInput(System.Boolean)">
-            <summary>
-            Enables or disables input processing. This is not required for GUI controls! Enabled automatically if [method _input] is overridden. Any calls to this before [method _ready] will be ignored.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsProcessingInput">
-            <summary>
-            Returns [code]true[/code] if the node is processing input (see [method set_process_input]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetProcessUnhandledInput(System.Boolean)">
-            <summary>
-            Enables unhandled input processing. This is not required for GUI controls! It enables the node to receive all input that was not previously handled (usually by a [Control]). Enabled automatically if [method _unhandled_input] is overridden. Any calls to this before [method _ready] will be ignored.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsProcessingUnhandledInput">
-            <summary>
-            Returns [code]true[/code] if the node is processing unhandled input (see [method set_process_unhandled_input]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetProcessUnhandledKeyInput(System.Boolean)">
-            <summary>
-            Enables unhandled key input processing. Enabled automatically if [method _unhandled_key_input] is overridden. Any calls to this before [method _ready] will be ignored.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsProcessingUnhandledKeyInput">
-            <summary>
-            Returns [code]true[/code] if the node is processing unhandled key input (see [method set_process_unhandled_key_input]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.CanProcess">
-            <summary>
-            Returns [code]true[/code] if the node can process while the scene tree is paused (see [method set_pause_mode]). Always returns [code]true[/code] if the scene tree is not paused, and [code]false[/code] if the node is not in the tree. FIXME: Why FAIL_COND?
-            </summary>
-        </member>
-        <member name="M:Godot.Node.PrintStrayNodes">
-            <summary>
-            Prints all stray nodes (nodes outside the [SceneTree]). Used for debugging. Works only in debug builds.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetPositionInParent">
-            <summary>
-            Returns the node's order in the scene tree branch. For example, if called on the first child node the position is [code]0[/code].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetDisplayFolded(System.Boolean)">
-            <summary>
-            Sets the folded state of the node in the Scene dock.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsDisplayedFolded">
-            <summary>
-            Returns [code]true[/code] if the node is folded (collapsed) in the Scene dock.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetProcessInternal(System.Boolean)">
-            <summary>
-            Enables or disabled internal processing for this node. Internal processing happens in isolation from the normal [method]_process[/code] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or processing is disabled for scripting ([method set_process]). Only useful for advanced uses to manipulate built-in nodes behaviour.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsProcessingInternal">
-            <summary>
-            Returns [code]true[/code] if internal processing is enabled (see [method set_process_internal]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetPhysicsProcessInternal(System.Boolean)">
-            <summary>
-            Enables or disables internal physics for this node. Internal physics processing happens in isolation from the normal [method]_physics_process[/code] calls and is used by some nodes internally to guarantee proper functioning even if the node is paused or physics processing is disabled for scripting ([method set_physics_process]). Only useful for advanced uses to manipulate built-in nodes behaviour.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsPhysicsProcessingInternal">
-            <summary>
-            Returns [code]true[/code] if internal physics processing is enabled (see [method set_physics_process_internal]).
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetTree">
-            <summary>
-            Returns the [SceneTree] that contains this node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.Duplicate(System.Int32)">
-            <summary>
-            Duplicates the node, returning a new node.
-            You can fine-tune the behavior using the [code]flags[/code]. See DUPLICATE_* constants.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.ReplaceBy(Godot.Node,System.Boolean)">
-            <summary>
-            Replaces a node in a scene by the given one. Subscriptions that pass through this node will be lost.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetSceneInstanceLoadPlaceholder(System.Boolean)">
-            <summary>
-            Sets whether this is an instance load placeholder. See [InstancePlaceholder].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetSceneInstanceLoadPlaceholder">
-            <summary>
-            Returns [code]true[/code] if this is an instance load placeholder. See [InstancePlaceholder].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetViewport">
-            <summary>
-            Returns the node's [Viewport].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.QueueFree">
-            <summary>
-            Queues a node for deletion at the end of the current frame. When deleted, all of its child nodes will be deleted as well. This method ensures it's safe to delete the node, contrary to [method Object.free]. Use [method Object.is_queued_for_deletion] to check whether a node will be deleted at the end of the frame.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RequestReady">
-            <summary>
-            Requests that [code]_ready[/code] be called again.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.SetNetworkMaster(System.Int32,System.Boolean)">
-            <summary>
-            Sets the node's network master to the peer with the given peer ID. The network master is the peer that has authority over the node on the network. Useful in conjunction with the [code]master[/code] and [code]slave[/code] keywords. Inherited from the parent node by default, which ultimately defaults to peer ID 1 (the server). If [code]recursive[/code], the given peer is recursively set as the master for all children of this node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.GetNetworkMaster">
-            <summary>
-            Returns the peer ID of the network master for this node. See [method set_network_master].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.IsNetworkMaster">
-            <summary>
-            Returns [code]true[/code] if the local system is the master of this node.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RpcConfig(System.String,Godot.Node.RPCMode)">
-            <summary>
-            Changes the RPC mode for the given [code]method[/code] to the given [code]mode[/code]. See [enum RPCMode]. An alternative is annotating methods and properties with the corresponding keywords ([code]remote[/code], [code]sync[/code], [code]master[/code], [code]slave[/code]). By default, methods are not exposed to networking (and RPCs). Also see [method rset] and [method rset_config] for properties.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RsetConfig(System.String,Godot.Node.RPCMode)">
-            <summary>
-            Changes the RPC mode for the given [code]property[/code] to the given [code]mode[/code]. See [enum RPCMode]. An alternative is annotating methods and properties with the corresponding keywords ([code]remote[/code], [code]sync[/code], [code]master[/code], [code]slave[/code]). By default, properties are not exposed to networking (and RPCs). Also see [method rpc] and [method rpc_config] for methods.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.Rpc(System.String,System.Object[])">
-            <summary>
-            Sends a remote procedure call request for the given [code]method[/code] to peers on the network (and locally), optionally sending all additional arguments as arguments to the method called by the RPC. The call request will only be received by nodes with the same [NodePath], including the exact same node name. Behaviour depends on the RPC configuration for the given method, see [method rpc_config]. Methods are not exposed to RPCs by default. Also see [method rset] and [method rset_config] for properties. Returns an empty [Variant]. Note that you can only safely use RPCs on clients after you received the [code]connected_to_server[/code] signal from the [SceneTree]. You also need to keep track of the connection state, either by the [SceneTree] signals like [code]server_disconnected[/code] or by checking [code]SceneTree.network_peer.get_connection_status() == CONNECTION_CONNECTED[/code].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RpcUnreliable(System.String,System.Object[])">
-            <summary>
-            Sends a [method rpc] using an unreliable protocol. Returns an empty [Variant].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RpcId(System.Int32,System.String,System.Object[])">
-            <summary>
-            Sends a [method rpc] to a specific peer identified by [code]peer_id[/code]. Returns an empty [Variant].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RpcUnreliableId(System.Int32,System.String,System.Object[])">
-            <summary>
-            Sends a [method rpc] to a specific peer identified by [code]peer_id[/code] using an unreliable protocol. Returns an empty [Variant].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.Rset(System.String,System.Object)">
-            <summary>
-            Remotely changes a property's value on other peers (and locally). Behaviour depends on the RPC configuration for the given property, see [method rset_config]. Also see [method rpc] for RPCs for methods, most information applies to this method as well.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RsetId(System.Int32,System.String,System.Object)">
-            <summary>
-            Remotely changes the property's value on a specific peer identified by [code]peer_id[/code].
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RsetUnreliable(System.String,System.Object)">
-            <summary>
-            Remotely changes the property's value on other peers (and locally) using an unreliable protocol.
-            </summary>
-        </member>
-        <member name="M:Godot.Node.RsetUnreliableId(System.Int32,System.String,System.Object)">
-            <summary>
-            Remotely changes property's value on a specific peer identified by [code]peer_id[/code] using an unreliable protocol.
-            </summary>
-        </member>
         <member name="T:Godot.Node2D">
             <summary>
             A 2D game object, with a position, rotation and scale. All 2D physics nodes and sprites inherit from Node2D. Use Node2D as a parent node to move, scale and rotate children in a 2D project. Also gives control on the node's render order.
@@ -13802,10 +13812,10 @@
             Returns the object's metadata as a [PoolStringArray].
             </summary>
         </member>
-        <member name="M:Godot.Object.AddUserSignal(System.String,System.Object[])">
+        <member name="M:Godot.Object.AddUserSignal(System.String,Godot.Array)">
             <summary>
             Adds a user-defined [code]signal[/code]. Arguments are optional, but can be added as an [Array] of dictionaries, each containing "name" and "type" (from [@GlobalScope] TYPE_*).
-            &lt;param name="arguments"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="arguments"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.Object.HasUserSignal(System.String)">
@@ -13828,7 +13838,7 @@
             Calls the [code]method[/code] on the object during idle time and returns a result. Pass parameters as a comma separated list.
             </summary>
         </member>
-        <member name="M:Godot.Object.Callv(System.String,System.Object[])">
+        <member name="M:Godot.Object.Callv(System.String,Godot.Array)">
             <summary>
             Calls the [code]method[/code] on the object and returns a result. Pass parameters as an [Array].
             </summary>
@@ -13857,10 +13867,10 @@
             - "method_name" is a name of method to which signal is connected.
             </summary>
         </member>
-        <member name="M:Godot.Object.Connect(System.String,Godot.Object,System.String,System.Object[],System.Int32)">
+        <member name="M:Godot.Object.Connect(System.String,Godot.Object,System.String,Godot.Array,System.Int32)">
             <summary>
             Connects a [code]signal[/code] to a [code]method[/code] on a [code]target[/code] object. Pass optional [code]binds[/code] to the call. Use [code]flags[/code] to set deferred or one shot connections. See [code]CONNECT_*[/code] constants. A [code]signal[/code] can only be connected once to a [code]method[/code]. It will throw an error if already connected. To avoid this, first use [method is_connected] to check for existing connections.
-            &lt;param name="binds"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="binds"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.Object.Disconnect(System.String,Godot.Object,System.String)">
@@ -14205,7 +14215,7 @@
             Returns the path to the current engine executable.
             </summary>
         </member>
-        <member name="M:Godot.OS.Execute(System.String,System.String[],System.Boolean,System.Object[])">
+        <member name="M:Godot.OS.Execute(System.String,System.String[],System.Boolean,Godot.Array)">
             <summary>
             Execute the file at the given path, optionally blocking until it returns.
             Platform path resolution will take place.  The resolved file must exist and be executable.
@@ -14219,7 +14229,7 @@
             [codeblock]
             var pid = OS.execute('CMD.exe', ['/C', 'cd %TEMP% &amp;&amp; dir'], true, output)
             [/codeblock]
-            &lt;param name="output"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="output"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.OS.Kill(System.Int32)">
@@ -14290,7 +14300,7 @@
             Dictionary Time values will be a union of values from [method get_time] and [method get_date] dictionaries (with the exception of dst = day light standard time, as it cannot be determined from epoch).
             </summary>
         </member>
-        <member name="M:Godot.OS.GetUnixTimeFromDatetime(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.OS.GetUnixTimeFromDatetime(Godot.Dictionary)">
             <summary>
             Get an epoch time value from a dictionary of time values.
             [code]datetime[/code] must be populated with the following keys: year, month, day, hour, minute, second.
@@ -15515,7 +15525,7 @@
             Direct access object to a space in the [Physics2DServer]. It's used mainly to do queries against objects and areas residing in a given space.
             </summary>
         </member>
-        <member name="M:Godot.Physics2DDirectSpaceState.IntersectPoint(Godot.Vector2,System.Int32,System.Object[],System.Int32)">
+        <member name="M:Godot.Physics2DDirectSpaceState.IntersectPoint(Godot.Vector2,System.Int32,Godot.Array,System.Int32)">
             <summary>
             Checks whether a point is inside any shape. The shapes the point is inside of are returned in an array containing dictionaries with the following fields:
             [code]collider[/code]: The colliding object.
@@ -15524,10 +15534,10 @@
             [code]rid[/code]: The intersecting object's [RID].
             [code]shape[/code]: The shape index of the colliding shape.
             Additionally, the method can take an array of objects or [RID]s that are to be excluded from collisions, or a bitmask representing the physics layers to check in.
-            &lt;param name="exclude"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="exclude"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
-        <member name="M:Godot.Physics2DDirectSpaceState.IntersectRay(Godot.Vector2,Godot.Vector2,System.Object[],System.Int32)">
+        <member name="M:Godot.Physics2DDirectSpaceState.IntersectRay(Godot.Vector2,Godot.Vector2,Godot.Array,System.Int32)">
             <summary>
             Intersects a ray in a given space. The returned object is a dictionary with the following fields:
             [code]collider[/code]: The colliding object.
@@ -15539,7 +15549,7 @@
             [code]shape[/code]: The shape index of the colliding shape.
             If the ray did not intersect anything, then an empty dictionary ([code]dir.empty()==true[/code]) is returned instead.
             Additionally, the method can take an array of objects or [RID]s that are to be excluded from collisions, or a bitmask representing the physics layers to check in.
-            &lt;param name="exclude"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="exclude"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.Physics2DDirectSpaceState.IntersectShape(Godot.Physics2DShapeQueryParameters,System.Int32)">
@@ -16365,7 +16375,7 @@
             Direct access object to a space in the [PhysicsServer]. It's used mainly to do queries against objects and areas residing in a given space.
             </summary>
         </member>
-        <member name="M:Godot.PhysicsDirectSpaceState.IntersectRay(Godot.Vector3,Godot.Vector3,System.Object[],System.Int32)">
+        <member name="M:Godot.PhysicsDirectSpaceState.IntersectRay(Godot.Vector3,Godot.Vector3,Godot.Array,System.Int32)">
             <summary>
             Intersects a ray in a given space. The returned object is a dictionary with the following fields:
             [code]collider[/code]: The colliding object.
@@ -16376,7 +16386,7 @@
             [code]shape[/code]: The shape index of the colliding shape.
             If the ray did not intersect anything, then an empty dictionary ([code]dir.empty()==true[/code]) is returned instead.
             Additionally, the method can take an array of objects or [RID]s that are to be excluded from collisions, or a bitmask representing the physics layers to check in.
-            &lt;param name="exclude"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="exclude"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.PhysicsDirectSpaceState.IntersectShape(Godot.PhysicsShapeQueryParameters,System.Int32)">
@@ -17609,7 +17619,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.ProjectSettings.AddPropertyInfo(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.ProjectSettings.AddPropertyInfo(Godot.Dictionary)">
             <summary>
             Add a custom property info to a property. The dictionary must contain: name:[String](the name of the property) and type:[int](see TYPE_* in [@GlobalScope]), and optionally hint:[int](see PROPERTY_HINT_* in [@GlobalScope]), hint_string:[String].
             Example:
@@ -21242,14 +21252,14 @@
             Specify whether current Vertex (if using only Vertex arrays) or current index (if also using index arrays) should utilize smooth normals for normal calculation.
             </summary>
         </member>
-        <member name="M:Godot.SurfaceTool.AddTriangleFan(Godot.Vector3[],Godot.Vector2[],Godot.Color[],Godot.Vector2[],Godot.Vector3[],System.Object[])">
+        <member name="M:Godot.SurfaceTool.AddTriangleFan(Godot.Vector3[],Godot.Vector2[],Godot.Color[],Godot.Vector2[],Godot.Vector3[],Godot.Array)">
             <summary>
             Insert a triangle fan made of array data into [Mesh] being constructed.
             &lt;param name="uvs"&gt;If the param is null, then the default value is new Vector2[] {}&lt;/param&gt;
             &lt;param name="colors"&gt;If the param is null, then the default value is new Color[] {}&lt;/param&gt;
             &lt;param name="uv2s"&gt;If the param is null, then the default value is new Vector2[] {}&lt;/param&gt;
             &lt;param name="normals"&gt;If the param is null, then the default value is new Vector3[] {}&lt;/param&gt;
-            &lt;param name="tangents"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="tangents"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.SurfaceTool.AddIndex(System.Int32)">
@@ -22420,7 +22430,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.TileSet.TileSetShapes(System.Int32,System.Object[])">
+        <member name="M:Godot.TileSet.TileSetShapes(System.Int32,Godot.Array)">
             <summary>
             Set an array of shapes for the tile, enabling physics to collide with it.
             </summary>
@@ -24011,7 +24021,7 @@
             Returns the default (initial) value of a variable.
             </summary>
         </member>
-        <member name="M:Godot.VisualScript.SetVariableInfo(System.String,System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.VisualScript.SetVariableInfo(System.String,Godot.Dictionary)">
             <summary>
             Set a variable's info, using the same format as [method get_variable_info].
             </summary>
@@ -24211,7 +24221,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.VisualScriptConstructor.SetConstructor(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.VisualScriptConstructor.SetConstructor(Godot.Dictionary)">
             <summary>
             </summary>
         </member>
@@ -24289,7 +24299,7 @@
             Return whether the custom node has an input [b]sequence[/b] port.
             </summary>
         </member>
-        <member name="M:Godot.VisualScriptCustomNode._Step(System.Object[],System.Object[],System.Int32,System.Object[])">
+        <member name="M:Godot.VisualScriptCustomNode._Step(Godot.Array,Godot.Array,System.Int32,Godot.Array)">
             <summary>
             Execute the custom node's logic, returning the index of the output sequence port to use or a [String] when there is an error.
             The [code]inputs[/code] array contains the values of the input ports.
@@ -24373,11 +24383,11 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.VisualScriptFunctionState.ConnectToSignal(Godot.Object,System.String,System.Object[])">
+        <member name="M:Godot.VisualScriptFunctionState.ConnectToSignal(Godot.Object,System.String,Godot.Array)">
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.VisualScriptFunctionState.Resume(System.Object[])">
+        <member name="M:Godot.VisualScriptFunctionState.Resume(Godot.Array)">
             <summary>
             </summary>
         </member>
@@ -24943,10 +24953,10 @@
             Creates a new mesh.
             </summary>
         </member>
-        <member name="M:Godot.VisualServer.MeshAddSurfaceFromArrays(Godot.RID,Godot.VisualServer.PrimitiveType,System.Object[],System.Object[],System.Int32)">
+        <member name="M:Godot.VisualServer.MeshAddSurfaceFromArrays(Godot.RID,Godot.VisualServer.PrimitiveType,Godot.Array,Godot.Array,System.Int32)">
             <summary>
             Adds a surface generated from the Arrays to a mesh. See PRIMITIVE_TYPE_* constants for types.
-            &lt;param name="blendShapes"&gt;If the param is null, then the default value is new object[] {}&lt;/param&gt;
+            &lt;param name="blendShapes"&gt;If the param is null, then the default value is new Array {}&lt;/param&gt;
             </summary>
         </member>
         <member name="M:Godot.VisualServer.MeshSetBlendShapeCount(Godot.RID,System.Int32)">
@@ -25884,7 +25894,7 @@
             &lt;param name="scenario"&gt;If the param is null, then the default value is new RID()&lt;/param&gt;
             </summary>
         </member>
-        <member name="M:Godot.VisualServer.InstancesCullConvex(System.Object[],Godot.RID)">
+        <member name="M:Godot.VisualServer.InstancesCullConvex(Godot.Array,Godot.RID)">
             <summary>
             &lt;param name="scenario"&gt;If the param is null, then the default value is new RID()&lt;/param&gt;
             </summary>

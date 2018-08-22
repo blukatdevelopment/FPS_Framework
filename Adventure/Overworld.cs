@@ -10,15 +10,15 @@ using System.Collections.Generic;
 
 public class Overworld : Spatial {
 	public List<Treadmill> treadmills;
-	public Dictionary<int, TerrainCell> activeCells;
+	public System.Collections.Generic.Dictionary<int, TerrainCell> activeCells;
 
 
 	public List<Actor> activeActors;
 	public List<Item> activeItems;
 
-	public Dictionary<int, TerrainCellData> dormantCells;
-	public Dictionary<int, ItemData> dormantItems;
-	public Dictionary<int, ActorData> dormantActors;
+	public System.Collections.Generic.Dictionary<int, TerrainCellData> dormantCells;
+	public System.Collections.Generic.Dictionary<int, ItemData> dormantItems;
+	public System.Collections.Generic.Dictionary<int, ActorData> dormantActors;
 
 	public const int WorldWidth = 50;
 	public const int WorldHeight = 50;
@@ -30,7 +30,7 @@ public class Overworld : Spatial {
 	public Overworld(){
 		treadmills = new List<Treadmill>();
 		activeActors = new List<Actor>();
-		activeCells = new Dictionary<int, TerrainCell>();
+		activeCells = new System.Collections.Generic.Dictionary<int, TerrainCell>();
 		activeItems = new List<Item>();
 
 		Name = "Adventure";

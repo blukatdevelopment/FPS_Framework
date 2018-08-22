@@ -9,9 +9,9 @@ public class Cartographer {
 	
 	Overworld world;
 
-	public Dictionary<int, TerrainCellData> cells;
-	public Dictionary<int, ItemData> items;
-	public Dictionary<int, ActorData> actors;
+	public System.Collections.Generic.Dictionary<int, TerrainCellData> cells;
+	public System.Collections.Generic.Dictionary<int, ItemData> items;
+	public System.Collections.Generic.Dictionary<int, ActorData> actors;
 
 	public int worldWidth, worldHeight, cellSize;
 	public int nextItemId, nextActorId;
@@ -42,7 +42,7 @@ public class Cartographer {
 
 	// Fill out grid of world 
 	public void GenerateTerrain(){
-		cells = new Dictionary<int, TerrainCellData>();
+		cells = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
 		for(int i = 0; i < worldHeight; i++){ // y
 			for(int j = 0; j < worldWidth; j++){ // x
 				TerrainCellData tcd = GenerateCell(new Vector2(j, i));
@@ -81,7 +81,7 @@ public class Cartographer {
 	}
 
 	public void GenerateItems(){
-		items = new Dictionary<int, ItemData>();
+		items = new System.Collections.Generic.Dictionary<int, ItemData>();
 		for(int i = 0; i < 10; i++){
 			ItemData item = GenerateItem(Item.Types.Rifle, "rifle", new Vector3(0, i, 0));
 			items.Add(item.id, item);
@@ -99,7 +99,7 @@ public class Cartographer {
 
 	public void GenerateActors(){
 		GD.Print("Cartographer.GenerateActors not implemented");
-		actors = new Dictionary<int, ActorData>();
+		actors = new System.Collections.Generic.Dictionary<int, ActorData>();
 		ActorData dat = GenerateActor(GetEmptyPosition(0));
 		actors.Add(dat.id, dat);
 	}

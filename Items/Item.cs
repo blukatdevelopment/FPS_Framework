@@ -154,8 +154,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     this.area = new Area();
     CollisionShape areaShape = new CollisionShape();
     area.AddChild(areaShape);
-    object[] areaShapeOwners = area.GetShapeOwners();
-    for(int i = 0; i < areaShapeOwners.Length; i++){
+    Godot.Array areaShapeOwners = area.GetShapeOwners();
+    for(int i = 0; i < areaShapeOwners.Count; i++){
       int ownerInt = (int)areaShapeOwners[i];
       for(int j = 0; j < shapes.Count; j++){
         area.ShapeOwnerAddShape(ownerInt, shapes[i].Shape);
@@ -254,7 +254,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   List<CollisionShape> GetCollisionShapes(){
     List<CollisionShape> shapes = new List<CollisionShape>();
-    object[] owners = GetShapeOwners();
+    Godot.Array owners = GetShapeOwners();
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
@@ -267,7 +267,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   /* Disable or enable collisions. Particularly useful for held items. */
   public void SetCollision(bool val){
-    object[] owners = GetShapeOwners();
+    Godot.Array owners = GetShapeOwners();
     collisionDisabled = !val;
     if(area == null){
       InitArea();

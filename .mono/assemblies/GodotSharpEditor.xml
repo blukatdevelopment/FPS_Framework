@@ -265,7 +265,7 @@
             Get the unique name of the importer.
             </summary>
         </member>
-        <member name="M:Godot.EditorImportPlugin.GetOptionVisibility(System.String,System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.EditorImportPlugin.GetOptionVisibility(System.String,Godot.Dictionary)">
             <summary>
             </summary>
         </member>
@@ -304,7 +304,7 @@
             Get the name to display in the import window.
             </summary>
         </member>
-        <member name="M:Godot.EditorImportPlugin.Import(System.String,System.String,System.Collections.Generic.Dictionary{System.Object,System.Object},System.Object[],System.Object[])">
+        <member name="M:Godot.EditorImportPlugin.Import(System.String,System.String,Godot.Dictionary,Godot.Array,Godot.Array)">
             <summary>
             </summary>
         </member>
@@ -378,7 +378,7 @@
             Returns the editor [Viewport].
             </summary>
         </member>
-        <member name="M:Godot.EditorInterface.MakeMeshPreviews(System.Object[],System.Int32)">
+        <member name="M:Godot.EditorInterface.MakeMeshPreviews(Godot.Array,System.Int32)">
             <summary>
             Returns mesh previews rendered at the given size as an [Array] of [Texture]s.
             </summary>
@@ -499,7 +499,7 @@
             This method is called after the editor saves the project or when it's closed. It asks the plugin to save edited external scenes/resources.
             </summary>
         </member>
-        <member name="M:Godot.EditorPlugin.SetState(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.EditorPlugin.SetState(Godot.Dictionary)">
             <summary>
             Restore the state saved by [method EditorPlugin.get_state].
             </summary>
@@ -813,7 +813,7 @@
             <summary>
             </summary>
         </member>
-        <member name="M:Godot.EditorSettings.AddPropertyInfo(System.Collections.Generic.Dictionary{System.Object,System.Object})">
+        <member name="M:Godot.EditorSettings.AddPropertyInfo(Godot.Dictionary)">
             <summary>
             Add a custom property info to a property. The dictionary must contain: name:[String](the name of the property) and type:[int](see TYPE_* in [@GlobalScope]), and optionally hint:[int](see PROPERTY_HINT_* in [@GlobalScope]), hint_string:[String].
             Example:
