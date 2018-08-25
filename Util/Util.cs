@@ -198,25 +198,40 @@ public class Util{
   /*
     Recenter map in new position
   */
-  public static void RecenterMap(
+  public static System.Collections.Generic.Dictionary<Vector2, Vector3> RecenterMap(
     Vector2 center,
     System.Collections.Generic.Dictionary<Vector2, Vector3> map,
     Vector3 destination
   ){
-    
+    GD.Print("Recenter start");
+    if(!map.ContainsKey(center)){
+      GD.Print("RecenterMap: Key not " + center + " found");
+      return map;
+    }
+
+    Vector3 centerPos = map[center];
+    Vector3 translation = destination - centerPos;
+    return TranslateMap(map, translation);
   }
 
 
   /*
     Apply translation to every value in dictionary.
   */
-  public static void TranslateMap(
+  public static System.Collections.Generic.Dictionary<Vector2, Vector3> TranslateMap(
     System.Collections.Generic.Dictionary<Vector2, Vector3> map,
     Vector3 translation
   ){
+    GD.Print("Translation start");
+    System.Collections.Generic.Dictionary<Vector2, Vector3> translatedMap;
+    translatedMap = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
+
     foreach(Vector2 key in map.Keys){
-      map[key] = map[key] + translation;
+      GD.Print("Translating  " + map[key] + " to " + map[key] + translation);
+      translatedMap.Add(key, map[key] + translation);
     }
+
+    return translatedMap;
   }
 
 }
