@@ -48,9 +48,23 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     InitJukeBox();
     InitSettings();
+    TestUtils();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
+  }
+
+  public void TestUtils(){
+    GD.Print("Starting test utils");
+    Vector2 center = new Vector2(0, 0);
+    List<Vector2> coords = Util.CoordsInRadius(center, 1);
+    float scale = 10f;
+
+    System.Collections.Generic.Dictionary<Vector2, Vector3> map;
+    map = Util.GetCellMap(coords, center, new Vector3(0, 0, 0), scale);
+    
+    
+
   }
 
   public void InitSettings(){

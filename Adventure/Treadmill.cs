@@ -141,6 +141,9 @@ public class Treadmill {
 		recenterActive = false;
 	}
 
+
+
+
 	// Move all used cells whilst keeping relative position
 	public void MoveUsedCells(Vector3 end){
 		Vector2 centerCoords = center.coords;

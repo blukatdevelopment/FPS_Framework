@@ -134,4 +134,89 @@ public class Util{
     }
     return ret;
   }
+
+  // Flatten a Vector2 into an int index
+  public static int CoordsToCellIndex(Vector2 coords, int gridSize){
+    int x = (int)coords.x;
+    int y = (int)coords.y;
+
+    if(y < 0 || y >= gridSize || x < 0 || x >= gridSize){
+      return -1;
+    }
+    return y * gridSize + x;
+  }
+
+  // Turn an int index for position into a Vector2
+  public static Vector2 CellIndexToCoords(int index, int gridSize){
+    int y = index % gridSize;
+    int x = index / gridSize;
+
+    return new Vector2(x, y);
+  }
+
+
+
+  public static List<Vector2> CoordsInRadius(Vector2 center, int radius){
+    List<Vector2> ret = new List<Vector2>();
+    for(int i = -radius; i <= radius; i++){
+      for(int j = -radius; j <= radius; j++){
+        Vector2 offset = new Vector2(i, j);
+        Vector2 coord = center + offset;
+        ret.Add(coord);
+      }
+    }
+    return ret;
+  }
+
+  /*
+    Map cell coordinates to 3D positions based off of 
+    the center's position and scale of each cell.
+  */
+  public static System.Collections.Generic.Dictionary<Vector2, Vector3> GetCellMap(
+      List<Vector2> cells, // Coordinates of each cell getting assigned a position
+      Vector2 centerCoords,
+      Vector3 centerPos,
+      float scale // Width and length of each cell
+  ){
+    System.Collections.Generic.Dictionary<Vector2, Vector3> ret;
+    ret = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
+
+    foreach(Vector2 cell in cells){
+      Vector2 offset = cell - centerCoords;
+      //GD.Print(cell + " VS " + centerCoords + ":" + offset);
+      float cellX = centerPos.x  + (scale * offset.x);
+      float cellZ = centerPos.z  + (scale * offset.y);
+      float cellY = centerPos.y;
+      Vector3 cellPos = new Vector3(cellX, cellY, cellZ);
+      ret.Add(cell, cellPos);
+    }
+
+    return ret;
+
+  }
+
+  /*
+    Recenter map in new position
+  */
+  public static void RecenterMap(
+    Vector2 center,
+    System.Collections.Generic.Dictionary<Vector2, Vector3> map,
+    Vector3 destination
+  ){
+    
+  }
+
+
+  /*
+    Apply translation to every value in dictionary.
+  */
+  public static void TranslateMap(
+    System.Collections.Generic.Dictionary<Vector2, Vector3> map,
+    Vector3 translation
+  ){
+    foreach(Vector2 key in map.Keys){
+      map[key] = map[key] + translation;
+    }
+  }
+
 }
