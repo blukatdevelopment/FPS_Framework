@@ -27,9 +27,9 @@ public class Treadmill {
 		this.center.SetPos(pos);
 		this.radius = radius;
 
-
-		actorData.pos = pos + new Vector3(0, 10f, 0); // TODO: Make this not hardcoded.
-		this.actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
+		GD.Print(center.GetPos());
+		actorData.pos = center.GetPos() + new Vector3(0, 20f, 0); // TODO: Make this not hardcoded.
+		actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
 		Session.ChangeMenu(Menu.Menus.HUD);
 		
 
@@ -65,18 +65,22 @@ public class Treadmill {
 
 	// Populates cells surrounding Center
 	public void PopulateCells(){
-		List<Vector2> usedCoords = UsedCoords();
-		foreach(Vector2 used in usedCoords) {
-			TerrainCell terrainCell = world.RequestCell(used);
-			if(terrainCell == null){
-				//GD.Print(used + " couldn't be requested");
-				continue;
-			}
-			Vector3 position = GridToPos(used);
-			terrainCell.SetPos(position);
+		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();
+		ApplyCellMap(map);
+		PopulateBoundaries();
+
+		// List<Vector2> usedCoords = UsedCoords();
+		// foreach(Vector2 used in usedCoords) {
+		// 	TerrainCell terrainCell = world.RequestCell(used);
+		// 	if(terrainCell == null){
+		// 		//GD.Print(used + " couldn't be requested");
+		// 		continue;
+		// 	}
+		// 	Vector3 position = GridToPos(used);
+		// 	terrainCell.SetPos(position);
 			
-			//GD.Print("Set");
-		}
+		// 	//GD.Print("Set");
+		// }
 	}
 
 	// Release cells surrounding arbitrary central coordinates
@@ -105,42 +109,100 @@ public class Treadmill {
 			return;
 		}
 		else{
-			Vector2 newCenter = PosToGrid(actor.Translation);
+			Vector2 newCenter = PosToCoords(actor.Translation);
 			List<Vector2> newCoords =  UsedCoords(newCenter);
 			GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
 			Recenter(newCenter);
 		}
 	}
 
-	public void Recenter(Vector2 newCenterCoords){
-		recenterActive = true;
-		Vector2 oldCenterCoords = center.coords;
-		GD.Print("Recentering from " + oldCenterCoords + " to " + newCenterCoords);
-		
-		TerrainCell newCenter = world.RequestCell(newCenterCoords);
-		GD.Print("Starting at " + newCenter.GetCenterPos());
-		if(newCenter == null){
-			GD.Print("Couldn't request new center. Aborting recenter to " + newCenterCoords);	
-			return;		
+
+	public System.Collections.Generic.Dictionary<Vector2, Vector3> GetPopulatedCellMap(){
+		Vector2 centerCoords = center.coords;
+		Vector3 centerPos = center.GetPos();
+		List<Vector2> candidateCoords = Util.CoordsInRadius(centerCoords, radius);
+		float scale = center.GetWidth();
+		List<Vector2> finalCoords = new List<Vector2>();
+
+		foreach(Vector2 coords in candidateCoords){
+			if(world.RequestCell(coords) != null){
+				finalCoords.Add(coords);
+			}
 		}
 
-		center = newCenter;
-		ClearBoundaries();
-		PopulateCells();
-		DePopulateCells(oldCenterCoords);
-		PopulateBoundaries();
-		GD.Print("Recenter complete.");
-		
-		if(CellsShared()){
-			GD.Print("Moving tiles not possible. Returning.");
-			recenterActive = false;
-			return;
-		}
-		MoveUsedCells(newCenter.Translation);
-		GD.Print("ending at " + center.GetCenterPos());
-		recenterActive = false;
+	  return Util.GetCellMap(finalCoords, centerCoords, centerPos, scale);
+
 	}
 
+	// Reposition cells according to positions in the cell map
+	public void ApplyCellMap(
+		System.Collections.Generic.Dictionary<Vector2, Vector3> map
+	){
+		foreach(Vector2 key in map.Keys){
+			TerrainCell cell = world.RequestCell(key);
+			if(cell != null){
+				cell.SetPos(map[key]);
+			}
+		}
+	}
+
+	public Vector2 CenterCoords(){
+		return center.coords;
+	}
+
+
+	public void Recenter(Vector2 newCenterCoords){
+		if(recenterActive){
+			GD.Print("Another treadmill recenter is in progress. Aborting.");
+			return;
+		}
+
+		if(world.RequestCell(newCenterCoords) == null){
+			GD.Print("Couldn't recenter treadmill to invalid coordinates" + newCenterCoords);
+			return;
+		}
+
+		if(center.coords == newCenterCoords){
+			GD.Print("Treadmill.Recenter: Will not recenter to current position. Aborting.");
+			return;
+		}
+
+		recenterActive = true;
+
+		ReleaseAbandonedCells(CenterCoords(), newCenterCoords);
+		ClearBoundaries();
+
+		center = world.RequestCell(newCenterCoords);
+
+		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();
+		ApplyCellMap(map);
+		PopulateBoundaries();
+		
+		if(CellsShared()){
+			GD.Print("Treadmill.Recenter: Do some fancy shared cell logic.");
+		}
+
+		recenterActive = false;
+
+	}
+
+	/* Release any cells that will no longer be used after a recenter. */
+	public void ReleaseAbandonedCells(Vector2 fromCenter, Vector2 toCenter){
+		List<Vector2> fromCoords = Util.CoordsInRadius(fromCenter, radius);
+		List<Vector2> toCoords = Util.CoordsInRadius(toCenter, radius);
+
+		foreach(Vector2 fCoords in fromCoords){
+			bool found = false;
+			foreach(Vector2 tCoords in toCoords){
+				if(fCoords.x == tCoords.x && fCoords.y == tCoords.y){
+					found = true;
+				}
+			}
+			if(!found){
+				world.ReleaseCell(fCoords);
+			}
+		}
+	}
 
 
 
@@ -187,40 +249,17 @@ public class Treadmill {
 	}
 
 	// Find grid coords based on position relative to center terrainCell
-	public Vector2 PosToGrid(Vector3 pos){
-		if(center.InBounds(pos)){
-			return center.coords;
-		}
-		Vector3 centerPos = center.GetCenterPos();
-		Vector3 distance =  pos - centerPos;
-		float width = center.GetWidth();
+	public Vector2 PosToCoords(Vector3 pos){
+		Vector3 centerPos = center.GetPos();
+		Vector2 centerCoords = center.coords;
+		float centerScale = center.GetWidth();
 
-		// offsets in X and Y coords
-		int xDiff = (int)distance.x/(int)width;
-		int yDiff = (int)distance.z/(int)width;
-
-		if(xDiff == 0 && distance.x > width/2f){
-			xDiff = 1;
-		}
-		else if(xDiff == 0 && distance.x < width/-2f){
-			xDiff = -1;
-		}
-		if(yDiff == 0 && distance.z > width/2f){
-			yDiff = 1;
-		}
-		else if(yDiff == 0 && distance.z < width/-2f){
-			yDiff = -1;
-		}
-
-		Vector2 diff = new Vector2(xDiff, yDiff);
-		return center.coords + diff;
+		return Util.PosToCoords(centerPos, centerCoords, centerScale, pos);
 	}
 
 	// All coordinates this treadmill cares about.
 	public List<Vector2> UsedCoords(){
-		List<Vector2> ret = UsedCoords(center.coords);
-		//GD.Print("ret" + ret);
-		return ret;
+		return UsedCoords(center.coords);
 	}
 
 	public List<Vector2> UsedCoords(Vector2 centerCoords){
@@ -240,7 +279,7 @@ public class Treadmill {
 	public Vector3 GridToPos(Vector2 coords){
 		Vector2 centerCoords = center.coords;
 		float width = center.GetWidth();
-		Vector3 centerPos = center.GetCenterPos();
+		Vector3 centerPos = center.GetPos();
 		return GridToPos(coords, centerCoords, width, centerPos);
 	}
 
@@ -265,23 +304,21 @@ public class Treadmill {
 		return true;
 	}
 
-	// Returns true if cell is in 
+	// Returns true if cell is in radius
 	public bool UsingCell(Vector2 coords){
 		List<Vector2> usedCoords = UsedCoords();
 		foreach(Vector2 used in usedCoords){
 			if(used.x == coords.x && used.y == coords.y){
-				//GD.Print("Found cell at " + coords);
 				return true;
 			}
 		}
-		//GD.Print("Didn't find cell at " + coords);
 		return false;
 	}
 
 
 	// Returns true if at least one cell is used by another treadmill
 	public bool CellsShared(){
-		List<Vector2> usedCoords = UsedCoords();
+		List<Vector2> usedCoords = Util.CoordsInRadius(CenterCoords(), radius);
 		foreach(Vector2 used in usedCoords){
 			List<Treadmill> users = world.CellUsers(used);
 			if(users.Count > 1){

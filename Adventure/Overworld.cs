@@ -309,7 +309,7 @@ public class Overworld : Spatial {
 	public void ReleaseCell(Vector2 coords){
 		foreach(Treadmill treadmill in treadmills){
 			if(treadmill.UsingCell(coords)){
-				GD.Print("Cell at " + coords + " still in use.");
+				//GD.Print("Cell at " + coords + " still in use.");
 				return;
 			}
 		}

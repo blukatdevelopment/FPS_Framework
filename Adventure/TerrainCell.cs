@@ -39,16 +39,8 @@ public class TerrainCell : GridMap{
 	public bool InBounds(Vector3 pos){
 		Vector3 min = GetMinBounds();
 		Vector3 max = GetMaxBounds();
-		
-		if(pos.x < min.x || pos.y < min.y || pos.z < min.z){
-			return false;
-		}
-		
-		if(pos.x > max.x || pos.y > max.y || pos.z > max.z){
-			return false;
-		}
 
-		return true;
+		return Util.InBounds(min, max, pos);
 	}
 
 	public Vector3 GetMinBounds(){
@@ -84,37 +76,50 @@ public class TerrainCell : GridMap{
 		}
 	}
 
+	public Vector3 CenteredPos(Vector3 pos){
+		float effectiveScale = GetWidth();
+		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
+		return pos - offset;
+	}
+
+
 	// Returns center of this terrain cell
-	public Vector3 GetCenterPos(){
+	public Vector3 GetPos(){
 		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
 		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
 		return Translation + offset;
 	}
 
-	// TODO: Relocate contained Actors and Items
+	// Move cell and contents to new position.
 	public void SetPos(Vector3 pos){
-		Vector3 oldPos = Translation;
-		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
-		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
-		
-		Vector3 newPos = pos - offset;
-		//GD.Print( "Moving cell " + coords + "from " + oldPos + " to " + newPos);
+		// Move cell
+		Vector3 oldPos = Translation; // Old position, not centered
+		Vector3 centeredPos = CenteredPos(pos);
+		Translation = centeredPos;
 
-		// 
-		// foreach(Item item in items){
-		// 	item.Translation = RecenterActivePos(oldPos, newPos, item.Translation);
-		// }
-		
-		List<Actor> actors = world.ActiveActorsInBounds(this);
-		foreach(Actor actor in actors){
-			Vector3 start = actor.Translation;
-			actor.Translation = RecenterActivePos(oldPos, newPos, actor.Translation);
-			Vector3 end = actor.Translation;
-			GD.Print("Actor moved from " + start + " to " + end);
-		}
+		string debug = "TerrainCell.SetPos\n";
+		debug += "  Moving cell from " + oldPos + " to " + pos + "\n";
+		debug += "  Total translation: " + (pos - oldPos);
+		GD.Print(debug);
 
+		// Move contents
+		Vector3 translation = pos - oldPos;
+		TranslateContents(translation);
+	}
 
-		Translation = newPos;
+	// Translate all items and actors in bounds
+	public void TranslateContents(Vector3 translation){
+	  Vector3 start = GetPos();
+	 	List<Item> items = ItemsInBounds();
+	 	List<Actor> actors = ActorsInBounds();
+	 	foreach(Item item in items){
+	 		//item.Translation = item.Translation + translation;
+	 	}
+
+	 	foreach(Actor actor in actors){
+	 		GD.Print("Moving actor from " + actor.Translation + " to " + (actor.Translation + translation));
+	 		//actor.Translation = actor.Translation + translation;
+	 	}
 	}
 
 	// Preserves position of activePos relative to newPos.

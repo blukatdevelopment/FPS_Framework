@@ -48,9 +48,15 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     InitJukeBox();
     InitSettings();
+    TestUtil();
     //ShowMethods(typeof(Godot.RigidBody));
     //ShowProperties(typeof(Godot.CollisionShape));
     //ShowVariables(typeof(Godot.RigidBody));
+  }
+
+  public void TestUtil(){
+
+
   }
 
   public void InitSettings(){

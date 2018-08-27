@@ -205,7 +205,7 @@ public class Util{
   ){
     GD.Print("Recenter start");
     if(!map.ContainsKey(center)){
-      GD.Print("RecenterMap: Key not " + center + " found");
+      GD.Print("RecenterMap: Key " + center + " not found");
       return map;
     }
 
@@ -232,6 +232,79 @@ public class Util{
     }
 
     return translatedMap;
+  }
+
+  /* Given coords, position, and scale of center cell, determine coordinates of
+     an arbitrary position.
+  */
+  public static Vector2 PosToCoords(
+    Vector3 centerPos,    // Position dead center of the center cell
+    Vector2 centerCoords, // Coordinates of center cell
+    float centerScale,    // Size of center position in x and z dimensions
+    Vector3 pos           // Arbitrary position
+  ){
+    string debug = "[Util.PosToCoords]\n";
+    debug += "centerPos: " + centerPos + "\n";
+    debug += "centerCoords: " + centerCoords + "\n";
+    debug += "centerScale: " + centerScale + "\n";
+    debug += "pos: " + pos + "\n";
+    
+
+    float halfScale = centerScale/2f;
+
+
+    // Check if position is inside center cell. If so, return center coords.
+    Vector3 cMinBounds = centerPos - new Vector3(halfScale, 0, halfScale);
+    Vector3 cMaxBounds = centerPos + new Vector3(halfScale, 0, halfScale);
+    if(InBounds(cMinBounds, cMaxBounds, pos)){
+      debug += "returning " + centerCoords;
+      GD.Print(debug);
+      return centerCoords;
+    }
+
+    // Get offset in full cell widths
+    Vector3 posOffset = pos - centerPos;
+    int xCoordsOffset = (int)pos.x / (int)centerScale; 
+    int yCoordsOffset = (int)pos.z / (int)centerScale;
+
+    // Check if remainder offset is large enough to leave center cell
+    int xOffsetRemainder = (int)posOffset.x % (int)centerScale;
+    int yOffsetRemainder = (int)posOffset.z % (int)centerScale;
+    
+    // If that remainder is large enough, add it to to offset
+    xCoordsOffset += xOffsetRemainder/(int)halfScale;
+    yCoordsOffset += yOffsetRemainder/(int)halfScale;
+
+    Vector2 coordsOffset = new Vector2(xCoordsOffset, yCoordsOffset);
+
+    debug += "returning " + (centerCoords + coordsOffset);
+    GD.Print(debug); 
+    return centerCoords + coordsOffset;
+  }
+
+  /*   Returns true if pos is between min and max */
+  public static bool InBounds(Vector3 min, Vector3 max, Vector3 pos){
+    string debug = "Util.InBounds\n";
+    debug += "min: " + min + "\n";
+    debug += "max: " + max + "\n";
+    debug += "pos: " + pos + "\n";
+    
+
+    if(min.x > pos.x || min.y > pos.y || min.z > pos.z){
+      debug += " was false";
+      //GD.Print(debug);
+      return false;
+    }
+
+    if(max.x < pos.x || max.y < pos.y || max.z < pos.z){
+      debug += " was false";
+      //GD.Print(debug);
+      return false;
+    }
+
+    debug += " was true";
+    //GD.Print(debug);
+    return true;
   }
 
 }
