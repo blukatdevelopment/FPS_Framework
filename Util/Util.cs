@@ -222,7 +222,7 @@ public class Util{
     System.Collections.Generic.Dictionary<Vector2, Vector3> map,
     Vector3 translation
   ){
-    GD.Print("Translation start");
+    string debug = "Util.TranslateMap:";
     System.Collections.Generic.Dictionary<Vector2, Vector3> translatedMap;
     translatedMap = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
 
@@ -278,7 +278,7 @@ public class Util{
     Vector2 coordsOffset = new Vector2(xCoordsOffset, yCoordsOffset);
 
     debug += "returning " + (centerCoords + coordsOffset);
-    GD.Print(debug); 
+    //GD.Print(debug); 
     return centerCoords + coordsOffset;
   }
 

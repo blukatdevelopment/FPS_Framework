@@ -97,8 +97,9 @@ public class TerrainCell : GridMap{
 		Vector3 centeredPos = CenteredPos(pos);
 		Translation = centeredPos;
 
+
 		string debug = "TerrainCell.SetPos\n";
-		debug += "  Moving cell from " + oldPos + " to " + pos + "\n";
+		debug += "  Moving cell " + id + " from " + oldPos + " to " + pos + "\n";
 		debug += "  Total translation: " + (pos - oldPos);
 		GD.Print(debug);
 
@@ -117,8 +118,8 @@ public class TerrainCell : GridMap{
 	 	}
 
 	 	foreach(Actor actor in actors){
-	 		GD.Print("Moving actor from " + actor.Translation + " to " + (actor.Translation + translation));
-	 		//actor.Translation = actor.Translation + translation;
+	 		GD.Print("Moving actor from " + actor.Translation + " to " + (actor.Translation + translation) + " by " + translation);
+	 		actor.Translation = actor.Translation + translation;
 	 	}
 	}
 

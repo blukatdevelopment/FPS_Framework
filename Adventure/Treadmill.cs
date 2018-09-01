@@ -32,7 +32,6 @@ public class Treadmill {
 		actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
 		Session.ChangeMenu(Menu.Menus.HUD);
 		
-
 		List<string> missingArgs = new List<string>();
 		if(world == null){
 			missingArgs.Add("world");
@@ -68,19 +67,6 @@ public class Treadmill {
 		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();
 		ApplyCellMap(map);
 		PopulateBoundaries();
-
-		// List<Vector2> usedCoords = UsedCoords();
-		// foreach(Vector2 used in usedCoords) {
-		// 	TerrainCell terrainCell = world.RequestCell(used);
-		// 	if(terrainCell == null){
-		// 		//GD.Print(used + " couldn't be requested");
-		// 		continue;
-		// 	}
-		// 	Vector3 position = GridToPos(used);
-		// 	terrainCell.SetPos(position);
-			
-		// 	//GD.Print("Set");
-		// }
 	}
 
 	// Release cells surrounding arbitrary central coordinates
@@ -106,31 +92,56 @@ public class Treadmill {
 			return;
 		}
 		if(center.InBounds(actor.Translation)){
+			GD.Print("Player is currently at " +PosToCoords(actor.Translation));
 			return;
 		}
 		else{
 			Vector2 newCenter = PosToCoords(actor.Translation);
 			List<Vector2> newCoords =  UsedCoords(newCenter);
 			GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
-			Recenter(newCenter);
+			GD.Print("recenter disabled");
+			//Recenter(newCenter);
 		}
 	}
 
+  public System.Collections.Generic.Dictionary<Vector2, Vector3> GetPopulatedCellMap(){
+		// Vector2 centerCoords = center.coords;
+		// Vector3 centerPos = pos;
+		// List<Vector2> candidateCoords = Util.CoordsInRadius(centerCoords, radius);
+		// float scale = center.GetWidth();
+		// List<Vector2> finalCoords = new List<Vector2>();
 
-	public System.Collections.Generic.Dictionary<Vector2, Vector3> GetPopulatedCellMap(){
+		// foreach(Vector2 coords in candidateCoords){
+		// 	if(world.RequestCell(coords) != null){
+		// 		finalCoords.Add(coords);
+		// 	}
+		// }
+
+	  //  return Util.GetCellMap(finalCoords, centerCoords, centerPos, scale);
+
+  	// Get map of potential cells and their positions.
 		Vector2 centerCoords = center.coords;
-		Vector3 centerPos = center.GetPos();
+		Vector3 centerPos = pos;
 		List<Vector2> candidateCoords = Util.CoordsInRadius(centerCoords, radius);
 		float scale = center.GetWidth();
-		List<Vector2> finalCoords = new List<Vector2>();
+		System.Collections.Generic.Dictionary<Vector2, Vector3> candidateMap;
+		candidateMap = Util.GetCellMap(candidateCoords, centerCoords, centerPos, scale);
+		
 
-		foreach(Vector2 coords in candidateCoords){
-			if(world.RequestCell(coords) != null){
-				finalCoords.Add(coords);
+		System.Collections.Generic.Dictionary<Vector2, Vector3> ret;
+		ret = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
+
+		foreach(Vector2 key in candidateMap.Keys){
+			Vector2 coords = key;
+			Vector3 position = candidateMap[key];
+
+			TerrainCell cell = world.RequestCellAtPos(coords, true, position);
+			if(cell != null){
+				ret.Add(coords, position);
 			}
 		}
 
-	  return Util.GetCellMap(finalCoords, centerCoords, centerPos, scale);
+		return ret;
 
 	}
 
@@ -149,7 +160,6 @@ public class Treadmill {
 	public Vector2 CenterCoords(){
 		return center.coords;
 	}
-
 
 	public void Recenter(Vector2 newCenterCoords){
 		if(recenterActive){
@@ -236,7 +246,6 @@ public class Treadmill {
 			}
 		}
 	}
-
 
 	// Clear out all boundaries
 	public void ClearBoundaries(){

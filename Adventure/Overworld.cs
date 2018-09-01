@@ -158,7 +158,6 @@ public class Overworld : Spatial {
 		return -1;
 	}
 
-
 	public int GetWorldWidth(){
 		return WorldWidth;
 	}
@@ -230,7 +229,6 @@ public class Overworld : Spatial {
 		activeActors.Add(actor);
 	}
 
-
 	public List<Treadmill> CellUsers(Vector2 coords){
 		int id = CoordsToCellId(coords);
 		return CellUsers(id);
@@ -275,8 +273,20 @@ public class Overworld : Spatial {
 		GD.Print("Overworld.ReleaseActor not implemented");
 	}
 
-	/* Locates or creates TerrainCell and returns it. */
+	/* Locates or creates TerrainCell. When creating a terrain cell,
+	 	 
+	*/
 	public TerrainCell RequestCell(Vector2 coords){
+		return RequestCellAtPos(coords, false, new Vector3());
+	}
+
+	/* 
+		Locates or creates TerrainCell and returns it.
+		when creating a TerrainCell and setPos is true, set position before instantiating.
+		non-nullable optional arguments without a sentinal value are tricky,
+		so setPos is true is the optional flag for position.
+	*/
+	public TerrainCell RequestCellAtPos(Vector2 coords, bool setPos, Vector3 position){
 		if(coords == null){
 			//GD.Print("RequestCell: Coords null");
 			return null;
@@ -294,7 +304,10 @@ public class Overworld : Spatial {
 			TerrainCellData dormant = dormantCells[id];
 			dormantCells.Remove(id);
 
-			TerrainCell active = new TerrainCell(this, dormant, GetCellSize());
+			TerrainCell active = new TerrainCell(this, GetCellSize());
+			active.Translation = position;
+			active.LoadData(dormant);
+
 			activeCells.Add(id, active);
 			AddChild(active);
 			//GD.Print("Returning new ");
@@ -318,7 +331,7 @@ public class Overworld : Spatial {
 			//GD.Print(coords + " is invalid, ignoring." );
 			return;
 		}
-		StoreCell(id); // TODO: Delay this action so player can be pursued.
+		StoreCell(id); // TODO: Delay this action so player can be pursued by NPCs and projectiles.
 	}
 
 	public void StoreCell(int id){
