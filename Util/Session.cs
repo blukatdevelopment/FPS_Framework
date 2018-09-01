@@ -55,8 +55,6 @@ public class Session : Node {
   }
 
   public void TestUtil(){
-
-
   }
 
   public void InitSettings(){

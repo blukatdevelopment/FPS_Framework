@@ -216,6 +216,30 @@ public class Overworld : Spatial {
 		return null;
 	}
 
+	// Size of each block used in gridmaps
+	public static Vector3 BaseBlockSize(){
+		return new Vector3(6, 6, 6);
+	}
+
+	// width and length of each TerrainCell
+	public static float CellWidth(){
+		Vector3 baseBlockSize = BaseBlockSize();
+		return baseBlockSize.x * CellSize;
+	}
+
+	/*
+		Returns the Coordinates of the cell that should contain this
+		position in dormant space.
+		Dormant space starts at [0,0,0] at coords [0,0]
+	*/ 
+	public static Vector2 GetDormantPositionCoordinates(Vector3 position){
+		Vector2 centerCoords = new Vector2(0,0); // Minimum corner of overworld map.
+		float centerScale = CellWidth();
+		Vector3 offset = new Vector3(centerScale/2, 0, centerScale/2); // Offset from [0,0,0] to center point of [0,0]
+		Vector3 centerPos = new Vector3() + offset;
+		return Util.PosToCoords(centerPos, centerCoords, centerScale, position);
+	}
+
 	// Creates Actor from ActorData
 	public Actor ActivateActorData(Actor.Brains brain, ActorData data){
 		Actor ret = Actor.ActorFactory(brain, data);
@@ -317,6 +341,7 @@ public class Overworld : Spatial {
 		//GD.Print("Couldn't find dormant cell for " + coords + ", " + id);
 		return null;
 	}
+
 
 	/* Check if cell is still used, and if not store or queue for storage. */
 	public void ReleaseCell(Vector2 coords){

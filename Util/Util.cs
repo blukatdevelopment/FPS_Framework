@@ -255,11 +255,14 @@ public class Util{
 
     // Check if position is inside center cell. If so, return center coords.
     Vector3 cMinBounds = centerPos - new Vector3(halfScale, 0, halfScale);
-    Vector3 cMaxBounds = centerPos + new Vector3(halfScale, 0, halfScale);
+    Vector3 cMaxBounds = centerPos + new Vector3(halfScale, centerScale, halfScale);
     if(InBounds(cMinBounds, cMaxBounds, pos)){
       debug += "returning " + centerCoords;
-      GD.Print(debug);
+      //GD.Print(debug);
       return centerCoords;
+    }
+    else{
+      debug += "Not within  " + cMinBounds + " and " + cMaxBounds + "\n";
     }
 
     // Get offset in full cell widths

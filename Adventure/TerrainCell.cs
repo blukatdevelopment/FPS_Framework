@@ -27,7 +27,7 @@ public class TerrainCell : GridMap{
 	private void BaseInit(Overworld world){
 		this.world = world;
 		Theme = TerrainBlock.GetTheme();
-		CellSize = new Vector3(1, 1, 1) * 6; // Hardcoded for this meshLibrary
+		CellSize = Overworld.BaseBlockSize();
 	}
 
 
