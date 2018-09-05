@@ -262,3 +262,59 @@ and operate with limited information and resources.
 ## Economy stuff
 - Trading 
 - Currency
+
+# Modular Content System
+The concept is relatively simple at a higher level. The world should be made of building blocks, self-contained modules that interact with one another only through clearly defined interfaces. The goal is that the last module of content added will not regress or force a rewrite of the first.
+
+
+## NPCs
+NPCs can be broken down into three constituents, AI, Agent, and Character. Any set of these components should be able to combine to form a distinct NPC. 
+
+### Active AI (AI.cs)
+The active AI is responsible for an active actor's real-time actions in 3D space.
+
+### Dormant AI(Agent.cs)
+The agent is responsible for a dormant actor's turn-based actions in the 2D dormant world.
+
+### Character (ActorStats.cs)
+The character describes the abilities and limitations of the NPC as well as long-term state in the form of a dictionary of strings referred to as memories. While a dormant and active AI can store whatever it wants in its own memory footprint, the AI is unloaded from memory and only the memories of the character will remain to be accessed the next time the dormant or active AI is instantiated.
+
+**int PerkRank(string perkName)**
+Returns 0 if character lacks a perk of this name, or else its rank. This should be used by Actor.cs upon loading.
+
+#### Stats
+Stats are a dictionary of ints that track anything from condition (health/stamina/mana/hunger/thirst/fatigue/radiation levels), active effects(berzerk, invisible, poisoned, regen), to personality traits (impatient, brave, coward), to ICEPAWS attributes, to varying granularity of skills (unarmed, melee, swords, guns, ranged, bows, survival, fishing, rifles, pistols), RGP values (perkPoints, skillPoints, experience, nextLevel), and attitudes( attitude: Pasta, attitude: Monster, attitude: Guards) The environment, AI, and Actor will consult and interact with this interface, but the custom logic of the Character will decide how to handle these interactions and maintain its internal consistency.
+
+**int GetStat(string statName)** 
+Fetch arbitrary stat. 0 is default value.
+
+**void SetStat(string statName, int statValue)**
+Change a stat's value. If stat does not exist and is going to become non-zero, add it. (if possible)
+
+**void ChangeStat(string statName, int delta)**
+Add delta to stat's current value.
+
+**string[] GetStatNames()** 
+Returns all this character's non-zero stats.
+
+**void ExperienceAction(string actionName, int multiplier)**
+Apply xp for a given action.
+
+#### Memories
+Memories are a dictionary of strings used for long-term fact recall. 
+
+**void ForgetMemory(string memoryName)**
+Remove a memory if it exists.
+
+**void StoreMemory(string memoryName, string memoryValue)**
+Attempts to add or update a certain memory.
+
+**string RecallMemory(string memoryName)**
+Returns corresponding memoryValue if it exists.
+
+
+## Items
+Items are the backbone of survival and economy. Similar 
+
+
+## Terrain
