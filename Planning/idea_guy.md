@@ -276,6 +276,25 @@ The active AI is responsible for an active actor's real-time actions in 3D space
 ### Dormant AI(Agent.cs)
 The agent is responsible for a dormant actor's turn-based actions in the 2D dormant world.
 
+**void Update(int timeUnits)**
+Perform updating by spending presented timeUnits.
+
+**int LocationAffinity(Location location)**
+Assesses preference for said location, ranging from -100 to 100. This is to be used by cartographer
+when placing randomly generated NPCs.
+
+### Communications AI (Communicator.cs)
+The communicator is responsible for parsing and interpreting incoming messages as well as forming outgoing messages, consulting other systems as necessary. 
+
+**string[] GetDialogueOptions()**
+Returns all available dialogue options.
+
+**void Communicate(Actor speaker, int option)**
+Communicates a particular option as defined above.
+
+**void Communicate(Actor speaker, string message)**
+Communicates a body of text for the AI to parse.
+
 ### Character (ActorStats.cs)
 The character describes the abilities and limitations of the NPC as well as long-term state in the form of a dictionary of strings referred to as memories. While a dormant and active AI can store whatever it wants in its own memory footprint, the AI is unloaded from memory and only the memories of the character will remain to be accessed the next time the dormant or active AI is instantiated.
 
@@ -283,7 +302,7 @@ The character describes the abilities and limitations of the NPC as well as long
 Returns 0 if character lacks a perk of this name, or else its rank. This should be used by Actor.cs upon loading.
 
 #### Stats
-Stats are a dictionary of ints that track anything from condition (health/stamina/mana/hunger/thirst/fatigue/radiation levels), active effects(berzerk, invisible, poisoned, regen), to personality traits (impatient, brave, coward), to ICEPAWS attributes, to varying granularity of skills (unarmed, melee, swords, guns, ranged, bows, survival, fishing, rifles, pistols), RGP values (perkPoints, skillPoints, experience, nextLevel), and attitudes( attitude: Pasta, attitude: Monster, attitude: Guards) The environment, AI, and Actor will consult and interact with this interface, but the custom logic of the Character will decide how to handle these interactions and maintain its internal consistency.
+Stats are a dictionary of ints that track anything from condition (health/stamina/mana/hunger/thirst/fatigue/radiation levels), active effects(berzerk, invisible, poisoned, regen), to personality traits (impatient, brave, coward), to ICEPAWS attributes, to varying granularity of skills (unarmed, melee, swords, guns, ranged, bows, survival, fishing, rifles, pistols), and RGP values (perkPoints, skillPoints, experience, nextLevel) The environment, AI, and Actor will consult and interact with this interface, but the custom logic of the Character will decide how to handle these interactions and maintain its internal consistency.
 
 **int GetStat(string statName)** 
 Fetch arbitrary stat. 0 is default value.
@@ -312,9 +331,49 @@ Attempts to add or update a certain memory.
 **string RecallMemory(string memoryName)**
 Returns corresponding memoryValue if it exists.
 
+**int ActorAffinity(Actor actor)**
+Returns preference for this actor according the actor and existing memories.
 
 ## Items
-Items are the backbone of survival and economy. Similar 
+Items inherit from Item.cs and so this not a true interface
+
+**string[] Uses()**
+Return names of all uses. Each index matches an enum value in Item.Uses.
+Can be used to inform UI or AI about how to use an item.
+
+**string[] GetProperties()**
+Returns all of this item's non-zero properties. Examples of properties include range, damage, value, hasScope, capacity, usesAmmo, ammoType, etc. These may vary heavily from item to item
+
+**int CheckProperty(string property)**
+Returns value of this property, or zero.
 
 
-## Terrain
+## Locations (implementing Location.cs, stored in LocationData.cs record)
+A location is used to generate Actors, Items, and Scenery on an arbitrary set of TerrainCells. The location's information can then be stored in a LocationData record for use by the Overworld. The goal of a implementations will likely be to provide content adhering to a particular theme (dungeon, village, ruins, forest), but with procedural variation to adapt to given terrain and to mitigate redundancy.
+
+**Vector2[] UsedCells()**
+Coordinates used by this location's terrain cells. 
+
+**bool UsingCell(Vector3 cell)**
+Returns true if this cell is being used.
+
+**void ProvideCells(Vector2[] cells)**
+Adds cell to UsedCells()
+
+**int CellAffinity(Overworld world, Vector2 coords)**
+Returns preference for these coords as a centerpoint on the overworld. 
+
+**void GenerateActors()**
+Creates specific actors on this location's used cells.
+
+**void GenerateStructures()**
+Creates structures and natural features for location.
+
+**LocationData GetData()**
+Returns the data for this location.
+
+**string[] GetProperties()**
+Returns all non-zero properties for this location. Examples include vegetation, minerals, airable, water, surfaceWater, monstersPresent, civilization, dungeon, urban, etc, etc
+
+**int CheckProperty(string property)**
+Returns a propert's value, or null.
