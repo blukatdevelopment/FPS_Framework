@@ -40,88 +40,19 @@ Things that need to be done:
 - Actor/Item storage
 - placeholder world generation
 
-The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
-
-## DONE Step 1: Access
-
-Set up menus to navigate to adventure mode
-- Multiplayer Server lobby
-- Single player settings screen
-- AdventureConfigMenu
+The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps. Edit: As evidenced by scrapping all the existing planning in favor for working on active stories
 
 
-## DONE Step 2: Prototypes
+## Cartographer
+- Create test plan once surrounding scope is built.
 
-Build up some prototype classes with dummy methods and comments
-- Overworld
-- AdventureSettings
-- Treadmill
-- Cartographer - Generates the overworld's terrain.
-- TerrainCell - Unit of overworld terrain controlling one GridMap
-- TerrainCellData - Data from one Terrain Cell
-- IAgent - 
-- MonsterAgent
+## Treadmill
+- Make sure treadmill Init is good.
+- Make sure treadmill player tracking is good.
+- Make sure treadmill cell shifting includes abandoned cells.
+- Make sure treadmill moves Actors correctly.
 
-New classes discovered after setting up dummy code:
-- OverworldData
-- ItemQuery
-- TerrainBlock
-
-## Step 3: Hello, world!
-
-Provide minimal implementation to render overworld with a single treadmill.
-- Overworld
-- AdventureSettings
-- Treadmill
-- Cartographer
-- TerrainCell
-- IAgent
-- MonsterAgent
-
-## Step 4: Netcode
-
-Handle traditional problems Arena faces.
-Give arbitrary user control over treadmill, transfer control when they leave.
-
-
-## Step 5: MMO Netcode
-Handle new problems 
-
-Store SHA256 hash of password in user preferences.
-Use username + password to login as player on server.
-Allow dropping in and out of game (Spawn joining players at center of treadmill).
-
-## Step 6: Multiple treadmills
-
-Get multiple treadmills in one overworld and netcode.
-Handle treadmills joining.
-Handle treadmills separating.
-Handle treadmills disappearing and appearing with players (Possibly with delay).
-
-
-## Step 7: Databases 
-
-Figure out saving/loading sections of the world using sqlite.
-Create database handler for overworld that selects between multiple files depending on which adventure is loaded.
-Determine a schema for terrain, actors(and their details)
-Look into using UUID instead of auto-incremented IDs.
-Make serializeable versions of actor. 
-Look into options for loading database into memory and saving it to file. 
-
-Each role should have responsibilities laid out in terms of tasks and acceptance
-criteria that can be marked complete or ready for review.
-
-This iteration should, in itself, contain a few steps(These are not necessarily sequential).
-
-0. DONE Set up camera to view these steps.
-1. DONE Generate single flat Gridmap (Perhaps with one cube poking up to show tile boundaries.)
-2. DONE Generate map comprised of these Gridmaps in dormant form.
-3. DONE Render a 3x3 grid of these Gridmaps.
-4. DONE get treadmill to watch for player leaving center gridmap
-5. DONE treadmills should determine which gridmaps will be released/requested.
-6. recenter cells to treadmill position after recenter when possible
-7. save/activate items and actors along with terrain cells (Handle via overworld)
-8. Create invisible walls on unused boundaries of treadmill
-9. Perform Populate and DePopulate in background or on another thread.
-10. Populate items/Actors in active space.
-11. Maintain dormant space separately from active space.
+## Auth service
+- Build auth service in order repo.
+- Set up outward-facing nodejs server to offer this service.
+- Build static Util method in this project to attempt to connect and use configured auth service endpoint.
