@@ -48,6 +48,8 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 
 ## Treadmill
 - Make sure treadmill Init is good.
+Actor's being placed at 150, 9, 150. Is this correct? Nope
+
 - Make sure treadmill player tracking is good.
 - Make sure treadmill cell shifting includes abandoned cells.
 - Make sure treadmill moves Actors correctly.

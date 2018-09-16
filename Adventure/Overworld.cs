@@ -58,12 +58,22 @@ public class Overworld : Spatial {
 	}
 
 	public void SinglePlayerInit(){
-		GD.Print("SinglePlayerInit");
+		string debug = "SinglePlayerInit\n";
+
 		InitWorld();
+
 		ActorData actor = LoadDormantActor(-1);
-		Treadmill treadmill = new Treadmill(-1, this, actor, new Vector2(), 1, new Vector3());
+		Vector2 actorCoords = new Vector2();
+		Vector3 treadmillPosition = new Vector3();
+
+		debug += "\t Actor created at " + actor.pos + " pos and at coords " + actorCoords + "and treadmill at " + treadmillPosition + "\n";
+
+		Treadmill treadmill = new Treadmill(-1, this, actor, actorCoords, 1, treadmillPosition);
 		treadmills.Add(treadmill);
 		treadmill.Init();
+
+		debug += "\t Actor wound up at " + treadmill.actor.Translation + "\n";
+		GD.Print(debug);
 	}
 
 	/* Asks the cartographer to make a new world

@@ -12,13 +12,17 @@ public class Treadmill {
 	public float timerMax = 0.5f;
 
 	public Overworld world;
-	public int id; // Should match client's peerId in multiplayer.
+	public int id; // Should match client's peerId in multiplayer. -1 for offline play.
+	public ActorData actorData; // Data to init actor with
 	public Actor actor; // Actor to monitor.
 	public TerrainCell center; // cell at center of treadmill.
 	public int radius; // How many layers of Cells should be  modified.
 	public Vector3 pos; // Central positon for this treadmill to move to.
 	public bool recenterActive = false;
 
+	/*
+		id is -1 for offline play
+	*/
 	public Treadmill(int id, Overworld world, ActorData actorData, Vector2 coords, int radius, Vector3 pos){
 		this.id = id;
 		this.world = world;
@@ -26,12 +30,8 @@ public class Treadmill {
 		this.center = world.RequestCell(coords);
 		this.center.SetPos(pos);
 		this.radius = radius;
+		this.actorData = actorData;
 
-		GD.Print(center.GetPos());
-		actorData.pos = center.GetPos() + new Vector3(0, 20f, 0); // TODO: Make this not hardcoded.
-		actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
-		Session.ChangeMenu(Menu.Menus.HUD);
-		
 		List<string> missingArgs = new List<string>();
 		if(world == null){
 			missingArgs.Add("world");
@@ -52,6 +52,13 @@ public class Treadmill {
 
 	public void Init(){
 		PopulateCells();
+		PlayerInit();
+	}
+
+	public void PlayerInit(){
+		actorData.pos = center.GetPos() + new Vector3(0, 20f, 0); // TODO: Make this not hardcoded.
+		actor = world.ActivateActorData(Actor.Brains.Player1, actorData);
+		Session.ChangeMenu(Menu.Menus.HUD);
 	}
 
 	public void Update(float delta){
