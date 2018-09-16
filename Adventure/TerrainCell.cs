@@ -184,12 +184,12 @@ public class TerrainCell : GridMap{
 
 
 		string debug = "TerrainCell.Unpack\n";
-		debug += "  Moving cell " + id + " from " + oldPos + " to " + pos + "\n";
+		debug += "  Moving cell " + id +  "(" + coords + ") from " + oldPos + " to " + pos + "\n";
 		debug += "  Total translation: " + (pos - oldPos);
 		GD.Print(debug);
 
 		// Move packed contents.
-		Vector3 translation = pos - oldPos;
+		Vector3 translation = CenteredPos(pos) - CenteredPos(oldPos);
 		TranslatePackedContents(translation);
 
 		foreach(Item packedItem in packedItems){

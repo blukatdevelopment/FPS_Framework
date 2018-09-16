@@ -105,8 +105,8 @@ public class Treadmill {
 		}
 		else{
 			Vector2 newCenter = PosToCoords(actor.Translation);
-			List<Vector2> newCoords =  UsedCoords(newCenter);
-			//GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
+			//List<Vector2> newCoords =  UsedCoords(newCenter);
+			GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
 			Recenter(newCenter);
 		}
 	}
@@ -128,7 +128,7 @@ public class Treadmill {
 
   	// Get map of potential cells and their positions.
 		Vector2 centerCoords = center.coords;
-		Vector3 centerPos = pos;
+		Vector3 centerPos = center.GetPos();
 		List<Vector2> candidateCoords = Util.CoordsInRadius(centerCoords, radius);
 		float scale = center.GetWidth();
 		System.Collections.Generic.Dictionary<Vector2, Vector3> candidateMap;
@@ -198,10 +198,16 @@ public class Treadmill {
 		ReleaseAbandonedCells(CenterCoords(), newCenterCoords);
 		ClearBoundaries();
 
+		Vector3 oldCenterPos = center.GetPos();
+
 		center = world.RequestCell(newCenterCoords);
+
+		Vector3 newCenterPos = center.GetPos();
+
 
 		string debug = "Treadmill.Recenter\n";
 		debug += "\t Treadmill recentered to " + center.coords + "\n";
+		debug += "\t moving from " + oldCenterPos + " to " + newCenterPos + ", " + (newCenterPos - oldCenterPos) + "\n";
 		GD.Print(debug);
 
 		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();

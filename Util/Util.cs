@@ -175,7 +175,7 @@ public class Util{
   public static System.Collections.Generic.Dictionary<Vector2, Vector3> GetCellMap(
       List<Vector2> cells, // Coordinates of each cell getting assigned a position
       Vector2 centerCoords,
-      Vector3 centerPos,
+      Vector3 centerPos, // Make sure this matches either center of cell or top left corner
       float scale // Width and length of each cell
   ){
     System.Collections.Generic.Dictionary<Vector2, Vector3> ret;
