@@ -1,0 +1,56 @@
+This file contains stories to be used on a Kanban board.
+
+Kanban board procedure:
+Currently the kanban is hosted via Trello (An in-house solution may be considered in the future): https://trello.com/b/lGaz9YsG/kanban
+
+The five columns of the kanban board:
+Not Ready - Blocked by the completion of existing stories.
+Ready - Is not blocked, and is ready to work on.
+In Progress - Is being actively worked on.
+Review - Initial build is complete. Primary testing in progress.
+Done -  Story is available for regression testing and should be archived.
+
+Stories can be shared among the following components.
+Design - Story creation/grooming, planning, communication.
+Creative - Creation of non-programming assets such as music, textures, models, and animations.
+Content - Creation of programming and creative-heavy assets such as speech trees, quests, enemies, items.
+Testing - Create/execute manual test plans and automated tests.
+Interface - Create user interfaces.
+Network - Manage security, create external services, and manage netcode.
+Core - Provide core classes and 
+User experience - Assess the "fun" of existing features, propose alterations/user settings/features to make the game more balanced, cohesive, and "fun".
+AI - Create and maintain any artificial intelligences.
+
+Stories should contain three parts:
+Title- name to be used on Kanban board
+Components- disciplines needed to create this story
+Body- a description, estimate, test plan, and any other info to copy/paste into the body of a story on a kanban.  
+
+
+Title:
+Components:
+Body:
+
+Title: Treadmill
+Components: Core, Network
+Body:
+A treadmill should allow a player to move around the overworld, maintaining a grid
+of terraincells surrounding the player's character.
+
+A treadmill should occupy the same 3D space in order to avoid running into other treadmills.
+
+When two treadmills neighbor one another or share cells, they should move together in
+3D space and then separate independently.
+
+
+Title: Cartographer
+Components: Core
+Body:
+The cartographer creates an overworld to be used in the adventure mode.
+Minimally-viable product: create flat plain  with some cubes raised.
+
+
+Title: Auth service
+Components: Network
+Body:
+The auth service should allow users to create accounts and then log into them once globally for all participating servers.

@@ -108,8 +108,6 @@ Look into using UUID instead of auto-incremented IDs.
 Make serializeable versions of actor. 
 Look into options for loading database into memory and saving it to file. 
 
-
-## Design
 Each role should have responsibilities laid out in terms of tasks and acceptance
 criteria that can be marked complete or ready for review.
 
@@ -127,21 +125,3 @@ This iteration should, in itself, contain a few steps(These are not necessarily 
 9. Perform Populate and DePopulate in background or on another thread.
 10. Populate items/Actors in active space.
 11. Maintain dormant space separately from active space.
-
-## Art
-
-## Level Design
-
-## Sound engineering
-
-## Testing
-
-## Interface Programming
-
-## Network Programming
-
-## Core Programming
-
-## Gameplay Programming
-
-## AI programming

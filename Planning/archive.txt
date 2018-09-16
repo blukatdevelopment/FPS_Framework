@@ -1,0 +1,3 @@
+This file contains an archive of old, completed stores for historical purposes and manual regression testing.
+
+
