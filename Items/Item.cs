@@ -52,6 +52,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected object wielder;
   protected Area area;
   protected bool stopColliding = false; // Stop applying OnCollide effect
+  protected bool paused = false;
+
 
   public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
     this.name = name;
@@ -66,6 +68,14 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual bool IsBusy(){
     return false;
+  }
+
+  public virtual void Pause(){
+    paused = true;
+  }
+
+  public virtual void Unpause(){
+    paused = false;
   }
   
   public override void _Process(float delta){

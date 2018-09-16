@@ -34,6 +34,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float gravityVelocity = 0f;
   
   public bool menuActive = false;
+  public bool paused = false;
 
   public Speaker speaker;
 
@@ -855,6 +856,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       Session.ChangeMenu(Menu.Menus.HUD);
       Input.SetMouseMode(Input.MouseMode.Captured);
     }
+  }
+
+
+  public void Pause(){
+    paused = true;
+  }
+
+  public void Unpause(){
+    paused = false;
   }
   
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */

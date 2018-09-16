@@ -94,20 +94,20 @@ public class Treadmill {
 			return;
 		}
 
+		GD.Print("Player is currently at " +  actor.Translation + "," +  PosToCoords(actor.Translation));
+
 		if(actor == null){
 			GD.Print("Treadmill.CheckPlayerPos: Actor null");
 			return;
 		}
 		if(center.InBounds(actor.Translation)){
-			GD.Print("Player is currently at " +PosToCoords(actor.Translation));
 			return;
 		}
 		else{
 			Vector2 newCenter = PosToCoords(actor.Translation);
 			List<Vector2> newCoords =  UsedCoords(newCenter);
-			GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
-			GD.Print("recenter disabled");
-			//Recenter(newCenter);
+			//GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
+			Recenter(newCenter);
 		}
 	}
 
@@ -156,10 +156,19 @@ public class Treadmill {
 	public void ApplyCellMap(
 		System.Collections.Generic.Dictionary<Vector2, Vector3> map
 	){
+		// Pack all cells.
 		foreach(Vector2 key in map.Keys){
 			TerrainCell cell = world.RequestCell(key);
 			if(cell != null){
-				cell.SetPos(map[key]);
+				cell.Pack();
+			}
+		}
+
+		// Unpack all cells in new location.
+		foreach(Vector2 key in map.Keys){
+			TerrainCell cell = world.RequestCell(key);
+			if(cell != null){
+				cell.Unpack(map[key]);
 			}
 		}
 	}
@@ -191,13 +200,17 @@ public class Treadmill {
 
 		center = world.RequestCell(newCenterCoords);
 
+		string debug = "Treadmill.Recenter\n";
+		debug += "\t Treadmill recentered to " + center.coords + "\n";
+		GD.Print(debug);
+
 		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();
 		ApplyCellMap(map);
 		PopulateBoundaries();
 		
-		if(CellsShared()){
-			GD.Print("Treadmill.Recenter: Do some fancy shared cell logic.");
-		}
+		// if(CellsShared()){
+		// 	GD.Print("Treadmill.Recenter: Do some fancy shared cell logic.");
+		// }
 
 		recenterActive = false;
 

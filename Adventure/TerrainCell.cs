@@ -12,6 +12,9 @@ public class TerrainCell : GridMap{
 	public List<TerrainBlock> blockData;
 	public Overworld world;
 
+	public List<Actor> packedActors;
+	public List<Item> packedItems;
+
 	public TerrainCell(Overworld world, int cellSize = 1){
 		BaseInit(world);
 		this.cellSize = cellSize;
@@ -123,6 +126,21 @@ public class TerrainCell : GridMap{
 	 	}
 	}
 
+	// Translate all items and actors in bounds
+	public void TranslatePackedContents(Vector3 translation){
+	  Vector3 start = GetPos();
+	 	List<Item> items = ItemsInBounds();
+	 	List<Actor> actors = ActorsInBounds();
+	 	foreach(Item packedItem in packedItems){
+	 		//packedItem.Translation = packedItem.Translation + translation;
+	 	}
+
+	 	foreach(Actor packedActor in packedActors){
+	 		GD.Print("Moving actor from " + packedActor.Translation + " to " + (packedActor.Translation + translation) + " by " + translation);
+	 		packedActor.Translation = packedActor.Translation + translation;
+	 	}
+	}
+
 	// Preserves position of activePos relative to newPos.
 	public Vector3 RecenterActivePos(Vector3 oldPos, Vector3 newPos, Vector3 activePos){
 		Vector3 diff = activePos - oldPos;
@@ -136,6 +154,54 @@ public class TerrainCell : GridMap{
 
 	public List<Actor> ActorsInBounds(){
 		return world.ActiveActorsInBounds(this);
+	}
+
+	/* Record and pause all contents. */
+	public void Pack(){
+		packedItems = ItemsInBounds();
+		packedActors = ActorsInBounds();
+		
+		foreach(Item packedItem in packedItems){
+			packedItem.Pause();
+		}
+
+		foreach(Actor packedActor in packedActors){
+			packedActor.Pause();
+		}
+
+	}
+
+	/* Move packed contents and then unpause/forget them. */
+	public void Unpack(Vector3 pos){
+		if(packedItems == null || packedItems == null){
+			GD.Print("TerrainCell.Unpack: Cannot unpack cell before packing it.");
+			return;
+		}
+
+		Vector3 oldPos = Translation; // Old position, not centered
+		Vector3 centeredPos = CenteredPos(pos);
+		Translation = centeredPos;
+
+
+		string debug = "TerrainCell.Unpack\n";
+		debug += "  Moving cell " + id + " from " + oldPos + " to " + pos + "\n";
+		debug += "  Total translation: " + (pos - oldPos);
+		GD.Print(debug);
+
+		// Move packed contents.
+		Vector3 translation = pos - oldPos;
+		TranslatePackedContents(translation);
+
+		foreach(Item packedItem in packedItems){
+			packedItem.Unpause();
+		}
+
+		foreach(Actor packedActor in packedActors){
+			packedActor.Unpause();
+		}
+
+		packedItems = null;
+		packedActors = null;
 	}
 
 }
