@@ -13,7 +13,6 @@ public class Test{
   public static void Init(bool showDebugs = true){
     fails = new List<string>();
     debugs = showDebugs;
-    passes = 0;
   }
 
   public static void Assert(bool result){
@@ -47,6 +46,6 @@ public class Test{
   }
 
   public static string StackTrace(){
-    return System.Environment.StackTrace();
+    return System.Environment.StackTrace;
   }
 }
