@@ -124,6 +124,7 @@
     <Compile Include="Util\Session.cs" />
     <Compile Include="Util\Sound.cs" />
     <Compile Include="Util\PlayerData.cs" />
+    <Compile Include="Util\Test.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Util\Speaker.cs" />
     <Compile Include="Util\SessionEvent.cs" />
