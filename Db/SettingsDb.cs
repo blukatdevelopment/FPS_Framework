@@ -48,7 +48,7 @@ public class SettingsDb{
         ";
         cmd.CommandText = sql;
         cmd.ExecuteNonQuery();
-        GD.Print("Created tables.");
+        //GD.Print("Created tables.");
     }
 
     public void InitSettings(){
@@ -93,10 +93,10 @@ public class SettingsDb{
 
     public static SettingsDb Init(){
         if(System.IO.File.Exists(DefaultFile)){
-            GD.Print(DefaultFile + " already exists. Connecting.");
+            //GD.Print(DefaultFile + " already exists. Connecting.");
             return new SettingsDb();
         }
-        GD.Print(DefaultFile + " doesn't exist. Creating.");
+        //GD.Print(DefaultFile + " doesn't exist. Creating.");
         CreateFile(DefaultFile);
         SettingsDb db = new SettingsDb();
         db.CreateTables();

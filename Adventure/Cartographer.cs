@@ -98,7 +98,6 @@ public class Cartographer {
 	}
 
 	public void GenerateActors(){
-		GD.Print("Cartographer.GenerateActors not implemented");
 		actors = new System.Collections.Generic.Dictionary<int, ActorData>();
 		ActorData dat = GenerateActor(GetEmptyPosition(0));
 		actors.Add(dat.id, dat);
@@ -109,7 +108,6 @@ public class Cartographer {
 	}
 
 	public ActorData GenerateActor(Vector3 pos){
-		GD.Print("Cartographer.GenerateActor not implemented");
 		ActorData dat = world.CreateActor();
 		dat.pos = pos;
 		return dat;

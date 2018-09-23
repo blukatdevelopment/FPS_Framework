@@ -48,17 +48,16 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     InitJukeBox();
     InitSettings();
-    TestUtil();
-    //ShowMethods(typeof(Godot.RigidBody));
-    //ShowProperties(typeof(Godot.CollisionShape));
-    //ShowVariables(typeof(Godot.RigidBody));
+    PerformTests();
   }
 
-  public void TestUtil(){
+  public void PerformTests(){
+    Test.Init();
+    AdventureTest.RunTests();
   }
 
   public void InitSettings(){
-    GD.Print("InitSettings");
+    //GD.Print("InitSettings");
     SettingsDb db = SettingsDb.Init();
     masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
     sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));

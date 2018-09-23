@@ -30,6 +30,9 @@ public class Test{
     if(!result){
       Fail(output);
     }
+    else if(debugs){
+      GD.Print("Passed: " + message);
+    }
   }
 
   public static void Fail(string message){

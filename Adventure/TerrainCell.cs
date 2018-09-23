@@ -104,7 +104,7 @@ public class TerrainCell : GridMap{
 		string debug = "TerrainCell.SetPos\n";
 		debug += "  Moving cell " + id + " from " + oldPos + " to " + pos + "\n";
 		debug += "  Total translation: " + (pos - oldPos);
-		GD.Print(debug);
+		//GD.Print(debug);
 
 		// Move contents
 		Vector3 translation = pos - oldPos;
@@ -121,7 +121,7 @@ public class TerrainCell : GridMap{
 	 	}
 
 	 	foreach(Actor actor in actors){
-	 		GD.Print("Moving actor from " + actor.Translation + " to " + (actor.Translation + translation) + " by " + translation);
+	 		//GD.Print("Moving actor from " + actor.Translation + " to " + (actor.Translation + translation) + " by " + translation);
 	 		actor.Translation = actor.Translation + translation;
 	 	}
 	}
@@ -136,7 +136,7 @@ public class TerrainCell : GridMap{
 	 	}
 
 	 	foreach(Actor packedActor in packedActors){
-	 		GD.Print("Moving actor from " + packedActor.Translation + " to " + (packedActor.Translation + translation) + " by " + translation);
+	 		//GD.Print("Moving actor from " + packedActor.Translation + " to " + (packedActor.Translation + translation) + " by " + translation);
 	 		packedActor.Translation = packedActor.Translation + translation;
 	 	}
 	}
@@ -174,7 +174,7 @@ public class TerrainCell : GridMap{
 	/* Move packed contents and then unpause/forget them. */
 	public void Unpack(Vector3 pos){
 		if(packedItems == null || packedItems == null){
-			GD.Print("TerrainCell.Unpack: Cannot unpack cell before packing it.");
+			//GD.Print("TerrainCell.Unpack: Cannot unpack cell before packing it.");
 			return;
 		}
 
@@ -186,7 +186,7 @@ public class TerrainCell : GridMap{
 		string debug = "TerrainCell.Unpack\n";
 		debug += "  Moving cell " + id +  "(" + coords + ") from " + oldPos + " to " + pos + "\n";
 		debug += "  Total translation: " + (pos - oldPos);
-		GD.Print(debug);
+		//GD.Print(debug);
 
 		// Move packed contents.
 		Vector3 translation = CenteredPos(pos) - CenteredPos(oldPos);

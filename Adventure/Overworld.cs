@@ -50,11 +50,11 @@ public class Overworld : Spatial {
 	}
 
 	public void ServerInit(){
-		GD.Print("Server init");
+		//GD.Print("Server init");
 	}
 
 	public void ClientInit(){
-		GD.Print("Client init");
+		//GD.Print("Client init");
 	}
 
 	public void SinglePlayerInit(){
@@ -73,13 +73,12 @@ public class Overworld : Spatial {
 		treadmill.Init();
 
 		debug += "\t Actor wound up at " + treadmill.actor.Translation + "\n";
-		GD.Print(debug);
+		//GD.Print(debug);
 	}
 
 	/* Asks the cartographer to make a new world
 	 or loads an existing one */
 	public void InitWorld(){
-		GD.Print("InitTerrain not implemented");
 		Cartographer cart = new Cartographer();
 		
 		cart.GenerateWorld(this);
@@ -99,11 +98,11 @@ public class Overworld : Spatial {
 	}
 
 	public void InspectWorld(){
-		GD.Print("Dormant cells: " + dormantCells.Count);
+		//GD.Print("Dormant cells: " + dormantCells.Count);
 		TerrainCellData terrainDat = dormantCells[0];
-		GD.Print("Cell[0] blocks: " + terrainDat.blocks.Count);
+		//GD.Print("Cell[0] blocks: " + terrainDat.blocks.Count);
 		ActorData playerDat = dormantActors[0];
-		GD.Print("Dormant actor: " + playerDat);
+		//GD.Print("Dormant actor: " + playerDat);
 	}
 
 	/*
@@ -138,7 +137,7 @@ public class Overworld : Spatial {
 	public ItemData CreateItem(){
 		int id = NextItemId();
 		
-		GD.Print("Overworld.CreateItem not implemented");
+		//GD.Print("Overworld.CreateItem not implemented");
 		return null;
 	}
 
@@ -164,7 +163,7 @@ public class Overworld : Spatial {
 		Determine what cell a given position falls in.
 	*/
 	public int PositionToCellId(Vector2 pos){
-		GD.Print("Overworld.PositionToCellId not implemented");
+		//GD.Print("Overworld.PositionToCellId not implemented");
 		return -1;
 	}
 
@@ -189,13 +188,13 @@ public class Overworld : Spatial {
 
 	/* Remove dormant actor so it can be rendered. */
 	public ActorData RequestActorData(int peerId, int actorId = -1){
-		GD.Print("Overworld.RequestActor not implemented");
+		//GD.Print("Overworld.RequestActor not implemented");
 		return null;
 	}
 
 	// Add dormant ActorData to world
 	public void StoreActorData(ActorData data){
-		GD.Print("Overworld.StoreActorData not implemented");
+		//GD.Print("Overworld.StoreActorData not implemented");
 	}
 
 	public void UpdateTreadmills(float delta){
@@ -222,7 +221,7 @@ public class Overworld : Spatial {
 
 	// Converts active Actor to dormant ActorData
 	public ActorData StoreActor(Actor actor){
-		GD.Print("Overworld.StoreActor not implemented");
+		//GD.Print("Overworld.StoreActor not implemented");
 		return null;
 	}
 
@@ -274,7 +273,7 @@ public class Overworld : Spatial {
 			return new List<Treadmill>();
 		}
 		if(!activeCells.ContainsKey(cellId)){
-			GD.Print("Overworld.CellUsers: Cell not active:" + cellId);
+			//GD.Print("Overworld.CellUsers: Cell not active:" + cellId);
 			return new List<Treadmill>();	
 		}
 		TerrainCell cell = activeCells[cellId];
@@ -371,7 +370,7 @@ public class Overworld : Spatial {
 
 	public void StoreCell(int id){
 		if(!activeCells.ContainsKey(id)){
-			GD.Print("Cell " + id + " is not active, not storing.");
+			//GD.Print("Cell " + id + " is not active, not storing.");
 			return;
 		}
 		TerrainCell cell = activeCells[id];
@@ -380,7 +379,7 @@ public class Overworld : Spatial {
 		// TODO: Store cell's items/NPCs here.
 		cell.QueueFree();
 		if(dormantCells.ContainsKey(data.id)){
-			GD.Print("Cell " + data.id + " already stored, not storing.");
+			//GD.Print("Cell " + data.id + " already stored, not storing.");
 			return;
 		}
 		//GD.Print("Storing cell " + data.id);
@@ -424,7 +423,7 @@ public class Overworld : Spatial {
   }
 
   public void HandleActorDead(SessionEvent sessionEvent){
-  	GD.Print("HandleActorDead not implemented");
+  	//GD.Print("HandleActorDead not implemented");
   }
 
   public void TogglePause(){

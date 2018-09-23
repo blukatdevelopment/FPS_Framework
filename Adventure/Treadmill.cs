@@ -44,7 +44,7 @@ public class Treadmill {
 		}
 		if(missingArgs.Count > 0){
 			foreach(string arg in missingArgs){
-				GD.Print("Treadmill: Arg is null: " + arg);
+				//GD.Print("Treadmill: Arg is null: " + arg);
 			}
 			return;
 		}
@@ -90,14 +90,14 @@ public class Treadmill {
 
 	public void CheckPlayerPos(){
 		if(recenterActive == true){
-			GD.Print("Treadmill.CheckPlayerPos: recenter active. Aborting.");
+			//GD.Print("Treadmill.CheckPlayerPos: recenter active. Aborting.");
 			return;
 		}
 
-		GD.Print("Player is currently at " +  actor.Translation + "," +  PosToCoords(actor.Translation));
+		//GD.Print("Player is currently at " +  actor.Translation + "," +  PosToCoords(actor.Translation));
 
 		if(actor == null){
-			GD.Print("Treadmill.CheckPlayerPos: Actor null");
+			//GD.Print("Treadmill.CheckPlayerPos: Actor null");
 			return;
 		}
 		if(center.InBounds(actor.Translation)){
@@ -106,7 +106,7 @@ public class Treadmill {
 		else{
 			Vector2 newCenter = PosToCoords(actor.Translation);
 			//List<Vector2> newCoords =  UsedCoords(newCenter);
-			GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
+			//GD.Print("Player has escaped from " + center.coords + " to " + newCenter);
 			Recenter(newCenter);
 		}
 	}
@@ -179,17 +179,17 @@ public class Treadmill {
 
 	public void Recenter(Vector2 newCenterCoords){
 		if(recenterActive){
-			GD.Print("Another treadmill recenter is in progress. Aborting.");
+			//GD.Print("Another treadmill recenter is in progress. Aborting.");
 			return;
 		}
 
 		if(world.RequestCell(newCenterCoords) == null){
-			GD.Print("Couldn't recenter treadmill to invalid coordinates" + newCenterCoords);
+			//GD.Print("Couldn't recenter treadmill to invalid coordinates" + newCenterCoords);
 			return;
 		}
 
 		if(center.coords == newCenterCoords){
-			GD.Print("Treadmill.Recenter: Will not recenter to current position. Aborting.");
+			//GD.Print("Treadmill.Recenter: Will not recenter to current position. Aborting.");
 			return;
 		}
 
@@ -208,7 +208,7 @@ public class Treadmill {
 		string debug = "Treadmill.Recenter\n";
 		debug += "\t Treadmill recentered to " + center.coords + "\n";
 		debug += "\t moving from " + oldCenterPos + " to " + newCenterPos + ", " + (newCenterPos - oldCenterPos) + "\n";
-		GD.Print(debug);
+		//GD.Print(debug);
 
 		System.Collections.Generic.Dictionary<Vector2, Vector3> map = GetPopulatedCellMap();
 		ApplyCellMap(map);
@@ -275,12 +275,12 @@ public class Treadmill {
 
 	// Clear out all boundaries
 	public void ClearBoundaries(){
-		GD.Print("Treadmill.ClearBoundaries not implemented");
+		//GD.Print("Treadmill.ClearBoundaries not implemented");
 	}
 
 	// Create invisible walls in invalid or unused grid positions surrounding treadmill
 	public void PopulateBoundaries(){
-		GD.Print("Treadmill.PopulateBoundaries not implemented");
+		//GD.Print("Treadmill.PopulateBoundaries not implemented");
 	}
 
 	// Find grid coords based on position relative to center terrainCell
@@ -329,13 +329,13 @@ public class Treadmill {
 
 	// Returns true when item's position is inside treadmill.
 	public bool UsingItem(Item item){
-		GD.Print("UsingItem not implemented.");
+		//GD.Print("UsingItem not implemented.");
 		return true;
 	}
 
 	// Returns true when actor's observed by or inside treadmill
 	public bool UsingActor(Actor actor){
-		GD.Print("UsingActor not implemented.");
+		//GD.Print("UsingActor not implemented.");
 		return true;
 	}
 

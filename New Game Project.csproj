@@ -110,6 +110,7 @@
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaSettings.cs" />
     <Compile Include="Adventure\AdventureSettings.cs" />
+    <Compile Include="Adventure\AdventureTest.cs" />
     <Compile Include="Adventure\Overworld.cs" />
     <Compile Include="Adventure\OverworldData.cs" />
     <Compile Include="Adventure\Treadmill.cs" />
