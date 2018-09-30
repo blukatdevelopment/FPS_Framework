@@ -19,6 +19,7 @@ public class Overworld : Spatial {
 	public System.Collections.Generic.Dictionary<int, TerrainCellData> dormantCells;
 	public System.Collections.Generic.Dictionary<int, ItemData> dormantItems;
 	public System.Collections.Generic.Dictionary<int, ActorData> dormantActors;
+	public bool paused = false;
 
 	public const int WorldWidth = 50;
 	public const int WorldHeight = 50;
@@ -46,7 +47,17 @@ public class Overworld : Spatial {
 	}
 
 	public override void _Process(float delta){
-		UpdateTreadmills(delta);
+		if(!paused){
+			UpdateTreadmills(delta);
+		}
+	}
+
+	public void Pause(){
+		paused = true;
+	}
+
+	public void Unpause(){
+		paused = false;
 	}
 
 	public void ServerInit(){
@@ -185,6 +196,15 @@ public class Overworld : Spatial {
 			########################################################################
 	*/
 
+
+  public Treadmill GetTreadmillById(int treadmillId){
+  	foreach(Treadmill treadmill in treadmills){
+  		if(treadmill.id == treadmillId){
+  			return treadmill;
+  		}
+  	}
+  	return null;
+  }
 
 	/* Remove dormant actor so it can be rendered. */
 	public ActorData RequestActorData(int peerId, int actorId = -1){

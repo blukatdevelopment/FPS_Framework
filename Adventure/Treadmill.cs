@@ -19,6 +19,7 @@ public class Treadmill {
 	public int radius; // How many layers of Cells should be  modified.
 	public Vector3 pos; // Central positon for this treadmill to move to.
 	public bool recenterActive = false;
+	public bool paused = false;
 
 	/*
 		id is -1 for offline play
@@ -50,6 +51,14 @@ public class Treadmill {
 		}
 	}
 
+	public void Pause(){
+		paused = true;
+	}
+
+	public void Unpause(){
+		paused = false;
+	}
+
 	public void Init(){
 		PopulateCells();
 		PlayerInit();
@@ -62,6 +71,9 @@ public class Treadmill {
 	}
 
 	public void Update(float delta){
+		if(paused){
+			return;
+		}
 		timer += delta;
 		if(timer >= timerMax){
 			timer = 0;
@@ -297,6 +309,7 @@ public class Treadmill {
 		return UsedCoords(center.coords);
 	}
 
+	// Return all coords in radius
 	public List<Vector2> UsedCoords(Vector2 centerCoords){
 		List<Vector2> ret = new List<Vector2>();
 		for(int i = -radius; i <= radius; i++){
