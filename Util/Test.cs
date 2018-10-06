@@ -15,31 +15,21 @@ public class Test{
     debugs = showDebugs;
   }
 
-  public static void Assert(bool result){
-    string output = StackTrace();
-
-    if(!result){
-      Fail(output);
-    }
-  }
-
   public static void Assert(bool result, string message){
-    string output = message + "\n";
-    output += StackTrace();
 
     if(!result){
-      Fail(output);
+      Fail(message, StackTrace());
     }
     else if(debugs){
       GD.Print("Passed: " + message);
     }
   }
 
-  public static void Fail(string message){
+  public static void Fail(string message, string trace){
     string failedMessage = "Failed: " + message;
     
     if(debugs){
-      GD.Print(failedMessage);
+      GD.Print(failedMessage + trace);
     }
     fails.Add(failedMessage);
   }
@@ -48,6 +38,12 @@ public class Test{
     GD.Print("##############################################################");
     GD.Print("#                       Error report                         #");
     GD.Print("##############################################################");
+    if(fails.Count == 0){
+      GD.Print("All tests ran successfully!");
+    }
+    else{
+      GD.Print(fails.Count + " tests failed.");
+    }
     foreach(string fail in fails){
       GD.Print(fail);
     }
