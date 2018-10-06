@@ -89,7 +89,8 @@ public class TerrainCell : GridMap{
 	// Returns center of this terrain cell
 	public Vector3 GetPos(){
 		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
-		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
+		float halfScale = effectiveScale/2f;
+		Vector3 offset = new Vector3(halfScale, halfScale, halfScale);
 		return Translation + offset;
 	}
 

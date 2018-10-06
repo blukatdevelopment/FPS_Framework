@@ -36,13 +36,18 @@ public class Test{
   }
 
   public static void Fail(string message){
+    string failedMessage = "Failed: " + message;
+    
     if(debugs){
-      GD.Print(message);
+      GD.Print(failedMessage);
     }
-    fails.Add(message);
+    fails.Add(failedMessage);
   }
 
   public static void PrintFails(){
+    GD.Print("##############################################################");
+    GD.Print("#                       Error report                         #");
+    GD.Print("##############################################################");
     foreach(string fail in fails){
       GD.Print(fail);
     }
