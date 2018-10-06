@@ -1,5 +1,6 @@
 /*
-	The cartographer generates the terrain, actors, and items of an Overworld.
+	The cartographer generates a world's TerrainCells, Actors, and Items in
+	unrendered form.
 */
 using System;
 using System.Collections.Generic;

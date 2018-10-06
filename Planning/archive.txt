@@ -1,3 +1,7 @@
 This file contains an archive of old, completed stores for historical purposes and manual regression testing.
 
-
+Title: Cartographer
+Components: Core
+Body:
+The cartographer creates an overworld to be used in the adventure mode.
+Minimally-viable product: create flat plain  with some cubes raised.

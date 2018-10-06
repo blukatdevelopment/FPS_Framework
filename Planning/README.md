@@ -40,18 +40,20 @@ Things that need to be done:
 - Actor/Item storage
 - placeholder world generation
 
-The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps. Edit: As evidenced by scrapping all the existing planning in favor for working on active stories
+The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
 
-
-## Cartographer
-- Create test plan once surrounding scope is built.
+## Overworld
+- Determine cell coords, given position.
+- Determine cell position, given coords
+- Load cell into existence 
+- Assign human-controlled Actors a treadmill
+- Convert terrain/actors/items to rendered form when requested
+- Convert terrain/actors/items to unrendered form when released and unused
 
 ## Treadmill
-- Make sure treadmill Init is good. Yup
-- Make sure treadmill player tracking is good. Yup.
-- Make sure that center cell and player are tracked correctly with recenters.
-- Make sure treadmill cell shifting includes abandoned cells. 
-- Make sure treadmill moves Actors correctly.
+- Make sure treadmill requests cells appropriately
+- Make sure treadmill releases cells appropriately
+- Make sure treadmill knows when it is using a cell
 
 ## Auth service
 - Build auth service in order repo.

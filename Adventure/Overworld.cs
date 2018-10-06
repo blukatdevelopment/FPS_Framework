@@ -1,8 +1,11 @@
 /*
-	The overworld manages the active portions of the world
-	contained in Treadmills (TerrainCells, Actors, Items)
-	as well as the inactive portions of the world
-	contained TerrainCellData and IAgents. 
+	The overworld is responsible for managing the world's TerrainCells, 
+	Actors, and Items as they convert between rendered and unrendered
+	representations.
+
+	Regardless of representation, only the behavior (influenced by updating in
+	a real-time 3D or turn-based non-physics format) should change, leaving
+	each terraincell in the same position for all game instances.
 */
 using Godot;
 using System;
@@ -52,14 +55,6 @@ public class Overworld : Spatial {
 		}
 	}
 
-	public void Pause(){
-		paused = true;
-	}
-
-	public void Unpause(){
-		paused = false;
-	}
-
 	public void ServerInit(){
 		//GD.Print("Server init");
 	}
@@ -72,23 +67,10 @@ public class Overworld : Spatial {
 		string debug = "SinglePlayerInit\n";
 
 		InitWorld();
-
-		ActorData actor = LoadDormantActor(-1);
-		Vector2 actorCoords = new Vector2();
-		Vector3 treadmillPosition = new Vector3();
-
-		debug += "\t Actor created at " + actor.pos + " pos and at coords " + actorCoords + "and treadmill at " + treadmillPosition + "\n";
-
-		Treadmill treadmill = new Treadmill(-1, this, actor, actorCoords, 1, treadmillPosition);
-		treadmills.Add(treadmill);
-		treadmill.Init();
-
-		debug += "\t Actor wound up at " + treadmill.actor.Translation + "\n";
-		//GD.Print(debug);
 	}
 
 	/* Asks the cartographer to make a new world
-	 or loads an existing one */
+	 TODO: or loads an existing one */
 	public void InitWorld(){
 		Cartographer cart = new Cartographer();
 		
@@ -115,12 +97,6 @@ public class Overworld : Spatial {
 		ActorData playerDat = dormantActors[0];
 		//GD.Print("Dormant actor: " + playerDat);
 	}
-
-	/*
-			########################################################################
-														Dormant world manipulation
-			########################################################################
-	*/
 
 	private int NextActorId(){
 		int ret = nextActorId;
@@ -190,13 +166,6 @@ public class Overworld : Spatial {
 		return CellSize;
 	}
 
-	/*
-			########################################################################
-														Treadmill management
-			########################################################################
-	*/
-
-
   public Treadmill GetTreadmillById(int treadmillId){
   	foreach(Treadmill treadmill in treadmills){
   		if(treadmill.id == treadmillId){
@@ -206,43 +175,10 @@ public class Overworld : Spatial {
   	return null;
   }
 
-	/* Remove dormant actor so it can be rendered. */
-	public ActorData RequestActorData(int peerId, int actorId = -1){
-		//GD.Print("Overworld.RequestActor not implemented");
-		return null;
-	}
-
-	// Add dormant ActorData to world
-	public void StoreActorData(ActorData data){
-		//GD.Print("Overworld.StoreActorData not implemented");
-	}
-
 	public void UpdateTreadmills(float delta){
 		foreach(Treadmill treadmill in treadmills){
 			treadmill.Update(delta);
 		}
-	}
-
-	public ActorData LoadDormantActor(int peerId, int actorId = -1){
-		ActorData dat = null;
-		if(actorId == -1){
-			return GetADormantActor();
-		}
-		return dat;
-	}
-
-	// Returns a dormant actor without implied randomization nor order
-	public ActorData GetADormantActor(){
-		foreach(int key in dormantActors.Keys){
-			return dormantActors[key];
-		}
-		return null;
-	}
-
-	// Converts active Actor to dormant ActorData
-	public ActorData StoreActor(Actor actor){
-		//GD.Print("Overworld.StoreActor not implemented");
-		return null;
 	}
 
 	// Size of each block used in gridmaps
@@ -254,32 +190,6 @@ public class Overworld : Spatial {
 	public static float CellWidth(){
 		Vector3 baseBlockSize = BaseBlockSize();
 		return baseBlockSize.x * CellSize;
-	}
-
-	/*
-		Returns the Coordinates of the cell that should contain this
-		position in dormant space.
-		Dormant space starts at [0,0,0] at coords [0,0]
-	*/ 
-	public static Vector2 GetDormantPositionCoordinates(Vector3 position){
-		Vector2 centerCoords = new Vector2(0,0); // Minimum corner of overworld map.
-		float centerScale = CellWidth();
-		Vector3 offset = new Vector3(centerScale/2, 0, centerScale/2); // Offset from [0,0,0] to center point of [0,0]
-		Vector3 centerPos = new Vector3() + offset;
-		return Util.PosToCoords(centerPos, centerCoords, centerScale, position);
-	}
-
-	// Creates Actor from ActorData
-	public Actor ActivateActorData(Actor.Brains brain, ActorData data){
-		Actor ret = Actor.ActorFactory(brain, data);
-		AddChild(ret);
-		activeActors.Add(ret);
-		return ret;
-	}
-
-	// Keep track of externally-created actor.
-	public void RegisterActiveActor(Actor actor){
-		activeActors.Add(actor);
 	}
 
 	public List<Treadmill> CellUsers(Vector2 coords){
@@ -305,8 +215,7 @@ public class Overworld : Spatial {
 				users.Add(treadmill);
 			}
 		}
-		return users;
-		
+		return users;	
 	}
 
 	/*
@@ -316,116 +225,18 @@ public class Overworld : Spatial {
 		return null;
 	}
 
-	/*Request an Item from dormant*/
-	public ItemData RequestItem(int treadmillId, int itemId){
-		GD.Print("Overworld.RequestItem not implemented");	
-		return null;
-	}
-
-	public void ReleaseItem(ItemData data){
-		GD.Print("Overworld.ReleaseActor not implemented");
-	}
-
-	/* Locates or creates TerrainCell. When creating a terrain cell,
-	 	 
-	*/
 	public TerrainCell RequestCell(Vector2 coords){
-		return RequestCellAtPos(coords, false, new Vector3());
-	}
-
-	/* 
-		Locates or creates TerrainCell and returns it.
-		when creating a TerrainCell and setPos is true, set position before instantiating.
-		non-nullable optional arguments without a sentinal value are tricky,
-		so setPos is true is the optional flag for position.
-	*/
-	public TerrainCell RequestCellAtPos(Vector2 coords, bool setPos, Vector3 position){
-		if(coords == null){
-			//GD.Print("RequestCell: Coords null");
-			return null;
-		}
-		int id = CoordsToCellId(coords);
-		
-		//GD.Print("Coords: " + coords + " id" + id);
-
-		if(activeCells.ContainsKey(id)){
-			//GD.Print("Active Cell Found for " + coords);
-			return activeCells[id];
-		}
-		if(dormantCells.ContainsKey(id)){
-			//GD.Print("Dormant Cell Found for" + coords + "," + id);
-			TerrainCellData dormant = dormantCells[id];
-			dormantCells.Remove(id);
-
-			TerrainCell active = new TerrainCell(this, GetCellSize());
-			active.Translation = position;
-			active.LoadData(dormant);
-
-			activeCells.Add(id, active);
-			AddChild(active);
-			//GD.Print("Returning new ");
-			return active;
-		}
-	
-		//GD.Print("Couldn't find dormant cell for " + coords + ", " + id);
+		//TODO
 		return null;
 	}
 
-
-	/* Check if cell is still used, and if not store or queue for storage. */
 	public void ReleaseCell(Vector2 coords){
-		foreach(Treadmill treadmill in treadmills){
-			if(treadmill.UsingCell(coords)){
-				//GD.Print("Cell at " + coords + " still in use.");
-				return;
-			}
-		}
-		int id = CoordsToCellId(coords);
-		if(id == -1){
-			//GD.Print(coords + " is invalid, ignoring." );
-			return;
-		}
-		StoreCell(id); // TODO: Delay this action so player can be pursued by NPCs and projectiles.
+		// TODO
 	}
 
 	public void StoreCell(int id){
-		if(!activeCells.ContainsKey(id)){
-			//GD.Print("Cell " + id + " is not active, not storing.");
-			return;
-		}
-		TerrainCell cell = activeCells[id];
-		activeCells.Remove(id);
-		TerrainCellData data = cell.GetData();
-		// TODO: Store cell's items/NPCs here.
-		cell.QueueFree();
-		if(dormantCells.ContainsKey(data.id)){
-			//GD.Print("Cell " + data.id + " already stored, not storing.");
-			return;
-		}
-		//GD.Print("Storing cell " + data.id);
-		dormantCells.Add(data.id, data);
+		// TODO
 	}
-
-	public List<Item> ActiveItemsInBounds(TerrainCell tc){
-		List<Item> ret = new List<Item>();
-		foreach(Item item in activeItems){
-			if(tc.InBounds(item.Translation)){
-				ret.Add(item);
-			}
-		}
-		return ret;
-	}
-
-	public List<Actor> ActiveActorsInBounds(TerrainCell tc){
-		List<Actor> ret = new List<Actor>();
-		foreach(Actor actor in activeActors){
-			if(tc.InBounds(actor.Translation)){
-				ret.Add(actor);
-			}
-		}
-		return ret;
-	}
-
 
 	/*
 			########################################################################
@@ -451,6 +262,14 @@ public class Overworld : Spatial {
       actor.TogglePause();
     }
   }
+
+  public void Pause(){
+		paused = true;
+	}
+
+	public void Unpause(){
+		paused = false;
+	}
 
   public string GetObjectiveText(){
   	return "Take a look around.";

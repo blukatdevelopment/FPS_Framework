@@ -31,24 +31,17 @@ Title:
 Components:
 Body:
 
-Title: Treadmill
-Components: Core, Network
-Body:
-A treadmill should allow a player to move around the overworld, maintaining a grid
-of terraincells surrounding the player's character.
-
-A treadmill should occupy the same 3D space in order to avoid running into other treadmills.
-
-When two treadmills neighbor one another or share cells, they should move together in
-3D space and then separate independently.
-
-
-Title: Cartographer
+Title: Overworld(Singleplayer)
 Components: Core
 Body:
-The cartographer creates an overworld to be used in the adventure mode.
-Minimally-viable product: create flat plain  with some cubes raised.
+The overworld should handle converting terraincells, items, and actors between
+their rendered and unrendered representations.
 
+Title: Treadmill(Singleplayer)
+Components: Core, Network
+Body:
+A treadmill should track a player as they move across the overworld, 
+requesting and releasing cells as needed.
 
 Title: Auth service
 Components: Network
