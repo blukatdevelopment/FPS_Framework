@@ -6,6 +6,7 @@ using Godot;
 using System;
 
 public class ActorData {
+	public Actor.Brains brain;
 	public string name;
 	public int id, health, healthMax;
 	public Vector3 pos, rot;

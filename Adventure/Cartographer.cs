@@ -100,7 +100,11 @@ public class Cartographer {
 
 	public void GenerateActors(){
 		actors = new System.Collections.Generic.Dictionary<int, ActorData>();
+		
+		// Create player 1
 		ActorData dat = GenerateActor(GetEmptyPosition(0));
+		dat.brain = Actor.Brains.Player1;
+
 		actors.Add(dat.id, dat);
 	}
 

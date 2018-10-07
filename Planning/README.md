@@ -23,7 +23,8 @@ complexity. This balance must be attended to
 - Lack of item variety. (Currently no apparel or misc)
 - BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
 - Add <string, string> variable to ItemQuery and replace ItemData with it to simplify adding/removing data.
-
+- Revisit item stacking.
+- Revisit ItemQuery, maybe rename to ItemKey and apply kits before spawning actors in Arena
 # Completed Milestones
 
 **Version 1.0.1 Arena**

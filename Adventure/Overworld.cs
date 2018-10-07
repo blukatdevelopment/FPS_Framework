@@ -13,15 +13,17 @@ using System.Collections.Generic;
 
 public class Overworld : Spatial {
 	public List<Treadmill> treadmills;
-	public System.Collections.Generic.Dictionary<int, TerrainCell> activeCells;
 
+	// Entities with graphics and physics rendering
+	public System.Collections.Generic.Dictionary<int, TerrainCell> cells;
+	public System.Collections.Generic.Dictionary<int, Actor> actors;
+	public System.Collections.Generic.Dictionary<int, Item> items;
 
-	public List<Actor> activeActors;
-	public List<Item> activeItems;
-
-	public System.Collections.Generic.Dictionary<int, TerrainCellData> dormantCells;
-	public System.Collections.Generic.Dictionary<int, ItemData> dormantItems;
-	public System.Collections.Generic.Dictionary<int, ActorData> dormantActors;
+	// Unrendered entities
+	public System.Collections.Generic.Dictionary<int, TerrainCellData> cellsData;
+	public System.Collections.Generic.Dictionary<int, ItemData> itemsData;
+	public System.Collections.Generic.Dictionary<int, ActorData> actorsData;
+	
 	public bool paused = false;
 
 	public const int WorldWidth = 50;
@@ -32,10 +34,17 @@ public class Overworld : Spatial {
 
 
 	public Overworld(){
+		nextActorId = 1;
+		nextItemId = 1;
+
 		treadmills = new List<Treadmill>();
-		activeActors = new List<Actor>();
-		activeCells = new System.Collections.Generic.Dictionary<int, TerrainCell>();
-		activeItems = new List<Item>();
+		actors = new System.Collections.Generic.Dictionary<int, Actor>();
+		cells = new System.Collections.Generic.Dictionary<int, TerrainCell>();
+		items = new System.Collections.Generic.Dictionary<int, Item>();
+
+		actorsData = new System.Collections.Generic.Dictionary<int, ActorData>();
+		cellsData = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
+		itemsData = new System.Collections.Generic.Dictionary<int, ItemData>();
 
 		Name = "Adventure";
 		if(Session.IsServer()){
@@ -67,6 +76,9 @@ public class Overworld : Spatial {
 		string debug = "SinglePlayerInit\n";
 
 		InitWorld();
+
+		int playerId = 1; // First actor created should be the player
+
 	}
 
 	/* Asks the cartographer to make a new world
@@ -75,27 +87,9 @@ public class Overworld : Spatial {
 		Cartographer cart = new Cartographer();
 		
 		cart.GenerateWorld(this);
-		dormantCells = cart.cells;
-		dormantItems = cart.items;
-		dormantActors = cart.actors;
-
-		DebugInit();
-	}
-
-	// This can go away once player is moving around in world.
-	Camera debugCam;
-	public void DebugInit(){
-		//debugCam = new Camera();
-		//AddChild(debugCam);
-		InspectWorld();
-	}
-
-	public void InspectWorld(){
-		//GD.Print("Dormant cells: " + dormantCells.Count);
-		TerrainCellData terrainDat = dormantCells[0];
-		//GD.Print("Cell[0] blocks: " + terrainDat.blocks.Count);
-		ActorData playerDat = dormantActors[0];
-		//GD.Print("Dormant actor: " + playerDat);
+		cellsData = cart.cells;
+		itemsData = cart.items;
+		actorsData = cart.actors;
 	}
 
 	private int NextActorId(){
@@ -128,32 +122,6 @@ public class Overworld : Spatial {
 		return null;
 	}
 
-	/* Returns id for given TerrainCell coordinates,
-	 or -1 for invalid coordinates */
-	public int CoordsToCellId(int x, int y){
-		if(y < 0 || y >= WorldHeight || x < 0 || x >= WorldWidth){
-			//GD.Print("Invalid coords:" + x + ", " + y);
-			return -1;
-		}
-		return y * WorldWidth + x;
-	}
-
-	/* Returns id for given TerrainCell coordinates,
-	 or -1 for invalid coordinates */
-	public int CoordsToCellId(Vector2 coords){
-		int x = (int)coords.x;
-		int y = (int)coords.y;
-		return CoordsToCellId(x, y);
-	}
-
-	/*
-		Determine what cell a given position falls in.
-	*/
-	public int PositionToCellId(Vector2 pos){
-		//GD.Print("Overworld.PositionToCellId not implemented");
-		return -1;
-	}
-
 	public int GetWorldWidth(){
 		return WorldWidth;
 	}
@@ -162,23 +130,26 @@ public class Overworld : Spatial {
 		return WorldHeight;
 	}
 
-	public int GetCellSize(){
-		return CellSize;
-	}
-
-  public Treadmill GetTreadmillById(int treadmillId){
-  	foreach(Treadmill treadmill in treadmills){
-  		if(treadmill.id == treadmillId){
-  			return treadmill;
-  		}
-  	}
-  	return null;
-  }
-
 	public void UpdateTreadmills(float delta){
 		foreach(Treadmill treadmill in treadmills){
 			treadmill.Update(delta);
 		}
+	}
+
+	//############################################################################
+	//#								Cell access and  management										             #
+	//############################################################################	
+
+	public TerrainCell RequestCell(Vector2 coords){
+		return null;
+	}
+
+	public void ReleaseCell(Vector2 coords){
+
+	}
+
+	public int GetCellSize(){
+		return CellSize;
 	}
 
 	// Size of each block used in gridmaps
@@ -202,11 +173,11 @@ public class Overworld : Spatial {
 			//GD.Print("Overworld.CellUsers: Invalid cellID:" + cellId);
 			return new List<Treadmill>();
 		}
-		if(!activeCells.ContainsKey(cellId)){
+		if(!cells.ContainsKey(cellId)){
 			//GD.Print("Overworld.CellUsers: Cell not active:" + cellId);
 			return new List<Treadmill>();	
 		}
-		TerrainCell cell = activeCells[cellId];
+		TerrainCell cell = cells[cellId];
 		Vector2 coords = cell.coords;
 
 		List<Treadmill> users = new List<Treadmill>();
@@ -218,31 +189,160 @@ public class Overworld : Spatial {
 		return users;	
 	}
 
-	/*
-		Instanciate item from an inventory. (Or projectiles from a weapon)
-	*/
-	public Item DropItem(ItemData data){
-		return null;
+	public Vector2 PositionToCoords(Vector3 position){
+		return new Vector2(-1, -1);
 	}
 
-	public TerrainCell RequestCell(Vector2 coords){
-		//TODO
-		return null;
+	public int PositionToCellId(Vector3 position){
+		return -1;
 	}
 
-	public void ReleaseCell(Vector2 coords){
-		// TODO
+	public int CoordsToCellId(Vector2 coords){
+		int x = (int)coords.x;
+		int y = (int)coords.y;
+		return CoordsToCellId(x, y);
 	}
 
-	public void StoreCell(int id){
-		// TODO
+	public int CoordsToCellId(int x, int y){
+		if(y < 0 || y >= WorldHeight || x < 0 || x >= WorldWidth){
+			//GD.Print("Invalid coords:" + x + ", " + y);
+			return -1;
+		}
+		return y * WorldWidth + x;
 	}
 
-	/*
-			########################################################################
-														Session interactions
-			########################################################################
-	*/
+	//############################################################################
+	//#								Rendering and Unrendering Entities                         #
+	//# An entity should be in the rendered or unrendered form, but not both.	   #
+	//############################################################################
+
+	public bool ActorExists(int id){
+		return actors.ContainsKey(id) || actorsData.ContainsKey(id);
+	}
+
+	// Returns rendered actor(or null), actually rendering it if necessary
+	public Actor RenderActor(int id){
+		if(actors.ContainsKey(id)){
+			return actors[id];
+		}
+		
+		if(!actorsData.ContainsKey(id)){
+			return null;
+		}
+
+		ActorData actorData = actorsData[id];
+		actorsData.Remove(id);
+
+		Actor actor = Actor.ActorFactory(actorData);
+		actors.Add(actor.worldId, actor);
+
+		return actor;
+	}
+
+	public ActorData UnrenderActor(int id){
+		if(actorsData.ContainsKey(id)){
+			return actorsData[id];
+		}
+
+		if(!actors.ContainsKey(id)){
+			return null;
+		}
+
+		Actor actor = actors[id];
+		ActorData actorData = actor.GetData();
+		actors.Remove(id);
+		actor.QueueFree();
+
+		actorsData.Add(id, actorData);
+		return actorData;
+	}
+
+	public bool ItemExists(int id){
+		return items.ContainsKey(id) || itemsData.ContainsKey(id);
+	}
+
+	public Item RenderItem(int id){
+		if(items.ContainsKey(id)){
+			return items[id];
+		}
+		
+		if(!itemsData.ContainsKey(id)){
+			return null;
+		}
+
+		ItemData itemData = itemsData[id];
+		itemsData.Remove(id);
+
+		Item item = Item.FromData(itemData);
+		items.Add(item.id, item);
+
+		return item;
+	}
+
+	public ItemData UnrenderItem(int id){
+		if(itemsData.ContainsKey(id)){
+			return itemsData[id];
+		}
+
+		if(!items.ContainsKey(id)){
+			return null;
+		}
+
+		Item item = items[id];
+		ItemData itemData = item.GetData();
+		items.Remove(id);
+		item.QueueFree();
+
+		itemsData.Add(id, itemData);
+		return itemData;
+	}
+
+	public bool CellExists(int id){
+		return items.ContainsKey(id) || itemsData.ContainsKey(id);
+	}
+
+	public TerrainCell RenderCell(int id){
+		if(cells.ContainsKey(id)){
+			return cells[id];
+		}
+		
+		if(!cellsData.ContainsKey(id)){
+			return null;
+		}
+
+		TerrainCellData cellData = cellsData[id];
+		cellsData.Remove(id);
+
+		TerrainCell cell = new TerrainCell(cellData);
+		cells.Add(cell.id, cell);
+
+		return cell;
+	}
+
+	public TerrainCellData UnrenderCell(int id){
+		if(cellsData.ContainsKey(id)){
+			return cellsData[id];
+		}
+
+		if(!cells.ContainsKey(id)){
+			return null;
+		}
+
+		TerrainCell cell = cells[id];
+		TerrainCellData cellData = cell.GetData();
+		cells.Remove(id);
+		cell.QueueFree();
+
+		cellsData.Add(id, cellData);
+		return cellData;
+	}
+
+
+	//############################################################################
+	//#								Session interactions																			 #
+	//############################################################################
+
+
 
 	public void HandleEvent(SessionEvent sessionEvent){
     if(sessionEvent.type == SessionEvent.Types.ActorDied ){
@@ -258,7 +358,8 @@ public class Overworld : Spatial {
   }
 
   public void TogglePause(){
-    foreach(Actor actor in activeActors){
+    foreach(int id in actors.Keys){
+      Actor actor = actors[id];
       actor.TogglePause();
     }
   }

@@ -867,6 +867,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     paused = false;
   }
   
+  // From data convenience method
+  public static Actor ActorFactory(ActorData data){
+    return ActorFactory(data.brain, data);
+  }
+
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
   public static Actor ActorFactory(Brains brain = Brains.Player1, ActorData data = null){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");

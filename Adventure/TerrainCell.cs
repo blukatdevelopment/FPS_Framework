@@ -10,31 +10,17 @@ public class TerrainCell : GridMap{
 	public Vector2 coords;
 	public int cellSize;
 	public List<TerrainBlock> blockData;
-	public Overworld world;
 
 	public List<Actor> packedActors;
 	public List<Item> packedItems;
 
-	public TerrainCell(Overworld world, int cellSize = 1){
-		BaseInit(world);
+	public TerrainCell(TerrainCellData data, int cellSize = 1){
+		Theme = TerrainBlock.GetTheme();
 		this.cellSize = cellSize;
-		this.blockData = new List<TerrainBlock>();
-	}
-
-	public TerrainCell(Overworld world, TerrainCellData data, int cellSize = 1){
-		BaseInit(world);
-		this.cellSize = cellSize;	
 		LoadData(data);
 	}
 
-	private void BaseInit(Overworld world){
-		this.world = world;
-		Theme = TerrainBlock.GetTheme();
-		CellSize = Overworld.BaseBlockSize();
-	}
-
-
-	// Return width of this  in world unitys
+	// Return width of this cell in world units
 	public float GetWidth(){
 		return CellSize.x * cellSize;
 	}

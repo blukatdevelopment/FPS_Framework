@@ -154,8 +154,6 @@ public class Util{
     return new Vector2(x, y);
   }
 
-
-
   public static List<Vector2> CoordsInRadius(Vector2 center, int radius){
     List<Vector2> ret = new List<Vector2>();
     for(int i = -radius; i <= radius; i++){
@@ -169,121 +167,22 @@ public class Util{
   }
 
   /*
-    Map cell coordinates to 3D positions based off of 
-    the center's position and scale of each cell.
+    Assuming a world starting at coords [0,0] and going to [size-1, size-1],
+    determine what coordinates a specific position falls inside. Doesn't care
+    about bounds.
   */
-  public static System.Collections.Generic.Dictionary<Vector2, Vector3> GetCellMap(
-      List<Vector2> cells, // Coordinates of each cell getting assigned a position
-      Vector2 centerCoords,
-      Vector3 centerPos, // Make sure this matches either center of cell or top left corner
-      float scale // Width and length of each cell
+  public static Vector2 AbsoluteCoordsFromPosition(
+    Vector3 position, 
+    float scale // Width/height of cells
   ){
-    System.Collections.Generic.Dictionary<Vector2, Vector3> ret;
-    ret = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
+    int x = (int)position.x;
+    int z = (int)position.z;
 
-    foreach(Vector2 cell in cells){
-      Vector2 offset = cell - centerCoords;
-      //GD.Print(cell + " VS " + centerCoords + ":" + offset);
-      float cellX = centerPos.x  + (scale * offset.x);
-      float cellZ = centerPos.z  + (scale * offset.y);
-      float cellY = centerPos.y;
-      Vector3 cellPos = new Vector3(cellX, cellY, cellZ);
-      ret.Add(cell, cellPos);
-    }
-
-    return ret;
-
+    x /= (int)scale;
+    z /= (int)scale;
+    return new Vector2(x, z);
   }
 
-  /*
-    Recenter map in new position
-  */
-  public static System.Collections.Generic.Dictionary<Vector2, Vector3> RecenterMap(
-    Vector2 center,
-    System.Collections.Generic.Dictionary<Vector2, Vector3> map,
-    Vector3 destination
-  ){
-    GD.Print("Recenter start");
-    if(!map.ContainsKey(center)){
-      GD.Print("RecenterMap: Key " + center + " not found");
-      return map;
-    }
-
-    Vector3 centerPos = map[center];
-    Vector3 translation = destination - centerPos;
-    return TranslateMap(map, translation);
-  }
-
-
-  /*
-    Apply translation to every value in dictionary.
-  */
-  public static System.Collections.Generic.Dictionary<Vector2, Vector3> TranslateMap(
-    System.Collections.Generic.Dictionary<Vector2, Vector3> map,
-    Vector3 translation
-  ){
-    string debug = "Util.TranslateMap:";
-    System.Collections.Generic.Dictionary<Vector2, Vector3> translatedMap;
-    translatedMap = new System.Collections.Generic.Dictionary<Vector2, Vector3>();
-
-    foreach(Vector2 key in map.Keys){
-      GD.Print("Translating  " + map[key] + " to " + map[key] + translation);
-      translatedMap.Add(key, map[key] + translation);
-    }
-
-    return translatedMap;
-  }
-
-  /* Given coords, position, and scale of center cell, determine coordinates of
-     an arbitrary position.
-  */
-  public static Vector2 PosToCoords(
-    Vector3 centerPos,    // Position dead center of the center cell
-    Vector2 centerCoords, // Coordinates of center cell
-    float centerScale,    // Size of center position in x and z dimensions
-    Vector3 pos           // Arbitrary position
-  ){
-    string debug = "[Util.PosToCoords]\n";
-    debug += "centerPos: " + centerPos + "\n";
-    debug += "centerCoords: " + centerCoords + "\n";
-    debug += "centerScale: " + centerScale + "\n";
-    debug += "pos: " + pos + "\n";
-    
-
-    float halfScale = centerScale/2f;
-
-
-    // Check if position is inside center cell. If so, return center coords.
-    Vector3 cMinBounds = centerPos - new Vector3(halfScale, 0, halfScale);
-    Vector3 cMaxBounds = centerPos + new Vector3(halfScale, centerScale, halfScale);
-    if(InBounds(cMinBounds, cMaxBounds, pos)){
-      debug += "returning " + centerCoords;
-      //GD.Print(debug);
-      return centerCoords;
-    }
-    else{
-      debug += "Not within  " + cMinBounds + " and " + cMaxBounds + "\n";
-    }
-
-    // Get offset in full cell widths
-    Vector3 posOffset = pos - centerPos;
-    int xCoordsOffset = (int)pos.x / (int)centerScale; 
-    int yCoordsOffset = (int)pos.z / (int)centerScale;
-
-    // Check if remainder offset is large enough to leave center cell
-    int xOffsetRemainder = (int)posOffset.x % (int)centerScale;
-    int yOffsetRemainder = (int)posOffset.z % (int)centerScale;
-    
-    // If that remainder is large enough, add it to to offset
-    xCoordsOffset += xOffsetRemainder/(int)halfScale;
-    yCoordsOffset += yOffsetRemainder/(int)halfScale;
-
-    Vector2 coordsOffset = new Vector2(xCoordsOffset, yCoordsOffset);
-
-    debug += "returning " + (centerCoords + coordsOffset);
-    //GD.Print(debug); 
-    return centerCoords + coordsOffset;
-  }
 
   /*   Returns true if pos is between min and max */
   public static bool InBounds(Vector3 min, Vector3 max, Vector3 pos){
