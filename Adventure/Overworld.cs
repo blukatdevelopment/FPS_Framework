@@ -140,17 +140,53 @@ public class Overworld : Spatial {
 	//#								Cell access and  management										             #
 	//############################################################################	
 
+	// Returns rendered cell, rendering if necessary. Returns null for invalid
+	// coords. Request/Release are high-level methods used by treadmills.
 	public TerrainCell RequestCell(Vector2 coords){
-		return null;
+		// TODO: Destroy invisible wall if it exists.
+		return RenderCell(coords);
 	}
 
+	// Notes that at least one treadmill is no longer using this cell.
 	public void ReleaseCell(Vector2 coords){
-
+		Unrender(coords); // TODO: delay unrendering
 	}
 
+	// Size of cell in blocks
 	public int GetCellSize(){
 		return CellSize;
 	}
+ 
+ 	// Scale of cell in world units.
+	public static float GetCellScale(){
+			return CellSize * BaseBlockSize().x;
+	}
+
+	public List<ActorData> ActorsDataAtCoords(Vector2 coords){
+		List<ActorData> ret = new List<ActorData>();
+		float scale = GetCellScale();
+		foreach(int id in actorsData.Keys){
+			ActorData actorData = actorsData[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(actorData.pos, scale);
+			if(coords == actualCoords){
+				ret.Add(actorData);
+			}
+		}
+		return ret;
+	}
+
+	public List<ItemData> ItemDataAtCoords(Vector2 coords){
+		List<ItemData> ret = new List<ItemData>();
+		float scale = GetCellScale();
+		foreach(int id in itemsData.Keys){
+			ItemData itemData = itemsData[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(itemData.pos, scale);
+			if(coords == actualCoords){
+				ret.Add(itemData);
+			}
+		}
+		return ret;
+	}	
 
 	// Size of each block used in gridmaps
 	public static Vector3 BaseBlockSize(){

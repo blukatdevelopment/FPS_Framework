@@ -37,7 +37,7 @@ public class AdventureTest {
     world.Pause();
 
     WorldWasMadeCorrectSize();
-    TestAbsoluteCoordsFromPosition();
+    //TestAbsoluteCoordsFromPosition();
 
     Test.PrintFails();
   }
@@ -58,26 +58,26 @@ public class AdventureTest {
     Test.Assert(max != null, "2: world has maximum corner cell.");
   }
 
-  public void TestAbsoluteCoordsFromPosition(){
-    GD.Print("TestAbsoluteCoordsFromPosition");
+  // public void TestAbsoluteCoordsFromPosition(){
+  //   GD.Print("TestAbsoluteCoordsFromPosition");
 
-    Vector3 position = new Vector3(0, 0, 0);
-    float scale = 100f;
-    Vector2 result = Util.AbsoluteCoordsFromPosition(position, scale);
-    Test.Assert(result == new Vector2(0, 0), "1: [0, 0]");
+  //   Vector3 position = new Vector3(0, 0, 0);
+  //   float scale = 100f;
+  //   Vector2 result = Util.AbsoluteCoordsFromPosition(position, scale);
+  //   Test.Assert(result == new Vector2(0, 0), "1: [0, 0]");
 
-    position = new Vector3(100, 0, 0);
-    result = Util.AbsoluteCoordsFromPosition(position, scale);
-    Test.Assert(result == new Vector2(1, 0), "2: [1, 0]");
+  //   position = new Vector3(100, 0, 0);
+  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
+  //   Test.Assert(result == new Vector2(1, 0), "2: [1, 0]");
 
-    position = new Vector3(150, 0, 0);
-    result = Util.AbsoluteCoordsFromPosition(position, scale);
-    Test.Assert(result == new Vector2(1,0), "3: [1, 0] with partial");
+  //   position = new Vector3(150, 0, 0);
+  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
+  //   Test.Assert(result == new Vector2(1,0), "3: [1, 0] with partial");
 
-    position = new Vector3(150, 0, 0);
-    result = Util.AbsoluteCoordsFromPosition(position, scale);
-    Test.Assert(result == new Vector2(-1,0), "4: [1, 0] with partial");    
+  //   position = new Vector3(150, 0, 0);
+  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
+  //   Test.Assert(result == new Vector2(-1,0), "4: [1, 0] with partial");    
 
-  }
+  // }
 
 }

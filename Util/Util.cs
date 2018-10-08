@@ -171,7 +171,7 @@ public class Util{
     determine what coordinates a specific position falls inside. Doesn't care
     about bounds.
   */
-  public static Vector2 AbsoluteCoordsFromPosition(
+  public static Vector2 CoordsFromPosition(
     Vector3 position, 
     float scale // Width/height of cells
   ){
