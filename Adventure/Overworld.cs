@@ -228,7 +228,8 @@ public class Overworld : Spatial {
 	}
 
 	public Vector2 PositionToCoords(Vector3 position){
-		return new Vector2(-1, -1);
+		float scale = GetCellScale();
+		return Util.CoordsFromPosition(position, scale);
 	}
 
 	public int PositionToCellId(Vector3 position){

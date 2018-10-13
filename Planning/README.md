@@ -44,8 +44,8 @@ Things that need to be done:
 The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
 
 ## Overworld
-- Determine cell coords, given position.
-- Determine cell position, given coords
+- DONE Determine cell coords, given position.
+- DONE Determine cell position, given coords
 - Load cell into existence 
 - Assign human-controlled Actors a treadmill
 - Convert terrain/actors/items to rendered form when requested

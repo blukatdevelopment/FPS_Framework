@@ -169,7 +169,7 @@ public class Util{
   /*
     Assuming a world starting at coords [0,0] and going to [size-1, size-1],
     determine what coordinates a specific position falls inside. Doesn't care
-    about bounds.
+    about world bounds. [0, 0, 0] should be at the center of [0, 0]
   */
   public static Vector2 CoordsFromPosition(
     Vector3 position, 
@@ -181,6 +181,27 @@ public class Util{
     x /= (int)scale;
     z /= (int)scale;
     return new Vector2(x, z);
+  }
+
+  // Returns the center position of a cell, given position.
+  public static Vector3 CellPositionFromCoords( 
+    Vector2 coords, 
+    float scale, // Width/height of cells in world units
+    bool applyOffset = false // To get minimum corner instead of center
+  ){
+    float x = coords.x * scale;
+    float y = 0f; // 0 All positions aught to start at 0
+    float z = coords.y * scale;
+
+    Vector3 ret = new Vector3(x, y, z);
+
+    Vector3 offset = new Vector3(scale/2f, 0, scale/2f);
+
+    if(applyOffset){
+      ret -= offset;
+    }
+
+    return ret;
   }
 
 

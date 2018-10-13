@@ -38,6 +38,7 @@ public class AdventureTest {
 
     //WorldWasMadeCorrectSize();
     TestCoordsFromPosition();
+    TestCellPositionFromCoords();
 
     Test.PrintFails();
   }
@@ -60,6 +61,7 @@ public class AdventureTest {
 
   public void TestCoordsFromPosition(){
     GD.Print("TestCoordsFromPosition");
+    
     float scale = 100f;
     Vector3[] positions = new Vector3[] {
       new Vector3(0, 0, 0),
@@ -92,6 +94,36 @@ public class AdventureTest {
       string output = (i + 1) + ". Expected " + expected + " and got " + actual; 
       Test.Assert(actual == expected, output);      
     }
+  }
+
+
+  public void TestCellPositionFromCoords(){
+    GD.Print("TestCellPositionFromCoords");
+    float scale = 100f;
+
+    Vector2[] coords = new Vector2[] {
+      new Vector2(0, 0),
+      new Vector2(1, 0),
+      new Vector2(0, 1),
+      new Vector2(-1, 0),
+      new Vector2(0, -1)
+    };
+
+    Vector3[] expecteds = new Vector3[] {
+      new Vector3(0, 0, 0),
+      new Vector3(100, 0, 0),
+      new Vector3(0, 0, 100),
+      new Vector3(-100, 0, 0),
+      new Vector3(0, 0, -100)
+    };
+
+    for(int i = 0; i < coords.Length; i++){
+      Vector3 expected = expecteds[i];
+      Vector3 actual = Util.CellPositionFromCoords(coords[i], scale);
+      string output = (i + 1) + ". Expected " + expected + " and got " + actual;
+      Test.Assert(actual == expected, output);
+    }
+
   }
 
 }
