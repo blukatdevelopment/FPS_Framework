@@ -76,8 +76,7 @@ public class Overworld : Spatial {
 		string debug = "SinglePlayerInit\n";
 
 		InitWorld();
-
-		int playerId = 1; // First actor created should be the player
+		RenderCell(0);
 
 	}
 
@@ -274,6 +273,7 @@ public class Overworld : Spatial {
 
 		Actor actor = Actor.ActorFactory(actorData);
 		actors.Add(actor.worldId, actor);
+		AddChild(actor);
 
 		return actor;
 	}
@@ -349,11 +349,24 @@ public class Overworld : Spatial {
 			return null;
 		}
 
+		// Actually render the cell
 		TerrainCellData cellData = cellsData[id];
 		cellsData.Remove(id);
 
-		TerrainCell cell = new TerrainCell(cellData);
+		TerrainCell cell = new TerrainCell(cellData, CellSize, BaseBlockSize());
+		Vector3 cellPos = Util.CellPositionFromCoords(cell.coords, GetCellScale());
+		cell.SetCenteredPosition(cellPos);
 		cells.Add(cell.id, cell);
+		AddChild(cell);
+
+		// Render the cell's contents
+		foreach(ActorData actor in ActorsDataAtCoords(cell.coords)){
+			RenderActor(actor.id);
+		}
+
+		foreach(ItemData item in ItemDataAtCoords(cell.coords)){
+			RenderItem(item.id);
+		}
 
 		return cell;
 	}

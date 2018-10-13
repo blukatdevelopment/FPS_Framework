@@ -14,9 +14,10 @@ public class TerrainCell : GridMap{
 	public List<Actor> packedActors;
 	public List<Item> packedItems;
 
-	public TerrainCell(TerrainCellData data, int cellSize = 1){
+	public TerrainCell(TerrainCellData data, int cellSize, Vector3 baseBlockSize){
 		Theme = TerrainBlock.GetTheme();
 		this.cellSize = cellSize;
+		CellSize = baseBlockSize;
 		LoadData(data);
 	}
 
@@ -65,16 +66,22 @@ public class TerrainCell : GridMap{
 		}
 	}
 
+	public void SetCenteredPosition(Vector3 pos){
+		Vector3 centered = CenteredPos(pos);
+		GD.Print("Setting cell to centered position" + centered);
+		Translation = centered;
+	}
+
 	public Vector3 CenteredPos(Vector3 pos){
 		float effectiveScale = GetWidth();
-		Vector3 offset = new Vector3(effectiveScale/2, 0, effectiveScale/2);
+		Vector3 offset = new Vector3(effectiveScale/2f, 0, effectiveScale/2f);
 		return pos - offset;
 	}
 
 
 	// Returns center of this terrain cell
 	public Vector3 GetPos(){
-		float effectiveScale = cellSize * CellSize.x; //Assume cubeic grid
+		float effectiveScale = cellSize * CellSize.x; //Assume cubic grid
 		float halfScale = effectiveScale/2f;
 		Vector3 offset = new Vector3(halfScale, halfScale, halfScale);
 		return Translation + offset;

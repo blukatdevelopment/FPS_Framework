@@ -102,7 +102,7 @@ public class Cartographer {
 		actors = new System.Collections.Generic.Dictionary<int, ActorData>();
 		
 		// Create player 1
-		ActorData dat = GenerateActor(GetEmptyPosition(0));
+		ActorData dat = GenerateActor(new Vector3(0f, 10f, 0f));
 		dat.brain = Actor.Brains.Player1;
 		actors.Add(dat.id, dat);
 	}

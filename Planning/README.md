@@ -46,7 +46,7 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 ## Overworld
 - DONE Determine cell coords, given position.
 - DONE Determine cell position, given coords
-- Load cell into existence 
+- DONE Load cell into existence 
 - Assign human-controlled Actors a treadmill
 - Convert terrain/actors/items to rendered form when requested
 - Convert terrain/actors/items to unrendered form when released and unused

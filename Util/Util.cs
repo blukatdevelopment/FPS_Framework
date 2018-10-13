@@ -186,20 +186,13 @@ public class Util{
   // Returns the center position of a cell, given position.
   public static Vector3 CellPositionFromCoords( 
     Vector2 coords, 
-    float scale, // Width/height of cells in world units
-    bool applyOffset = false // To get minimum corner instead of center
+    float scale // Width/height of cells in world units
   ){
     float x = coords.x * scale;
     float y = 0f; // 0 All positions aught to start at 0
     float z = coords.y * scale;
 
     Vector3 ret = new Vector3(x, y, z);
-
-    Vector3 offset = new Vector3(scale/2f, 0, scale/2f);
-
-    if(applyOffset){
-      ret -= offset;
-    }
 
     return ret;
   }
