@@ -173,7 +173,7 @@ public class Util{
   */
   public static Vector2 CoordsFromPosition(
     Vector3 position, 
-    float scale // Width/height of cells
+    float scale // Width/height of cells in world units
   ){
     int x = (int)position.x;
     int z = (int)position.z;

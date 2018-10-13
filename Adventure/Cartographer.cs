@@ -104,7 +104,6 @@ public class Cartographer {
 		// Create player 1
 		ActorData dat = GenerateActor(GetEmptyPosition(0));
 		dat.brain = Actor.Brains.Player1;
-
 		actors.Add(dat.id, dat);
 	}
 

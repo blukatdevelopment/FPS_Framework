@@ -144,12 +144,14 @@ public class Overworld : Spatial {
 	// coords. Request/Release are high-level methods used by treadmills.
 	public TerrainCell RequestCell(Vector2 coords){
 		// TODO: Destroy invisible wall if it exists.
-		return RenderCell(coords);
+		int id = CoordsToCellId(coords);
+		return RenderCell(id);
 	}
 
 	// Notes that at least one treadmill is no longer using this cell.
 	public void ReleaseCell(Vector2 coords){
-		Unrender(coords); // TODO: delay unrendering
+		int id = CoordsToCellId(coords);
+		UnrenderCell(id); // TODO: delay unrendering
 	}
 
 	// Size of cell in blocks

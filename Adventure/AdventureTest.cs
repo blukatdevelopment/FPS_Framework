@@ -36,8 +36,8 @@ public class AdventureTest {
     // Pause world to allow updates to be run arbitrarily, and not in real time.
     world.Pause();
 
-    WorldWasMadeCorrectSize();
-    //TestAbsoluteCoordsFromPosition();
+    //WorldWasMadeCorrectSize();
+    TestCoordsFromPosition();
 
     Test.PrintFails();
   }
@@ -58,26 +58,40 @@ public class AdventureTest {
     Test.Assert(max != null, "2: world has maximum corner cell.");
   }
 
-  // public void TestAbsoluteCoordsFromPosition(){
-  //   GD.Print("TestAbsoluteCoordsFromPosition");
+  public void TestCoordsFromPosition(){
+    GD.Print("TestCoordsFromPosition");
+    float scale = 100f;
+    Vector3[] positions = new Vector3[] {
+      new Vector3(0, 0, 0),
+      new Vector3(100, 0, 0),
+      new Vector3(0, 0, 100),
+      new Vector3(0, 100, 0),
+      new Vector3(-100, 0, 0),
+      new Vector3(0, 0, -100),
+      new Vector3(50, 0, 50),
+      new Vector3(-50, 0, -50),
+      new Vector3(150, 0, 150)
+    };
 
-  //   Vector3 position = new Vector3(0, 0, 0);
-  //   float scale = 100f;
-  //   Vector2 result = Util.AbsoluteCoordsFromPosition(position, scale);
-  //   Test.Assert(result == new Vector2(0, 0), "1: [0, 0]");
+    Vector2[] expecteds = new Vector2[] {
+      new Vector2(0, 0),
+      new Vector2(1, 0),
+      new Vector2(0, 1),
+      new Vector2(0, 0),
+      new Vector2(-1, 0),
+      new Vector2(0, -1),
+      new Vector2(0, 0),
+      new Vector2(0, 0),
+      new Vector2(1, 1)
+    };
 
-  //   position = new Vector3(100, 0, 0);
-  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
-  //   Test.Assert(result == new Vector2(1, 0), "2: [1, 0]");
-
-  //   position = new Vector3(150, 0, 0);
-  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
-  //   Test.Assert(result == new Vector2(1,0), "3: [1, 0] with partial");
-
-  //   position = new Vector3(150, 0, 0);
-  //   result = Util.AbsoluteCoordsFromPosition(position, scale);
-  //   Test.Assert(result == new Vector2(-1,0), "4: [1, 0] with partial");    
-
-  // }
+    for(int i = 0; i < positions.Length; i++){
+      Vector3 pos = positions[i];
+      Vector2 actual = Util.CoordsFromPosition(pos, scale);
+      Vector2 expected = expecteds[i];
+      string output = (i + 1) + ". Expected " + expected + " and got " + actual; 
+      Test.Assert(actual == expected, output);      
+    }
+  }
 
 }

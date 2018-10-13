@@ -48,7 +48,7 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     InitJukeBox();
     InitSettings();
-    //PerformTests();
+    PerformTests();
   }
 
   public void PerformTests(){
