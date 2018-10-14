@@ -355,6 +355,7 @@ public class Overworld : Spatial {
 
 		Item item = Item.FromData(itemData);
 		items.Add(item.id, item);
+		AddChild(item);
 
 		return item;
 	}

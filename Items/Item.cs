@@ -195,11 +195,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.type = this.type;
     dat.weight = this.weight;
 
-    // FLOATS
-    Vector3 position = GetTranslation();
-    dat.floats.Add(position.x); 
-    dat.floats.Add(position.y);
-    dat.floats.Add(position.z);
+    
 
     // STRINGS
     dat.strings.Add(name);
@@ -210,20 +206,15 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.ints.Add(weight);
 
     // Position
-    dat.pos = Session.WorldPosition(this);
+    dat.pos = GetTranslation();
 
     return dat;
   }
 
   // Should remove every element added by ItemReadData
   public void ItemReadData(ItemData dat){
-    // FLOATS
-    float x = dat.floats[0];
-    float y = dat.floats[1];
-    float z = dat.floats[2];
 
-    SetTranslation( new Vector3(x, y, z));
-    dat.floats.RemoveRange(0, 3);
+    SetTranslation( dat.pos);
 
     // STRINGS
     name = dat.strings[0];

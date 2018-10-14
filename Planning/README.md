@@ -48,7 +48,7 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - DONE Determine cell position, given coords
 - DONE Load cell into existence 
 - DONE Assign human-controlled Actors a treadmill
-- Convert terrain/actors/items to rendered form when requested
+- DONE Convert terrain/actors/items to rendered form when requested
 - Convert terrain/actors/items to unrendered form when released and unused
 
 ## Treadmill
@@ -57,6 +57,6 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - Make sure treadmill knows when it is using a cell
 
 ## Auth service
-- Build auth service in order repo.
+- Build auth service in other repo.
 - Set up outward-facing nodejs server to offer this service.
 - Build static Util method in this project to attempt to connect and use configured auth service endpoint.

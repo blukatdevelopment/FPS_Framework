@@ -83,10 +83,10 @@ public class Cartographer {
 
 	public void GenerateItems(){
 		items = new System.Collections.Generic.Dictionary<int, ItemData>();
-		for(int i = 0; i < 10; i++){
-			ItemData item = GenerateItem(Item.Types.Rifle, "rifle", new Vector3(0, i, 0));
-			//items.Add(item.id, item);
-		}
+
+		// Add a single rifle beside player 1
+		ItemData item = GenerateItem(Item.Types.Rifle, "rifle", new Vector3(0, 15f, 0));
+		items.Add(item.id, item);
 	}
 
 	// Place an Item 
