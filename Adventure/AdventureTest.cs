@@ -80,11 +80,11 @@ public class AdventureTest {
       new Vector2(1, 0),
       new Vector2(0, 1),
       new Vector2(0, 0),
-      new Vector2(-1, 0),
-      new Vector2(0, -1),
       new Vector2(0, 0),
       new Vector2(0, 0),
-      new Vector2(1, 1)
+      new Vector2(1, 1),
+      new Vector2(0, 0),
+      new Vector2(2, 2)
     };
 
     for(int i = 0; i < positions.Length; i++){

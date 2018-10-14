@@ -52,9 +52,9 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - DONE Convert terrain/actors/items to unrendered form when released and unused
 
 ## Treadmill
-- Make sure treadmill requests cells appropriately
-- Make sure treadmill releases cells appropriately
-- Make sure treadmill knows when it is using a cell
+- DONE Make sure treadmill requests cells appropriately
+- DONE Make sure treadmill releases cells appropriately
+- DONE Make sure treadmill knows when it is using a cell
 
 ## Auth service
 - Build auth service in other repo.

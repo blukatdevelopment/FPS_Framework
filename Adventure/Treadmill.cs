@@ -1,5 +1,5 @@
 /*
-	Requests and releases cells as they enter and leave a radius around the player.
+	Requests and releases cells as they enter and leave a radius around the actor.
 */
 using Godot;
 using System;
@@ -55,17 +55,43 @@ public class Treadmill {
 		timer += delta;
 		if(timer >= timerMax){
 			timer = 0;
-			CheckPlayerPos();
+			FollowActor();
 		}
 	}
 
-	public void CheckPlayerPos(){
-		// TODO: check if player left cell. If so, release and request some cells.
+	public void FollowActor(){
+		Vector2 actorCoords = Util.CoordsFromPosition(actor.Translation, scale);
+		
+		if(actorCoords == currentCoords){
+			GD.Print("Player is at " + actor.Translation + ", which is still in " + actorCoords);
+			return; // No need to release or request cells
+		}
+
+		GD.Print("Actor has escaped from " + currentCoords + " to " + actorCoords);
+
+		List<Vector2> oldCells = Util.CoordsInRadius(currentCoords, radius);
+		List<Vector2> newCells = Util.CoordsInRadius(actorCoords, radius);
+
+		foreach(Vector2 cell in oldCells){
+			if(!newCells.Contains(cell)){
+				GD.Print("Releasing " + cell);
+				world.ReleaseCell(cell);
+			}
+		}
+
+		foreach(Vector2 cell in newCells){
+			world.RequestCell(cell);
+		}
+		currentCoords = actorCoords;
 	}
 
 	// Returns true if cell is in radius
 	public bool UsingCell(Vector2 coords){
-		// TODO: Check if cell in radius
-		return true;
+		foreach(Vector2 coord in Util.CoordsInRadius(currentCoords, radius)){
+			if(coords == coord){
+				return true;
+			}
+		}
+		return false;
 	}
 }

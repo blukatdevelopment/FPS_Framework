@@ -178,8 +178,12 @@ public class Util{
     int x = (int)position.x;
     int z = (int)position.z;
 
+    x += (int)(scale/2f);
+    z += (int)(scale/2f);
+
     x /= (int)scale;
     z /= (int)scale;
+
     return new Vector2(x, z);
   }
 
