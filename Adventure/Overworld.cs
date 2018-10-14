@@ -29,6 +29,7 @@ public class Overworld : Spatial {
 	public const int WorldWidth = 50;
 	public const int WorldHeight = 50;
 	public const int CellSize = 50; // x, y, z length in TerrainBlocks.
+	public const int DefaultTreadmillRadius = 1;
 
 	private int nextActorId, nextItemId; // auto-incremented ids.
 
@@ -76,7 +77,26 @@ public class Overworld : Spatial {
 		string debug = "SinglePlayerInit\n";
 
 		InitWorld();
-		RenderCell(0);
+		
+		int playerId = GetActorByBrain(Actor.Brains.Player1);
+		if(playerId == -1 || !actorsData.ContainsKey(playerId)){
+			GD.Print("Player1 does not exist. Aborting.");
+			return;
+		}
+		
+		// Render cell the player's in.
+		ActorData playerData = actorsData[playerId];
+		float scale = GetCellScale();
+		Vector2 startingCoords = Util.CoordsFromPosition(playerData.pos, scale);
+		RequestCell(startingCoords);
+
+		// Find the now existing actor
+		if(!actors.ContainsKey(playerId)){
+			GD.Print("Player1 was not rendered properly");
+			return;
+		}
+
+		CreateTreadmill(actors[playerId]);
 
 	}
 
@@ -117,8 +137,13 @@ public class Overworld : Spatial {
 	public ItemData CreateItem(){
 		int id = NextItemId();
 		
-		//GD.Print("Overworld.CreateItem not implemented");
 		return null;
+	}
+
+	public Treadmill CreateTreadmill(Actor actor){
+		Treadmill treadmill = new Treadmill(this, DefaultTreadmillRadius, actor);
+		treadmills.Add(treadmill);
+		return treadmill;
 	}
 
 	public int GetWorldWidth(){
@@ -253,6 +278,22 @@ public class Overworld : Spatial {
 	//#								Rendering and Unrendering Entities                         #
 	//# An entity should be in the rendered or unrendered form, but not both.	   #
 	//############################################################################
+
+	public int GetActorByBrain(Actor.Brains brain){
+		foreach(int key in actors.Keys){
+			if(actors[key].brainType == brain){
+				return key;
+			}
+		}
+
+		foreach(int key in actorsData.Keys){
+			if(actorsData[key].brain == brain){
+				return key;
+			}
+		}
+
+		return -1;
+	}
 
 	public bool ActorExists(int id){
 		return actors.ContainsKey(id) || actorsData.ContainsKey(id);

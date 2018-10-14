@@ -11,19 +11,27 @@ public class Treadmill {
 	public float timerMax = 0.5f;
 
 	public Overworld world;
-	public int id; // Should match client's peerId in multiplayer. -1 for offline play.
 	public Actor actor; // Actor to monitor.
 	public int radius; // How many layers of Cells should be  modified.
 	public bool paused = false;
+	public Vector2 currentCoords;
+	public float scale;
 
-	/*
-		id is -1 for offline play
-	*/
-	public Treadmill(int id, int radius, Actor actor){
-		this.id = id;
+	public Treadmill(Overworld world, int radius, Actor actor){
 		this.world = world;
 		this.radius = radius;
 		this.actor = actor;
+		this.scale = Overworld.GetCellScale();
+		this.currentCoords = Util.CoordsFromPosition(actor.Translation, scale);
+		InitialRequests();
+	}
+
+	public void InitialRequests(){
+		List<Vector2> coordsInRadius = Util.CoordsInRadius(currentCoords, radius);
+		foreach(Vector2 coords in coordsInRadius){
+			world.RequestCell(coords);
+		}
+	
 	}
 
 	public void Pause(){

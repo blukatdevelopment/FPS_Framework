@@ -68,7 +68,6 @@ public class TerrainCell : GridMap{
 
 	public void SetCenteredPosition(Vector3 pos){
 		Vector3 centered = CenteredPos(pos);
-		GD.Print("Setting cell to centered position" + centered);
 		Translation = centered;
 	}
 
