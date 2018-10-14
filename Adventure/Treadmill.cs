@@ -31,7 +31,13 @@ public class Treadmill {
 		foreach(Vector2 coords in coordsInRadius){
 			world.RequestCell(coords);
 		}
-	
+	}
+
+	public void ReleaseAll(){
+		List<Vector2> coordsInRadius = Util.CoordsInRadius(currentCoords, radius);
+		foreach(Vector2 coords in coordsInRadius){
+			world.ReleaseCell(coords);
+		}	
 	}
 
 	public void Pause(){

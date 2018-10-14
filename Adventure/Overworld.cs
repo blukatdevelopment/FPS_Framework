@@ -97,7 +97,6 @@ public class Overworld : Spatial {
 		}
 
 		CreateTreadmill(actors[playerId]);
-
 	}
 
 	/* Asks the cartographer to make a new world
@@ -144,6 +143,11 @@ public class Overworld : Spatial {
 		Treadmill treadmill = new Treadmill(this, DefaultTreadmillRadius, actor);
 		treadmills.Add(treadmill);
 		return treadmill;
+	}
+
+	public void DestroyTreadmill(Treadmill treadmill){
+		treadmills.Remove(treadmill);
+		treadmill.ReleaseAll();
 	}
 
 	public int GetWorldWidth(){
@@ -201,6 +205,19 @@ public class Overworld : Spatial {
 		return ret;
 	}
 
+	public List<Actor> ActorsAtCoords(Vector2 coords){
+		List<Actor> ret = new List<Actor>();
+		float scale = GetCellScale();
+		foreach(int id in actors.Keys){
+			Actor actor = actors[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(actor.Translation, scale);
+			if(coords == actualCoords){
+				ret.Add(actor);
+			}
+		}
+		return ret;
+	}
+
 	public List<ItemData> ItemDataAtCoords(Vector2 coords){
 		List<ItemData> ret = new List<ItemData>();
 		float scale = GetCellScale();
@@ -209,6 +226,19 @@ public class Overworld : Spatial {
 			Vector2 actualCoords = Util.CoordsFromPosition(itemData.pos, scale);
 			if(coords == actualCoords){
 				ret.Add(itemData);
+			}
+		}
+		return ret;
+	}	
+
+	public List<Item> ItemsAtCoords(Vector2 coords){
+		List<Item> ret = new List<Item>();
+		float scale = GetCellScale();
+		foreach(int id in items.Keys){
+			Item item = items[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(item.Translation, scale);
+			if(coords == actualCoords){
+				ret.Add(item);
 			}
 		}
 		return ret;
@@ -424,6 +454,17 @@ public class Overworld : Spatial {
 
 		TerrainCell cell = cells[id];
 		TerrainCellData cellData = cell.GetData();
+
+		foreach(Actor actor in ActorsAtCoords(cell.coords)){
+			GD.Print("Found actor " + actor);
+			UnrenderActor(actor.worldId);
+		}
+
+		foreach(Item item in ItemsAtCoords(cell.coords)){
+			GD.Print("Found item " + item);
+			UnrenderItem(item.id);
+		}
+
 		cells.Remove(id);
 		cell.QueueFree();
 

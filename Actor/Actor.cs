@@ -105,7 +105,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   public ActorData GetData(){
     //GD.Print("Actor.GetData not implemented");
-    return new ActorData();
+    ActorData data = new ActorData();
+    data.pos = Translation;
+    data.health = health;
+    data.healthMax = healthMax;
+    data.brain = brainType;
+    data.id = worldId;
+    data.name = name;
+    
+    return data;
   }
   
   public Item PrimaryItem(){

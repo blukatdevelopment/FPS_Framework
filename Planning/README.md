@@ -49,7 +49,7 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - DONE Load cell into existence 
 - DONE Assign human-controlled Actors a treadmill
 - DONE Convert terrain/actors/items to rendered form when requested
-- Convert terrain/actors/items to unrendered form when released and unused
+- DONE Convert terrain/actors/items to unrendered form when released and unused
 
 ## Treadmill
 - Make sure treadmill requests cells appropriately
