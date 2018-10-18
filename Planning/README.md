@@ -43,20 +43,25 @@ Things that need to be done:
 
 The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
 
-## Overworld
-- DONE Determine cell coords, given position.
-- DONE Determine cell position, given coords
-- DONE Load cell into existence 
-- DONE Assign human-controlled Actors a treadmill
-- DONE Convert terrain/actors/items to rendered form when requested
-- DONE Convert terrain/actors/items to unrendered form when released and unused
-
-## Treadmill
-- DONE Make sure treadmill requests cells appropriately
-- DONE Make sure treadmill releases cells appropriately
-- DONE Make sure treadmill knows when it is using a cell
 
 ## Auth service
 - Build auth service in other repo.
 - Set up outward-facing nodejs server to offer this service.
 - Build static Util method in this project to attempt to connect and use configured auth service endpoint.
+
+## Save/Load options in Adventure mode pause menu
+- Static method to figure out if in singleplayer adventure mode
+- Add the button when this is true
+
+
+## Load option in adventure menu
+- Add the button to lead to the load menu
+
+## Load menu
+- Context-sensitive back button
+- Check saves directory and list .adventure files in scrolling list
+- Add load button that starts game using selected file
+
+## Select adventure name in adventure menu
+- Add text field 
+- auto-validation with overwrite warning

@@ -76,6 +76,10 @@ public class Overworld : Spatial {
 	public void SinglePlayerInit(){
 		string debug = "SinglePlayerInit\n";
 
+		if(Session.session.adventureSettings != null){
+			GD.Print("adventureSettings file name " + Session.session.adventureSettings);
+		}
+
 		InitWorld();
 		
 		int playerId = GetActorByBrain(Actor.Brains.Player1);

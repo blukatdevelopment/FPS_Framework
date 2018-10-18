@@ -95,6 +95,7 @@ public class Cartographer {
 		ItemData data = item.GetData();
 		data.id = NextItemId();
 		data.pos = pos;
+		
 		return data;
 	}
 

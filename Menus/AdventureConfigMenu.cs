@@ -3,6 +3,8 @@ using Godot;
 public class AdventureConfigMenu : Container, IMenu {
   
   public Label adventureLabel;
+  public Label nameLabel;
+  public TextEdit nameBox;
 
   float minX, minY, maxX, maxY; // For scaling
   AdventureSettings config;
@@ -54,6 +56,7 @@ public class AdventureConfigMenu : Container, IMenu {
     float hu = height/10;
      
     Menu.ScaleControl(adventureLabel, width, hu, minX, minY);
+
   }
   
 }

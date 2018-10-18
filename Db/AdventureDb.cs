@@ -1,7 +1,7 @@
 /*
 
     This class manages an SQLite database dedicated
-    to user preferences.
+    to saving/loading an adventure mode game.
 */
 using Godot;
 using System;
@@ -10,8 +10,7 @@ using System.Data.SQLite;
 using System.IO;
 using Mono.Data.Sqlite;
 
-public class SettingsDb{
-    const string DefaultFile = @"settings.db";
+public class AdventureDb{
     const string SaveDirectory = "Saves/";
     public string file;
     IDbConnection conn;
@@ -52,30 +51,6 @@ public class SettingsDb{
         //GD.Print("Created tables.");
     }
 
-    public void InitSettings(){
-        StoreSetting("master_volume", "1.0");
-        StoreSetting("sfx_volume", "1.0");
-        StoreSetting("music_volume", "1.0");
-        StoreSetting("username", "New Player");
-        StoreSetting("first_login", DateTime.Today.ToString("MM/dd/yyyy"));
-        StoreSetting("mouse_sensitivity_x", "1.0");
-        StoreSetting("mouse_sensitivity_y", "1.0");
-    }
-
-    public void StoreSetting(string name, string val){
-        string sql = @"
-            INSERT OR IGNORE INTO settings(name, value)
-            VALUES (@name, @value);
-            UPDATE settings
-            SET value = @value 
-            WHERE name = @name;
-        ";
-        cmd.CommandText = sql;
-        cmd.Parameters.Add(new SqliteParameter ("@name", name));
-        cmd.Parameters.Add(new SqliteParameter ("@value", val));
-        cmd.ExecuteNonQuery();
-    }
-
     public string SelectSetting(string name){
         string sql = @"
             SELECT value FROM settings
@@ -90,11 +65,6 @@ public class SettingsDb{
         }
         rdr.Close();
         return ret;
-    }
-
-    public static bool SaveExists(string saveName){
-        string filePath = SavesDirectory + saveName;
-        return System.IO.File.Exists(filePath)
     }
 
     public static SettingsDb Init(){

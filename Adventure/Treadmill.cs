@@ -63,11 +63,8 @@ public class Treadmill {
 		Vector2 actorCoords = Util.CoordsFromPosition(actor.Translation, scale);
 		
 		if(actorCoords == currentCoords){
-			GD.Print("Player is at " + actor.Translation + ", which is still in " + actorCoords);
 			return; // No need to release or request cells
 		}
-
-		GD.Print("Actor has escaped from " + currentCoords + " to " + actorCoords);
 
 		List<Vector2> oldCells = Util.CoordsInRadius(currentCoords, radius);
 		List<Vector2> newCells = Util.CoordsInRadius(actorCoords, radius);
