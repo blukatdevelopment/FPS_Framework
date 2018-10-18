@@ -12,7 +12,8 @@ public class Menu{
     Lobby, 
     Pause, 
     HUD, 
-    Inventory
+    Inventory,
+    LoadAdventure
   };
 
   public enum SubMenus{ // Parented by menu

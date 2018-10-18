@@ -1,10 +1,16 @@
 using Godot;
+using System.Collections.Generic;
 
 public class AdventureConfigMenu : Container, IMenu {
   
   public Label adventureLabel;
   public Label nameLabel;
   public TextEdit nameBox;
+  public static int MaxNameLength = 16;
+
+  const string NameLabelText = "Adventure Name";
+  const string NameLabelWarning = "Warning: file already exists!";
+
 
   float minX, minY, maxX, maxY; // For scaling
   AdventureSettings config;
@@ -19,6 +25,7 @@ public class AdventureConfigMenu : Container, IMenu {
     InitAdventureSettings();
     InitControls();
     ScaleControls();
+
   }
   
   public void Resize(float minX, float minY, float maxX, float maxY){
@@ -47,6 +54,39 @@ public class AdventureConfigMenu : Container, IMenu {
     adventureLabel = Menu.Label("Adventure Mode");
     AddChild(adventureLabel);
 
+    nameLabel = Menu.Label(NameLabelText);
+    AddChild(nameLabel);
+
+    nameBox = Menu.TextBox("new_adventure", false);
+    nameBox.Connect("cursor_changed", this, nameof(UpdateName));
+    AddChild(nameBox);
+  }
+
+  // Coerce the name to prevent validation errors
+  public void UpdateName(){
+    int column = nameBox.CursorGetColumn();
+    string name = nameBox.GetText();
+    string[] forebidden = new string[] {
+      " ", "\\", "/", "?", "@", "#", "$", "%", "^", "&", "*", "(", ")",
+      "-", "=", "+", "{", "}", "\'", "\"", "~", "`", "!", "|", "[", "]"
+    };
+    for(int i = 0; i < forebidden.Length; i++){
+      name = name.Replace(forebidden[i], "_");
+    }
+
+    if(name.Length > MaxNameLength){
+      name = name.Substring(0, MaxNameLength);
+    }
+    
+    nameBox.SetText(name);
+    nameBox.CursorSetColumn(column);
+    config.fileName = name + ".adventure";
+    if(SettingsDb.SaveExists(config.fileName)){
+      nameLabel.SetText(NameLabelWarning);
+    }
+    else{
+      nameLabel.SetText(NameLabelText);
+    }
   }
 
   void ScaleControls(){
@@ -56,7 +96,8 @@ public class AdventureConfigMenu : Container, IMenu {
     float hu = height/10;
      
     Menu.ScaleControl(adventureLabel, width, hu, minX, minY);
-
+    Menu.ScaleControl(nameLabel, 2 * wu, hu, minX, minY + hu);
+    Menu.ScaleControl(nameBox, 2 * wu, hu, minX + 2.5f * wu, minY + hu);
   }
   
 }

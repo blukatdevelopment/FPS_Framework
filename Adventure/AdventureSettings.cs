@@ -3,5 +3,5 @@
 */
 using Godot;
 public class AdventureSettings {
-    string fileName = "";
+    public string fileName = "";
 }

@@ -63,5 +63,5 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - Add load button that starts game using selected file
 
 ## Select adventure name in adventure menu
-- Add text field 
-- auto-validation with overwrite warning
+- DONE Add text field 
+- DONE auto-validation with overwrite warning

@@ -9,10 +9,11 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using Mono.Data.Sqlite;
+using System.Collections.Generic;
 
 public class SettingsDb{
     const string DefaultFile = @"settings.db";
-    const string SaveDirectory = "Saves/";
+    const string SavesDirectory = "Saves/";
     public string file;
     IDbConnection conn;
     IDbCommand cmd;
@@ -94,7 +95,19 @@ public class SettingsDb{
 
     public static bool SaveExists(string saveName){
         string filePath = SavesDirectory + saveName;
-        return System.IO.File.Exists(filePath)
+        return System.IO.File.Exists(filePath);
+    }
+
+    public static List<string> GetAllSaves(string extension = ""){
+        string[] results;
+        if(extension == ""){
+            results = System.IO.Directory.GetFiles(SavesDirectory); 
+        }
+        else{
+            results = System.IO.Directory.GetFiles(SavesDirectory, "*." + extension);
+        }
+
+        return new List<string>(results);
     }
 
     public static SettingsDb Init(){
