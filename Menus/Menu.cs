@@ -92,6 +92,10 @@ public class Menu{
         ret = new SettingsMenu(); 
         ret.Name = "Settings";
         break;
+      case Menus.LoadAdventure:
+        ret = new LoadAdventureMenu();
+        ret.Name = "LoadAdventure";
+        break;
     }
     Session.session.AddChild(ret);
     IMenu menuInstance = ret as IMenu;

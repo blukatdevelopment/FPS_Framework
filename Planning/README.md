@@ -53,14 +53,13 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - Static method to figure out if in singleplayer adventure mode
 - Add the button when this is true
 
-
 ## Load option in adventure menu
-- Add the button to lead to the load menu
+- DONE Add the button to lead to the load menu
 
 ## Load menu
-- Context-sensitive back button
-- Check saves directory and list .adventure files in scrolling list
-- Add load button that starts game using selected file
+- DONE Context-sensitive back button
+- DONE Check saves directory and list .adventure files in scrolling list
+- DONE Add load button that starts game using selected file
 
 ## Select adventure name in adventure menu
 - DONE Add text field 

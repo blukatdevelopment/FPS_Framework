@@ -8,6 +8,8 @@ public class AdventureConfigMenu : Container, IMenu {
   public TextEdit nameBox;
   public static int MaxNameLength = 16;
 
+  public Button loadAdventureButton;
+
   const string NameLabelText = "Adventure Name";
   const string NameLabelWarning = "Warning: file already exists!";
 
@@ -60,6 +62,13 @@ public class AdventureConfigMenu : Container, IMenu {
     nameBox = Menu.TextBox("new_adventure", false);
     nameBox.Connect("cursor_changed", this, nameof(UpdateName));
     AddChild(nameBox);
+
+    loadAdventureButton = Menu.Button("Load Adventure", GoToLoadAdventure);
+    AddChild(loadAdventureButton);
+  }
+
+  public void GoToLoadAdventure(){
+    Session.ChangeMenu(Menu.Menus.LoadAdventure);
   }
 
   // Coerce the name to prevent validation errors
@@ -98,6 +107,7 @@ public class AdventureConfigMenu : Container, IMenu {
     Menu.ScaleControl(adventureLabel, width, hu, minX, minY);
     Menu.ScaleControl(nameLabel, 2 * wu, hu, minX, minY + hu);
     Menu.ScaleControl(nameBox, 2 * wu, hu, minX + 2.5f * wu, minY + hu);
+    Menu.ScaleControl(loadAdventureButton, wu, hu, minX, minY + 2 * hu);
   }
   
 }

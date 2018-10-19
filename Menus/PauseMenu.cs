@@ -7,6 +7,9 @@ public class PauseMenu : Container, IMenu {
   public Godot.Button mainMenuButton;
   public Godot.Button resumeButton;
 
+  public Godot.Button saveAdventureButton;
+  public Godot.Button loadAdventureButton;
+
   public void Init(float minX, float minY, float maxX, float maxY){
     InitControls();
     ScaleControls();
@@ -28,6 +31,22 @@ public class PauseMenu : Container, IMenu {
     SetQuitButton((Godot.Button)Menu.Button(text : "Quit", onClick : Quit));
     SetMainMenuButton((Godot.Button)Menu.Button(text : "Main Menu", onClick : QuitToMainMenu));
     SetResumeButton((Godot.Button)Menu.Button(text : "Resume", onClick : Resume));
+
+    if(Session.session.adventure != null){
+      saveAdventureButton = Menu.Button("Save", SaveAdventure);
+      AddChild(saveAdventureButton);
+
+      loadAdventureButton = Menu.Button("Load", LoadAdventure);
+      AddChild(loadAdventureButton);
+    }
+  }
+
+  public void SaveAdventure(){
+    GD.Print("Save Adventure");
+  }
+
+  public void LoadAdventure(){
+    Session.ChangeMenu(Menu.Menus.LoadAdventure);
   }
   
   void ScaleControls(){
@@ -40,6 +59,10 @@ public class PauseMenu : Container, IMenu {
       Menu.ScaleControl(resumeButton, 4 * wu, 2 * hu, 3 * wu, 0);
       Menu.ScaleControl(mainMenuButton, 4 * wu, 2 * hu, 3 * wu, 2 * hu);
       Menu.ScaleControl(quitButton, 4 * wu, 2 * hu, 3 * wu,  4 * hu);
+      if(Session.session.adventure != null){
+        Menu.ScaleControl(saveAdventureButton, 4 * wu, 2 * hu, 3 * wu, 6 * hu);
+        Menu.ScaleControl(loadAdventureButton, 4 * wu, 2 * hu, 3 * wu, 8 * hu);
+      }
   }
   
   public void SetQuitButton(Godot.Button button){
