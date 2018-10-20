@@ -4,6 +4,7 @@
 */
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class ActorData {
 	public Actor.Brains brain;
@@ -11,11 +12,14 @@ public class ActorData {
 	public int id, health, healthMax;
 	public Vector3 pos, rot;
 
+	// Extra data
+	public System.Collections.Generic.Dictionary<string, string> extra;
+
 	public ActorData(){
 		pos = new Vector3();
 		rot = new Vector3();
+		extra = new System.Collections.Generic.Dictionary<string, string>();
 	}
-	// TODO: Serialize inventory
 
 	public override string ToString(){
 		int x = (int)pos.x;
