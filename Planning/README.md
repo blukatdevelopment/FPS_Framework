@@ -49,3 +49,15 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - Set up outward-facing nodejs server to offer this service.
 - Build static Util method in this project to attempt to connect and use configured auth service endpoint.
 
+
+## Save singleplayer Overworld 
+- Gut item stacking completely. (Fix inventory menu to not display quantity)
+- Make sure every item class can transfer to and from its data form
+- When saving to existing file, rename existing file as a backup and delete upon success
+- Create DDL for item, item_extra, actor, actor_extra, and adventure tables
+- Create GetItem(id), GetItemIds(), GetItems() (and equivalents for actors and TerrainCells)
+
+
+## Load singleplayer Overworld 
+- upon starting singleplayer game, check if savefile already exists and load then
+- loading should get actors, items, terrain, and adventure settings from that save file
