@@ -49,18 +49,3 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 - Set up outward-facing nodejs server to offer this service.
 - Build static Util method in this project to attempt to connect and use configured auth service endpoint.
 
-## Save/Load options in Adventure mode pause menu
-- Static method to figure out if in singleplayer adventure mode
-- Add the button when this is true
-
-## Load option in adventure menu
-- DONE Add the button to lead to the load menu
-
-## Load menu
-- DONE Context-sensitive back button
-- DONE Check saves directory and list .adventure files in scrolling list
-- DONE Add load button that starts game using selected file
-
-## Select adventure name in adventure menu
-- DONE Add text field 
-- DONE auto-validation with overwrite warning

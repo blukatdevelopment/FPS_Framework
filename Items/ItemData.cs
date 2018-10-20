@@ -24,18 +24,27 @@ public class ItemData : IHasInfo {
 	public int weight;
 	public Vector3 pos;
 
-
-	// These should be handled by ReadData/GetData
-	public List<int> ints;
-	public List<string> strings;
-	public List<float>  floats;
-
+	// Store all custom data added by subclasses of Item
+	public System.Collections.Generic.Dictionary<string, string> extra;
 
 	public ItemData(){
-		ints = new List<int>();
-		strings = new List<string>();
-		floats = new List<float>();
-		pos = new Vector3();
+
+		extra = new System.Collections.Generic.Dictionary<string, string>();
+	}
+
+	public string GetExtra(string key){
+		if(!extra.ContainsKey(key)){
+			return "";
+		}
+		return extra[key];
+	}
+
+	public void SetExtra(string key, string val){
+		if(extra.ContainsKey(key)){
+			extra[key] = val;
+			return;
+		}
+		extra.Add(key, val);
 	}
 
 	public string GetInfo(){
@@ -52,10 +61,12 @@ public class ItemData : IHasInfo {
 		ret.name = original.name;
 		ret.quantity = original.quantity;
 
+		foreach(string key in original.extra.Keys){
+			ret.SetExtra(key, original.extra[key]);
+		}
+
 		ret.description = original.description;
-		ret.ints = new List<int>(original.ints as IEnumerable<int>);
-		ret.strings = new List<string>(original.strings as IEnumerable<string>);
-		ret.floats = new List<float>(original.floats as IEnumerable<float>);
+
 		return ret;
 	}
 
@@ -91,16 +102,8 @@ public class ItemData : IHasInfo {
 		return 0;
 	}
 
-	// Items of the same name and type are considered equivalent.
+	// TODO: Re-implement, maybe check for stackable key
 	public bool CanStack(ItemData other){
-		if(type != other.type || name != other.name){
-			return false;
-		}
-		if(ints.Count != other.ints.Count 
-			|| strings.Count != other.strings.Count
-			|| floats.Count != other.floats.Count){
-			return false;
-		}
 		return true;
 	}
 

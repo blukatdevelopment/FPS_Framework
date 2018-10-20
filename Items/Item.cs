@@ -184,47 +184,30 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     ItemReadData(dat);
   }
 
-  // Base Save/Load of ItemData to be used by subclasses
+  // Saves all the basic Item fields
   public ItemData ItemGetData(){
     ItemData dat = new ItemData();
 
-    // NON-LIST DATA
     dat.name = name;
     dat.description = description;
     dat.quantity = quantity;
-    dat.type = this.type;
-    dat.weight = this.weight;
-
-    
-
-    // STRINGS
-    dat.strings.Add(name);
-    dat.strings.Add(description);
-
-    // INTS
-    dat.ints.Add(quantity);
-    dat.ints.Add(weight);
-
-    // Position
+    dat.type = type;
+    dat.weight = weight;
     dat.pos = GetTranslation();
 
     return dat;
   }
 
-  // Should remove every element added by ItemReadData
   public void ItemReadData(ItemData dat){
 
     SetTranslation( dat.pos);
 
-    // STRINGS
-    name = dat.strings[0];
-    description = dat.strings[1];
-    dat.strings.RemoveRange(0, 2);
-
-    // INTS
-    quantity = dat.ints[0];
-    weight = dat.ints[1];
-    dat.ints.RemoveRange(0, 2);
+    name = dat.name;
+    description = dat.description;
+    quantity = dat.quantity;
+    type = dat.type;
+    weight = dat.weight;
+    Translation = dat.pos;
   }
 
   public void OnCollide(object body){
