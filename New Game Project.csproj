@@ -131,6 +131,7 @@
     <Compile Include="Util\Speaker.cs" />
     <Compile Include="Util\SessionEvent.cs" />
     <Compile Include="Db\SettingsDb.cs" />
+    <Compile Include="Db\AdventureDb.cs" />
     <Compile Include="Inventory\Inventory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

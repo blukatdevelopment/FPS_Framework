@@ -22,12 +22,15 @@ public class ItemData : IHasInfo {
 	public string description;
 	public int quantity;
 	public int weight;
-	public Vector3 pos;
+	public Vector3 pos, rot;
+	public bool held;
 
 	// Store all custom data added by subclasses of Item
 	public System.Collections.Generic.Dictionary<string, string> extra;
 
 	public ItemData(){
+		pos = new Vector3();
+		rot = new Vector3();
 
 		extra = new System.Collections.Generic.Dictionary<string, string>();
 	}
@@ -60,7 +63,9 @@ public class ItemData : IHasInfo {
 		ret.type = original.type;
 		ret.name = original.name;
 		ret.quantity = original.quantity;
-
+		ret.pos = original.pos;
+		ret.rot = original.rot;
+		
 		foreach(string key in original.extra.Keys){
 			ret.SetExtra(key, original.extra[key]);
 		}

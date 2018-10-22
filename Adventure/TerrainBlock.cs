@@ -13,7 +13,7 @@ public class TerrainBlock {
   };
   
 	public Vector3 orientation;
-	public Vector3 gridPosition; // Not currently used
+	public Vector3 gridPosition;
 	public Blocks blockId;
 
 
