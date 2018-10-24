@@ -25,10 +25,11 @@ public class AdventureDb{
         }
         conn = new SqliteConnection("URI=file:" + filePath);
         cmd = conn.CreateCommand();
+        conn.Open();
+        
         if(initNeeded){
             CreateTables();
         }
-        conn.Open();
     }
 
     public void Close(){

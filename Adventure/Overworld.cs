@@ -14,6 +14,8 @@ using System.Collections.Generic;
 public class Overworld : Spatial {
 	public List<Treadmill> treadmills;
 
+	public string saveFile;
+
 	// Entities with graphics and physics rendering
 	public System.Collections.Generic.Dictionary<int, TerrainCell> cells;
 	public System.Collections.Generic.Dictionary<int, Actor> actors;
@@ -77,7 +79,7 @@ public class Overworld : Spatial {
 		string debug = "SinglePlayerInit\n";
 
 		if(Session.session.adventureSettings != null){
-			GD.Print("adventureSettings file name " + Session.session.adventureSettings);
+			saveFile = Session.session.adventureSettings.fileName;
 		}
 
 		InitWorld();
@@ -312,6 +314,17 @@ public class Overworld : Spatial {
 	//#								Rendering and Unrendering Entities                         #
 	//# An entity should be in the rendered or unrendered form, but not both.	   #
 	//############################################################################
+
+
+	public void SaveAndQuit(){
+		AdventureDb db = new AdventureDb(saveFile);
+		
+		List<int> renderedActors = actors.Keys;
+		foreach(int id in renderedActors){
+			UnRenderActor(id);
+		}
+
+	}
 
 	public int GetActorByBrain(Actor.Brains brain){
 		foreach(int key in actors.Keys){
