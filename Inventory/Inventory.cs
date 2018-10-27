@@ -17,6 +17,38 @@ public class Inventory : IHasItem {
 		this.items = items;
 	}
 
+	/*
+		Removes items with matching type and name.
+		If max is greater than zero, will return up to that many items.
+	*/
+	public List<ItemData> RetrieveItems(Item.Types itemType, string itemName, int max = 0){
+		List<ItemData> ret = new List<ItemData>();
+
+		foreach(ItemData data in items){
+			if(max > 0 && ret.Count >= max){
+				break;
+			}
+			if(data.type == itemType && itemName == data.name){
+				ret.Add(data);
+			}
+		}
+
+		foreach(ItemData data in ret){
+			items.Remove(data);
+		}
+		return ret;
+	}
+
+	public int GetQuantity(Item.Types itemType, string itemName){
+		int ret = 0;
+		foreach(ItemData data in items){
+			if(data.type == itemType && itemName == data.name){
+				ret++;
+			}
+		}
+		return ret;
+	}
+
 	// Doesn't change value.
 	public ItemData GetItem(int index){
 		if(index < 0 || index >= items.Count){
@@ -68,6 +100,10 @@ public class Inventory : IHasItem {
 
 	public string ItemInfo(){
 		return ToString();
+	}
+
+	public void StoreItemData(ItemData data){
+		items.Add(data);
 	}
 
 	public int ReceiveItem(Item item){

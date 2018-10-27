@@ -207,36 +207,32 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
 
 
-  /* Show up to max ammo */
-  public int CheckAmmo(string ammoType, int max){
-    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
-    if(index == -1){
-      return 0;
+  /* Returns quantity of specified ammo.
+     If max is greater than zero, will return at most max.
+  */
+  public int CheckAmmo(string ammoType, int max = 0){
+    int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType);
+    if(max > 0){
+      return quantity;
     }
-    return inventory.GetItem(index).quantity;
+    else if(max < quantity){
+      return max;
+    }
+    return quantity;
   }
   
 
   /* Return up to max ammo, removing that ammo from inventory. */
-  public int RequestAmmo(string ammoType, int max){
-    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
-    if(index == -1){
-      return 0;
-    }
-    return inventory.RetrieveItem(index, max).quantity;
-
+  public List<ItemData> RequestAmmo(string ammoType, int max){
+    return inventory.GetItems(Item.Types.Ammo, ammoType, max);
   }
   
   /* Store up to max ammo, returning overflow. */
-  public int StoreAmmo(string ammoType, int max){
-    if(Session.NetActive() && !Session.IsServer()){
-      //GD.Print("Client won't store ammo.");
-      return 0;
+  public List<ItemData> StoreAmmo(List<ItemData> items){
+    foreach(ItemData item in items){
+      inventory.StoreItemData(item);
     }
-    //GD.Print("Storing ammo " + ammoType + "(" + max + ")");
-    Item ammo = Item.Factory(Item.Types.Ammo, "TemporaryName", ammoType, max);
-    ReceiveItem(ammo);
-    return 0;
+    return new List<ItemData>();
   }
   
   public string[] AmmoTypes(){

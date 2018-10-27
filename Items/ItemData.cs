@@ -20,7 +20,6 @@ public class ItemData : IHasInfo {
 	public Item.Types type;
 	public string name;
 	public string description;
-	public int quantity;
 	public int weight;
 	public Vector3 pos, rot;
 	public bool held;
@@ -76,7 +75,7 @@ public class ItemData : IHasInfo {
 	}
 
 	public string ToString(){
-		string ret = name + "(" + quantity + ")";
+		string ret = name;
 		return ret;
 	}
 
@@ -95,26 +94,6 @@ public class ItemData : IHasInfo {
 			quantity -= quant;
 		}
 		return ret;
-	}
-
-	// Add stacking item and return overflow.
-	public int Add(ItemData item){
-		if(!CanStack(item)){
-			return item.quantity;
-		}
-
-		quantity += item.quantity;
-		return 0;
-	}
-
-	// TODO: Re-implement, maybe check for stackable key
-	public bool CanStack(ItemData other){
-		return true;
-	}
-
-
-	public int GetWeight(){
-		return weight * quantity;
 	}
 
 }

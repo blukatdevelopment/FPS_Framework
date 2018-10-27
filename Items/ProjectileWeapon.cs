@@ -3,6 +3,7 @@
   Limited by a store of ammo wich must be reloaded with delay.
 */
 using Godot;
+using System.Collections.Generic;
 using System;
 
 public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
@@ -11,7 +12,9 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   const float ProjectileOffset = 0.1f;
   const float ImpulseStrength = 50f;
   string ammoType = "Bullet";
-  int ammo = 0;
+  
+  Inventory inventory;
+
   int maxAmmo = 10;
   
   float busyDelay = 0f;
@@ -20,7 +23,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   OnBusyEnd busyEndHandler;
   
   public void Init(){
-    
+    inventory = new Inventory();
   }
   
   public override void _Process(float delta){
@@ -44,7 +47,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
 
   public override string GetInfo(){
-    string ret = name + "[" + ammo + "/" + maxAmmo;
+    string ret = name + "[" + inventory.ItemCount() + "/" + maxAmmo;
     if(wielder != null){
       IHasAmmo ammoHolder = wielder as IHasAmmo;
       if(ammoHolder != null){
@@ -60,45 +63,37 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
   
   /* Show up to max ammo */
-  public int CheckAmmo(string ammoType, int max){
-    if(this.ammoType != ammoType){
-      return 0;
+  public int CheckAmmo(string ammoType, int max = 0){
+    int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType); 
+    if(max > 0 && quantity > max){
+      return max;
     }
-    if(max < 0){
-      return ammo;
-    }
-    if(max > ammo){
-      return ammo;
-    }
-    return max;
+    return quantity;
   }
   
   /* Return up to max ammo, removing that ammo from inventory. */
-  public int RequestAmmo(string ammoType, int max){
-    int amount = CheckAmmo(ammoType, max);
-    ammo -= amount;
-    return amount;
+  public List<ItemData> RequestAmmo(string ammoType, int max = 0){
+    return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
   }
   
   /* Store up to max ammo, returning overflow. */
-  public int StoreAmmo(string ammoType, int max){
-    if(ammoType != this.ammoType || busy){
-      return max;
+  public List<ItemData> StoreAmmo(List<ItemData> ammo){
+    if(busy){
+      return ammo;
     }
     
-    int amount = max + ammo;
+    List<ItemData> ret = new List<ItemData>();
     
-    if(maxAmmo <= amount){
-      StartReload(maxAmmo);
-      amount -= maxAmmo;
-    }
-    else{
-      int fullAmmo = ammo + amount;
-      StartReload(fullAmmo);
-      amount = 0;
+    foreach(ItemData data in ammo){
+      if(inventory.ItemCount() < maxAmmo && data.type == Item.Types.Ammo && data.name == ammoType){
+        inventory.StoreItemData(data);
+      }
+      else{
+        ret.Add(data);
+      }
     }
     
-    return amount;
+    return ret;
   }
   
   public string[] AmmoTypes(){
