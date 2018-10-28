@@ -61,7 +61,6 @@ public class ItemData : IHasInfo {
 		ItemData ret = new ItemData();
 		ret.type = original.type;
 		ret.name = original.name;
-		ret.quantity = original.quantity;
 		ret.pos = original.pos;
 		ret.rot = original.rot;
 		
@@ -76,23 +75,6 @@ public class ItemData : IHasInfo {
 
 	public string ToString(){
 		string ret = name;
-		return ret;
-	}
-
-	public ItemData Remove(int quant = 1){
-		if(quant <= 0){
-			return null;
-		}
-
-		ItemData ret = Clone(this);
-		
-		if(quant >= quantity){
-			quantity = 0;
-		}
-		else{
-			ret.quantity = quant;
-			quantity -= quant;
-		}
 		return ret;
 	}
 

@@ -224,10 +224,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   /* Return up to max ammo, removing that ammo from inventory. */
   public List<ItemData> RequestAmmo(string ammoType, int max){
-    return inventory.GetItems(Item.Types.Ammo, ammoType, max);
+    return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
   }
   
-  /* Store up to max ammo, returning overflow. */
   public List<ItemData> StoreAmmo(List<ItemData> items){
     foreach(ItemData item in items){
       inventory.StoreItemData(item);
@@ -790,27 +789,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return "Unequipped";
   }
 
-  // Good for server->client
-  public int ReceiveItem(Item item){
-    if(!Session.NetActive()){
-      //GD.Print("received " + item.quantity + " " + item);
-      return inventory.ReceiveItem(item);  
+  public bool ReceiveItem(Item item){
+    return inventory.ReceiveItem(item);
+  }
+
+  public bool ReceiveItems(List<Item> items){
+    foreach(Item item in items){
+      if(!inventory.ReceiveItem(item)){
+        return false;
+      }
     }
-    else if(Session.IsServer()){
-      string json = JsonConvert.SerializeObject(item.GetData(), Formatting.Indented);
-      DeferredReceiveItem(json);
-      Rpc(nameof(DeferredReceiveItem),json);
-      return 0;
-    }
-    else{
-      //GD.Print("Online and not server. Not receivingItem");
-      return 0;
-    }
+    return false;
   }
 
   
-
-  // Good for server->client
   [Remote]
   public void DeferredReceiveItem(string json){
     ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);

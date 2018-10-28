@@ -58,14 +58,12 @@ public class Inventory : IHasItem {
 	}
 
 	// Changes value.
-	public ItemData RetrieveItem(int index, int quantity = 1){
-		if(GetItem(index) == null){
+	public ItemData RetrieveItem(int index){
+		if(index >= items.Count || index < 0){
 			return null;
 		}
-		ItemData ret = items[index].Remove(quantity);
-		if(items[index].quantity == 0){
-			items.RemoveRange(index, 1);
-		}
+		ItemData ret = items[index];
+		items.Remove(ret);
 		return ret;
 	}
 
@@ -106,16 +104,10 @@ public class Inventory : IHasItem {
 		items.Add(data);
 	}
 
-	public int ReceiveItem(Item item){
+	public bool ReceiveItem(Item item){
 		ItemData data = item.GetData();
-		int index = IndexOf(data.type, data.name);
-		if(index == -1){
-			items.Add(data);
-			return 0;
-		}
-		else{
-			return items[index].Add(data);
-		}
+		items.Add(data);
+		return true;
 	}
 
 	public Item PrimaryItem(){
@@ -131,6 +123,12 @@ public class Inventory : IHasItem {
 		foreach(ItemData dat in items){
 			ret.Add(dat);
 		}
+		return ret;
+	}
+
+	public List<ItemData> RetrieveAllItems(){
+		List<ItemData> ret = items;
+		items = new List<ItemData>();
 		return ret;
 	}
 

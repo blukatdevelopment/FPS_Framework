@@ -44,7 +44,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public Types type;
   public string name;
   public string description;
-  public int quantity;
   public int weight;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
@@ -55,10 +54,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected bool paused = false;
 
 
-  public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
+  public void BaseInit(string name, string description, bool allowCollision = true){
     this.name = name;
     this.description = description;
-    this.quantity = quantity;
     this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
@@ -104,11 +102,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   // client -> client
   public void PickUp(IHasItem acquirer){
     if(!Session.NetActive()){
-      int overflow = acquirer.ReceiveItem(this);
-      if(overflow == 0){
+      if(acquirer.ReceiveItem(this)){
         this.QueueFree();
       }
-      quantity = overflow;
       return;
     }
     Node acquirerNode = acquirer as Node;
@@ -134,9 +130,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     if(acquirer == null){
       GD.Print("No acquirer found!");
     }
-    
-    int overflow = acquirer.ReceiveItem(this);
-    if(overflow == 0){
+  
+    if(acquirer.ReceiveItem(this)){
       this.QueueFree();
     }
 
@@ -190,7 +185,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
     dat.name = name;
     dat.description = description;
-    dat.quantity = quantity;
     dat.type = type;
     dat.weight = weight;
     dat.pos = GetTranslation();
@@ -204,7 +198,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
     name = dat.name;
     description = dat.description;
-    quantity = dat.quantity;
     type = dat.type;
     weight = dat.weight;
     Translation = dat.pos;
@@ -305,7 +298,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type, string name = "", string overrideName = "", int quantity = 1){
+  public static Item Factory(Types type, string name = "", string overrideName = ""){
     Item ret = null;
     if(type == Types.None){
       return null;
@@ -346,11 +339,29 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     if(overrideName != ""){
       ret.name = overrideName;
     }
-    ret.quantity = quantity;
 
     return ret;
   }
   
+  /* Returns a list of items */
+  public static List<Item> BulkFactory(Types type, string name = "", string overrideName = "", int quantity = 1){
+    List<Item> ret = new List<Item>();
+    for(int i = 0; i < quantity; i++){
+      ret.Add(Factory(type, name, overrideName));
+    }
+    return ret;
+  }
+
+  /* Converts list of Items into list of ItemData */
+  public static List<ItemData> ConvertListToData(List<Item> items){
+    List<ItemData> ret = new List<ItemData>();
+    foreach(Item item in items){
+      ret.Add(item.GetData());
+      item.QueueFree();
+    }
+    return ret;
+  }
+
   public static string ItemFiles(Types type){
     string ret = "";
     
@@ -423,14 +434,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return ret;
   }
 
-  public int GetWeight(){
-    return weight * quantity;
-  }
-
   public static int TotalWeight(List<ItemData> items){
     int total = 0;
     foreach(ItemData item in items){
-      total += item.GetWeight();
+      total += item.weight;
     }
     return total;
   }

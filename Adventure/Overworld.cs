@@ -319,9 +319,8 @@ public class Overworld : Spatial {
 	public void SaveAndQuit(){
 		AdventureDb db = new AdventureDb(saveFile);
 		
-		List<int> renderedActors = actors.Keys;
-		foreach(int id in renderedActors){
-			UnRenderActor(id);
+		foreach(int id in actors.Keys){
+			UnrenderActor(id);
 		}
 
 	}

@@ -372,10 +372,8 @@ public class Arena : Spatial {
     }
     Vector3 pos = RandomItemSpawn();
     Item item = Item.Factory(type);
-    item.quantity = quantity;
     item.Translation = pos;
     AddChild(item);
-
 
     if(Session.IsServer()){
       string name = NextItemName();
@@ -390,7 +388,6 @@ public class Arena : Spatial {
     Vector3 pos = new Vector3(x, y, z);
     Item item = Item.Factory(type);
     item.Translation = pos;
-    item.quantity = quantity;
 
     Node itemNode = item as Node;
     itemNode.Name = name;
@@ -427,7 +424,7 @@ public class Arena : Spatial {
     }
     GD.Print("Arena.Initkit");
     actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
-    actor.ReceiveItem(Item.Factory(Item.Types.Ammo, "", "Bullet", 100));
+    actor.ReceiveItems(Item.BulkFactory(Item.Types.Ammo, "", "Bullet", 100));
     EquipActor(actor, Item.Types.Rifle, "Rifle");
     
   }
