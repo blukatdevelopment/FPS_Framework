@@ -212,13 +212,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   */
   public int CheckAmmo(string ammoType, int max = 0){
     int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType);
-    if(max > 0){
+    if(max > 0 && max > quantity){
       return quantity;
     }
-    else if(max < quantity){
-      return max;
+    else if(max <= 0){
+      return quantity;
     }
-    return quantity;
+    
+    return max;
   }
   
 
@@ -393,6 +394,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     ItemData dat = inventory.RetrieveItem(index);
     
+    if(dat == null){
+      GD.Print("Actor.DeferredEquipItem: Item at index " + index + " was null.");
+      return;
+    }
+
     Item item = Item.FromData(dat);
 
     if(eyes == null){

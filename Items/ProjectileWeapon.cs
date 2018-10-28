@@ -22,9 +22,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   delegate void OnBusyEnd();
   OnBusyEnd busyEndHandler;
   
-  public void Init(){
+
+  public ProjectileWeapon(){
     inventory = new Inventory();
   }
+
   
   public override void _Process(float delta){
     if(busy){
@@ -51,7 +53,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     if(wielder != null){
       IHasAmmo ammoHolder = wielder as IHasAmmo;
       if(ammoHolder != null){
-        ret += "/" + ammoHolder.CheckAmmo(ammoType, -1);
+        ret += "/" + ammoHolder.CheckAmmo(ammoType, 0);
       }
     }
     ret += "]";
