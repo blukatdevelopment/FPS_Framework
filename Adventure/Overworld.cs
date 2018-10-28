@@ -33,7 +33,7 @@ public class Overworld : Spatial {
 	public const int CellSize = 50; // x, y, z length in TerrainBlocks.
 	public const int DefaultTreadmillRadius = 1;
 
-	private int nextActorId, nextItemId; // auto-incremented ids.
+	public int nextActorId, nextItemId; // auto-incremented ids.
 
 
 	public Overworld(){
@@ -316,13 +316,13 @@ public class Overworld : Spatial {
 	//############################################################################
 
 
-	public void SaveAndQuit(){
-		AdventureDb db = new AdventureDb(saveFile);
-		
-		foreach(int id in actors.Keys){
-			UnrenderActor(id);
-		}
+	public void Save(){
+		GD.Print("Saving");
+		OverworldData data = new OverworldData(this);
 
+		AdventureDb db = new AdventureDb(saveFile);
+
+		db.SaveData(data);
 	}
 
 	public int GetActorByBrain(Actor.Brains brain){

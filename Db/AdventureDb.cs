@@ -16,6 +16,8 @@ public class AdventureDb{
     IDbConnection conn;
     IDbCommand cmd;
 
+    IDbCommand saveBlockCommand;
+
     public AdventureDb(string fileName){
         string filePath = SaveDirectory + fileName;
         bool initNeeded = false;
@@ -88,7 +90,7 @@ public class AdventureDb{
 
         CREATE TABLE terrain_blocks
         (
-            cellId INT(8) PRIMARY KEY,
+            cellId INT(8),
             blockId INT(2),
             orientationx INT(2),
             orientationy INT(2),
@@ -101,27 +103,10 @@ public class AdventureDb{
         cmd.CommandText = sql;
         cmd.ExecuteNonQuery();
     }
-    
-    public void SaveFile(Overworld world){
-        foreach(int id in world.actorsData.Keys){
-            ActorData data = world.actorsData[id];
-            SaveActor(data);
-        }
-
-        foreach(int id in world.itemsData.Keys){
-            ItemData data = world.itemsData[id];
-            SaveItem(data);
-        }
-
-        foreach(int id in world.cellsData.Keys){
-            TerrainCellData data = world.cellsData[id];
-            SaveTerrain(data);
-        }
-    }
 
     public void SaveActor(ActorData data){
         string sql = @"
-            INSERT INTO actor(id, brain, posx, posy, posz, rotx, roty, rotz)
+            INSERT INTO actors(id, brain, posx, posy, posz, rotx, roty, rotz)
             VALUES (@id, @brain, @posx, @posy, @posz, @rotx, @roty, @rotz);
             
         ";
@@ -132,8 +117,8 @@ public class AdventureDb{
         cmd.Parameters.Add(new SqliteParameter("@posy", data.pos.y));
         cmd.Parameters.Add(new SqliteParameter("@posz", data.pos.z));
         cmd.Parameters.Add(new SqliteParameter("@rotx", data.rot.x));
-        cmd.Parameters.Add(new SqliteParameter("@rotx", data.rot.y));
-        cmd.Parameters.Add(new SqliteParameter("@rotx", data.rot.z));
+        cmd.Parameters.Add(new SqliteParameter("@roty", data.rot.y));
+        cmd.Parameters.Add(new SqliteParameter("@rotz", data.rot.z));
         cmd.ExecuteNonQuery();
 
         foreach(string key in data.extra.Keys){
@@ -233,9 +218,14 @@ public class AdventureDb{
         }
     }
 
-    public void SaveBlock(int cellId, int blockId, Vector3 pos, Vector3 rot){
+    /* Prepares and caches the query to insert blocks. */
+    public IDbCommand GetSaveBlockCommand(){
+        if(saveBlockCommand != null){
+            return saveBlockCommand;
+        }
+        saveBlockCommand = conn.CreateCommand();
         string sql = @"
-            INSERT INTO items_extra
+            INSERT INTO terrain_blocks
             (
                 cellId,
                 blockId, 
@@ -247,19 +237,76 @@ public class AdventureDb{
                 posz 
             )
             VALUES (
+                @cellId,
+                @blockId,
+                @orientationx,
+                @orientationy,
+                @orientationz,
+                @posx,
+                @posy,
+                @posz
             );
         ";
-        cmd.CommandText = sql;
-        cmd.Parameters.Add(new SqliteParameter("@cellId", cellId));
-        cmd.Parameters.Add(new SqliteParameter("@cellId", blockId));
-        cmd.Parameters.Add(new SqliteParameter("@orientationx", rot.x));
-        cmd.Parameters.Add(new SqliteParameter("@orientationy", rot.y));
-        cmd.Parameters.Add(new SqliteParameter("@orientationz", rot.z));
-        cmd.Parameters.Add(new SqliteParameter("@posx", pos.x));
-        cmd.Parameters.Add(new SqliteParameter("@posy", pos.y));
-        cmd.Parameters.Add(new SqliteParameter("@posz", pos.z));
+        saveBlockCommand.CommandText = sql;
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@cellId", 0));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@blockId", 0));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationx", 0.0f));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationy", 0.0f));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationz", 0.0f));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@posx", 0.0f));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@posy", 0.0f));
+        saveBlockCommand.Parameters.Add(new SqliteParameter("@posz", 0.0f));
+
+        saveBlockCommand.Prepare();
+        return saveBlockCommand;
+    }
+
+    public void SaveBlock(int cellId, int blockId, Vector3 pos, Vector3 rot){
+        cmd = GetSaveBlockCommand();
+
+        ((SqliteParameter)cmd.Parameters[0]).Value = cellId;
+        ((SqliteParameter)cmd.Parameters[1]).Value = blockId;
+        ((SqliteParameter)cmd.Parameters[2]).Value = rot.x;
+        ((SqliteParameter)cmd.Parameters[3]).Value = rot.y;
+        ((SqliteParameter)cmd.Parameters[4]).Value = rot.z;
+        ((SqliteParameter)cmd.Parameters[5]).Value = pos.x;
+        ((SqliteParameter)cmd.Parameters[6]).Value = pos.y;
+        ((SqliteParameter)cmd.Parameters[7]).Value = pos.z;
 
         cmd.ExecuteNonQuery();
+    }
+
+    public void SaveData(OverworldData dat){
+        string output = "Saving overworld data for " + dat.saveFile + "\n";
+
+        output += "\tnextActorId: " + dat.nextActorId + "\n";
+        output += "\tnextItemId: " + dat.nextItemId + "\n";
+        output += "\titems: " + dat.itemsData.Count + "\n";
+        output += "\tactors: " + dat.actorsData.Count + "\n";
+        output += "\tcells: " + dat.cellsData.Count + "\n";
+
+        GD.Print(output);
+
+        var trans = conn.BeginTransaction();
+
+        foreach(int id in dat.actorsData.Keys){
+            GD.Print("Saving actor " + id);
+            SaveActor(dat.actorsData[id]);
+        }
+
+        foreach(int id in dat.itemsData.Keys){
+            GD.Print("Saving item " + id);
+            SaveItem(dat.itemsData[id]);
+        }
+
+        foreach(int id in dat.cellsData.Keys){
+            GD.Print("Saving cell " + id);
+            SaveTerrain(dat.cellsData[id]);
+        }
+
+        trans.Commit();
+
+        conn.Close();
     }
 
     public static void CreateFile(string file){

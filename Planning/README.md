@@ -25,6 +25,7 @@ complexity. This balance must be attended to
 - Add <string, string> variable to ItemQuery and replace ItemData with it to simplify adding/removing data.
 - Revisit item stacking.
 - Revisit ItemQuery, maybe rename to ItemKey and apply kits before spawning actors in Arena
+
 # Completed Milestones
 
 **Version 1.0.1 Arena**
@@ -51,11 +52,11 @@ The following steps are the tentative roadmap. WIth this much scope, things will
 
 
 ## Save singleplayer Overworld 
-- Gut item stacking completely. (Fix inventory menu to not display quantity)
-- Make sure every item class can transfer to and from its data form
+- DONE Gut item stacking completely. (Fix inventory menu to not display quantity)
+- DONE Make sure every item class can transfer to and from its data form
 - When saving to existing file, rename existing file as a backup and delete upon success
-- Create DDL for item, item_extra, actor, actor_extra, and adventure tables
-- Create GetItem(id), GetItemIds(), GetItems() (and equivalents for actors and TerrainCells)
+- DONE Create DDL for item, item_extra, actor, actor_extra, and adventure tables
+- Create GetItem(id), GetItemIds(), GetItems() (and equivalents for actors and TerrainCells) in database manager
 
 
 ## Load singleplayer Overworld 

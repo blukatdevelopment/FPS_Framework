@@ -42,7 +42,7 @@ public class PauseMenu : Container, IMenu {
   }
 
   public void SaveAdventure(){
-    GD.Print("Save Adventure");
+    Session.session.adventure.Save();
   }
 
   public void LoadAdventure(){
@@ -59,6 +59,7 @@ public class PauseMenu : Container, IMenu {
       Menu.ScaleControl(resumeButton, 4 * wu, 2 * hu, 3 * wu, 0);
       Menu.ScaleControl(mainMenuButton, 4 * wu, 2 * hu, 3 * wu, 2 * hu);
       Menu.ScaleControl(quitButton, 4 * wu, 2 * hu, 3 * wu,  4 * hu);
+      
       if(Session.session.adventure != null){
         Menu.ScaleControl(saveAdventureButton, 4 * wu, 2 * hu, 3 * wu, 6 * hu);
         Menu.ScaleControl(loadAdventureButton, 4 * wu, 2 * hu, 3 * wu, 8 * hu);
