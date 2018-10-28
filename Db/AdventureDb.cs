@@ -12,14 +12,14 @@ using Mono.Data.Sqlite;
 
 public class AdventureDb{
     const string SaveDirectory = "Saves/";
-    public string file;
+    public string filePath;
     IDbConnection conn;
     IDbCommand cmd;
 
     IDbCommand saveBlockCommand;
 
     public AdventureDb(string fileName){
-        string filePath = SaveDirectory + fileName;
+        filePath = SaveDirectory + fileName;
         bool initNeeded = false;
         if(!System.IO.File.Exists(filePath)){
             initNeeded = true;
@@ -276,7 +276,24 @@ public class AdventureDb{
         cmd.ExecuteNonQuery();
     }
 
+    /* Save overworld data to current file. */
     public void SaveData(OverworldData dat){
+        /* Tear down existing database. */
+        
+        conn.Close();
+        if(System.IO.File.Exists(filePath)){
+            System.IO.File.Delete(filePath);
+        }
+
+        /* Set up new database for this save. */
+        conn = new SqliteConnection("URI=file:" + filePath);
+        cmd = conn.CreateCommand();
+        conn.Open();
+
+        CreateFile(filePath);
+
+        CreateTables();
+
         string output = "Saving overworld data for " + dat.saveFile + "\n";
 
         output += "\tnextActorId: " + dat.nextActorId + "\n";
