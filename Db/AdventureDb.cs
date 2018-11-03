@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using Mono.Data.Sqlite;
+using System.Collections.Generic;
 
 public class AdventureDb{
     const string SaveDirectory = "Saves/";
@@ -36,6 +37,115 @@ public class AdventureDb{
 
     public void Close(){
         conn.Close();
+    }
+
+    public System.Collections.Generic.Dictionary<int, ActorData> LoadActors(){
+        System.Collections.Generic.Dictionary<int, ActorData> actors;
+        actors = new System.Collections.Generic.Dictionary<int, ActorData>();
+        
+        string sql = @"
+            SELECT * from actors;
+        ";
+
+        cmd.CommandText = sql;
+        IDataReader rdr = cmd.ExecuteReader();
+
+        while(rdr.Read()){
+            ActorData dat = new ActorData();
+            dat.id = System.Convert.ToInt32(rdr["id"]);
+            dat.brain = (Actor.Brains)System.Convert.ToInt32(rdr["brain"]);
+            
+            float posx = (float)System.Convert.ToDecimal(rdr["posx"]);
+            float posy = (float)System.Convert.ToDecimal(rdr["posy"]);
+            float posz = (float)System.Convert.ToDecimal(rdr["posz"]);
+            dat.pos = new Vector3(posx, posy, posz);
+
+            float rotx = (float)System.Convert.ToDecimal(rdr["rotx"]);
+            float roty = (float)System.Convert.ToDecimal(rdr["roty"]);
+            float rotz = (float)System.Convert.ToDecimal(rdr["rotz"]);
+            dat.rot = new Vector3(rotx, roty, rotz);
+            GD.Print("Found actor " + dat.ToString());
+            actors.Add(dat.id, dat);
+        }
+        rdr.Close();
+
+        sql = @"
+            SELECT * from actors_extra;
+        ";
+
+        cmd.CommandText = sql;
+        rdr = cmd.ExecuteReader();
+
+        while(rdr.Read()){
+            int id = (int)rdr["id"];
+            string name = (string)rdr["name"];
+            string val = (string)rdr["value"];
+
+            if(actors.ContainsKey(id)){
+                ActorData actor = actors[id];
+
+                if(actor.extra.ContainsKey(name)){
+                    actor.extra[name] = val;
+                }
+                else{
+                    actor.extra.Add(name, val);
+                }
+            }
+        }
+        rdr.Close();
+
+        return actors;
+    }
+
+    public System.Collections.Generic.Dictionary<int, TerrainCellData> LoadCells(){
+        System.Collections.Generic.Dictionary<int, TerrainCellData> cells;
+        cells = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
+
+        int width = Overworld.WorldWidth;
+        int maxId = width * width;
+
+        for(int i = 0; i < maxId; i++){
+            TerrainCellData cell = new TerrainCellData();
+            cell.id = i;
+            cell.coords = Util.CellIndexToCoords(cell.id, width);
+            cells.Add(cell.id, cell);
+        }
+
+        string sql = @"
+            SELECT * from terrain_blocks;
+        ";
+
+        cmd.CommandText = sql;
+        IDataReader rdr = cmd.ExecuteReader();
+
+        while(rdr.Read()){
+            TerrainBlock block = new TerrainBlock();
+
+            int cellId = System.Convert.ToInt32(rdr["cellId"]);
+
+            block.blockId = (TerrainBlock.Blocks)System.Convert.ToInt32(rdr["blockId"]);
+
+            int orx = System.Convert.ToInt32(rdr["orientationx"]);
+            int ory = System.Convert.ToInt32(rdr["orientationy"]);
+            int orz = System.Convert.ToInt32(rdr["orientationz"]);
+            block.orientation = new Vector3(orx, ory, orz);
+
+            int posx = System.Convert.ToInt32(rdr["posx"]);
+            int posy = System.Convert.ToInt32(rdr["posy"]);
+            int posz = System.Convert.ToInt32(rdr["posz"]);
+            block.gridPosition = new Vector3(posx, posy, posz);
+
+            if(cells.ContainsKey(cellId)){
+                cells[cellId].blocks.Add(block);
+            }
+            else{
+                GD.Print("AdventureDB.LoadCells: Cell " + cellId + " doesn't exist.");
+            }
+        }
+
+        rdr.Close();
+
+        return cells;
     }
 
     public void CreateTables(){
@@ -326,7 +436,17 @@ public class AdventureDb{
         conn.Close();
     }
 
+    public OverworldData LoadData(){
+        OverworldData data = new OverworldData();
+
+        data.actorsData = LoadActors();
+        data.cellsData = LoadCells();
+
+        return data;
+    }
+
     public static void CreateFile(string file){
+        GD.Print("Creating " + file);
         SQLiteConnection.CreateFile(file);
     }
 }

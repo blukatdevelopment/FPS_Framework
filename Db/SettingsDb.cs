@@ -106,8 +106,16 @@ public class SettingsDb{
         else{
             results = System.IO.Directory.GetFiles(SavesDirectory, "*." + extension);
         }
+        
+        for(int i = 0; i < results.Length; i++){
+            results[i] = results[i].Replace("Saves/", "");
+            results[i] = results[i].Replace("." + extension, "");
+        }
+        List<string> ret = new List<String>(results);
+        
 
-        return new List<string>(results);
+
+        return ret;
     }
 
     public static SettingsDb Init(){

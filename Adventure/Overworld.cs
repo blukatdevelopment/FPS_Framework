@@ -86,7 +86,7 @@ public class Overworld : Spatial {
 		
 		int playerId = GetActorByBrain(Actor.Brains.Player1);
 		if(playerId == -1 || !actorsData.ContainsKey(playerId)){
-			GD.Print("Player1 does not exist. Aborting.");
+			GD.Print("Player1 does not exist with id " + playerId + " Aborting.");
 			return;
 		}
 		
@@ -108,6 +108,16 @@ public class Overworld : Spatial {
 	/* Asks the cartographer to make a new world
 	 TODO: or loads an existing one */
 	public void InitWorld(){
+		if(Session.session.adventureSettings != null 
+			 && Session.session.adventureSettings.load){
+			
+			AdventureDb db = new AdventureDb(saveFile);
+			OverworldData dat = db.LoadData();
+			
+			actorsData = dat.actorsData;
+			return;
+		}
+
 		Cartographer cart = new Cartographer();
 		
 		cart.GenerateWorld(this);
@@ -325,6 +335,13 @@ public class Overworld : Spatial {
 		db.SaveData(data);
 	}
 
+	public void Load(){
+		GD.Print("Loading");
+		AdventureDb db = new AdventureDb(saveFile);
+
+		OverworldData data = db.LoadData();
+	}
+
 	public int GetActorByBrain(Actor.Brains brain){
 		foreach(int key in actors.Keys){
 			if(actors[key].brainType == brain){
@@ -334,6 +351,7 @@ public class Overworld : Spatial {
 
 		foreach(int key in actorsData.Keys){
 			if(actorsData[key].brain == brain){
+				GD.Print("Found brain in " + key);
 				return key;
 			}
 		}

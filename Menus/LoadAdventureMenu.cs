@@ -32,9 +32,8 @@ public class LoadAdventureMenu : Container, IMenu {
   }
 
   public void SelectSave(int index){
-    string save = savesList.GetItemText(index);
-    Session.session.adventureSettings.fileName = save + ".adventure";
-    GD.Print("Selecting " + save);
+    string save = savesList.GetItemText(index) + ".adventure";
+    Session.session.adventureSettings.fileName = save;
   }
 
   public void LoadSave(int index){
@@ -51,6 +50,7 @@ public class LoadAdventureMenu : Container, IMenu {
       GD.Print("Can't load a blank file");
       return;
     }
+    Session.session.adventureSettings.load = true;
     Session.SinglePlayerAdventure();
   }
 
