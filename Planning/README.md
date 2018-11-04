@@ -2,29 +2,44 @@
 
 This folder is where all files relating to planning reside.
 
+# Guidelines
+
+## Commits
+
+A commit message should look something like this. Note that the QA and Bug
+sections are optional, but the type(scope): is not.
+
+``` 
+feat(AI): Installed morality core.
+
+QA: Check to make sure testing chamber is not flooded with nerve toxins.
+Bug: Fixes #1234
+```
+
+Acceptable commit types include:
+- fix : A fix to existing functionality.
+- feat : Adding new functionality.
+- doc : Updating documentation.
+
 # State of development
 
 At the time of this writing this game is being developed by
-one person assuming all roles. Godot 3.0.4 Mono is the engine selected 
+one person assuming all roles. Godot 3.0.6 Mono is the engine selected 
 for this project.
 
-The first iteration of development is completed. This creates room for
-two kinds of growth: refinement of existing features and the introduction
-of new features. The former includes consists mostly of granular changes
-as well as architectural review to reducOptimization will be a priority that will come only after things are feature complete.  However, that might be something worth noting. e complexity. The second introduces
-complexity. This balance must be attended to 
+The first iteration of development created the Arena mode, wherein players and
+AI fight one another in a static arena.
+
+The ongoing second iteration of development is creating the Adventure mode, 
+wherein players and AI interact in an open world sandbox.
 
 # Areas lacking polish or needing refactor
-- AI is currently not smart.
-- There is only one placeholder Arena map.
 - Items rely on Scenes for initialization.
-- Menus use default skin and is hideous.
+- Menus use default skin and it is hideous.
 - Actors lack humanoid models with animations.
-- Lack of item variety. (Currently no apparel or misc)
 - BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
-- Add <string, string> variable to ItemQuery and replace ItemData with it to simplify adding/removing data.
-- Revisit item stacking.
-- Revisit ItemQuery, maybe rename to ItemKey and apply kits before spawning actors in Arena
+- BUG: Cannot load adventure from pause menu
+- Revisit Arena code to simplify initializing inventories.
 
 # Completed Milestones
 
