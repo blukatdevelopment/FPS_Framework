@@ -32,25 +32,11 @@ complexity. This balance must be attended to
 Minimalistic multiplayer arena shooter.
 
 
-# Adventure Gamemode
-
-Things that need to be done:
-- Menus to access and configure adventure mode
-- Overworld class to manage active Treadmills
-- Treadmill class to render one portion of the map
-- Terrain data storage
-- Actor/Item storage
-- placeholder world generation
-
-The following steps are the tentative roadmap. WIth this much scope, things will likely change between steps.
+# Active stories
 
 
 ## Auth service
-- Build auth service in other repo.
-- Set up outward-facing nodejs server to offer this service.
+- DONE Build auth service in other repo.
+- Set up outward-facing nodejs server to offer this service, at least just to test.
 - Build static Util method in this project to attempt to connect and use configured auth service endpoint.
 
-## Load singleplayer Overworld 
-- upon starting singleplayer game, check if savefile already exists and load then
-- loading should get actors, items, terrain, and adventure settings from that save file
-- Create GetItem(id), GetItemIds(), GetItems() (and equivalents for actors and TerrainCells) in database manager
