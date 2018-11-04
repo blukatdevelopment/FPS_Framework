@@ -59,14 +59,16 @@ public class Cartographer {
 
 	public TerrainCellData GenerateFlatCell(Vector2 coords){
 		TerrainCellData data = new TerrainCellData();
-		data.coords = coords;
+		data.xCoord = (int)coords.x;
+		data.yCoord = (int)coords.y;
 		data.id = world.CoordsToCellId((int)coords.x, (int)coords.y);
 
 
 		for(int i = 0; i < cellSize; i++){
 			for(int j = 0; j < cellSize; j++){
 				TerrainBlock block = new TerrainBlock();
-				block.gridPosition = new Vector3(i, 0, j);
+				block.gpx = i;
+				block.gpz = j;
 				block.blockId = TerrainBlock.Blocks.Dirt;
 				data.blocks.Add(block);
 			}

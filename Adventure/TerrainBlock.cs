@@ -5,42 +5,55 @@
 */
 
 using Godot;
+using System;
 
+[System.Serializable]
 public class TerrainBlock {
 	public enum Blocks{
     Air,
     Dirt = 2 // Hardcoded to full block
   };
   
-	public Vector3 orientation;
-	public Vector3 gridPosition;
+  // Orientation
+  public int orx, ory, orz;
+  // Grid Position
+  public int gpx, gpy, gpz;
+
 	public Blocks blockId;
 
 
 	public TerrainBlock(){
-		orientation = new Vector3();
-		gridPosition = new Vector3();
 	}
 
 	public TerrainBlock(Vector3 gridPosition, Vector3 orientation, Blocks blockId = Blocks.Dirt){
-		this.gridPosition = gridPosition;
-		this.orientation = orientation;
+		orx = (int)orientation.x;
+		ory = (int)orientation.y;
+		orz = (int)orientation.z;
+
+		gpx = (int)gridPosition.x;
+		gpy = (int)gridPosition.y;
+		gpz = (int)gridPosition.z;
+
 		this.blockId = blockId;
 	}
 
 	// Because a Vector3 cannot be an optional argument
 	public TerrainBlock(Vector3 gridPosition, Blocks blockId = Blocks.Dirt){
-		this.gridPosition = gridPosition;
-		this.orientation = new Vector3();
+		orx = 0;
+		ory = 0;
+		orz = 0;
+
+		gpx = (int)gridPosition.x;
+		gpy = (int)gridPosition.y;
+		gpz = (int)gridPosition.z;
+
+		
 		this.blockId = blockId;
 	}
 
 	public override string ToString(){
 		string ret = "Block:[";
-		int x = (int)gridPosition.x;
-		int y = (int)gridPosition.y;
-		int z = (int)gridPosition.z;
-		ret += x + "," + y + "," + z + "]";
+		ret += gpx + "," + gpy + "," + gpz + "]";
 		ret += "blockId: " + blockId;
 		return ret;
 	}

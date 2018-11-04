@@ -135,6 +135,17 @@ public class Util{
     return ret;
   }
 
+  // Returns true if index is positive and within max bounds.
+  public static bool ValidCellIndex(int index, int gridSize){
+    if(index < 0){
+      return false;
+    }
+    if(index >= gridSize * gridSize){
+      return false;
+    }
+    return true;
+  }
+
   // Flatten a Vector2 into an int index
   public static int CoordsToCellIndex(Vector2 coords, int gridSize){
     int x = (int)coords.x;

@@ -47,20 +47,21 @@ public class TerrainCell : GridMap{
 
 	public TerrainCellData GetData(){
 		TerrainCellData data = new TerrainCellData();
-		data.coords = coords;
+		data.xCoord = (int)coords.x;
+		data.yCoord = (int)coords.y;
 		data.id = id;
 		data.blocks = blockData;
 		return data;
 	}
 	
 	public void LoadData(TerrainCellData data){
-		coords = data.coords;
+		coords = new Vector2(data.xCoord, data.yCoord);
 		id = data.id;
 		blockData = data.blocks;
 		foreach(TerrainBlock block in data.blocks){
-			int x = (int)block.gridPosition.x;
-			int y = (int)block.gridPosition.y;
-			int z = (int)block.gridPosition.z;
+			int x = block.gpx;
+			int y = block.gpy;
+			int z = block.gpz;
 			int meshId = (int)block.blockId;
 			SetCellItem(x, y, z, meshId);
 		}

@@ -1,7 +1,10 @@
 /*
 
-    This class manages an SQLite database dedicated
-    to saving/loading an adventure mode game.
+    This class manages File I/O for an adventure, and now serves as a layer
+    of abstraction obscuring away how this data is saved or loaded.
+
+    Actor and item data are stored in SQLite, whilst for performance reasons
+    cells are serialized directly.
 */
 using Godot;
 using System;
@@ -10,10 +13,13 @@ using System.Data.SQLite;
 using System.IO;
 using Mono.Data.Sqlite;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 public class AdventureDb{
     const string SaveDirectory = "Saves/";
     public string filePath;
+    public string terrainDirectory;
     IDbConnection conn;
     IDbCommand cmd;
 
@@ -33,6 +39,7 @@ public class AdventureDb{
         if(initNeeded){
             CreateTables();
         }
+        InitTerrainFolder();
     }
 
     public void Close(){
@@ -97,55 +104,68 @@ public class AdventureDb{
         return actors;
     }
 
-    public System.Collections.Generic.Dictionary<int, TerrainCellData> LoadCells(){
-        System.Collections.Generic.Dictionary<int, TerrainCellData> cells;
-        cells = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
-
-        int width = Overworld.WorldWidth;
-        int maxId = width * width;
-
-        for(int i = 0; i < maxId; i++){
-            TerrainCellData cell = new TerrainCellData();
-            cell.id = i;
-            cell.coords = Util.CellIndexToCoords(cell.id, width);
-            cells.Add(cell.id, cell);
-        }
-
+    public System.Collections.Generic.Dictionary<int, ItemData> LoadItems(){
+        System.Collections.Generic.Dictionary<int, ItemData> items;
+        items = new System.Collections.Generic.Dictionary<int, ItemData>();
+        
         string sql = @"
-            SELECT * from terrain_blocks;
+            SELECT * from items;
         ";
 
         cmd.CommandText = sql;
         IDataReader rdr = cmd.ExecuteReader();
 
         while(rdr.Read()){
-            TerrainBlock block = new TerrainBlock();
+            ItemData dat = new ItemData();
+            
+            dat.id = System.Convert.ToInt32(rdr["id"]);
+            dat.type = (Item.Types)System.Convert.ToInt32(rdr["itemType"]);
+            dat.name = (string)rdr["name"];
+            dat.description = (string)rdr["description"];
+            dat.weight = System.Convert.ToInt32(rdr["weight"]);
+            dat.held = System.Convert.ToBoolean(rdr["held"]);
 
-            int cellId = System.Convert.ToInt32(rdr["cellId"]);
+            float posx = (float)System.Convert.ToDecimal(rdr["posx"]);
+            float posy = (float)System.Convert.ToDecimal(rdr["posy"]);
+            float posz = (float)System.Convert.ToDecimal(rdr["posz"]);
+            dat.pos = new Vector3(posx, posy, posz);
 
-            block.blockId = (TerrainBlock.Blocks)System.Convert.ToInt32(rdr["blockId"]);
-
-            int orx = System.Convert.ToInt32(rdr["orientationx"]);
-            int ory = System.Convert.ToInt32(rdr["orientationy"]);
-            int orz = System.Convert.ToInt32(rdr["orientationz"]);
-            block.orientation = new Vector3(orx, ory, orz);
-
-            int posx = System.Convert.ToInt32(rdr["posx"]);
-            int posy = System.Convert.ToInt32(rdr["posy"]);
-            int posz = System.Convert.ToInt32(rdr["posz"]);
-            block.gridPosition = new Vector3(posx, posy, posz);
-
-            if(cells.ContainsKey(cellId)){
-                cells[cellId].blocks.Add(block);
-            }
-            else{
-                GD.Print("AdventureDB.LoadCells: Cell " + cellId + " doesn't exist.");
-            }
+            float rotx = (float)System.Convert.ToDecimal(rdr["rotx"]);
+            float roty = (float)System.Convert.ToDecimal(rdr["roty"]);
+            float rotz = (float)System.Convert.ToDecimal(rdr["rotz"]);
+            dat.rot = new Vector3(rotx, roty, rotz);
+            
+            items.Add(dat.id, dat);
         }
 
         rdr.Close();
 
-        return cells;
+        sql = @"
+            SELECT * from actors_extra;
+        ";
+
+        cmd.CommandText = sql;
+        rdr = cmd.ExecuteReader();
+
+        while(rdr.Read()){
+            int id = (int)rdr["id"];
+            string name = (string)rdr["name"];
+            string val = (string)rdr["value"];
+
+            if(items.ContainsKey(id)){
+                ItemData item = items[id];
+
+                if(item.extra.ContainsKey(name)){
+                    item.extra[name] = val;
+                }
+                else{
+                    item.extra.Add(name, val);
+                }
+            }
+        }
+        rdr.Close();
+
+        return items;
     }
 
     public void CreateTables(){
@@ -166,7 +186,7 @@ public class AdventureDb{
             roty FLOAT,
             rotz FLOAT,
             name VARCHAR(200),
-            itemType VARCHAR(200),
+            itemType INT,
             description TEXT,
             weight INT(2),
             held BOOLEAN
@@ -196,18 +216,6 @@ public class AdventureDb{
             id BIGINT PRIMARY KEY,
             name VARCHAR(200),
             value TEXT
-        );
-
-        CREATE TABLE terrain_blocks
-        (
-            cellId INT(8),
-            blockId INT(2),
-            orientationx INT(2),
-            orientationy INT(2),
-            orientationz INT(2),
-            posx INT(2),
-            posy INT(2),
-            posz INT(2)
         );
         ";
         cmd.CommandText = sql;
@@ -322,78 +330,42 @@ public class AdventureDb{
         cmd.ExecuteNonQuery();
     }
 
-    public void SaveTerrain(TerrainCellData data){
-        foreach(TerrainBlock block in data.blocks){
-            SaveBlock(data.id, (int)block.blockId, block.gridPosition, block.orientation);
-        }
+    public string CellFileName(int id){
+        string ret = terrainDirectory + "/cell" + id;
+        return ret;
     }
 
-    /* Prepares and caches the query to insert blocks. */
-    public IDbCommand GetSaveBlockCommand(){
-        if(saveBlockCommand != null){
-            return saveBlockCommand;
-        }
-        saveBlockCommand = conn.CreateCommand();
-        string sql = @"
-            INSERT INTO terrain_blocks
-            (
-                cellId,
-                blockId, 
-                orientationx, 
-                orientationy,
-                orientationz,
-                posx,
-                posy,
-                posz 
-            )
-            VALUES (
-                @cellId,
-                @blockId,
-                @orientationx,
-                @orientationy,
-                @orientationz,
-                @posx,
-                @posy,
-                @posz
-            );
-        ";
-        saveBlockCommand.CommandText = sql;
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@cellId", 0));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@blockId", 0));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationx", 0.0f));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationy", 0.0f));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@orientationz", 0.0f));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@posx", 0.0f));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@posy", 0.0f));
-        saveBlockCommand.Parameters.Add(new SqliteParameter("@posz", 0.0f));
+    /* Save one cell into its own file. */
+    public void SaveCell(TerrainCellData data){
+        string cellFile = CellFileName(data.id);
+        GD.Print("Saving cell " + data.id + " to " + cellFile);
 
-        saveBlockCommand.Prepare();
-        return saveBlockCommand;
+        // Delete an existing cell file.
+        System.IO.File.Delete(cellFile);
+
+        IFormatter formatter = new BinaryFormatter();
+        Stream stream = new FileStream(cellFile, FileMode.Create, FileAccess.Write, FileShare.None);
+        formatter.Serialize(stream, data);
+        stream.Close();
     }
 
-    public void SaveBlock(int cellId, int blockId, Vector3 pos, Vector3 rot){
-        cmd = GetSaveBlockCommand();
+    public TerrainCellData LoadCell(int id){
+        string cellFile = CellFileName(id);
 
-        ((SqliteParameter)cmd.Parameters[0]).Value = cellId;
-        ((SqliteParameter)cmd.Parameters[1]).Value = blockId;
-        ((SqliteParameter)cmd.Parameters[2]).Value = rot.x;
-        ((SqliteParameter)cmd.Parameters[3]).Value = rot.y;
-        ((SqliteParameter)cmd.Parameters[4]).Value = rot.z;
-        ((SqliteParameter)cmd.Parameters[5]).Value = pos.x;
-        ((SqliteParameter)cmd.Parameters[6]).Value = pos.y;
-        ((SqliteParameter)cmd.Parameters[7]).Value = pos.z;
+        IFormatter formatter = new BinaryFormatter();  
+        Stream stream = new FileStream(cellFile, FileMode.Open, FileAccess.Read, FileShare.Read);  
+        TerrainCellData ret = (TerrainCellData)formatter.Deserialize(stream);  
+        stream.Close();
 
-        cmd.ExecuteNonQuery();
+        return ret;
     }
 
     /* Save overworld data to current file. */
     public void SaveData(OverworldData dat){
         /* Tear down existing database. */
-        
         conn.Close();
-        if(System.IO.File.Exists(filePath)){
-            System.IO.File.Delete(filePath);
-        }
+        System.IO.File.Delete(filePath);
+        
 
         /* Set up new database for this save. */
         conn = new SqliteConnection("URI=file:" + filePath);
@@ -427,8 +399,7 @@ public class AdventureDb{
         }
 
         foreach(int id in dat.cellsData.Keys){
-            GD.Print("Saving cell " + id);
-            SaveTerrain(dat.cellsData[id]);
+            SaveCell(dat.cellsData[id]);
         }
 
         trans.Commit();
@@ -436,12 +407,17 @@ public class AdventureDb{
         conn.Close();
     }
 
+    public void InitTerrainFolder(){
+        terrainDirectory = filePath.Replace(".adventure", "");
+        System.IO.Directory.CreateDirectory(terrainDirectory);
+
+    }
+
     public OverworldData LoadData(){
         OverworldData data = new OverworldData();
 
         data.actorsData = LoadActors();
-        data.cellsData = LoadCells();
-
+        data.itemsData = LoadItems();
         return data;
     }
 

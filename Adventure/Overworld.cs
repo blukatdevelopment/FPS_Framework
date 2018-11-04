@@ -111,6 +111,7 @@ public class Overworld : Spatial {
 		if(Session.session.adventureSettings != null 
 			 && Session.session.adventureSettings.load){
 			
+			GD.Print("InitWorld saveFile " + saveFile);
 			AdventureDb db = new AdventureDb(saveFile);
 			OverworldData dat = db.LoadData();
 			
@@ -447,12 +448,20 @@ public class Overworld : Spatial {
 	}
 
 	public TerrainCell RenderCell(int id){
+		if(!Util.ValidCellIndex(id, WorldWidth)){
+			return null;
+		}
+
 		if(cells.ContainsKey(id)){
 			return cells[id];
 		}
 		
+		// Load from Disc
 		if(!cellsData.ContainsKey(id)){
-			return null;
+			GD.Print("RenderCell saveFile " + saveFile);
+			AdventureDb db = new AdventureDb(saveFile);
+			TerrainCellData data = db.LoadCell(id);
+			cellsData.Add(id, data);
 		}
 
 		// Actually render the cell
