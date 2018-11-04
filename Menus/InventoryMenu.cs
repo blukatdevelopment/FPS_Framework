@@ -216,12 +216,7 @@ public class InventoryMenu : Container, IMenu {
     int playerItemIndex = player.IndexOf(dat.type, dat.name);
     player.DiscardItem(playerItemIndex);
     
-    if(dat.quantity <= 0){
-    	RefreshInventory();
-    }
-    else{
-    	itemList.SetItemText(selected, dat.ToString());
-    }
+    RefreshInventory();
   }
 
   public void StashItem(){

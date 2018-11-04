@@ -15,16 +15,24 @@ public class Session : Node {
   public static Session session;
   private Node activeMenu;
   public Arena arena;
+  public Overworld adventure; // Overworld manages adventure mode.
   public NetworkSession netSes;
   public Random random;
   public JukeBox jukeBox;
 
   // Settings
   public ArenaSettings arenaSettings; // Set up just before Arena game
+  public AdventureSettings adventureSettings; // Set up for an adventure game
   public float masterVolume, sfxVolume, musicVolume;
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;
   
+
+  public enum Gamemodes{
+    None,
+    Arena,
+    Adventure
+  };
 
   public Actor player;
 
@@ -40,13 +48,16 @@ public class Session : Node {
     ChangeMenu(Menu.Menus.Main);
     InitJukeBox();
     InitSettings();
-    //ShowMethods(typeof(Godot.RigidBody));
-    //ShowProperties(typeof(Godot.CollisionShape));
-    //ShowVariables(typeof(Godot.RigidBody));
+    //PerformTests();
+  }
+
+  public void PerformTests(){
+    Test.Init();
+    AdventureTest.RunTests();
   }
 
   public void InitSettings(){
-    GD.Print("InitSettings");
+    //GD.Print("InitSettings");
     SettingsDb db = SettingsDb.Init();
     masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
     sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
@@ -127,6 +138,10 @@ public class Session : Node {
       ses.arena.QueueFree();
       ses.arena = null;
     }
+    if(ses.adventure != null){
+      ses.adventure.QueueFree();
+      ses.adventure = null;
+    }
     if(!keepNet && ses.netSes != null){
       ses.netSes.QueueFree();
       ses.netSes = null;
@@ -154,7 +169,20 @@ public class Session : Node {
     ses.arena = (Arena)arenaNode;
     ses.AddChild(arenaNode);
     ses.arena.Init(true);
-    
+  }
+
+  public static void SinglePlayerAdventure(){
+    GD.Print("SinglePlayerAdventure");
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
+  }
+
+  public static void MultiplayerAdventure(){
+    GD.Print("MultiplayerAdventure Server:" + Session.IsServer());
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
   }
 
   public static void MultiplayerArena(){
@@ -229,6 +257,9 @@ public class Session : Node {
     if(ses.arena != null){
       return ses.arena.GetObjectiveText();
     }
+    if(ses.adventure != null){
+      return ses.adventure.GetObjectiveText();
+    }
     return "Fight the enemies.";
   }
   
@@ -239,6 +270,9 @@ public class Session : Node {
     }
     if(arena != null){
       arena.HandleEvent(sessionEvent);
+    }
+    if(adventure != null){
+      adventure.HandleEvent(sessionEvent);
     }
   }
 
@@ -273,5 +307,10 @@ public class Session : Node {
     if(arena != null){
       arena.PlayerReady();
     }
+  }
+
+  // TODO: Pass off this logic to Overworld or Arena.
+  public static Vector3 WorldPosition(Item item){
+    return item.Translation;
   }
 }

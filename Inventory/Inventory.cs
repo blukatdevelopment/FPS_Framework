@@ -17,6 +17,38 @@ public class Inventory : IHasItem {
 		this.items = items;
 	}
 
+	/*
+		Removes items with matching type and name.
+		If max is greater than zero, will return up to that many items.
+	*/
+	public List<ItemData> RetrieveItems(Item.Types itemType, string itemName, int max = 0){
+		List<ItemData> ret = new List<ItemData>();
+
+		foreach(ItemData data in items){
+			if(max > 0 && ret.Count >= max){
+				break;
+			}
+			if(data.type == itemType && itemName == data.name){
+				ret.Add(data);
+			}
+		}
+
+		foreach(ItemData data in ret){
+			items.Remove(data);
+		}
+		return ret;
+	}
+
+	public int GetQuantity(Item.Types itemType, string itemName){
+		int ret = 0;
+		foreach(ItemData data in items){
+			if(data.type == itemType && itemName == data.name){
+				ret++;
+			}
+		}
+		return ret;
+	}
+
 	// Doesn't change value.
 	public ItemData GetItem(int index){
 		if(index < 0 || index >= items.Count){
@@ -26,14 +58,12 @@ public class Inventory : IHasItem {
 	}
 
 	// Changes value.
-	public ItemData RetrieveItem(int index, int quantity = 1){
-		if(GetItem(index) == null){
+	public ItemData RetrieveItem(int index){
+		if(index >= items.Count || index < 0){
 			return null;
 		}
-		ItemData ret = items[index].Remove(quantity);
-		if(items[index].quantity == 0){
-			items.RemoveRange(index, 1);
-		}
+		ItemData ret = items[index];
+		items.Remove(ret);
 		return ret;
 	}
 
@@ -70,16 +100,14 @@ public class Inventory : IHasItem {
 		return ToString();
 	}
 
-	public int ReceiveItem(Item item){
+	public void StoreItemData(ItemData data){
+		items.Add(data);
+	}
+
+	public bool ReceiveItem(Item item){
 		ItemData data = item.GetData();
-		int index = IndexOf(data.type, data.name);
-		if(index == -1){
-			items.Add(data);
-			return 0;
-		}
-		else{
-			return items[index].Add(data);
-		}
+		items.Add(data);
+		return true;
 	}
 
 	public Item PrimaryItem(){
@@ -95,6 +123,12 @@ public class Inventory : IHasItem {
 		foreach(ItemData dat in items){
 			ret.Add(dat);
 		}
+		return ret;
+	}
+
+	public List<ItemData> RetrieveAllItems(){
+		List<ItemData> ret = items;
+		items = new List<ItemData>();
 		return ret;
 	}
 

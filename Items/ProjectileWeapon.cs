@@ -3,6 +3,7 @@
   Limited by a store of ammo wich must be reloaded with delay.
 */
 using Godot;
+using System.Collections.Generic;
 using System;
 
 public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
@@ -11,7 +12,9 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   const float ProjectileOffset = 0.1f;
   const float ImpulseStrength = 50f;
   string ammoType = "Bullet";
-  int ammo = 0;
+  
+  Inventory inventory;
+
   int maxAmmo = 10;
   
   float busyDelay = 0f;
@@ -19,9 +22,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   delegate void OnBusyEnd();
   OnBusyEnd busyEndHandler;
   
-  public void Init(){
-    
+
+  public ProjectileWeapon(){
+    inventory = new Inventory();
   }
+
   
   public override void _Process(float delta){
     if(busy){
@@ -44,11 +49,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
 
   public override string GetInfo(){
-    string ret = name + "[" + ammo + "/" + maxAmmo;
+    string ret = name + "[" + inventory.ItemCount() + "/" + maxAmmo;
     if(wielder != null){
       IHasAmmo ammoHolder = wielder as IHasAmmo;
       if(ammoHolder != null){
-        ret += "/" + ammoHolder.CheckAmmo(ammoType, -1);
+        ret += "/" + ammoHolder.CheckAmmo(ammoType, 0);
       }
     }
     ret += "]";
@@ -60,45 +65,37 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
   
   /* Show up to max ammo */
-  public int CheckAmmo(string ammoType, int max){
-    if(this.ammoType != ammoType){
-      return 0;
+  public int CheckAmmo(string ammoType, int max = 0){
+    int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType); 
+    if(max > 0 && quantity > max){
+      return max;
     }
-    if(max < 0){
-      return ammo;
-    }
-    if(max > ammo){
-      return ammo;
-    }
-    return max;
+    return quantity;
   }
   
   /* Return up to max ammo, removing that ammo from inventory. */
-  public int RequestAmmo(string ammoType, int max){
-    int amount = CheckAmmo(ammoType, max);
-    ammo -= amount;
-    return amount;
+  public List<ItemData> RequestAmmo(string ammoType, int max = 0){
+    return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
   }
   
   /* Store up to max ammo, returning overflow. */
-  public int StoreAmmo(string ammoType, int max){
-    if(ammoType != this.ammoType || busy){
-      return max;
+  public List<ItemData> StoreAmmo(List<ItemData> ammo){
+    if(busy){
+      return ammo;
     }
     
-    int amount = max + ammo;
+    List<ItemData> ret = new List<ItemData>();
     
-    if(maxAmmo <= amount){
-      StartReload(maxAmmo);
-      amount -= maxAmmo;
-    }
-    else{
-      int fullAmmo = ammo + amount;
-      StartReload(fullAmmo);
-      amount = 0;
+    foreach(ItemData data in ammo){
+      if(inventory.ItemCount() < maxAmmo && data.type == Item.Types.Ammo && data.name == ammoType){
+        inventory.StoreItemData(data);
+      }
+      else{
+        ret.Add(data);
+      }
     }
     
-    return amount;
+    return ret;
   }
   
   public string[] AmmoTypes(){
@@ -106,11 +103,13 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     return new string[]{ ammoType };
   }
   
-  void StartReload(int finalAmmo){
+  void StartReload(List<ItemData> newAmmo){
     busy = true;
     busyDelay = 2f;
     OnBusyEnd loadAmmo = () => { 
-      ammo = finalAmmo; 
+      foreach(ItemData ammo in newAmmo){
+        inventory.StoreItemData(ammo);
+      } 
     };
     busyEndHandler = loadAmmo;
   }
@@ -132,7 +131,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   
   /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
-    if(ammo < 1 || (Session.NetActive() && !Session.IsServer() )){
+    if(inventory.ItemCount() < 1 || (Session.NetActive() && !Session.IsServer() )){
       return;
     }
     
@@ -151,9 +150,20 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     }
   }
 
+  // Expends ammo, returns true on success
+  public bool ExpendAmmo(){
+    if(inventory.ItemCount() > 0){
+      inventory.RetrieveItem(0);
+      return true;
+    }
+    return false;
+  } 
+
   [Remote]
   public void DeferredFire(string name){
-    ammo--;
+    if(!ExpendAmmo()){
+      return;
+    }
     speaker.PlayEffect(Sound.Effects.RifleShot);
     Item projectile = Item.Factory(Item.Types.Bullet, name);
     Projectile proj = projectile as Projectile;
@@ -184,7 +194,10 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     ItemBaseEquip(wielder);
     IHasAmmo ammoHolder = wielder as IHasAmmo;
     if(ammoHolder != null){
-      ammo = ammoHolder.RequestAmmo(ammoType, maxAmmo);
+      List<ItemData> newAmmo = ammoHolder.RequestAmmo(ammoType, maxAmmo);
+      foreach(ItemData ammo in newAmmo){
+        inventory.StoreItemData(ammo);
+      }
     }
     
   }
@@ -192,14 +205,13 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   public override void Unequip(){
     IHasAmmo ammoHolder = wielder as IHasAmmo;
     if(ammoHolder != null){
-      ammoHolder.StoreAmmo(ammoType, ammo);
+      ammoHolder.StoreAmmo(inventory.RetrieveAllItems());
     }
-    ammo = 0;
     ItemBaseUnequip();
   }
   
   private void Reload(){
-    int needed = maxAmmo - ammo;
+    int needed = maxAmmo - inventory.ItemCount();
     
     if(needed == 0 || wielder == null){
       return;
@@ -216,8 +228,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     }
     
     speaker.PlayEffect(Sound.Effects.RifleReload);
-    int receivedAmmo = ammoHolder.RequestAmmo(ammoType, needed);
-    StoreAmmo(ammoType, receivedAmmo);
+    List<ItemData> receivedAmmo = ammoHolder.RequestAmmo(ammoType, needed);
+    
+    foreach(ItemData ammo in receivedAmmo){
+      inventory.StoreItemData(ammo);
+    }
   }
   
   private Vector3 ProjectilePosition(){

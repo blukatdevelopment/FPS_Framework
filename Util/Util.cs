@@ -134,4 +134,108 @@ public class Util{
     }
     return ret;
   }
+
+  // Returns true if index is positive and within max bounds.
+  public static bool ValidCellIndex(int index, int gridSize){
+    if(index < 0){
+      return false;
+    }
+    if(index >= gridSize * gridSize){
+      return false;
+    }
+    return true;
+  }
+
+  // Flatten a Vector2 into an int index
+  public static int CoordsToCellIndex(Vector2 coords, int gridSize){
+    int x = (int)coords.x;
+    int y = (int)coords.y;
+
+    if(y < 0 || y >= gridSize || x < 0 || x >= gridSize){
+      return -1;
+    }
+    return y * gridSize + x;
+  }
+
+  // Turn an int index for position into a Vector2
+  public static Vector2 CellIndexToCoords(int index, int gridSize){
+    int y = index % gridSize;
+    int x = index / gridSize;
+
+    return new Vector2(x, y);
+  }
+
+  public static List<Vector2> CoordsInRadius(Vector2 center, int radius){
+    List<Vector2> ret = new List<Vector2>();
+    for(int i = -radius; i <= radius; i++){
+      for(int j = -radius; j <= radius; j++){
+        Vector2 offset = new Vector2(i, j);
+        Vector2 coord = center + offset;
+        ret.Add(coord);
+      }
+    }
+    return ret;
+  }
+
+  /*
+    Assuming a world starting at coords [0,0] and going to [size-1, size-1],
+    determine what coordinates a specific position falls inside. Doesn't care
+    about world bounds. [0, 0, 0] should be at the center of [0, 0]
+  */
+  public static Vector2 CoordsFromPosition(
+    Vector3 position, 
+    float scale // Width/height of cells in world units
+  ){
+    int x = (int)position.x;
+    int z = (int)position.z;
+
+    x += (int)(scale/2f);
+    z += (int)(scale/2f);
+
+    x /= (int)scale;
+    z /= (int)scale;
+
+    return new Vector2(x, z);
+  }
+
+  // Returns the center position of a cell, given position.
+  public static Vector3 CellPositionFromCoords( 
+    Vector2 coords, 
+    float scale // Width/height of cells in world units
+  ){
+    float x = coords.x * scale;
+    float y = 0f; // 0 All positions aught to start at 0
+    float z = coords.y * scale;
+
+    Vector3 ret = new Vector3(x, y, z);
+
+    return ret;
+  }
+
+
+  /*   Returns true if pos is between min and max */
+  public static bool InBounds(Vector3 min, Vector3 max, Vector3 pos){
+    string debug = "Util.InBounds\n";
+    debug += "min: " + min + "\n";
+    debug += "max: " + max + "\n";
+    debug += "pos: " + pos + "\n";
+    
+
+    if(min.x > pos.x || min.y > pos.y || min.z > pos.z){
+      debug += " was false";
+      //GD.Print(debug);
+      return false;
+    }
+
+    if(max.x < pos.x || max.y < pos.y || max.z < pos.z){
+      debug += " was false";
+      //GD.Print(debug);
+      return false;
+    }
+
+    debug += " was true";
+    //GD.Print(debug);
+    return true;
+  }
+
 }

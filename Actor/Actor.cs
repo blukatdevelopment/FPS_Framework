@@ -34,6 +34,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float gravityVelocity = 0f;
   
   public bool menuActive = false;
+  public bool paused = false;
 
   public Speaker speaker;
 
@@ -54,8 +55,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   // Network
   public int netId;
 
-  // World info
+  // World info TODO: Create an NPCCharacter module for personality stuff.
   public int worldId;
+  public string name; 
   
   // Delayed inventory init for netcode.
   float initTimer, initDelay;
@@ -65,7 +67,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   bool readyActive = false;
 
   
-  public void Init(Brains b = Brains.Player1){
+  public void Init(Brains b = Brains.Player1, bool initHealth = true){
     InitChildren();
     this.brainType = b;
     switch(b){
@@ -86,15 +88,39 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
     speaker = new Speaker();
     AddChild(speaker);
-    health = 100;
+    if(initHealth){
+      health = 100;
+    }
     InitInventory();
+  }
+
+  public void LoadData(ActorData dat){
+    // FIXME add remaining fields to ActorData and this method
+    health = dat.health;
+    healthMax = dat.healthMax;
+    Translation = dat.pos;
+    name = dat.name;
+    worldId = dat.id;
+  }
+
+  public ActorData GetData(){
+    //GD.Print("Actor.GetData not implemented");
+    ActorData data = new ActorData();
+    data.pos = Translation;
+    data.health = health;
+    data.healthMax = healthMax;
+    data.brain = brainType;
+    data.id = worldId;
+    data.name = name;
+    
+    return data;
   }
   
   public Item PrimaryItem(){
     return activeItem;
   }
   
-
+  // TODO: Remove hardcoded equipping code
   void InitInventory(){
     inventory = new Inventory();
     if(Session.NetActive() && !Session.IsServer()){
@@ -105,7 +131,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     string hand = Session.NextItemId();
 
     if(rifle == "" || hand == ""){
-      GD.Print("InitInventory: Rifle and hand strings are blank");
+      //GD.Print("InitInventory: Rifle and hand strings are blank");
     }
 
     if(!Session.NetActive()){
@@ -139,7 +165,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       EquipHand();  
     }
     else{
-      GD.Print("Not equipping hand because holding something.");
+      //GD.Print("Not equipping hand because holding something.");
     }
     
   }
@@ -181,36 +207,32 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
 
 
-  /* Show up to max ammo */
-  public int CheckAmmo(string ammoType, int max){
-    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
-    if(index == -1){
-      return 0;
+  /* Returns quantity of specified ammo.
+     If max is greater than zero, will return at most max.
+  */
+  public int CheckAmmo(string ammoType, int max = 0){
+    int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType);
+    if(max > 0 && max > quantity){
+      return quantity;
     }
-    return inventory.GetItem(index).quantity;
+    else if(max <= 0){
+      return quantity;
+    }
+    
+    return max;
   }
   
 
   /* Return up to max ammo, removing that ammo from inventory. */
-  public int RequestAmmo(string ammoType, int max){
-    int index = inventory.IndexOf(Item.Types.Ammo, ammoType);
-    if(index == -1){
-      return 0;
-    }
-    return inventory.RetrieveItem(index, max).quantity;
-
+  public List<ItemData> RequestAmmo(string ammoType, int max){
+    return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
   }
   
-  /* Store up to max ammo, returning overflow. */
-  public int StoreAmmo(string ammoType, int max){
-    if(Session.NetActive() && !Session.IsServer()){
-      GD.Print("Client won't store ammo.");
-      return 0;
+  public List<ItemData> StoreAmmo(List<ItemData> items){
+    foreach(ItemData item in items){
+      inventory.StoreItemData(item);
     }
-    GD.Print("Storing ammo " + ammoType + "(" + max + ")");
-    Item ammo = Item.Factory(Item.Types.Ammo, "TemporaryName", ammoType, max);
-    ReceiveItem(ammo);
-    return 0;
+    return new List<ItemData>();
   }
   
   public string[] AmmoTypes(){
@@ -254,14 +276,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void InitiateInteraction(){
     IInteract interactor = VisibleObject() as IInteract;
     if(interactor == null){
-      GD.Print("Nothing in range.");
+      //GD.Print("Nothing in range.");
       return;
     }
     Item.Uses interaction = GetActiveInteraction();
 
     Item item = interactor as Item;
     if(item != null && (item == hand || item == activeItem)){
-      GD.Print("Don't interact with your active item or hand. Returning.");
+      //GD.Print("Don't interact with your active item or hand. Returning.");
       return;
     }    
 
@@ -269,7 +291,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
-    GD.Print("Interacted with " + GetInfo() + ".");
+    //GD.Print("Interacted with " + GetInfo() + ".");
   }
   
   public string GetMoreInfo(){
@@ -316,7 +338,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public float GetMovementSpeed(){
-    float speed = 5f;
+    float speed = 50f;
     if(sprinting){
       speed *= 2f;
     }
@@ -362,7 +384,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredEquipItem(int index){
-    GD.Print("DeferredEquipItem: " + index);
+    //GD.Print("DeferredEquipItem: " + index);
     if(unarmed){
       StashHand();
     }
@@ -372,10 +394,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     ItemData dat = inventory.RetrieveItem(index);
     
+    if(dat == null){
+      GD.Print("Actor.DeferredEquipItem: Item at index " + index + " was null.");
+      return;
+    }
+
     Item item = Item.FromData(dat);
 
     if(eyes == null){
-      GD.Print("Not equipping item because eyes don't exist.");
+      //GD.Print("Not equipping item because eyes don't exist.");
       return;
     }
     
@@ -394,17 +421,17 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Removes activeItem from hands. */
   public void StashItem(){
     if(unarmed){
-      GD.Print("Unarmed. Not Stashing.");
+      //GD.Print("Unarmed. Not Stashing.");
       return;
     }
 
     if(activeItem == null){
-      GD.Print("No activeitem. Not stashing.");
+      //GD.Print("No activeitem. Not stashing.");
       return;
     }
     
     if(activeItem.GetParent() == null){
-      GD.Print("activeItem is orphan. Not stashing");
+      //GD.Print("activeItem is orphan. Not stashing");
       return;
     }
     DeferredStashItem();
@@ -441,19 +468,19 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Remove hand in preparation of equipping an item */
   public void StashHand(){
     if(activeItem != hand){
-      GD.Print("Hand not out. Not stashing hand.");
+      //GD.Print("Hand not out. Not stashing hand.");
       return;
     }
     eyes.RemoveChild(activeItem);
     activeItem = null;
-    GD.Print("Stashed hand");
+    //GD.Print("Stashed hand");
     unarmed = false;
   }
 
   /* Equip hand when unarmed.  */
   public void EquipHand(){
     if(activeItem == hand){
-      GD.Print("Hand already out. Not equipping hand.");
+      //GD.Print("Hand already out. Not equipping hand.");
       return;
     }
     activeItem = hand;
@@ -462,7 +489,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     activeItem.Mode = RigidBody.ModeEnum.Static;
     activeItem.Equip(this);
     unarmed = true;
-    GD.Print("Hand equipped");
+    //GD.Print("Hand equipped");
   }
   
   /* Finds any attached eyes if eys are not already set by factory.  */
@@ -512,7 +539,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void DeferredUse(Item.Uses use, bool released = false){
     if(activeItem == null){
-      GD.Print("No item equipped.");
+      //GD.Print("No item equipped.");
       return;
     }
     activeItem.Use(use);
@@ -599,7 +626,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void ReceiveDamage(Damage damage){
-    GD.Print("Received damage " + damage.health);
+    //GD.Print("Received damage " + damage.health);
     if(health <= 0){
       return;
     }
@@ -655,18 +682,18 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void DiscardItem(int index){
     ItemData data = inventory.GetItem(index);
     if(data == null){
-      GD.Print("No item found, not discarding.");
+      //GD.Print("No item found, not discarding.");
       return;
     }
     
     
     if(!Session.NetActive()){ // Singleplayer should directly call DeferredDiscardItem
-      GD.Print("Discarding item because no net active");
+      //GD.Print("Discarding item because no net active");
       string itemName = Session.NextItemId();
       DeferredDiscardItem(index, itemName);
     }
     else{
-      GD.Print("RPC serverdiscarditem");
+      //GD.Print("RPC serverdiscarditem");
       Rpc(nameof(ServerDiscardItem), index);
     }
   }
@@ -674,10 +701,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void ServerDiscardItem(int index){
     if(Session.NetActive() && !Session.IsServer()){
-      GD.Print("Returning because not server.");
+      //GD.Print("Returning because not server.");
       return;
     }
-    GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
+    //GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
     string itemName = Session.NextItemId();
     Rpc(nameof(DeferredDiscardItem), index, itemName);
     DeferredDiscardItem(index, itemName);
@@ -685,17 +712,17 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredDiscardItem(int index, string itemName){
-    GD.Print("Deferred discard " + index + " " + itemName);
+    //GD.Print("Deferred discard " + index + " " + itemName);
     ItemData data = inventory.RetrieveItem(index);
     if(data == null){
-      GD.Print("No item data. Not discarding.");
+      //GD.Print("No item data. Not discarding.");
       return;
     }
 
     Item item = Item.FromData(data);
     item.Name = itemName;
     Session.GameNode().AddChild(item);
-    GD.Print(item);
+    //GD.Print("Item:" + item);
     Transform trans = item.GlobalTransform;
     trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
     item.GlobalTransform = trans;
@@ -768,27 +795,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return "Unequipped";
   }
 
-  // Good for server->client
-  public int ReceiveItem(Item item){
-    if(!Session.NetActive()){
-      GD.Print("received " + item.quantity + " " + item);
-      return inventory.ReceiveItem(item);  
+  public bool ReceiveItem(Item item){
+    return inventory.ReceiveItem(item);
+  }
+
+  public bool ReceiveItems(List<Item> items){
+    foreach(Item item in items){
+      if(!inventory.ReceiveItem(item)){
+        return false;
+      }
     }
-    else if(Session.IsServer()){
-      string json = JsonConvert.SerializeObject(item.GetData(), Formatting.Indented);
-      DeferredReceiveItem(json);
-      Rpc(nameof(DeferredReceiveItem),json);
-      return 0;
-    }
-    else{
-      GD.Print("Online and not server. Not receivingItem");
-      return 0;
-    }
+    return false;
   }
 
   
-
-  // Good for server->client
   [Remote]
   public void DeferredReceiveItem(string json){
     ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);
@@ -839,9 +859,23 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       Input.SetMouseMode(Input.MouseMode.Captured);
     }
   }
+
+
+  public void Pause(){
+    paused = true;
+  }
+
+  public void Unpause(){
+    paused = false;
+  }
   
+  // From data convenience method
+  public static Actor ActorFactory(ActorData data){
+    return ActorFactory(data.brain, data);
+  }
+
   /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
-  public static Actor ActorFactory(Brains brain = Brains.Player1){
+  public static Actor ActorFactory(Brains brain = Brains.Player1, ActorData data = null){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
     
@@ -866,6 +900,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     actor.eyes.TranslateObjectLocal(eyesPos);
     actor.AddChild(actor.eyes);
     actor.Init(brain);
+    if(data != null){
+      actor.LoadData(data);
+    }
     return actor;
   }
 }

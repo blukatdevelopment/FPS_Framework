@@ -5,16 +5,18 @@ using System.Linq;
 using Newtonsoft.Json;
 
 public class LobbyMenu : Container, IMenu {
-  Godot.TextEdit messageBox;
-  Godot.TextEdit composeBox;
+  TextEdit messageBox;
+  TextEdit composeBox;
   Godot.Button sendButton;
   Godot.Button mainMenuButton;
-  Godot.TextEdit playersBox;
+  TextEdit playersBox;
   Godot.Button readyButton;
+  Godot.Button modeButton;
 
   // Server stuff
+  Session.Gamemodes activeMode;
   IMenu arenaConfig;
-  
+  IMenu adventureConfig;
 
   private bool countDownActive = false;
   private float timer = 0f;
@@ -102,6 +104,8 @@ public class LobbyMenu : Container, IMenu {
   }
 
   void InitServerControls(){
+    activeMode = Session.Gamemodes.Arena;
+
     messageBox = (Godot.TextEdit)Menu.TextBox();
     messageBox.Readonly = true;
     AddChild(messageBox);
@@ -114,9 +118,58 @@ public class LobbyMenu : Container, IMenu {
     playersBox.Readonly = true;
     AddChild(playersBox);
 
-    Node arenaConfigNode = Menu.SubMenuFactory(Menu.SubMenus.ArenaConfig);
-    AddChild(arenaConfigNode);
-    arenaConfig = arenaConfigNode as IMenu;
+    modeButton = Menu.Button("Gamemode: " + activeMode, ToggleMode);
+    AddChild(modeButton);
+
+    arenaConfig = Menu.SubMenuFactory(Menu.SubMenus.ArenaConfig) as IMenu;
+    adventureConfig = Menu.SubMenuFactory(Menu.SubMenus.AdventureConfig) as IMenu;
+
+    SetMenu(activeMode);
+  }
+
+
+  public void SetMenu(Session.Gamemodes mode){
+    switch(activeMode){
+      case Session.Gamemodes.None:
+        break;
+      case Session.Gamemodes.Arena:
+        RemoveChild(arenaConfig as Node);
+        break;
+      case Session.Gamemodes.Adventure:
+        RemoveChild(adventureConfig as Node);
+        break; 
+    }
+
+    activeMode = mode;
+
+    switch(activeMode){
+      case Session.Gamemodes.None:
+        break;
+      case Session.Gamemodes.Arena:
+        AddChild(arenaConfig as Node);
+        break;
+      case Session.Gamemodes.Adventure:
+        AddChild(adventureConfig as Node);
+        break;
+    }
+  }
+
+  public void ToggleMode(){
+    if(activeMode == Session.Gamemodes.Arena){
+      SetMenu(Session.Gamemodes.Adventure);
+    }
+    else{
+      SetMenu(Session.Gamemodes.Arena);
+    }
+    modeButton.SetText("Gamemode: " + activeMode);
+    Rpc(nameof(ChangeMode), activeMode);
+  }
+
+
+  [Remote]
+  public void ChangeMode(Session.Gamemodes mode){
+    activeMode = mode;
+    GD.Print("Mode changed to " + mode);
   }
 
   void InitNetwork(){
@@ -181,10 +234,13 @@ public class LobbyMenu : Container, IMenu {
     float hu = height/10;
     
     Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+    Menu.ScaleControl(modeButton, 2 * wu, hu, 0, height - 2 * hu);
     Menu.ScaleControl(messageBox, 6 * wu, hu, 3 * wu, 0);
     Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
 
     arenaConfig.Init(2 * wu, hu, width, height);
+    adventureConfig.Init(2 * wu, hu, width, height);
+
   }
   
   public void ReturnToMainMenu(){
@@ -202,6 +258,7 @@ public class LobbyMenu : Container, IMenu {
   }
   
   public void PlayerJoined(int id){
+    RpcId(id , nameof(ChangeMode), activeMode);
   }
 
   [Remote]
@@ -364,7 +421,15 @@ public class LobbyMenu : Container, IMenu {
 
   public void StartGame(){
     ResetReady();
-    Session.MultiplayerArena();
+    switch(activeMode){
+      case Session.Gamemodes.Arena:
+        Session.MultiplayerArena();
+        break;
+      case Session.Gamemodes.Adventure:
+        Session.MultiplayerAdventure();
+        break;
+    }
+    
   }
 
   void StopCountDown(){

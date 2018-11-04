@@ -9,9 +9,11 @@ using System.Data;
 using System.Data.SQLite;
 using System.IO;
 using Mono.Data.Sqlite;
+using System.Collections.Generic;
 
 public class SettingsDb{
     const string DefaultFile = @"settings.db";
+    const string SavesDirectory = "Saves/";
     public string file;
     IDbConnection conn;
     IDbCommand cmd;
@@ -48,7 +50,7 @@ public class SettingsDb{
         ";
         cmd.CommandText = sql;
         cmd.ExecuteNonQuery();
-        GD.Print("Created tables.");
+        //GD.Print("Created tables.");
     }
 
     public void InitSettings(){
@@ -91,12 +93,37 @@ public class SettingsDb{
         return ret;
     }
 
+    public static bool SaveExists(string saveName){
+        string filePath = SavesDirectory + saveName;
+        return System.IO.File.Exists(filePath);
+    }
+
+    public static List<string> GetAllSaves(string extension = ""){
+        string[] results;
+        if(extension == ""){
+            results = System.IO.Directory.GetFiles(SavesDirectory); 
+        }
+        else{
+            results = System.IO.Directory.GetFiles(SavesDirectory, "*." + extension);
+        }
+        
+        for(int i = 0; i < results.Length; i++){
+            results[i] = results[i].Replace("Saves/", "");
+            results[i] = results[i].Replace("." + extension, "");
+        }
+        List<string> ret = new List<String>(results);
+        
+
+
+        return ret;
+    }
+
     public static SettingsDb Init(){
         if(System.IO.File.Exists(DefaultFile)){
-            GD.Print(DefaultFile + " already exists. Connecting.");
+            //GD.Print(DefaultFile + " already exists. Connecting.");
             return new SettingsDb();
         }
-        GD.Print(DefaultFile + " doesn't exist. Creating.");
+        //GD.Print(DefaultFile + " doesn't exist. Creating.");
         CreateFile(DefaultFile);
         SettingsDb db = new SettingsDb();
         db.CreateTables();

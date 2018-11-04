@@ -40,11 +40,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     Ammo
   };
   
-  
+  public int id;
   public Types type;
   public string name;
   public string description;
-  public int quantity;
   public int weight;
   public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
@@ -52,11 +51,12 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected object wielder;
   protected Area area;
   protected bool stopColliding = false; // Stop applying OnCollide effect
+  protected bool paused = false;
 
-  public void BaseInit(string name, string description, int quantity = 1, bool allowCollision = true){
+
+  public void BaseInit(string name, string description, bool allowCollision = true){
     this.name = name;
     this.description = description;
-    this.quantity = quantity;
     this.Connect("body_entered", this, nameof(OnCollide));
     SetCollision(allowCollision);
     InitArea();
@@ -66,6 +66,14 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual bool IsBusy(){
     return false;
+  }
+
+  public virtual void Pause(){
+    paused = true;
+  }
+
+  public virtual void Unpause(){
+    paused = false;
   }
   
   public override void _Process(float delta){
@@ -94,11 +102,9 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   // client -> client
   public void PickUp(IHasItem acquirer){
     if(!Session.NetActive()){
-      int overflow = acquirer.ReceiveItem(this);
-      if(overflow == 0){
+      if(acquirer.ReceiveItem(this)){
         this.QueueFree();
       }
-      quantity = overflow;
       return;
     }
     Node acquirerNode = acquirer as Node;
@@ -124,9 +130,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     if(acquirer == null){
       GD.Print("No acquirer found!");
     }
-    
-    int overflow = acquirer.ReceiveItem(this);
-    if(overflow == 0){
+  
+    if(acquirer.ReceiveItem(this)){
       this.QueueFree();
     }
 
@@ -154,8 +159,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     this.area = new Area();
     CollisionShape areaShape = new CollisionShape();
     area.AddChild(areaShape);
-    object[] areaShapeOwners = area.GetShapeOwners();
-    for(int i = 0; i < areaShapeOwners.Length; i++){
+    Godot.Array areaShapeOwners = area.GetShapeOwners();
+    for(int i = 0; i < areaShapeOwners.Count; i++){
       int ownerInt = (int)areaShapeOwners[i];
       for(int j = 0; j < shapes.Count; j++){
         area.ShapeOwnerAddShape(ownerInt, shapes[i].Shape);
@@ -174,53 +179,28 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     ItemReadData(dat);
   }
 
-  // Base Save/Load of ItemData to be used by subclasses
+  // Saves all the basic Item fields
   public ItemData ItemGetData(){
     ItemData dat = new ItemData();
 
-    // NON-LIST DATA
     dat.name = name;
     dat.description = description;
-    dat.quantity = quantity;
-    dat.type = this.type;
-    dat.weight = this.weight;
-
-    // FLOATS
-    Vector3 position = GetTranslation();
-    dat.floats.Add(position.x); 
-    dat.floats.Add(position.y);
-    dat.floats.Add(position.z);
-
-    // STRINGS
-    dat.strings.Add(name);
-    dat.strings.Add(description);
-
-    // INTS
-    dat.ints.Add(quantity);
-    dat.ints.Add(weight);
+    dat.type = type;
+    dat.weight = weight;
+    dat.pos = GetTranslation();
 
     return dat;
   }
 
-  // Should remove every element added by ItemReadData
   public void ItemReadData(ItemData dat){
-    // FLOATS
-    float x = dat.floats[0];
-    float y = dat.floats[1];
-    float z = dat.floats[2];
 
-    SetTranslation( new Vector3(x, y, z));
-    dat.floats.RemoveRange(0, 3);
+    SetTranslation( dat.pos);
 
-    // STRINGS
-    name = dat.strings[0];
-    description = dat.strings[1];
-    dat.strings.RemoveRange(0, 2);
-
-    // INTS
-    quantity = dat.ints[0];
-    weight = dat.ints[1];
-    dat.ints.RemoveRange(0, 2);
+    name = dat.name;
+    description = dat.description;
+    type = dat.type;
+    weight = dat.weight;
+    Translation = dat.pos;
   }
 
   public void OnCollide(object body){
@@ -251,7 +231,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   List<CollisionShape> GetCollisionShapes(){
     List<CollisionShape> shapes = new List<CollisionShape>();
-    object[] owners = GetShapeOwners();
+    Godot.Array owners = GetShapeOwners();
     foreach(object owner in owners){
       int ownerInt = (int)owner;
       CollisionShape cs = (CollisionShape)ShapeOwnerGetOwner(ownerInt);
@@ -264,7 +244,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   /* Disable or enable collisions. Particularly useful for held items. */
   public void SetCollision(bool val){
-    object[] owners = GetShapeOwners();
+    Godot.Array owners = GetShapeOwners();
     collisionDisabled = !val;
     if(area == null){
       InitArea();
@@ -318,7 +298,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type, string name = "", string overrideName = "", int quantity = 1){
+  public static Item Factory(Types type, string name = "", string overrideName = ""){
     Item ret = null;
     if(type == Types.None){
       return null;
@@ -359,11 +339,29 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     if(overrideName != ""){
       ret.name = overrideName;
     }
-    ret.quantity = quantity;
 
     return ret;
   }
   
+  /* Returns a list of items */
+  public static List<Item> BulkFactory(Types type, string name = "", string overrideName = "", int quantity = 1){
+    List<Item> ret = new List<Item>();
+    for(int i = 0; i < quantity; i++){
+      ret.Add(Factory(type, name, overrideName));
+    }
+    return ret;
+  }
+
+  /* Converts list of Items into list of ItemData */
+  public static List<ItemData> ConvertListToData(List<Item> items){
+    List<ItemData> ret = new List<ItemData>();
+    foreach(Item item in items){
+      ret.Add(item.GetData());
+      item.QueueFree();
+    }
+    return ret;
+  }
+
   public static string ItemFiles(Types type){
     string ret = "";
     
@@ -436,14 +434,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return ret;
   }
 
-  public int GetWeight(){
-    return weight * quantity;
-  }
-
   public static int TotalWeight(List<ItemData> items){
     int total = 0;
     foreach(ItemData item in items){
-      total += item.GetWeight();
+      total += item.weight;
     }
     return total;
   }

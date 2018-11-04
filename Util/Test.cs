@@ -13,40 +13,43 @@ public class Test{
   public static void Init(bool showDebugs = true){
     fails = new List<string>();
     debugs = showDebugs;
-    passes = 0;
-  }
-
-  public static void Assert(bool result){
-    string output = StackTrace();
-
-    if(!result){
-      Fail(output);
-    }
   }
 
   public static void Assert(bool result, string message){
-    string output = message + "\n";
-    output += StackTrace();
 
     if(!result){
-      Fail(output);
+      Fail(message, StackTrace());
+    }
+    else if(debugs){
+      GD.Print("Passed: " + message);
     }
   }
 
-  public static void Fail(string message){
+  public static void Fail(string message, string trace){
+    string failedMessage = "Failed: " + message;
+    
     if(debugs){
-      GD.Print(message);
+      GD.Print(failedMessage + trace);
     }
-    fails.Add(message);
+    fails.Add(failedMessage);
   }
 
   public static void PrintFails(){
+    GD.Print("##############################################################");
+    GD.Print("#                       Error report                         #");
+    GD.Print("##############################################################");
+    if(fails.Count == 0){
+      GD.Print("All tests ran successfully!");
+    }
+    else{
+      GD.Print(fails.Count + " tests failed.");
+    }
     foreach(string fail in fails){
       GD.Print(fail);
     }
   }
 
   public static string StackTrace(){
-    return System.Environment.StackTrace();
+    return System.Environment.StackTrace;
   }
 }

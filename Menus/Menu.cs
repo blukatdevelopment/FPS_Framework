@@ -12,12 +12,14 @@ public class Menu{
     Lobby, 
     Pause, 
     HUD, 
-    Inventory
+    Inventory,
+    LoadAdventure
   };
 
   public enum SubMenus{ // Parented by menu
     None,
-    ArenaConfig
+    ArenaConfig,
+    AdventureConfig
   }
   
   public static Button Button(string text = "", Action onClick = null){
@@ -90,6 +92,10 @@ public class Menu{
         ret = new SettingsMenu(); 
         ret.Name = "Settings";
         break;
+      case Menus.LoadAdventure:
+        ret = new LoadAdventureMenu();
+        ret.Name = "LoadAdventure";
+        break;
     }
     Session.session.AddChild(ret);
     IMenu menuInstance = ret as IMenu;
@@ -108,6 +114,10 @@ public class Menu{
       case SubMenus.ArenaConfig:
         ret = new ArenaConfigMenu();
         ret.Name = "ArenaConfig";
+        break;
+      case SubMenus.AdventureConfig:
+        ret = new AdventureConfigMenu();
+        ret.Name = "AdventureConfig";
         break;
     }
     return ret;
