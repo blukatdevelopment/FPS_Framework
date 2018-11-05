@@ -211,14 +211,6 @@ visible: <bool> // If false, option does not appear.
 evaluate-method: <method name> // method that decides whether effects take place.
 action-evaluate: <action> // Corresponding actions for this option only apply when evaluation method returns true.
 
-
-# Background stuff
-
-## Logging system
-Instead of GD.Print(), use a Session.Debug() line to drop text into one or more log files that can
-be tailed and grepped for a better debugging experience. 
-
-
 # Philosophy
 The following section is mostly empty rhetoric about a non-existant finished product. 
 
@@ -233,147 +225,65 @@ Practive AI -
 An AI should take action to stop its opponents, prepare a strategy to do so, 
 and operate with limited information and resources.
 
-
-
-# Mini Roadmap For Adventure mode
-
-## RPG mechanics
--Perks
--Quests
--Leveling
-
-## Core stuff
-- World
-- Multiplayer Coop
-
-## Item stuff
-- Items
-- Looting
-- Viewable inventory
-- Varied weapons
-
-## Combat stuff
-- Combat
-- Things to fight (not necessarily enemies)
-- Intuitive Controls
-- Enemies
-- Looting
-
-## Economy stuff
-- Trading 
-- Currency
-
 # Modular Content System
-The concept is relatively simple at a higher level. The world should be made of building blocks, self-contained modules that interact with one another only through clearly defined interfaces. The goal is that the last module of content added will not regress or force a rewrite of the first.
+As much as possible, the modular content system should be a set of interfaces that can be implemented to allow content to be added to the game in a modular fashion. This has two intended effects.
+
+Firstly, the "core" code should function independently from any module's implementation by using these interfaces.
+
+Secondly, these interfaces should define modes of interaction between entities (items, actors, terrain) that any class can take advantage of.
 
 
-## NPCs
-NPCs can be broken down into three constituents, AI, Agent, and Character. Any set of these components should be able to combine to form a distinct NPC. 
+## Actor
 
-### Active AI (AI.cs)
-The active AI is responsible for an active actor's real-time actions in 3D space.
+### IStats.cs
+Stat handler
 
-### Dormant AI(Agent.cs)
-The agent is responsible for a dormant actor's turn-based actions in the 2D dormant world.
+bool HasStat(string name)
 
-**void Update(int timeUnits)**
-Perform updating by spending presented timeUnits.
+int GetStat(string name)
 
-**int LocationAffinity(Location location)**
-Assesses preference for said location, ranging from -100 to 100. This is to be used by cartographer
-when placing randomly generated NPCs.
+### IEdible.cs
+food
 
-### Communications AI (Communicator.cs)
-The communicator is responsible for parsing and interpreting incoming messages as well as forming outgoing messages, consulting other systems as necessary. 
+### IThinkSlow.cs
+turn-based AI
 
-**string[] GetDialogueOptions()**
-Returns all available dialogue options.
+### IActor.cs
+Executor of actions.
 
-**void Communicate(Actor speaker, int option)**
-Communicates a particular option as defined above.
+int GetActionPoints()
+bool ConsumeActionPoints(int quantity, IAction action)
 
-**void Communicate(Actor speaker, string message)**
-Communicates a body of text for the AI to parse.
+### IAction.cs
+A discrete action to be used by an IActor.
+First an IActor sets the parameters and checks the cost.
+An IActor then attempts to perform the action, consuming the action points involved.
 
-### Character (ActorStats.cs)
-The character describes the abilities and limitations of the NPC as well as long-term state in the form of a dictionary of strings referred to as memories. While a dormant and active AI can store whatever it wants in its own memory footprint, the AI is unloaded from memory and only the memories of the character will remain to be accessed the next time the dormant or active AI is instantiated.
+void Init(IActor executor)
+bool CanExecute()
+bool Execute()
+int Cost()
 
-**int PerkRank(string perkName)**
-Returns 0 if character lacks a perk of this name, or else its rank. This should be used by Actor.cs upon loading.
-
-#### Stats
-Stats are a dictionary of ints that track anything from condition (health/stamina/mana/hunger/thirst/fatigue/radiation levels), active effects(berzerk, invisible, poisoned, regen), to personality traits (impatient, brave, coward), to ICEPAWS attributes, to varying granularity of skills (unarmed, melee, swords, guns, ranged, bows, survival, fishing, rifles, pistols), and RGP values (perkPoints, skillPoints, experience, nextLevel) The environment, AI, and Actor will consult and interact with this interface, but the custom logic of the Character will decide how to handle these interactions and maintain its internal consistency.
-
-**int GetStat(string statName)** 
-Fetch arbitrary stat. 0 is default value.
-
-**void SetStat(string statName, int statValue)**
-Change a stat's value. If stat does not exist and is going to become non-zero, add it. (if possible)
-
-**void ChangeStat(string statName, int delta)**
-Add delta to stat's current value.
-
-**string[] GetStatNames()** 
-Returns all this character's non-zero stats.
-
-**void ExperienceAction(string actionName, int multiplier)**
-Apply xp for a given action.
-
-#### Memories
-Memories are a dictionary of strings used for long-term fact recall. 
-
-**void ForgetMemory(string memoryName)**
-Remove a memory if it exists.
-
-**void StoreMemory(string memoryName, string memoryValue)**
-Attempts to add or update a certain memory.
-
-**string RecallMemory(string memoryName)**
-Returns corresponding memoryValue if it exists.
-
-**int ActorAffinity(Actor actor)**
-Returns preference for this actor according the actor and existing memories.
-
-## Items
-Items inherit from Item.cs and so this not a true interface
-
-**string[] Uses()**
-Return names of all uses. Each index matches an enum value in Item.Uses.
-Can be used to inform UI or AI about how to use an item.
-
-**string[] GetProperties()**
-Returns all of this item's non-zero properties. Examples of properties include range, damage, value, hasScope, capacity, usesAmmo, ammoType, etc. These may vary heavily from item to item
-
-**int CheckProperty(string property)**
-Returns value of this property, or zero.
+string GetName()
+string GetDescription()
 
 
-## Locations (implementing Location.cs, stored in LocationData.cs record)
-A location is used to generate Actors, Items, and Scenery on an arbitrary set of TerrainCells. The location's information can then be stored in a LocationData record for use by the Overworld. The goal of a implementations will likely be to provide content adhering to a particular theme (dungeon, village, ruins, forest), but with procedural variation to adapt to given terrain and to mitigate redundancy.
+List<string> GetParametersNames()
+Dictionary<string, string> GetParameterTypes()
+Dictionary<string, string> GetParameterValues()
+Dictionary<string, string> GetParameterDescriptions()
 
-**Vector2[] UsedCells()**
-Coordinates used by this location's terrain cells. 
+string GetParameterValue(string name)
+string GetParameterType(string name)
+string GetParameterDescription(string name)
 
-**bool UsingCell(Vector3 cell)**
-Returns true if this cell is being used.
+bool SetValues(Dictionary<string, string> values) // Returns true on success
+bool SetValue(string name, string value) // Returns true on success
 
-**void ProvideCells(Vector2[] cells)**
-Adds cell to UsedCells()
+### IThinkFast.cs
+real-time AI
 
-**int CellAffinity(Overworld world, Vector2 coords)**
-Returns preference for these coords as a centerpoint on the overworld. 
 
-**void GenerateActors()**
-Creates specific actors on this location's used cells.
+# Item
 
-**void GenerateStructures()**
-Creates structures and natural features for location.
-
-**LocationData GetData()**
-Returns the data for this location.
-
-**string[] GetProperties()**
-Returns all non-zero properties for this location. Examples include vegetation, minerals, airable, water, surfaceWater, monstersPresent, civilization, dungeon, urban, etc, etc
-
-**int CheckProperty(string property)**
-Returns a propert's value, or null.
+# Terrain
