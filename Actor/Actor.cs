@@ -338,7 +338,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public float GetMovementSpeed(){
-    float speed = 50f;
+    float speed = 5f;
     if(sprinting){
       speed *= 2f;
     }
