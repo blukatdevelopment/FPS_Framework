@@ -87,13 +87,13 @@ public class Cartographer {
 		items = new System.Collections.Generic.Dictionary<int, ItemData>();
 
 		// Add a single rifle beside player 1
-		ItemData item = GenerateItem(Item.Types.Rifle, "rifle", new Vector3(0, 15f, 0));
+		ItemData item = GenerateItem(Item.Types.Rifle, new Vector3(0, 15f, 0));
 		items.Add(item.id, item);
 	}
 
 	// Place an Item 
-	public ItemData GenerateItem(Item.Types type, string name, Vector3 pos){
-		Item item = Item.Factory(type, name);
+	public ItemData GenerateItem(Item.Types type, Vector3 pos){
+		Item item = Item.Factory(type);
 		ItemData data = item.GetData();
 		data.id = NextItemId();
 		data.pos = pos;

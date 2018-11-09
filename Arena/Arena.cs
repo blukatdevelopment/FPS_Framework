@@ -424,7 +424,7 @@ public class Arena : Spatial {
     }
     GD.Print("Arena.Initkit");
     actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
-    actor.ReceiveItems(Item.BulkFactory(Item.Types.Ammo, "", "Bullet", 100));
+    actor.ReceiveItems(Item.BulkFactory(Item.Types.Ammo, 100));
     EquipActor(actor, Item.Types.Rifle, "Rifle");
     
   }

@@ -160,7 +160,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void InitHand(string handName){
-    hand = Item.Factory(Item.Types.Hand, handName);
+    hand = Item.Factory(Item.Types.Hand);
+    hand.Name = handName;
     if(unarmed && activeItem == null){
       EquipHand();  
     }

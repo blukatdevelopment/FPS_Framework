@@ -52,9 +52,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected Area area;
   protected bool stopColliding = false; // Stop applying OnCollide effect
   protected bool paused = false;
+  protected MeshInstance meshInstance;
+  protected CollisionShape shape;
 
 
-  public void BaseInit(string name, string description, bool allowCollision = true){
+  public void BaseInit(string name, string description, string meshPath, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.Connect("body_entered", this, nameof(OnCollide));
@@ -62,6 +64,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     InitArea();
     speaker = new Speaker();
     AddChild(speaker);
+
+    // Set up default mesh here
+    meshInstance = new MeshInstance();
+    meshInstance.Mesh = ResourceLoader.Load(meshPath) as Mesh;
+    AddChild(meshInstance);
   }
   
   public virtual bool IsBusy(){
@@ -99,7 +106,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
   }
 
-  // client -> client
   public void PickUp(IHasItem acquirer){
     if(!Session.NetActive()){
       if(acquirer.ReceiveItem(this)){
@@ -172,7 +178,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
   public virtual ItemData GetData(){
     return ItemGetData();
-    
   }
 
   public virtual void ReadData(ItemData dat){
@@ -193,8 +198,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   }
 
   public void ItemReadData(ItemData dat){
-
-    SetTranslation( dat.pos);
+    SetTranslation(dat.pos);
 
     name = dat.name;
     description = dat.description;
@@ -273,8 +277,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
   }
   
-  public virtual void Use(Uses use, bool released = false){
-  }
+  public virtual void Use(Uses use, bool released = false){}
   
   public virtual string GetInfo(){
     return name;
@@ -284,70 +287,58 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return description;
   }
   
-
-  
   public virtual void DoOnCollide(object body){}
   
   /* Convert ItemData to Item */
   public static Item FromData(ItemData data){
-    Item item = Factory(data.type, data.name);
+    Item item = Factory(data.type);
     if(item != null){
       item.ReadData(data);
     }
     return item;
   }
 
-  /* Returns a base/simple item by it's name. */
-  public static Item Factory(Types type, string name = "", string overrideName = ""){
+  /* Returns an archetypal item by it's type. */
+  public static Item Factory(Types type){
     Item ret = null;
     if(type == Types.None){
       return null;
     }
-    string itemFile = ItemFiles(type);
     
-    ret = (Item)Session.Instance(itemFile);
+    ret = FromType(type);
     
-    switch(type){
-      case Types.Hand: 
-        ret.BaseInit("Hand", "Raised in anger, it is a fist!");  
-        break;
-      case Types.Rifle: 
-        ret.BaseInit("Rifle", "There are many like it, but this one is yours.");
-        ret.weight = 8;
-        break;
-      case Types.Bullet:
-        ret.BaseInit("Bullet", "Comes out one end of the rifle. Be sure to know which.");
-        break;
-      case Types.HealthPack:
-        ret.BaseInit("HealthPack", "Heals what ails you.");
-        break;
-      case Types.AmmoPack:
-        ret.BaseInit("AmmoPack", "Food for your rifle.");
-        break;
-      case Types.Ammo:
-        ret.BaseInit("Bullet", "A casing full of powder capped with a bullet. No further info available.");
-        break;
-      case Types.AidHealthPack:
-        ret.BaseInit("HealthPack", "Heals what ails you.");
-        break;
-    }
+    string[] archetype = ItemArchetype(type);
+    ret.BaseInit(archetype[0], archetype[1], archetype[2]);
+
     ret.type = type;
-    if(name != ""){
+    if(ret.name != ""){
       Node retNode = ret as Node;
-      retNode.Name = name;
-    }
-    if(overrideName != ""){
-      ret.name = overrideName;
+      retNode.Name = ret.name;
     }
 
     return ret;
   }
+
+  // Return an instance of the type's archetypal class.
+  public static Item FromType(Types type){
+    Item ret = null;
+    switch(type){
+      case Types.Hand: ret = new MeleeWeapon() as Item; break;
+      case Types.Rifle: ret = new ProjectileWeapon() as Item; break;
+      case Types.Bullet: ret = new Projectile() as Item; break;
+      case Types.HealthPack:  ret = new HealthPowerUp() as Item; break;
+      case Types.AmmoPack: ret = new AmmoPowerUp() as Item; break;
+      case Types.Ammo: ret = new Item(); break;
+      case Types.AidHealthPack: ret = new HealthAid() as Item; break;
+    }
+    return ret;
+  }
   
   /* Returns a list of items */
-  public static List<Item> BulkFactory(Types type, string name = "", string overrideName = "", int quantity = 1){
+  public static List<Item> BulkFactory(Types type, int quantity = 1){
     List<Item> ret = new List<Item>();
     for(int i = 0; i < quantity; i++){
-      ret.Add(Factory(type, name, overrideName));
+      ret.Add(Factory(type));
     }
     return ret;
   }
@@ -362,17 +353,36 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return ret;
   }
 
-  public static string ItemFiles(Types type){
-    string ret = "";
+  // Return an array of strings used to initialize an archetypal item of given type.
+  // When making new item types, add an archetype here.
+  // 0 name
+  // 1 description
+  // 2 mesh name
+  public static string[] ItemArchetype(Types type){
+    string[] ret = null;
     
     switch(type){
-      case Types.Hand: ret = "res://Scenes/Prefabs/Items/Hand.tscn"; break;
-      case Types.Rifle: ret = "res://Scenes/Prefabs/Items/Rifle.tscn"; break;
-      case Types.Bullet: ret = "res://Scenes/Prefabs/Items/Bullet.tscn"; break;
-      case Types.HealthPack: ret = "res://Scenes/Prefabs/Items/HealthPack.tscn"; break;
-      case Types.AmmoPack: ret = "res://Scenes/Prefabs/Items/AmmoPack.tscn"; break;
-      case Types.Ammo: ret = "res://Scenes/Prefabs/Items/Ammo.tscn"; break;
-      case Types.AidHealthPack: ret = "res://Scenes/Prefabs/Items/AidHealthPack.tscn"; break;
+      case Types.Hand:
+        ret = new string[]{"Hand", "Raised in anger, it is a fist!", "res://Models/Hand.obj"};
+        break;
+      case Types.Rifle:
+        ret = new string[]{"Rifle", "There are many like it, but this one is yours.", "res://Models/Rifle.obj"};
+        break;
+      case Types.Bullet:
+        ret = new string[]{"Bullet", "Comes out one end of the rifle. Be sure to know which.", "res://Models/Bullet.obj"};
+        break;
+      case Types.HealthPack:
+        ret = new string[]{"HealthPack", "Heals what ails you.", "res://Models/Healthpack.obj"};
+        break;
+      case Types.AmmoPack:
+        ret = new string[]{"AmmoPack", "Food for your rifle.", "res://Models/Ammopack.obj"};
+        break;
+      case Types.Ammo:
+        ret = new string[]{"Bullet", "A casing full of powder capped with a bullet. No further info available.", "res://Models/Ammopack.obj"};
+        break;
+      case Types.AidHealthPack:
+        ret = new string[]{"HealthPack", "Heals what ails you.", "res://Models/Healthpack.obj"};
+        break;
     }
     
     return ret;

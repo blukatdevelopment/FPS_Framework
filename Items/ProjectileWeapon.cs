@@ -165,7 +165,8 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
       return;
     }
     speaker.PlayEffect(Sound.Effects.RifleShot);
-    Item projectile = Item.Factory(Item.Types.Bullet, name);
+    Item projectile = Item.Factory(Item.Types.Bullet);
+    projectile.Name = name;
     Projectile proj = projectile as Projectile;
     Actor wielderActor = wielder as Actor;
     if(wielderActor != null){
