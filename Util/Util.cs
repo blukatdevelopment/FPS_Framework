@@ -73,10 +73,13 @@ public class Util{
       GD.Print("ToBool: Blank String");
       return false;
     }
+
     bool ret = false;
+    
     if(Boolean.TryParse(val, out ret)){
       return ret;
     }
+    
     GD.Print("ToBool failed");
     return false;
   }
@@ -143,6 +146,7 @@ public class Util{
     if(index >= gridSize * gridSize){
       return false;
     }
+
     return true;
   }
 
@@ -154,6 +158,7 @@ public class Util{
     if(y < 0 || y >= gridSize || x < 0 || x >= gridSize){
       return -1;
     }
+
     return y * gridSize + x;
   }
 
@@ -167,6 +172,7 @@ public class Util{
 
   public static List<Vector2> CoordsInRadius(Vector2 center, int radius){
     List<Vector2> ret = new List<Vector2>();
+    
     for(int i = -radius; i <= radius; i++){
       for(int j = -radius; j <= radius; j++){
         Vector2 offset = new Vector2(i, j);
@@ -174,6 +180,7 @@ public class Util{
         ret.Add(coord);
       }
     }
+
     return ret;
   }
 
@@ -215,27 +222,46 @@ public class Util{
 
   /*   Returns true if pos is between min and max */
   public static bool InBounds(Vector3 min, Vector3 max, Vector3 pos){
-    string debug = "Util.InBounds\n";
-    debug += "min: " + min + "\n";
-    debug += "max: " + max + "\n";
-    debug += "pos: " + pos + "\n";
-    
-
     if(min.x > pos.x || min.y > pos.y || min.z > pos.z){
-      debug += " was false";
-      //GD.Print(debug);
       return false;
     }
 
     if(max.x < pos.x || max.y < pos.y || max.z < pos.z){
-      debug += " was false";
-      //GD.Print(debug);
       return false;
     }
-
-    debug += " was true";
-    //GD.Print(debug);
+    
     return true;
   }
 
+  // Use this to find methods for classes.
+  public static void ShowMethods(Type type){
+    foreach (var method in type.GetMethods()){
+      string ret = "" + method.ReturnType +"," + method.Name;
+      foreach( var parameter in method.GetParameters()){
+        ret += ", " + parameter.ParameterType + " " + parameter.Name; 
+      }
+      GD.Print(ret);
+      System.Threading.Thread.Sleep(100);
+    }
+  }
+  
+  // Use this to find variables for classes
+  public static void ShowProperties(Type type){
+    foreach(PropertyInfo prop in type.GetProperties()){
+      GD.Print(prop.Name + " : " + prop.PropertyType );
+    }
+  }
+  
+  // Use this to print out class variables 
+  public static void ShowVariables(Type type){
+    BindingFlags bindingFlags = BindingFlags.Public |
+                            BindingFlags.NonPublic |
+                            BindingFlags.Instance |
+                            BindingFlags.Static;
+
+    foreach (FieldInfo field in type.GetFields(bindingFlags)) {
+        GD.Print(field.Name);
+        System.Threading.Thread.Sleep(100);
+    }
+  }
 }

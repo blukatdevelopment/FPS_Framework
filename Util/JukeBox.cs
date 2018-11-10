@@ -2,6 +2,4 @@
 
 using Godot;
 
-public class JukeBox : AudioStreamPlayer{
-  
-}
+public class JukeBox : AudioStreamPlayer{}

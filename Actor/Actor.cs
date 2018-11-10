@@ -1,10 +1,7 @@
 /*
   TODO: Update this description
-  The Actor is a living entity in the game world.
-  Each actor is controlled by a Brain.
-  Items are children of an actor's Eyes.
-  Inventory is crude weapon-switching and ammo count like that in classic FPS games.
-
+  An Actor is a living entity rendered in the 3D world and controlled by a Brain,
+  which can either be an AI, or an input handler listening to a device.
 */
 
 using Godot;
@@ -17,7 +14,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public enum Brains{
     Player1, // Local player leveraging keyboard input.
     Ai,      // Computer player
-    Remote     // Remote player controlled via RPC calls
+    Remote   // Remote player controlled via RPC calls
   };
   
   private Brain brain;
@@ -54,12 +51,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   // Network
   public int netId;
-
-  // World info TODO: Create an NPCCharacter module for personality stuff.
   public int worldId;
   public string name; 
   
   // Delayed inventory init for netcode.
+  // TODO: Get rid of this messy setup by using ItemData
   float initTimer, initDelay;
   bool initActive = false;
   string initHand, initRifle;
@@ -120,7 +116,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem;
   }
   
-  // TODO: Remove hardcoded equipping code
   void InitInventory(){
     inventory = new Inventory();
     if(Session.NetActive() && !Session.IsServer()){
@@ -129,10 +124,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
     string rifle = Session.NextItemId();
     string hand = Session.NextItemId();
-
-    if(rifle == "" || hand == ""){
-      //GD.Print("InitInventory: Rifle and hand strings are blank");
-    }
 
     if(!Session.NetActive()){
       DeferredInitInventory(hand);
@@ -164,9 +155,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     hand.Name = handName;
     if(unarmed && activeItem == null){
       EquipHand();  
-    }
-    else{
-      //GD.Print("Not equipping hand because holding something.");
     }
     
   }
@@ -206,13 +194,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return Util.RayCast(start, end, world);
   }
 
-
-
   /* Returns quantity of specified ammo.
      If max is greater than zero, will return at most max.
   */
   public int CheckAmmo(string ammoType, int max = 0){
     int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType);
+    
     if(max > 0 && max > quantity){
       return quantity;
     }
@@ -233,6 +220,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     foreach(ItemData item in items){
       inventory.StoreItemData(item);
     }
+    
     return new List<ItemData>();
   }
   
@@ -284,16 +272,13 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     Item item = interactor as Item;
     if(item != null && (item == hand || item == activeItem)){
-      //GD.Print("Don't interact with your active item or hand. Returning.");
       return;
     }    
 
     interactor.Interact((object)this, interaction);
   }
 
-  public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){
-    //GD.Print("Interacted with " + GetInfo() + ".");
-  }
+  public void Interact(object interactor, Item.Uses interaction = Item.Uses.A){  }
   
   public string GetMoreInfo(){
     return "A character in this game.";
@@ -371,7 +356,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
 
-  // Client -> Server -> Client
   [Remote]
   public void ServerEquipItem(int caller, int index){
     DeferredEquipItem(index);
@@ -385,7 +369,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredEquipItem(int index){
-    //GD.Print("DeferredEquipItem: " + index);
     if(unarmed){
       StashHand();
     }
@@ -403,7 +386,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Item item = Item.FromData(dat);
 
     if(eyes == null){
-      //GD.Print("Not equipping item because eyes don't exist.");
       return;
     }
     
@@ -422,20 +404,19 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Removes activeItem from hands. */
   public void StashItem(){
     if(unarmed){
-      //GD.Print("Unarmed. Not Stashing.");
       return;
     }
 
     if(activeItem == null){
-      //GD.Print("No activeitem. Not stashing.");
       return;
     }
     
     if(activeItem.GetParent() == null){
-      //GD.Print("activeItem is orphan. Not stashing");
       return;
     }
+
     DeferredStashItem();
+    
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredStashItem));
     }
@@ -444,7 +425,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
 
-  // Client -> Server -> Client
   [Remote]
   public void ServerStashItem(int caller){
     DeferredStashItem();
@@ -469,28 +449,26 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Remove hand in preparation of equipping an item */
   public void StashHand(){
     if(activeItem != hand){
-      //GD.Print("Hand not out. Not stashing hand.");
       return;
     }
+
     eyes.RemoveChild(activeItem);
     activeItem = null;
-    //GD.Print("Stashed hand");
     unarmed = false;
   }
 
   /* Equip hand when unarmed.  */
   public void EquipHand(){
     if(activeItem == hand){
-      //GD.Print("Hand already out. Not equipping hand.");
       return;
     }
+
     activeItem = hand;
     eyes.AddChild(activeItem);
     activeItem.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
     activeItem.Mode = RigidBody.ModeEnum.Static;
     activeItem.Equip(this);
     unarmed = true;
-    //GD.Print("Hand equipped");
   }
   
   /* Finds any attached eyes if eys are not already set by factory.  */
@@ -498,12 +476,12 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(eyes != null){
       return;
     }
+
     foreach(Node child in this.GetChildren()){
       switch(child.GetName()){
         case "Eyes": eyes = child as Eyes; break;
       }
     }
-    if(eyes == null){ GD.Print("Actor's eyes are null!"); }
   }
   
   public bool IsBusy(){
@@ -513,9 +491,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem.IsBusy();
   }
   
-  
   public void Use(Item.Uses use, bool released = false){
     DeferredUse(use, released);
+
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredUse), use, released);
     }
@@ -524,7 +502,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
 
-  // Client -> Server -> Client
   [Remote]
   public void ServerUse(int caller, Item.Uses use, bool released){
     DeferredUse(use, released);
@@ -540,9 +517,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void DeferredUse(Item.Uses use, bool released = false){
     if(activeItem == null){
-      //GD.Print("No item equipped.");
       return;
     }
+
     activeItem.Use(use);
   }
 
@@ -553,6 +530,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         brain.Update(delta); 
         Gravity(delta);
       }
+
       if(initActive){
         initTimer += delta;
         if(initTimer >= initDelay){
@@ -562,6 +540,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
           Rpc(nameof(DeferredInitInventory), initHand);
         }
       }
+
       if(readyActive){
         readyTimer += delta;
         if(readyTimer >= readyDelay){
@@ -575,18 +554,17 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void Gravity(float delta){ 
     float gravityForce = GravityAcceleration * delta;
     gravityVelocity += gravityForce;
+
     if(gravityVelocity < TerminalVelocity){
       gravityVelocity = TerminalVelocity;
     }
     
     Vector3 grav = new Vector3(0, gravityVelocity, 0);
-    //grav = this.ToLocal(grav);
     Move(grav, delta);
   }
 
   
   public void Move(Vector3 movement, float moveDelta = 1f){
-      //Vector3 movement = new Vector3(x, y, -z) * moveDelta; 
       movement *= moveDelta;
       
       Transform current = GetTransform();
@@ -595,13 +573,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       
       Vector3 delta = destination.origin - current.origin;
       KinematicCollision collision = MoveAndCollide(delta);
+      
       if(collision != null && collision.Collider != null){
         ICollide collider = collision.Collider as ICollide;
+        
         if(collider != null){
           Node colliderNode = collider as Node;
           collider.OnCollide(this as object);
         }
       }
+      
       if(!grounded && collision != null && collision.Position.y < GetTranslation().y){
         if(gravityVelocity < 0){
           grounded = true;
@@ -612,44 +593,45 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public void Jump(){
     if(!grounded){ return; }
+    
     float jumpForce = 10;
     gravityVelocity = jumpForce;
-    grounded = false;
-    
+    grounded = false; 
   }
 
   [Remote]
   public void RemoteReceiveDamage(string json){
     Damage dmg = JsonConvert.DeserializeObject<Damage>(json);
+    
     if(dmg != null){
       ReceiveDamage(dmg);
     }
   }
   
   public void ReceiveDamage(Damage damage){
-    //GD.Print("Received damage " + damage.health);
     if(health <= 0){
       return;
     }
+
     health -= damage.health;
     
     if(damage.health > 0 && health > 0){
       speaker.PlayEffect(Sound.Effects.ActorDamage);
     }
+
     if(health <= 0){
       health = 0;
       speaker.PlayEffect(Sound.Effects.ActorDeath);
       Die(damage.sender);
     }
+
     if(health > healthMax){
       health = healthMax;
     }
   }
   
   public void Die(string source = ""){
-    
-    Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
-
+    Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);\
     string path = NodePath();
     SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
     Session.Event(evt);
@@ -657,7 +639,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   public string NodePath(){
     NodePath path = GetPath();
-    return path.ToString(); // GetConcatenatedSubnames was returning ""
+    return path.ToString();
     
   }
 
@@ -683,18 +665,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public void DiscardItem(int index){
     ItemData data = inventory.GetItem(index);
     if(data == null){
-      //GD.Print("No item found, not discarding.");
       return;
     }
     
     
-    if(!Session.NetActive()){ // Singleplayer should directly call DeferredDiscardItem
-      //GD.Print("Discarding item because no net active");
+    if(!Session.NetActive()){
       string itemName = Session.NextItemId();
       DeferredDiscardItem(index, itemName);
     }
     else{
-      //GD.Print("RPC serverdiscarditem");
       Rpc(nameof(ServerDiscardItem), index);
     }
   }
@@ -702,10 +681,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   [Remote]
   public void ServerDiscardItem(int index){
     if(Session.NetActive() && !Session.IsServer()){
-      //GD.Print("Returning because not server.");
       return;
     }
-    //GD.Print("Server RPC deferreddiscarditem" + inventory.ToString());
+
     string itemName = Session.NextItemId();
     Rpc(nameof(DeferredDiscardItem), index, itemName);
     DeferredDiscardItem(index, itemName);
@@ -713,22 +691,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   [Remote]
   public void DeferredDiscardItem(int index, string itemName){
-    //GD.Print("Deferred discard " + index + " " + itemName);
+
     ItemData data = inventory.RetrieveItem(index);
     if(data == null){
-      //GD.Print("No item data. Not discarding.");
       return;
     }
 
     Item item = Item.FromData(data);
     item.Name = itemName;
     Session.GameNode().AddChild(item);
-    //GD.Print("Item:" + item);
+
     Transform trans = item.GlobalTransform;
     trans.origin = ToGlobal(new Vector3(HandPosX, HandPosY, HandPosZ));
     item.GlobalTransform = trans;
 
-    // Notify session
     Session.Event(SessionEvent.ItemDiscardedEvent(NodePath().ToString()));
   }
 
@@ -770,19 +746,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
     Vector3 headRot = eyes.GetRotationDegrees();
     headRot.x += y;
+
     if(headRot.x < minY){
       headRot.x = minY;
     }
+
     if(headRot.x > maxY){
       headRot.x = maxY;
     }
+
     eyes.SetRotationDegrees(headRot);
   }
   
-  
   public void SetPos(Vector3 pos){
     SetTranslation(pos);
-    
   }
   
   public bool HasItem(string item){
@@ -793,6 +770,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     if(activeItem != null){
       return activeItem.GetInfo();
     }
+
     return "Unequipped";
   }
 
@@ -806,10 +784,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
         return false;
       }
     }
+
     return false;
   }
 
-  
   [Remote]
   public void DeferredReceiveItem(string json){
     ItemData dat = JsonConvert.DeserializeObject<ItemData>(json);
@@ -870,12 +848,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     paused = false;
   }
   
-  // From data convenience method
   public static Actor ActorFactory(ActorData data){
     return ActorFactory(data.brain, data);
   }
 
-  /* The goal of this factory is to set up an actor's node tree in script so it's version controllable. */
   public static Actor ActorFactory(Brains brain = Brains.Player1, ActorData data = null){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
@@ -901,9 +877,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     actor.eyes.TranslateObjectLocal(eyesPos);
     actor.AddChild(actor.eyes);
     actor.Init(brain);
+
     if(data != null){
       actor.LoadData(data);
     }
+    
     return actor;
   }
 }

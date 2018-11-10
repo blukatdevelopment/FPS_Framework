@@ -10,21 +10,19 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 public class Arena : Spatial {
-  bool singlePlayer;
-  List<Actor> actors;
-  Spatial terrain;
-  List<Vector3> actorSpawnPoints, itemSpawnPoints;
-  int nextId = -2147483648;
+  public bool singlePlayer;
+  public List<Actor> actors;
+  public Spatial terrain;
+  public List<Vector3> actorSpawnPoints, itemSpawnPoints;
+  public int nextId = -2147483648;
   public bool gameStarted = false;
-
   public ArenaSettings settings;
-  
   const float RoundDuration = 300f;
   const float ScoreDuration = 5f;
-  float roundTimeRemaining, secondCounter;
-  bool roundTimerActive = false;
-  bool scorePresented = false;
-  System.Collections.Generic.Dictionary<int, int> scores;
+  public float roundTimeRemaining, secondCounter;
+  public bool roundTimerActive = false;
+  public bool scorePresented = false;
+  public System.Collections.Generic.Dictionary<int, int> scores;
   public int playerWorldId = -1;
 
   // used for singleplayer
@@ -32,23 +30,25 @@ public class Arena : Spatial {
 
   public void Init(bool singlePlayer){
     settings = Session.session.arenaSettings;
+    
     if(settings == null){
       GD.Print("Using default arena settings.");
       settings = new ArenaSettings();
     }
+    
     this.singlePlayer = singlePlayer;
     actors = new List<Actor>();
     scores = new System.Collections.Generic.Dictionary<int, int>();
 
     InitTerrain();
     InitSpawnPoints();
+    
     if(singlePlayer){
       SinglePlayerInit();
     }
     else{
       MultiplayerInit();
-    }
-    
+    } 
   }
 
   public override void _Process(float delta){
@@ -75,6 +75,7 @@ public class Arena : Spatial {
           Rpc(nameof(PresentScore));
         }
       }
+      
       if(roundTimeRemaining < -ScoreDuration){
         
         if(Session.IsServer()){
@@ -88,15 +89,19 @@ public class Arena : Spatial {
   
   public bool PlayerWon(){
     int max = playerWorldId;
+    
     foreach(KeyValuePair<int, int> key in scores){
       int score = key.Value;
+      
       if(score > scores[max]){
         max = score;
       }
     }
+    
     if(max == playerWorldId){
       return true;
     }
+    
     return false;
   }
 
@@ -104,14 +109,17 @@ public class Arena : Spatial {
     if(playerWorldId == -1){
       return "Player not initialized.";
     }
+    
     if(scorePresented){
       return PlayerWon() ? "Victory!" : "Defeat!";
     }
 
     string ret = "Arena\n";
+    
     string timeText = TimeFormat( (int)roundTimeRemaining);
     ret += "Time: " + timeText + "\n";
     ret += "Score: " + scores[playerWorldId];
+    
     return ret;
   }
   
@@ -119,13 +127,17 @@ public class Arena : Spatial {
     int minutes = timeSeconds / 60;
     int seconds = timeSeconds % 60;
     string minutesText = "" + minutes;
+    
     if(minutes < 1){
       minutesText = "00";
     }
+    
     string secondsText = "" + seconds;
+    
     if(seconds < 1){
       secondsText = "00";
     }
+    
     return minutesText + ":" + secondsText;
   }
   
@@ -154,7 +166,6 @@ public class Arena : Spatial {
     } 
   }
 
-
   public int NextWorldId(){
     int ret = nextId;
     nextId++;
@@ -181,7 +192,6 @@ public class Arena : Spatial {
       }
     }
 
-
     InitActor(Actor.Brains.Player1, NextWorldId());
     for(int i = 0; i < settings.bots; i++){
       InitActor(Actor.Brains.Ai, NextWorldId());
@@ -195,7 +205,6 @@ public class Arena : Spatial {
     }
 
     roundTimerActive = true;
-
   }
 
   public void MultiplayerInit(){
@@ -213,16 +222,17 @@ public class Arena : Spatial {
     Rpc(nameof(DeferredMultiplayerInit), json);
   }
 
-  // Make sure clients 
   [Remote]
   public void DeferredMultiplayerInit(string json){
     if(!Session.IsServer()){
       settings = JsonConvert.DeserializeObject<ArenaSettings>(json);
       Session.session.arenaSettings = settings;
     }
+    
     NetworkSession netSes = Session.session.netSes;
     netSes.playersReady = 0;
     playerWorldId = netSes.selfPeerId;
+    
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
@@ -255,9 +265,11 @@ public class Arena : Spatial {
 
     if(!Session.NetActive()){
       SpawnActor(brain, id);
+      
       if(brain == Actor.Brains.Player1){
         playerWorldId = id;
       }
+      
       return null;
     }
 
@@ -273,7 +285,6 @@ public class Arena : Spatial {
     return ret; 
   }
 
-  
   public void InitTerrain(){
     PackedScene ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Terrain.tscn");
     Node instance = ps.Instance();
@@ -292,8 +303,8 @@ public class Arena : Spatial {
 
   public void HandleActorDead(SessionEvent sessionEvent){
     string[] actors = sessionEvent.args;  
+    
     if(actors == null || actors.Length == 0 || actors[0] == ""){
-      GD.Print("Arena.HandleActorDead: Insufficient args");
       return;
     }
 
@@ -312,7 +323,6 @@ public class Arena : Spatial {
     }
     
     if(actors.Length < 2 || actors[1] == ""){
-     GD.Print("HandleActorDead: Insufficient arguments");
      return; 
     }
 
@@ -320,15 +330,8 @@ public class Arena : Spatial {
     Actor killer = killerNode as Actor;
 
     if(killer != null){
-      GD.Print("Killer:" + killer.worldId);
       scores[killer.worldId]++;
     }
-    else{
-      GD.Print("HandleActorDead: Killer null");
-    }
-    
-    
-
   }
 
   public void SetPause(bool val){
@@ -348,9 +351,12 @@ public class Arena : Spatial {
   public void InitSpawnPoints(){
     SceneTree st = GetTree();
     Godot.Array actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
+    
     this.actorSpawnPoints = new List<Vector3>();
+    
     for(int i = 0; i < actorSpawns.Count; i++){
       Spatial spawnPoint = actorSpawns[i] as Spatial;
+      
       if(spawnPoint != null){
         this.actorSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
       }
@@ -358,8 +364,10 @@ public class Arena : Spatial {
     
     Godot.Array itemSpawns = st.GetNodesInGroup("ItemSpawnPoint");
     this.itemSpawnPoints = new List<Vector3>();
+    
     for(int i = 0; i < itemSpawns.Count; i++){
       Spatial spawnPoint = itemSpawns[i] as Spatial;
+      
       if(spawnPoint != null){
         this.itemSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
       }
@@ -370,6 +378,7 @@ public class Arena : Spatial {
     if(Session.NetActive() && !Session.IsServer()){
       return;
     }
+    
     Vector3 pos = RandomItemSpawn();
     Item item = Item.Factory(type);
     item.Translation = pos;
@@ -410,6 +419,7 @@ public class Arena : Spatial {
     actors.Add(actor);
     actor.SetPos(pos);
     Node actorNode = actor as Node;
+    
     if(id != 0){
       actorNode.Name = "Player" + id;
     } 
@@ -422,7 +432,7 @@ public class Arena : Spatial {
     if(!settings.useKits){
       GD.Print();
     }
-    GD.Print("Arena.Initkit");
+    
     actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
     actor.ReceiveItems(Item.BulkFactory(Item.Types.Ammo, 100));
     EquipActor(actor, Item.Types.Rifle, "Rifle");
@@ -475,7 +485,6 @@ public class Arena : Spatial {
       return;
     }
     gameStarted = true;
-    //Equip rifle.
     if(settings.useKits){
       foreach(Actor actor in actors){
         EquipActor(actor, Item.Types.Rifle, "Rifle");

@@ -7,19 +7,15 @@ using Godot;
 using System;
 
 public class MultiplayerMenu : Container, IMenu {
-  Godot.Button mainMenuButton;
-  
-  Godot.Button selectionButton;
-  Godot.Button serverButton;
-  Godot.Button clientButton;
-  
-  Godot.TextEdit portBox;
-  Godot.TextEdit addressBox;
-  Godot.TextEdit nameBox;
-  
-  Godot.Button startServerButton;
-  Godot.Button startClientButton;
-    
+  public Godot.Button mainMenuButton;
+  public Godot.Button selectionButton;
+  public Godot.Button serverButton;
+  public Godot.Button clientButton;
+  public Godot.TextEdit portBox;
+  public Godot.TextEdit addressBox;
+  public Godot.TextEdit nameBox;
+  public Godot.Button startServerButton;
+  public Godot.Button startClientButton;
 
   public void Init(float minX, float minY, float maxX, float maxY){
     InitControls();
@@ -27,9 +23,7 @@ public class MultiplayerMenu : Container, IMenu {
     ShowSelection();
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -79,21 +73,21 @@ public class MultiplayerMenu : Container, IMenu {
     Menu.ScaleControl(serverButton, 4 * wu, 4 * hu, 0, hu);
     Menu.ScaleControl(clientButton, 4 * wu, 4 * hu, width - 4 * wu, hu);
     Menu.ScaleControl(selectionButton, 2 * wu, hu, 4 * wu, 9 * hu);
-    
     Menu.ScaleControl(startServerButton, 2 * wu, hu, 8 * wu, 3 * hu);
     Menu.ScaleControl(startClientButton, 2 * wu, hu, 8 * wu, 3 * hu);
     Menu.ScaleControl(portBox, 1 * wu, hu, 7 * wu, 3 * hu);
     Menu.ScaleControl(addressBox, 3 * wu, hu, 4 * wu, 3 * hu);
-    Menu.ScaleControl(nameBox, 2 * wu, hu, 2 * wu, 3 * hu);
-    
+    Menu.ScaleControl(nameBox, 2 * wu, hu, 2 * wu, 3 * hu); 
   }
   
   /* Let user select server or client. */
   public void ShowSelection(){
     HideClient();
     HideServer();
+
     serverButton.Show();
     clientButton.Show();
+
     ScaleControls();
   }
   
@@ -102,7 +96,6 @@ public class MultiplayerMenu : Container, IMenu {
     clientButton.Hide();
   }
   
-  /* Show server configuration settings. */
   public void ShowServer(){
     HideSelection();
     selectionButton.Show();
@@ -111,7 +104,6 @@ public class MultiplayerMenu : Container, IMenu {
     ScaleControls();
   }
   
-  
   public void HideServer(){
     selectionButton.Hide();
     startServerButton.Hide();
@@ -119,8 +111,6 @@ public class MultiplayerMenu : Container, IMenu {
     startServerButton.SetText("Host Game");
   }
   
-  
-  /* Show client configuration settings */
   public void ShowClient(){
     HideSelection();
     selectionButton.Show();
@@ -131,7 +121,6 @@ public class MultiplayerMenu : Container, IMenu {
     ScaleControls();
   }
   
-  
   public void HideClient(){
     selectionButton.Hide();
     startClientButton.Hide();
@@ -141,16 +130,12 @@ public class MultiplayerMenu : Container, IMenu {
     startClientButton.SetText("Join Game");
   }
   
-  
   public void StartClient(){
-    //startClientButton.SetText("Joining...");
-    
     NetworkSession netSes = new NetworkSession();
     netSes.initAddress = addressBox.GetText();
     netSes.initPort = portBox.GetText();
     Session.session.AddChild(netSes);
     Session.session.netSes = netSes;
-
 
     netSes.isServer = false;
     netSes.initName = nameBox.GetText();
@@ -159,9 +144,7 @@ public class MultiplayerMenu : Container, IMenu {
   }
   
   
-  public void StartServer(){
-    //startServerButton.SetText("Hosting...");
-    
+  public void StartServer(){    
     NetworkSession netSes = new NetworkSession();
     Session.session.AddChild(netSes);
     Session.session.netSes = netSes;
@@ -171,16 +154,14 @@ public class MultiplayerMenu : Container, IMenu {
 
     Session.ChangeMenu(Menu.Menus.Lobby);
   }
-
-
   
   public void MainMenu(){
     Session.ChangeMenu(Menu.Menus.Main);
   }
   
-  
   public void SetMainMenuButton(Godot.Button button){
     if(mainMenuButton != null){ mainMenuButton.QueueFree(); }
+    
     mainMenuButton = button;
     AddChild(button);
   }

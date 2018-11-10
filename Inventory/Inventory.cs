@@ -49,7 +49,6 @@ public class Inventory : IHasItem {
 		return ret;
 	}
 
-	// Doesn't change value.
 	public ItemData GetItem(int index){
 		if(index < 0 || index >= items.Count){
 			return null;
@@ -57,7 +56,6 @@ public class Inventory : IHasItem {
 		return ItemData.Clone(items[index]);
 	}
 
-	// Changes value.
 	public ItemData RetrieveItem(int index){
 		if(index >= items.Count || index < 0){
 			return null;
@@ -67,7 +65,6 @@ public class Inventory : IHasItem {
 		return ret;
 	}
 
-	/* Returns item based on matching type and name. Returns -1 if not found.*/
 	public int IndexOf(Item.Types type, string name){
 		for(int i = 0; i < items.Count; i++){
 			ItemData item = items[i];
@@ -86,7 +83,6 @@ public class Inventory : IHasItem {
 		return ret;
 	}
 
-	/* Returns true item with matching name, ignoring type. */
 	public bool HasItem(string itemName){
 		foreach(ItemData item in items){
 			if(itemName == item.name){

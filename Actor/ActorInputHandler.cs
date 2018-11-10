@@ -19,17 +19,16 @@ public class ActorInputHandler : Brain {
     device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes as Eyes);
   }
   
-  
   private void InitEyes(Node eyes){
     if(eyes == null){ GD.Print("ActorInputHandler:Eyes were null"); }
     else{
       this.eyes = eyes as Spatial;
+      
       if(eyes == null){
         GD.Print("ActorInputHandler:Eyes failed to cast.");
       }
     }
   }
-  
   
   private void InitHeld(){
     held = new System.Collections.Generic.Dictionary<InputEvent.Buttons, bool>();
@@ -37,7 +36,6 @@ public class ActorInputHandler : Brain {
       held.Add(button, false);
     }
   }
-  
   
   public override void Update(float delta){
     this.delta = delta;
@@ -55,6 +53,7 @@ public class ActorInputHandler : Brain {
     else{
       HandleMenuInput(events);
     }
+    
     if(Session.NetActive()){
       NetUpdate();
     }
@@ -62,6 +61,7 @@ public class ActorInputHandler : Brain {
 
   public void NetUpdate(){
     syncTimer += delta;
+    
     if(syncTimer >= syncRate){
       syncTimer = 0f;
       actor.SyncPosition();
@@ -100,9 +100,9 @@ public class ActorInputHandler : Brain {
     }
     else if(evt.action == InputEvent.Actions.Up){
       held[evt.button] = false;
+      
       if(evt.button == InputEvent.Buttons.Shift){
         actor.SetSprint(false);
-
       }
     }
   }
@@ -123,13 +123,14 @@ public class ActorInputHandler : Brain {
     }
   }
 
-
   private void HandleAxis(InputEvent evt){
     float wx = Session.session.mouseSensitivityX;
     float wy = Session.session.mouseSensitivityY;
+    
     if(evt.axis == InputEvent.Axes.Mouse){
       actor.Turn(evt.x * wx, evt.y * wy);
     }
+    
     actor.Turn(evt.x * wx, evt.y * wy);
   }
 }

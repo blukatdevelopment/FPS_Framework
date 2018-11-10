@@ -6,7 +6,6 @@ public class PauseMenu : Container, IMenu {
   public Godot.Button quitButton;
   public Godot.Button mainMenuButton;
   public Godot.Button resumeButton;
-
   public Godot.Button saveAdventureButton;
   public Godot.Button loadAdventureButton;
 
@@ -15,9 +14,7 @@ public class PauseMenu : Container, IMenu {
     ScaleControls();
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -68,18 +65,21 @@ public class PauseMenu : Container, IMenu {
   
   public void SetQuitButton(Godot.Button button){
     if(quitButton != null){ quitButton.QueueFree(); }
+    
     quitButton = button;
     AddChild(button);
   }
   
   public void SetMainMenuButton(Godot.Button button){
     if(mainMenuButton != null){ quitButton.QueueFree(); }
+    
     mainMenuButton = button;
     AddChild(button);
   }
 
   public void SetResumeButton(Godot.Button button){
     if(resumeButton != null){ resumeButton.QueueFree(); }
+    
     resumeButton = button;
     AddChild(button);
   }

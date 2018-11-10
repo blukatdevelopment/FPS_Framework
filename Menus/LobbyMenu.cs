@@ -5,25 +5,22 @@ using System.Linq;
 using Newtonsoft.Json;
 
 public class LobbyMenu : Container, IMenu {
-  TextEdit messageBox;
-  TextEdit composeBox;
-  Godot.Button sendButton;
-  Godot.Button mainMenuButton;
-  TextEdit playersBox;
-  Godot.Button readyButton;
-  Godot.Button modeButton;
+  public TextEdit messageBox;
+  public TextEdit composeBox;
+  public Godot.Button sendButton;
+  public Godot.Button mainMenuButton;
+  public TextEdit playersBox;
+  public Godot.Button readyButton;
+  public Godot.Button modeButton;
 
   // Server stuff
-  Session.Gamemodes activeMode;
-  IMenu arenaConfig;
-  IMenu adventureConfig;
-
+  public Session.Gamemodes activeMode;
+  public IMenu arenaConfig;
+  public IMenu adventureConfig;
   private bool countDownActive = false;
   private float timer = 0f;
   private int countDown = 10;
   private bool isReady = false;
-
-
   private string myName;
   private List<string> messages;
 
@@ -34,17 +31,18 @@ public class LobbyMenu : Container, IMenu {
   public override void _Process(float delta){
     if(countDownActive){
       CountDown(delta);
-    }
-    
+    } 
   }
 
   void CountDown(float delta){
     timer += delta;
+    
     if(timer > 1f){
       countDown--;
       timer = 0;
       BuildPlayers();
     }
+    
     if(countDown < 1){
       countDownActive = false;
       StartGame();
@@ -59,19 +57,18 @@ public class LobbyMenu : Container, IMenu {
     else{
       InitControls();
     } 
+    
     InitNetwork();
+    
     if(netSes.isServer){
       ScaleServerControls();
     }
     else{
       ScaleControls();
     }
-    
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -108,8 +105,7 @@ public class LobbyMenu : Container, IMenu {
 
     messageBox = (Godot.TextEdit)Menu.TextBox();
     messageBox.Readonly = true;
-    AddChild(messageBox);
-    
+    AddChild(messageBox); 
     
     mainMenuButton = (Godot.Button)Menu.Button("Main Menu", ReturnToMainMenu);
     AddChild(mainMenuButton);
@@ -126,7 +122,6 @@ public class LobbyMenu : Container, IMenu {
 
     SetMenu(activeMode);
   }
-
 
   public void SetMenu(Session.Gamemodes mode){
     switch(activeMode){
@@ -161,6 +156,7 @@ public class LobbyMenu : Container, IMenu {
     else{
       SetMenu(Session.Gamemodes.Arena);
     }
+
     modeButton.SetText("Gamemode: " + activeMode);
     Rpc(nameof(ChangeMode), activeMode);
   }
@@ -194,6 +190,7 @@ public class LobbyMenu : Container, IMenu {
       else{
         netSes.UpdateClient(obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected));
       }
+
       BuildPlayers();
       return;
     }
@@ -208,6 +205,7 @@ public class LobbyMenu : Container, IMenu {
     else{
       netSes.InitClient(address: netSes.initAddress, obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected),  port: netSes.initPort);
     }
+
     BuildPlayers();
   }
   
@@ -240,7 +238,6 @@ public class LobbyMenu : Container, IMenu {
 
     arenaConfig.Init(2 * wu, hu, width, height);
     adventureConfig.Init(2 * wu, hu, width, height);
-
   }
   
   public void ReturnToMainMenu(){
@@ -267,7 +264,6 @@ public class LobbyMenu : Container, IMenu {
   }
 
   public void PlayerQuit(int id){
-    //ReceiveMessage("Player " + id + " quit.");
     RemovePlayer(id);
     Rpc(nameof(RemovePlayer), id);
   }
@@ -312,7 +308,6 @@ public class LobbyMenu : Container, IMenu {
     }
   }
 
-
   public void ConnectionFailed(){
     ReceiveMessage("Connection failed. :(");
   }
@@ -347,10 +342,12 @@ public class LobbyMenu : Container, IMenu {
     }
 
     NetworkSession netSes = Session.session.netSes;
+    
     if(netSes == null){ 
       GD.Print("AddPlayer: No network session detected");
       return; 
     }
+
     if(dat.id == netSes.selfPeerId){
       myName = dat.name;
     }
@@ -358,7 +355,6 @@ public class LobbyMenu : Container, IMenu {
     if(!netSes.playerData.ContainsKey(dat.id)){
       netSes.playerData.Add(dat.id, dat);
     }
-    
     
     BuildPlayers();
   }
@@ -411,16 +407,19 @@ public class LobbyMenu : Container, IMenu {
 
   public bool AllPlayersReady(){
     NetworkSession netSes = Session.session.netSes;
+    
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       if(entry.Value.ready == false){
         return false;
       }
     }
+
     return true;
   }
 
   public void StartGame(){
     ResetReady();
+    
     switch(activeMode){
       case Session.Gamemodes.Arena:
         Session.MultiplayerArena();
@@ -429,7 +428,6 @@ public class LobbyMenu : Container, IMenu {
         Session.MultiplayerAdventure();
         break;
     }
-    
   }
 
   void StopCountDown(){
@@ -450,7 +448,6 @@ public class LobbyMenu : Container, IMenu {
     PlayerData playerDat = JsonConvert.DeserializeObject<PlayerData>(dat);
   }
 
-
   void BuildPlayers(){
     NetworkSession netSes = Session.session.netSes;
     string names = "Players(" + netSes.playerData.Count + ")";
@@ -464,7 +461,7 @@ public class LobbyMenu : Container, IMenu {
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       names += entry.Value.name + "\n";
     }
+
     playersBox.SetText(names);
-  }
-    
+  }   
 }

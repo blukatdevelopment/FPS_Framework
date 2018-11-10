@@ -2,17 +2,14 @@
 using Godot;
 
 public class SingleplayerMenu : Container, IMenu {
-  Button mainMenuButton;
-  Button startButton;
-  Button modeButton;
-
-  Session.Gamemodes activeMode = Session.Gamemodes.None;
-
-  IMenu arenaConfig;
-  IMenu adventureConfig;
+  public Button mainMenuButton;
+  public Button startButton;
+  public Button modeButton;
+  public Session.Gamemodes activeMode = Session.Gamemodes.None;
+  public IMenu arenaConfig;
+  public IMenu adventureConfig;
 
   public void Init(float minX, float minY, float maxX, float maxY){
-  	GD.Print("Init singleplayer menu");
     InitControls();
     ScaleControls();
   }
@@ -46,7 +43,6 @@ public class SingleplayerMenu : Container, IMenu {
 
     SetMenu(activeMode);
   }
-
 
   public void SetMenu(Session.Gamemodes mode){
     switch(activeMode){
@@ -85,7 +81,6 @@ public class SingleplayerMenu : Container, IMenu {
     Menu.ScaleControl(modeButton, 2 * wu,  hu, 0, hu);
     Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
 
-
     arenaConfig.Init(2 * wu, hu, width, height);
     adventureConfig.Init(2 * wu, hu, width, height);
   }
@@ -115,6 +110,7 @@ public class SingleplayerMenu : Container, IMenu {
     else{
       SetMenu(Session.Gamemodes.Arena);
     }
+    
     modeButton.SetText("Gamemode: " + activeMode);
   }
 }

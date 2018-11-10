@@ -21,7 +21,6 @@ public class InventoryMenu : Container, IMenu {
   public Godot.Button aidButton;
   public Godot.Button miscButton;
   public Godot.Button ammoButton;
-
   public Item.Categories activeFilter;
   public List<ItemData> itemData;
   public int itemSelected;
@@ -32,9 +31,7 @@ public class InventoryMenu : Container, IMenu {
     ScaleControls();
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -44,8 +41,7 @@ public class InventoryMenu : Container, IMenu {
     this.QueueFree();
   }
   
-
-  void InitControls(){
+  public void InitControls(){
     activeFilter = Item.Categories.Weapons;
 
     closeButton = (Godot.Button)Menu.Button(text : "Close", onClick : Close);
@@ -95,7 +91,7 @@ public class InventoryMenu : Container, IMenu {
     AddChild(weightInfo);
   }
 
-  void ScaleControls(){
+  public void ScaleControls(){
       Rect2 screen = this.GetViewportRect();
       float width = screen.Size.x;
       float height = screen.Size.y;
@@ -117,7 +113,7 @@ public class InventoryMenu : Container, IMenu {
     	Menu.ScaleControl(weightInfo, 2 * wu, hu, 2 * wu, 4.5f * hu);
   }
 
-  void RefreshStashItemInfo(){
+  public void RefreshStashItemInfo(){
   	Item item = Session.session.player.PrimaryItem();
   	if(item != null){
   		stashButton.SetText("Arms: " + item.GetInfo());
@@ -128,7 +124,7 @@ public class InventoryMenu : Container, IMenu {
   	Session.session.player.SetMenuActive(false);
   }
 
-  void UpdateWeightInfo(int weight){
+  public void UpdateWeightInfo(int weight){
   	string text = "Weight: " + weight;
   	weightInfo.SetText(text);
   }
@@ -154,13 +150,13 @@ public class InventoryMenu : Container, IMenu {
   	}
   }
 
-  void SelectItem(int index){
+  public void SelectItem(int index){
   	GD.Print("Item " + index + " selected");
   	itemSelected = index;
   	UpdateItemInfo();
   }
 
-  void UpdateItemInfo(){
+  public void UpdateItemInfo(){
   	if(itemSelected == -1){
   		return;
   	}
@@ -226,29 +222,23 @@ public class InventoryMenu : Container, IMenu {
   	RefreshStashItemInfo();
   }
 
-  // Methods to filter inventory displayed
   public void FilterWeapons(){
-  	// GD.Print("Weapons");
   	UpdateFilter(Item.Categories.Weapons);
   }
 
   public void FilterApparel(){
-  	// GD.Print("Apparel");
   	UpdateFilter(Item.Categories.Apparel);
   }
 
   public void FilterAid(){
-  	// GD.Print("Aid");
   	UpdateFilter(Item.Categories.Aid);
   }
 
   public void FilterMisc(){
-  	// GD.Print("Misc");
   	UpdateFilter(Item.Categories.Misc);
   }
 
   public void FilterAmmo(){
-  	// GD.Print("Ammo");
   	UpdateFilter(Item.Categories.Ammo);
   }
 
@@ -282,8 +272,7 @@ public class InventoryMenu : Container, IMenu {
   			useButton.SetText("Select");
   			break;
   	}
+
   	RefreshInventory();
   }
-
-
 }

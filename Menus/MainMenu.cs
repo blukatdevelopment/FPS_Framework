@@ -29,12 +29,16 @@ public class MainMenu : Container, IMenu {
     void InitControls(){
       soloButton = Menu.Button(text : "Solo", onClick : SinglePlayerGame);
       AddChild(soloButton);
+      
       multiplayerButton = Menu.Button(text : "Multiplayer", onClick : Multiplayer);
       AddChild(multiplayerButton);
+      
       quitButton = Menu.Button(text : "Quit", onClick : Quit);
       AddChild(quitButton);
+      
       settingsButton = (Godot.Button)Menu.Button(text : "Settings", onClick : Settings);
       AddChild(settingsButton);
+      
       Sound.PlaySong(Sound.Songs.FloatingHorizons);
     }
 

@@ -39,6 +39,7 @@ public class Ai : Brain
         
       }
     }
+
     if(Session.IsServer() && Session.NetActive()){
       NetUpdate(delta);
     }
@@ -46,6 +47,7 @@ public class Ai : Brain
 
   public void NetUpdate(float delta){
     syncTimer += delta;
+    
     if(syncTimer >= syncRate){
       syncTimer = 0f;
       actor.SyncPosition();
@@ -96,8 +98,10 @@ public class Ai : Brain
   bool AimingAt(Vector3 point){
     Vector3 hostRot = host.GetRotationDegrees();
     Transform aimedTrans = host.Transform.LookingAt(point, host.Up());
+    
     Vector3 aimedRot = aimedTrans.basis.GetEuler();
     aimedRot = Util.ToDegrees(aimedRot);
+    
     float aimAngle = hostRot.DistanceTo(aimedRot);
     
     return aimAngle < AimMargin;
@@ -112,18 +116,19 @@ public class Ai : Brain
   void AcquireTarget(){
     float distance = 100f;
     Vector3 start = host.HeadPosition();
+    
     Vector3 end = host.Forward();
     end *= distance; // Move distance
     end += start; // Add starting position
     
-    List<Actor> targets = SeeActors();//GridCastForActor(start, end);
+    List<Actor> targets = SeeActors();
+    
     foreach(Actor targ in targets){
       if(targ != null && targ != host){
         target = targ;
         return;
       }
     }
-
   }
 
   List<Actor> SeeActors(){
@@ -137,6 +142,7 @@ public class Ai : Brain
 
     foreach(object obj in objects){
       Actor sighted = obj as Actor;
+      
       if(sighted != null){
         ret.Add(sighted);
       }
@@ -152,6 +158,7 @@ public class Ai : Brain
     }
 
     Vector3 targetPos = target.Translation;
+    
     if(!AimingAt(targetPos)){
       Pursue(delta);
       return;
@@ -160,6 +167,7 @@ public class Ai : Brain
     actor.Use(Item.Uses.A);
     
     IHasAmmo ammoHaver = actor.PrimaryItem() as IHasAmmo;
+    
     if(ammoHaver != null){
       ManageAmmo(ammoHaver);
     }
@@ -167,6 +175,7 @@ public class Ai : Brain
   
   void ManageAmmo(IHasAmmo ammoHaver){
     string[] ammoTypes = ammoHaver.AmmoTypes();
+    
     if(ammoTypes == null || ammoTypes.Length == 0){
       return;
     }
@@ -174,6 +183,7 @@ public class Ai : Brain
     string ammoType = ammoTypes[0];
     int haverCount = ammoHaver.CheckAmmo(ammoType, -1);
     int actorCount = actor.CheckAmmo(ammoType, -1);
+    
     if(haverCount == 0 && actorCount > 0){
       actor.Use(Item.Uses.D);
     }

@@ -29,8 +29,6 @@ public class OverworldData{
   }
 
   public void ReadData(Overworld world){
-    
-
     world.TogglePause(); // Keep things from moving around for the save.
     
     saveFile = world.saveFile;
@@ -53,8 +51,6 @@ public class OverworldData{
     foreach(int id in world.items.Keys){
       itemsData.Add(id, world.items[id].GetData());
     }
-
-
 
     world.TogglePause();
   }

@@ -9,7 +9,6 @@ public class Treadmill {
 
 	public float timer = 0f;
 	public float timerMax = 0.5f;
-
 	public Overworld world;
 	public Actor actor; // Actor to monitor.
 	public int radius; // How many layers of Cells should be  modified.
@@ -79,6 +78,7 @@ public class Treadmill {
 		foreach(Vector2 cell in newCells){
 			world.RequestCell(cell);
 		}
+		
 		currentCoords = actorCoords;
 	}
 
@@ -89,6 +89,7 @@ public class Treadmill {
 				return true;
 			}
 		}
+		
 		return false;
 	}
 }

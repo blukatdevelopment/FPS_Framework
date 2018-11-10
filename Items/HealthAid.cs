@@ -14,7 +14,7 @@ public class HealthAid : Item, IConsume {
     Damage damage = new Damage(-Health);
 
     receiver.ReceiveDamage(damage);
-    // Peer -> peer
+
     if(Session.NetActive()){
       Actor actor = obj as Actor;
       
@@ -22,6 +22,7 @@ public class HealthAid : Item, IConsume {
         actor.Rpc(nameof(Actor.RemoteReceiveDamage), JsonConvert.SerializeObject(damage, Formatting.Indented));
       }
     }
+    
     this.QueueFree();
 	}
 }

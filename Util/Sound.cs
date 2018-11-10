@@ -63,6 +63,7 @@ public class Sound {
   public static float VolumeMath(float val){
     val *= Session.session.masterVolume;
     val *= 100f;
+    
     float remainder = 100f - val; // The distance from 100%
     val = 0f - remainder; // volume should be -distance decibals
     return val;
@@ -76,6 +77,7 @@ public class Sound {
     
     string fileName = SongFile(song);
     AudioStreamOGGVorbis stream = (AudioStreamOGGVorbis)GD.Load(fileName);
+    
     Session.InitJukeBox();
     Session.session.jukeBox.Stream = stream;
     Session.session.jukeBox.Playing = true;

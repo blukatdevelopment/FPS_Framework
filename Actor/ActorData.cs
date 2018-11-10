@@ -25,11 +25,12 @@ public class ActorData {
 		int x = (int)pos.x;
 		int y = (int)pos.y;
 		int z = (int)pos.z;
+
 		string ret = "Actor[" + id + "]:\n";
+		
 		ret += "\tname: " + name + "\n";
 		ret += "\tbrain: " + brain + "\n";
 		ret += "\tPos: [" + x + "," + y + "," + z + "] \n";
-
 
 		return ret;
 	}

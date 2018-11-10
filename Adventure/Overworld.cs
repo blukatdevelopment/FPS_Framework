@@ -51,10 +51,10 @@ public class Overworld : Spatial {
 
 		Name = "Adventure";
 		if(Session.IsServer()){
-			ServerInit();
+			// Server setup
 		}
 		else if(Session.NetActive()){
-			ClientInit();
+			// Client setup
 		}
 		else{
 			SinglePlayerInit();
@@ -65,14 +65,6 @@ public class Overworld : Spatial {
 		if(!paused){
 			UpdateTreadmills(delta);
 		}
-	}
-
-	public void ServerInit(){
-		//GD.Print("Server init");
-	}
-
-	public void ClientInit(){
-		//GD.Print("Client init");
 	}
 
 	public void SinglePlayerInit(){
@@ -105,8 +97,7 @@ public class Overworld : Spatial {
 		CreateTreadmill(actors[playerId]);
 	}
 
-	/* Asks the cartographer to make a new world
-	 TODO: or loads an existing one */
+	/* Asks the cartographer to make a new world */
 	public void InitWorld(){
 		if(Session.session.adventureSettings != null 
 			 && Session.session.adventureSettings.load){
@@ -315,7 +306,6 @@ public class Overworld : Spatial {
 
 	public int CoordsToCellId(int x, int y){
 		if(y < 0 || y >= WorldHeight || x < 0 || x >= WorldWidth){
-			//GD.Print("Invalid coords:" + x + ", " + y);
 			return -1;
 		}
 		return y * WorldWidth + x;
@@ -364,7 +354,6 @@ public class Overworld : Spatial {
 		return actors.ContainsKey(id) || actorsData.ContainsKey(id);
 	}
 
-	// Returns rendered actor(or null), actually rendering it if necessary
 	public Actor RenderActor(int id){
 		if(actors.ContainsKey(id)){
 			return actors[id];
@@ -456,7 +445,6 @@ public class Overworld : Spatial {
 			return cells[id];
 		}
 		
-		// Load from Disc
 		if(!cellsData.ContainsKey(id)){
 			GD.Print("RenderCell saveFile " + saveFile);
 			AdventureDb db = new AdventureDb(saveFile);
@@ -464,7 +452,6 @@ public class Overworld : Spatial {
 			cellsData.Add(id, data);
 		}
 
-		// Actually render the cell
 		TerrainCellData cellData = cellsData[id];
 		cellsData.Remove(id);
 
@@ -474,7 +461,6 @@ public class Overworld : Spatial {
 		cells.Add(cell.id, cell);
 		AddChild(cell);
 
-		// Render the cell's contents
 		foreach(ActorData actor in ActorsDataAtCoords(cell.coords)){
 			RenderActor(actor.id);
 		}
@@ -515,12 +501,9 @@ public class Overworld : Spatial {
 		return cellData;
 	}
 
-
 	//############################################################################
 	//#								Session interactions																			 #
 	//############################################################################
-
-
 
 	public void HandleEvent(SessionEvent sessionEvent){
     if(sessionEvent.type == SessionEvent.Types.ActorDied ){
@@ -531,9 +514,7 @@ public class Overworld : Spatial {
     }
   }
 
-  public void HandleActorDead(SessionEvent sessionEvent){
-  	//GD.Print("HandleActorDead not implemented");
-  }
+  public void HandleActorDead(SessionEvent sessionEvent){}
 
   public void TogglePause(){
     foreach(int id in actors.Keys){

@@ -10,7 +10,7 @@ public class Eyes : Camera {
   private Vector2 mousePosition;
   
   public override void _Ready(){
-    Input.SetMouseMode(Input.MouseMode.Captured); // Assumption is that player will use mouse for input.
+    Input.SetMouseMode(Input.MouseMode.Captured);
   }
   
   public override void _Process(float delta){

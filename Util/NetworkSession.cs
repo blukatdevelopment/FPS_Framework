@@ -17,15 +17,11 @@ public class NetworkSession : Node {
   public System.Collections.Generic.Dictionary<int, PlayerData> playerData;
   public int randomSeed;
   public System.Random random;
-
-  // Init variables
   public int playersReady;
   public bool isServer;
   public string initAddress;
   public string initPort;
   public string initName;
-
-
   
   public override void _Ready(){
     playerData = new System.Collections.Generic.Dictionary<int, PlayerData>();
@@ -35,7 +31,6 @@ public class NetworkSession : Node {
     return peer != null;
   }
 
-  // Update handler methods without disconnecting.
   public void UpdateServer(Godot.Object obj, string playerJoin, string playerLeave){
     this.GetTree().Connect("network_peer_connected", obj, playerJoin);
     this.GetTree().Connect("network_peer_disconnected", obj, playerLeave);
@@ -90,7 +85,6 @@ public class NetworkSession : Node {
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
   
-
   public void InitRandom(int seed){
     this.randomSeed = seed;
     this.random = new System.Random(randomSeed);

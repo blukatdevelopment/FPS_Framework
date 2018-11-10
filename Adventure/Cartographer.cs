@@ -91,7 +91,6 @@ public class Cartographer {
 		items.Add(item.id, item);
 	}
 
-	// Place an Item 
 	public ItemData GenerateItem(Item.Types type, Vector3 pos){
 		Item item = Item.Factory(type);
 		ItemData data = item.GetData();

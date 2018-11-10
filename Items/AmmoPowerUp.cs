@@ -9,6 +9,7 @@ public class AmmoPowerUp : PowerUp {
   
   public override void ApplyPowerUp(object obj){
     IHasAmmo receiver = obj as IHasAmmo;
+    
     if(receiver == null){
       return;
     }

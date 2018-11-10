@@ -6,28 +6,22 @@ public class AdventureConfigMenu : Container, IMenu {
   public Label adventureLabel;
   public Label nameLabel;
   public TextEdit nameBox;
-  public static int MaxNameLength = 16;
-
+  public const int MaxNameLength = 16;
   public Button loadAdventureButton;
-
-  const string NameLabelText = "Adventure Name";
-  const string NameLabelWarning = "Warning: file already exists!";
-
-
-  float minX, minY, maxX, maxY; // For scaling
-  AdventureSettings config;
-
+  public const string NameLabelText = "Adventure Name";
+  public const string NameLabelWarning = "Warning: file already exists!";
+  public float minX, minY, maxX, maxY;
+  public AdventureSettings config;
 
   public void Init(float minX, float minY, float maxX, float maxY){
     this.minX = minX;
     this.minY = minY;
     this.maxX = maxX;
     this.maxY = maxY;
-    GD.Print("Init adventure config");
+
     InitAdventureSettings();
     InitControls();
     ScaleControls();
-
   }
   
   public void Resize(float minX, float minY, float maxX, float maxY){
@@ -35,6 +29,7 @@ public class AdventureConfigMenu : Container, IMenu {
     this.minY = minY;
     this.maxX = maxX;
     this.maxY = maxY;
+
     ScaleControls();
   }
 
@@ -45,7 +40,6 @@ public class AdventureConfigMenu : Container, IMenu {
   public void Clear(){
     this.QueueFree();
   }
-
 
   void InitAdventureSettings(){
     config = new AdventureSettings();
@@ -79,6 +73,7 @@ public class AdventureConfigMenu : Container, IMenu {
       " ", "\\", "/", "?", "@", "#", "$", "%", "^", "&", "*", "(", ")",
       "-", "=", "+", "{", "}", "\'", "\"", "~", "`", "!", "|", "[", "]"
     };
+    
     for(int i = 0; i < forebidden.Length; i++){
       name = name.Replace(forebidden[i], "_");
     }
@@ -90,6 +85,7 @@ public class AdventureConfigMenu : Container, IMenu {
     nameBox.SetText(name);
     nameBox.CursorSetColumn(column);
     config.fileName = name + ".adventure";
+    
     if(SettingsDb.SaveExists(config.fileName)){
       nameLabel.SetText(NameLabelWarning);
     }

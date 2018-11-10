@@ -11,19 +11,17 @@ using System;
 public class TerrainBlock {
 	public enum Blocks{
     Air,
-    Dirt = 2 // Hardcoded to full block
+    Dirt = 2 // Hardcoded to full block mesh
   };
   
-  // Orientation
-  public int orx, ory, orz;
-  // Grid Position
-  public int gpx, gpy, gpz;
+  
+  public int orx, ory, orz; // Orientation
+  public int gpx, gpy, gpz; // Grid Position
 
 	public Blocks blockId;
 
 
-	public TerrainBlock(){
-	}
+	public TerrainBlock(){}
 
 	public TerrainBlock(Vector3 gridPosition, Vector3 orientation, Blocks blockId = Blocks.Dirt){
 		orx = (int)orientation.x;
@@ -55,10 +53,10 @@ public class TerrainBlock {
 		string ret = "Block:[";
 		ret += gpx + "," + gpy + "," + gpz + "]";
 		ret += "blockId: " + blockId;
+		
 		return ret;
 	}
 
-	// TODO: Find a non-hardcoded way to configure this.
 	public static MeshLibrary GetTheme(){
 		MeshLibrary ret = ResourceLoader.Load("res://Terrain/Terrain.meshlib") as MeshLibrary;
 		return ret;

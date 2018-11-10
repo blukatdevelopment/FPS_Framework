@@ -16,7 +16,6 @@ public class Test{
   }
 
   public static void Assert(bool result, string message){
-
     if(!result){
       Fail(message, StackTrace());
     }

@@ -7,14 +7,13 @@ using System;
 public class MeleeWeapon : Item, IWeapon {
   
   const int HealthDamage = 10;
-  private Vector3 wieldedPosition;
-  private Vector3 forwardPosition;
-  
-  bool swinging = false;
-  float busyDelay = 0f;
-  bool busy = false;
-  delegate void OnBusyEnd();
-  OnBusyEnd busyEndHandler;
+  public Vector3 wieldedPosition;
+  public Vector3 forwardPosition;
+  public bool swinging = false;
+  public float busyDelay = 0f;
+  public bool busy = false;
+  public delegate void OnBusyEnd();
+  public OnBusyEnd busyEndHandler;
   
   public override ItemData GetData(){
     ItemData ret = ItemGetData();
@@ -35,6 +34,7 @@ public class MeleeWeapon : Item, IWeapon {
   public override void _Process(float delta){
     if(busy){
       busyDelay -= delta;
+      
       if(busyDelay <= 0f){
         busy = false;
         busyDelay = 0f;
@@ -62,13 +62,13 @@ public class MeleeWeapon : Item, IWeapon {
     if(!swinging){
       return;
     }
+    
     IReceiveDamage receiver = body as IReceiveDamage;
     IReceiveDamage wielderDamage = wielder as IReceiveDamage;
+    
     if(receiver != null && receiver != wielderDamage){
       Strike(receiver);
     }
-    
-    
   }
   
   private void Strike(IReceiveDamage receiver){
@@ -90,12 +90,14 @@ public class MeleeWeapon : Item, IWeapon {
   
   private void StartSwing(){
     speaker.PlayEffect(Sound.Effects.FistSwing);
+    
     busy = true;
     busyDelay = 0.5f;
     OnBusyEnd endSwing = EndSwing;
     busyEndHandler = endSwing;
     swinging = true;
     Translation = forwardPosition;
+    
     SetCollision(true);
   }
    
@@ -103,6 +105,7 @@ public class MeleeWeapon : Item, IWeapon {
     swinging = false;
     busy = false;
     Translation = wieldedPosition;
+    
     SetCollision(false);
   }
 }

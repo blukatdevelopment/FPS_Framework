@@ -6,7 +6,6 @@ public class LoadAdventureMenu : Container, IMenu {
   public Godot.Button backButton;
   public Godot.Button loadButton;
 
-
   public void Init(float minX, float minY, float maxX, float maxY){
     Session.session.adventureSettings = new AdventureSettings();
     InitControls();
@@ -40,16 +39,16 @@ public class LoadAdventureMenu : Container, IMenu {
     Load();
   }
 
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public void Load(){
     string save = Session.session.adventureSettings.fileName;
+    
     if(save == null || save == ""){
       GD.Print("Can't load a blank file");
       return;
     }
+
     Session.session.adventureSettings.load = true;
     Session.SinglePlayerAdventure();
   }
@@ -75,6 +74,7 @@ public class LoadAdventureMenu : Container, IMenu {
     float height = screen.Size.y;
     float wu = width / 10; // relative height and width units
     float hu = height / 10;
+    
     Menu.ScaleControl(savesList, 5 * wu, 4 * hu, 0, 5 * hu);
     Menu.ScaleControl(backButton, 2 * wu, hu, 0, height - hu);
     Menu.ScaleControl(loadButton, 2 * wu, hu, width - 2 * wu, height - hu);
@@ -83,5 +83,4 @@ public class LoadAdventureMenu : Container, IMenu {
   public void Clear(){
     this.QueueFree();
   }
-
 }

@@ -3,7 +3,7 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-  public enum Menus{ // Parented by Session.session
+  public enum Menus{
     None, 
     Main,
     Singleplayer,
@@ -16,7 +16,7 @@ public class Menu{
     LoadAdventure
   };
 
-  public enum SubMenus{ // Parented by menu
+  public enum SubMenus{
     None,
     ArenaConfig,
     AdventureConfig
@@ -24,8 +24,10 @@ public class Menu{
   
   public static Button Button(string text = "", Action onClick = null){
     Button button = new Button();
+    
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
+    
     return button;
   }
   
@@ -97,11 +99,14 @@ public class Menu{
         ret.Name = "LoadAdventure";
         break;
     }
+    
     Session.session.AddChild(ret);
     IMenu menuInstance = ret as IMenu;
+    
     if(menuInstance != null){
       menuInstance.Init(0, 0, 0, 0); // Assuiming these are not subMenus
     }
+    
     return ret;
   }
 
@@ -125,6 +130,7 @@ public class Menu{
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){
     if(control == null){ return; }
+    
     control.SetSize(new Vector2(width, height)); 
     control.SetPosition(new Vector2(x, y)); 
   }

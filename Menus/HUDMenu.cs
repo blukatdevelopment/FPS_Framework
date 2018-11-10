@@ -4,14 +4,14 @@ using System;
 public class HUDMenu : Container, IMenu{
 
   public float delay = 0.0f;
-
-  Godot.Label healthBox;
-  Godot.Label itemBox;
-  Godot.Label objectiveBox;
-  Godot.Label interactionBox;
+  public Godot.Label healthBox;
+  public Godot.Label itemBox;
+  public Godot.Label objectiveBox;
+  public Godot.Label interactionBox;
   
   public override void _Process(float delta){
     delay += delta;
+
     if(delay > 0.033f){
       delay -= 0.033f;
       Update();
@@ -23,9 +23,7 @@ public class HUDMenu : Container, IMenu{
     ScaleControls();
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -53,6 +51,7 @@ public class HUDMenu : Container, IMenu{
     objectiveBox.Text = objectiveText;
 
     IInteract interactor = player.VisibleObject() as IInteract;
+    
     if(interactor == null){
       interactionBox.Hide();
     }
@@ -62,11 +61,9 @@ public class HUDMenu : Container, IMenu{
       interactionBox.Show();
       interactionBox.SetText(interactionText);
     }
-
   }
 
   void InitControls(){
-
     healthBox = Menu.Label("health");
     AddChild(healthBox);
 
@@ -92,5 +89,4 @@ public class HUDMenu : Container, IMenu{
     Menu.ScaleControl(objectiveBox, 4 * wu, hu, 3 * wu, 0);
     Menu.ScaleControl(interactionBox, 4 * wu, hu, 3 * wu, 7 * hu);
   }
-
 }

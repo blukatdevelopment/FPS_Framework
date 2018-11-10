@@ -6,7 +6,7 @@ using Godot;
 using System.Collections.Generic;
 
 public class TerrainCell : GridMap{
-	public int id; // id according to overworld.
+	public int id; // Overworld ID
 	public Vector2 coords;
 	public int cellSize;
 	public List<TerrainBlock> blockData;
@@ -21,7 +21,6 @@ public class TerrainCell : GridMap{
 		LoadData(data);
 	}
 
-	// Return width of this cell in world units
 	public float GetWidth(){
 		return CellSize.x * cellSize;
 	}
@@ -43,7 +42,6 @@ public class TerrainCell : GridMap{
 		ret += new Vector3(scale, scale, scale);
 		return ret;
 	}
-
 
 	public TerrainCellData GetData(){
 		TerrainCellData data = new TerrainCellData();
@@ -78,8 +76,6 @@ public class TerrainCell : GridMap{
 		return pos - offset;
 	}
 
-
-	// Returns center of this terrain cell
 	public Vector3 GetPos(){
 		float effectiveScale = cellSize * CellSize.x; //Assume cubic grid
 		float halfScale = effectiveScale/2f;

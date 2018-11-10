@@ -7,18 +7,13 @@ using Godot;
 
 public class ItemData : IHasInfo {
 	
-
-	// These should be used by classes like Inventory, but NOT for ReadData
-	// When searching an inventory for an item, (type, name) are the primary key.
-	public int id; // primary identifier
+	public int id;
 	public Item.Types type;
 	public string name;
 	public string description;
 	public int weight;
 	public Vector3 pos, rot;
 	public bool held;
-
-	// Store all custom data added by subclasses of Item
 	public System.Collections.Generic.Dictionary<string, string> extra;
 
 	public ItemData(){
@@ -32,6 +27,7 @@ public class ItemData : IHasInfo {
 		if(!extra.ContainsKey(key)){
 			return "";
 		}
+
 		return extra[key];
 	}
 
@@ -40,6 +36,7 @@ public class ItemData : IHasInfo {
 			extra[key] = val;
 			return;
 		}
+
 		extra.Add(key, val);
 	}
 
@@ -71,5 +68,4 @@ public class ItemData : IHasInfo {
 		string ret = name;
 		return ret;
 	}
-
 }

@@ -9,17 +9,9 @@ using System.Reflection;
 
 
 public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
-  public enum Uses{ 
-    A, // Primary use (Left Mouse) 
-    B, // Secondary Use(Right Mouse)
-    C, // Third Use(Middle mouse)
-    D, // Fourth Use(R)
-    E, // Fifth Use(E)
-    F, 
-    G 
-  };
+  public enum Uses{ A, B, C, D, E, F, G };
   
-  public enum Types{ // For mapping to classes in the factory and categories in inventorymenu
+  public enum Types{
     None,
     Hand,
     Rifle,
@@ -29,7 +21,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     Ammo,
     AidHealthPack
   };
-
 
   public enum Categories { // Inventory categories.
     None,
@@ -65,7 +56,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     speaker = new Speaker();
     AddChild(speaker);
 
-    // Set up default mesh here
     meshInstance = new MeshInstance();
     meshInstance.Mesh = ResourceLoader.Load(meshPath) as Mesh;
     AddChild(meshInstance);
@@ -184,7 +174,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     ItemReadData(dat);
   }
 
-  // Saves all the basic Item fields
   public ItemData ItemGetData(){
     ItemData dat = new ItemData();
 
@@ -246,7 +235,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return shapes;
   }
   
-  /* Disable or enable collisions. Particularly useful for held items. */
   public void SetCollision(bool val){
     Godot.Array owners = GetShapeOwners();
     collisionDisabled = !val;
@@ -289,7 +277,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual void DoOnCollide(object body){}
   
-  /* Convert ItemData to Item */
   public static Item FromData(ItemData data){
     Item item = Factory(data.type);
     if(item != null){
@@ -298,7 +285,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return item;
   }
 
-  /* Returns an archetypal item by it's type. */
   public static Item Factory(Types type){
     Item ret = null;
     if(type == Types.None){
@@ -322,6 +308,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   // Return an instance of the type's archetypal class.
   public static Item FromType(Types type){
     Item ret = null;
+    
     switch(type){
       case Types.Hand: ret = new MeleeWeapon() as Item; break;
       case Types.Rifle: ret = new ProjectileWeapon() as Item; break;
@@ -331,25 +318,29 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
       case Types.Ammo: ret = new Item(); break;
       case Types.AidHealthPack: ret = new HealthAid() as Item; break;
     }
+    
     return ret;
   }
   
   /* Returns a list of items */
   public static List<Item> BulkFactory(Types type, int quantity = 1){
     List<Item> ret = new List<Item>();
+    
     for(int i = 0; i < quantity; i++){
       ret.Add(Factory(type));
     }
+    
     return ret;
   }
 
-  /* Converts list of Items into list of ItemData */
   public static List<ItemData> ConvertListToData(List<Item> items){
     List<ItemData> ret = new List<ItemData>();
+    
     foreach(Item item in items){
       ret.Add(item.GetData());
       item.QueueFree();
     }
+
     return ret;
   }
 
@@ -430,6 +421,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
         return Categories.Aid;
         break;
     }
+
     return Categories.None;
   }
 
@@ -446,9 +438,11 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
   public static int TotalWeight(List<ItemData> items){
     int total = 0;
+    
     foreach(ItemData item in items){
       total += item.weight;
     }
+
     return total;
   }
 

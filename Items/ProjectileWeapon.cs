@@ -11,26 +11,22 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   const int BaseDamage = 10;
   const float ProjectileOffset = 0.1f;
   const float ImpulseStrength = 50f;
-  string ammoType = "Bullet";
+  public string ammoType = "Bullet";
+  public Inventory inventory;
+  public int maxAmmo = 10;
+  public float busyDelay = 0f;
+  public bool busy = false;
+  public delegate void OnBusyEnd();
+  public OnBusyEnd busyEndHandler;
   
-  Inventory inventory;
-
-  int maxAmmo = 10;
-  
-  float busyDelay = 0f;
-  bool busy = false;
-  delegate void OnBusyEnd();
-  OnBusyEnd busyEndHandler;
-  
-
   public ProjectileWeapon(){
     inventory = new Inventory();
   }
-
   
   public override void _Process(float delta){
     if(busy){
       busyDelay -= delta;
+      
       if(busyDelay <= 0f){
         busy = false;
         busyDelay = 0f;
@@ -41,21 +37,25 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   
   public override ItemData GetData(){
     ItemData ret = ItemGetData();
+    
     ret.description += "\nDamage: " + BaseDamage + "\n";
     ret.description += "Capacity: " + maxAmmo + "\n";
     ret.description += "Ammo Type: " + ammoType + "\n";
     ret.description += "Range: " + ImpulseStrength;
+    
     return ret;
   }
 
   public override string GetInfo(){
     string ret = name + "[" + inventory.ItemCount() + "/" + maxAmmo;
+    
     if(wielder != null){
       IHasAmmo ammoHolder = wielder as IHasAmmo;
       if(ammoHolder != null){
         ret += "/" + ammoHolder.CheckAmmo(ammoType, 0);
       }
     }
+    
     ret += "]";
     return ret; 
   }
@@ -64,7 +64,6 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     return new Damage(BaseDamage);
   }
   
-  /* Show up to max ammo */
   public int CheckAmmo(string ammoType, int max = 0){
     int quantity = inventory.GetQuantity(Item.Types.Ammo, ammoType); 
     if(max > 0 && quantity > max){
@@ -73,12 +72,10 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     return quantity;
   }
   
-  /* Return up to max ammo, removing that ammo from inventory. */
   public List<ItemData> RequestAmmo(string ammoType, int max = 0){
     return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
   }
   
-  /* Store up to max ammo, returning overflow. */
   public List<ItemData> StoreAmmo(List<ItemData> ammo){
     if(busy){
       return ammo;
@@ -99,18 +96,19 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   }
   
   public string[] AmmoTypes(){
-    
     return new string[]{ ammoType };
   }
   
   void StartReload(List<ItemData> newAmmo){
     busy = true;
     busyDelay = 2f;
+
     OnBusyEnd loadAmmo = () => { 
       foreach(ItemData ammo in newAmmo){
         inventory.StoreItemData(ammo);
       } 
     };
+
     busyEndHandler = loadAmmo;
   }
   
@@ -122,6 +120,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     if(busy){
       return;
     }
+
     switch(use){
       case Uses.A: Fire(); break;
       case Uses.B: break; // Aim logic goes here.
@@ -129,17 +128,12 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     }
   }
   
-  /* Assumes GameNode is a spatial. TODO: Clean that up. */
   protected virtual void Fire(){
     if(inventory.ItemCount() < 1 || (Session.NetActive() && !Session.IsServer() )){
       return;
     }
     
     string name = Session.NextItemId();
-
-    if(name == ""){
-      GD.Print("ProjectileWeapon.Fire: NextItemId was blank.");
-    }
 
     if(Session.IsServer()){
       DeferredFire(name);
@@ -150,12 +144,12 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     }
   }
 
-  // Expends ammo, returns true on success
   public bool ExpendAmmo(){
     if(inventory.ItemCount() > 0){
       inventory.RetrieveItem(0);
       return true;
     }
+    
     return false;
   } 
 
@@ -164,21 +158,20 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     if(!ExpendAmmo()){
       return;
     }
+    
     speaker.PlayEffect(Sound.Effects.RifleShot);
     Item projectile = Item.Factory(Item.Types.Bullet);
     projectile.Name = name;
     Projectile proj = projectile as Projectile;
     Actor wielderActor = wielder as Actor;
+    
     if(wielderActor != null){
       proj.sender = wielderActor.NodePath();
     }
     
-
     Vector3 projectilePosition = ProjectilePosition();
     Vector3 globalPosition = this.ToGlobal(projectilePosition);
-    
     Spatial gameNode = (Spatial)Session.GameNode();
-    
     
     Vector3 gamePosition = gameNode.ToLocal(globalPosition);
     projectile.Translation = gamePosition;
@@ -187,6 +180,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     Transform start = this.GetGlobalTransform();
     Transform destination = start;
     destination.Translated(new Vector3(0, 0, 1));
+    
     Vector3 impulse = start.origin - destination.origin;
     projectile.SetAxisVelocity(impulse * ImpulseStrength);
   }
@@ -194,8 +188,10 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
   public override void Equip(object wielder){
     ItemBaseEquip(wielder);
     IHasAmmo ammoHolder = wielder as IHasAmmo;
+    
     if(ammoHolder != null){
       List<ItemData> newAmmo = ammoHolder.RequestAmmo(ammoType, maxAmmo);
+      
       foreach(ItemData ammo in newAmmo){
         inventory.StoreItemData(ammo);
       }
@@ -205,9 +201,11 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
 
   public override void Unequip(){
     IHasAmmo ammoHolder = wielder as IHasAmmo;
+    
     if(ammoHolder != null){
       ammoHolder.StoreAmmo(inventory.RetrieveAllItems());
     }
+
     ItemBaseUnequip();
   }
   
@@ -240,6 +238,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
     Vector3 current = Translation; 
     Vector3 forward = -Transform.basis.z;
     forward *= ProjectileOffset;
+    
     return current + forward;
   }
   
