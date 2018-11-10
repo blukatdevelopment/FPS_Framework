@@ -631,7 +631,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
   
   public void Die(string source = ""){
-    Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);\
+    Transform = Transform.Rotated(new Vector3(0, 0, 1), 1.5f);
     string path = NodePath();
     SessionEvent evt = SessionEvent.ActorDiedEvent(path, source);
     Session.Event(evt);

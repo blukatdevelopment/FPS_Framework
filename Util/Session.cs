@@ -7,7 +7,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 
 
@@ -18,7 +17,7 @@ public class Session : Node {
   public Overworld adventure; // Overworld manages adventure mode.
   public NetworkSession netSes;
   public Random random;
-  public JukeBox jukeBox;
+  public AudioStreamPlayer jukeBox;
   public ArenaSettings arenaSettings; // Set up just before Arena game
   public AdventureSettings adventureSettings; // Set up for an adventure game
   public float masterVolume, sfxVolume, musicVolume;
@@ -86,7 +85,7 @@ public class Session : Node {
       return;
     }
 
-    Session.session.jukeBox = new JukeBox();
+    Session.session.jukeBox = new AudioStreamPlayer();
     Session.session.AddChild(Session.session.jukeBox);
   }
   

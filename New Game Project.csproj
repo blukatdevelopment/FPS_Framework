@@ -118,7 +118,6 @@
     <Compile Include="Adventure\TerrainCell.cs" />
     <Compile Include="Adventure\TerrainCellData.cs" />
     <Compile Include="Adventure\TerrainBlock.cs" />
-    <Compile Include="Util\JukeBox.cs" />
     <Compile Include="Util\NetworkSession.cs" />
     <Compile Include="Util\Session.cs" />
     <Compile Include="Util\Sound.cs" />
