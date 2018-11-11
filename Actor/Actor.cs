@@ -122,8 +122,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
     
-    string rifle = Session.NextItemId();
-    string hand = Session.NextItemId();
+    string rifle = Session.NextItemName();
+    string hand = Session.NextItemName();
 
     if(!Session.NetActive()){
       DeferredInitInventory(hand);
@@ -670,7 +670,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     
     
     if(!Session.NetActive()){
-      string itemName = Session.NextItemId();
+      string itemName = Session.NextItemName();
       DeferredDiscardItem(index, itemName);
     }
     else{
@@ -684,7 +684,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
-    string itemName = Session.NextItemId();
+    string itemName = Session.NextItemName();
     Rpc(nameof(DeferredDiscardItem), index, itemName);
     DeferredDiscardItem(index, itemName);
   }

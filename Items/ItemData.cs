@@ -58,6 +58,7 @@ public class ItemData : IHasInfo {
 		ret.pos = original.pos;
 		ret.rot = original.rot;
 		ret.stack = new List<int>(original.stack.ToArray());
+    ret.stackable = original.stackable;
 
 		foreach(string key in original.extra.Keys){
 			ret.SetExtra(key, original.extra[key]);
@@ -70,6 +71,10 @@ public class ItemData : IHasInfo {
 
 	public string ToString(){
 		string ret = name;
+    if(stack.Count > 0){
+      int quantity = 1 + stack.Count;
+      ret += "(" + quantity + ")";
+    }
 		return ret;
 	}
 
@@ -78,7 +83,7 @@ public class ItemData : IHasInfo {
   }
 
   public bool Push(ItemData item){
-  	if(!stackable || item.type != this.type){
+  	if(!stackable || item.type != this.type || item.name != this.name){
       return false;
     }
 
@@ -87,9 +92,23 @@ public class ItemData : IHasInfo {
     return true;
   }
 
+  public bool Push(int id){
+    if(!stackable){
+      return false;
+    }
+
+    stack.Add(id);
+    return true;
+  }
+
   public ItemData Pop(int quantity = 1){
-    if(stack.Count == 0 || quantity > stack.Count){
+    if(stack.Count == 0){
       return null;
+    }
+
+    int effectiveQuantity = quantity;
+    if(quantity > stack.Count){
+      effectiveQuantity = stack.Count + 1;
     }
 
     ItemData ret = Clone(this);
@@ -98,11 +117,21 @@ public class ItemData : IHasInfo {
     ret.id = stack[0];
     stack.RemoveAt(0);
 
-    for(int i = 1; i < quantity; i++){
+    for(int i = 1; i < effectiveQuantity; i++){
       ret.stack.Add(stack[0]);
       stack.RemoveAt(0);
     }
 
     return ret;
+  }
+
+  public int GetWeight(){
+    int ret = weight;
+    ret += weight * stack.Count;
+    return ret;
+  }
+
+  public int GetQuantity(){
+    return 1 + stack.Count;
   }
 }

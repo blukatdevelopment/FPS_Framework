@@ -118,13 +118,13 @@ public class Overworld : Spatial {
 		actorsData = cart.actors;
 	}
 
-	private int NextActorId(){
+	public int NextActorId(){
 		int ret = nextActorId;
 		nextActorId++;
 		return ret;
 	}
 
-	private int NextItemId(){
+	public int NextItemId(){
 		int ret = nextItemId;
 		nextItemId++;
 		return ret;
