@@ -45,12 +45,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected bool paused = false;
   protected MeshInstance meshInstance;
   protected CollisionShape shape;
-
+  public bool stackable;
+  public List<int> stack;
 
   public void BaseInit(string name, string description, string meshPath, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.Connect("body_entered", this, nameof(OnCollide));
+    
+    this.stack = new List<int>();
+
     SetCollision(allowCollision);
     InitArea();
     speaker = new Speaker();
@@ -105,7 +109,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     }
     Node acquirerNode = acquirer as Node;
     if(acquirerNode == null){
-      GD.Print("Null acquirerNode");
       return;
     }
     string acquirerPath = acquirerNode.GetPath().ToString();
@@ -115,7 +118,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
 
   [Remote]
   public void DeferredPickup(string acquirerPath){
-    GD.Print("DeferredPickup");
     if(acquirerPath == ""){
       GD.Print("acquirerPath is null");
     }
@@ -182,6 +184,8 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.type = type;
     dat.weight = weight;
     dat.pos = GetTranslation();
+    dat.stack = new List<int>(stack.ToArray());
+    dat.stackable = stackable;
 
     return dat;
   }
@@ -194,12 +198,13 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     type = dat.type;
     weight = dat.weight;
     Translation = dat.pos;
+    stack = new List<int>(dat.stack.ToArray());
+    stackable = dat.stackable;
   }
 
   public void OnCollide(object body){
     Node bodyNode = body as Node;
     if(bodyNode == null){
-      GD.Print("Item.OnCollide: body was not a node.");
       return;
     }
 
@@ -295,12 +300,14 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     
     string[] archetype = ItemArchetype(type);
     ret.BaseInit(archetype[0], archetype[1], archetype[2]);
-
     ret.type = type;
+
     if(ret.name != ""){
       Node retNode = ret as Node;
       retNode.Name = ret.name;
     }
+
+    ret.id = Session.NextItemId();
 
     return ret;
   }
@@ -312,10 +319,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     switch(type){
       case Types.Hand: ret = new MeleeWeapon() as Item; break;
       case Types.Rifle: ret = new ProjectileWeapon() as Item; break;
-      case Types.Bullet: ret = new Projectile() as Item; break;
+      case Types.Bullet: 
+        ret = new Projectile() as Item; 
+        ret.stackable = true;
+        break;
       case Types.HealthPack:  ret = new HealthPowerUp() as Item; break;
       case Types.AmmoPack: ret = new AmmoPowerUp() as Item; break;
-      case Types.Ammo: ret = new Item(); break;
+      case Types.Ammo: 
+        ret = new Item();
+        ret.stackable = true; 
+        break;
       case Types.AidHealthPack: ret = new HealthAid() as Item; break;
     }
     
@@ -326,9 +339,19 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public static List<Item> BulkFactory(Types type, int quantity = 1){
     List<Item> ret = new List<Item>();
     
-    for(int i = 0; i < quantity; i++){
-      ret.Add(Factory(type));
+    Item first = Factory(type);
+
+    if(quantity > 1 && first.stackable){
+      for(int i = 1; i < quantity; i++){
+        first.Push(Session.NextItemId());
+      }
     }
+    else if(quantity > 1){
+      for(int i = 1; i < quantity; i++){
+        ret.Add(Factory(type));
+      }
+    }
+    ret.Add(first);
     
     return ret;
   }
@@ -397,6 +420,49 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     ItemBaseUnequip();
   }
 
+
+  public List<int> GetStack(){
+    return stack;
+  }
+
+  public bool Push(ItemData item){
+    if(!stackable || item.type != this.type || item.name != this.name){
+      return false;
+    }
+
+    stack.Add(item.id);
+    stack.AddRange(item.GetStack());
+    return true;
+  }
+
+  public bool Push(int id){
+    if(!stackable){
+      return false;
+    }
+
+    stack.Add(id);
+    return true;
+  }
+
+  public ItemData Pop(int quantity = 1){
+    if(stack.Count == 0 || quantity > stack.Count){
+      return null;
+    }
+
+    ItemData ret = GetData();
+    ret.stack = new List<int>();
+
+    ret.id = stack[0];
+    stack.RemoveAt(0);
+
+    for(int i = 1; i < quantity; i++){
+      ret.stack.Add(stack[0]);
+      stack.RemoveAt(0);
+    }
+
+    return ret;
+  }
+
   public static Categories TypeCategory(Types type){
     switch(type){
       case Types.Hand:
@@ -440,10 +506,19 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     int total = 0;
     
     foreach(ItemData item in items){
-      total += item.weight;
+      total += item.GetWeight();
     }
 
     return total;
   }
 
+  public int GetWeight(){
+    int ret = weight;
+    ret += weight * stack.Count;
+    return ret;
+  }
+
+  public int GetQuantity(){
+    return 1 + stack.Count;
+  }
 }

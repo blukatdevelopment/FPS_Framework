@@ -133,7 +133,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
       return;
     }
     
-    string name = Session.NextItemId();
+    string name = Session.NextItemName();
 
     if(Session.IsServer()){
       DeferredFire(name);
@@ -146,7 +146,7 @@ public class ProjectileWeapon : Item, IWeapon, IHasAmmo, IEquip {
 
   public bool ExpendAmmo(){
     if(inventory.ItemCount() > 0){
-      inventory.RetrieveItem(0);
+      inventory.RetrieveItem(0, 1);
       return true;
     }
     

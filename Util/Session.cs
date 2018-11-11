@@ -30,12 +30,28 @@ public class Session : Node {
     Adventure
   };
 
-  public static string NextItemId(){
+  public static string NextItemName(){
     if(Session.session.arena != null){
       return Session.session.arena.NextItemName();
     }
     
     return "";
+  }
+
+  public static int NextItemId(){
+    if(Session.session.adventure != null){
+      return Session.session.adventure.NextItemId();
+    }
+
+    return 0;
+  }
+
+  public static int NextActorId(){
+    if(Session.session.adventure != null){
+      return Session.session.adventure.NextActorId();
+    }
+
+    return 0;
   }
 
   public override void _Ready() {

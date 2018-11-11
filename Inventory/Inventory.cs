@@ -28,8 +28,15 @@ public class Inventory : IHasItem {
 			if(max > 0 && ret.Count >= max){
 				break;
 			}
-			if(data.type == itemType && itemName == data.name){
-				ret.Add(data);
+			if(data.type != itemType || itemName != data.name){
+				continue;
+			}
+			if(data.stackable){
+				int startingQuantity = data.GetQuantity();
+				ret.Add(data.Pop(max));
+			}
+			else{
+				ret.Add(data);	
 			}
 		}
 
@@ -43,7 +50,7 @@ public class Inventory : IHasItem {
 		int ret = 0;
 		foreach(ItemData data in items){
 			if(data.type == itemType && itemName == data.name){
-				ret++;
+				ret += data.GetQuantity();
 			}
 		}
 		return ret;
@@ -56,12 +63,26 @@ public class Inventory : IHasItem {
 		return ItemData.Clone(items[index]);
 	}
 
-	public ItemData RetrieveItem(int index){
+	public ItemData RetrieveItem(int index, int quantity = 1){
 		if(index >= items.Count || index < 0){
 			return null;
 		}
-		ItemData ret = items[index];
-		items.Remove(ret);
+
+		ItemData ret;
+
+		if(items[index].stackable){
+			int startingQuantity = items[index].GetQuantity();
+
+			ret = items[index].Pop(quantity);
+			if(startingQuantity == quantity){
+				items.RemoveAt(index);
+			}
+		}
+		else{
+			ret = items[index];
+			items.Remove(ret);	
+		}
+
 		return ret;
 	}
 
@@ -97,12 +118,36 @@ public class Inventory : IHasItem {
 	}
 
 	public void StoreItemData(ItemData data){
-		items.Add(data);
+		
+		if(!data.stackable){
+			items.Add(data);
+			return;	
+		}
+
+		int index = StackableIndex(data);
+		
+		if(index == -1){
+			items.Add(data);
+			return;
+		}
+
+		items[index].Push(data);
+	}
+
+	public int StackableIndex(ItemData data){
+		for(int i = 0; i < items.Count; i++){
+			ItemData dat = items[i];
+			if(dat.type == data.type && dat.name == data.name){
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	public bool ReceiveItem(Item item){
 		ItemData data = item.GetData();
-		items.Add(data);
+		StoreItemData(data);
 		return true;
 	}
 
@@ -111,7 +156,11 @@ public class Inventory : IHasItem {
 	}
 
 	public int ItemCount(){
-		return items.Count;
+		int ret = 0;
+		foreach(ItemData item in items){
+			ret += item.GetQuantity();
+		}
+		return ret;
 	}
 
 	public List<ItemData> GetAllItems(){

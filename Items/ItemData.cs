@@ -15,12 +15,15 @@ public class ItemData : IHasInfo {
 	public Vector3 pos, rot;
 	public bool held;
 	public System.Collections.Generic.Dictionary<string, string> extra;
+	public List<int> stack;
+	public bool stackable;
 
 	public ItemData(){
 		pos = new Vector3();
 		rot = new Vector3();
 
 		extra = new System.Collections.Generic.Dictionary<string, string>();
+		stack = new List<int>();
 	}
 
 	public string GetExtra(string key){
@@ -54,7 +57,9 @@ public class ItemData : IHasInfo {
 		ret.name = original.name;
 		ret.pos = original.pos;
 		ret.rot = original.rot;
-		
+		ret.stack = new List<int>(original.stack.ToArray());
+    ret.stackable = original.stackable;
+
 		foreach(string key in original.extra.Keys){
 			ret.SetExtra(key, original.extra[key]);
 		}
@@ -66,6 +71,67 @@ public class ItemData : IHasInfo {
 
 	public string ToString(){
 		string ret = name;
+    if(stack.Count > 0){
+      int quantity = 1 + stack.Count;
+      ret += "(" + quantity + ")";
+    }
 		return ret;
 	}
+
+	public List<int> GetStack(){
+    return stack;
+  }
+
+  public bool Push(ItemData item){
+  	if(!stackable || item.type != this.type || item.name != this.name){
+      return false;
+    }
+
+    stack.Add(item.id);
+    stack.AddRange(item.GetStack());
+    return true;
+  }
+
+  public bool Push(int id){
+    if(!stackable){
+      return false;
+    }
+
+    stack.Add(id);
+    return true;
+  }
+
+  public ItemData Pop(int quantity = 1){
+    if(stack.Count == 0){
+      return null;
+    }
+
+    int effectiveQuantity = quantity;
+    if(quantity > stack.Count){
+      effectiveQuantity = stack.Count + 1;
+    }
+
+    ItemData ret = Clone(this);
+    ret.stack = new List<int>();
+
+    ret.id = stack[0];
+    stack.RemoveAt(0);
+
+    for(int i = 1; i < effectiveQuantity; i++){
+      ret.stack.Add(stack[0]);
+      stack.RemoveAt(0);
+    }
+
+    return ret;
+  }
+
+  public int GetWeight(){
+    int ret = weight;
+    ret += weight * stack.Count;
+    return ret;
+  }
+
+  public int GetQuantity(){
+    return 1 + stack.Count;
+  }
 }
