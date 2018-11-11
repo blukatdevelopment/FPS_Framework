@@ -45,12 +45,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected bool paused = false;
   protected MeshInstance meshInstance;
   protected CollisionShape shape;
-
+  public bool stackable;
+  public List<int> stack;
 
   public void BaseInit(string name, string description, string meshPath, bool allowCollision = true){
     this.name = name;
     this.description = description;
     this.Connect("body_entered", this, nameof(OnCollide));
+    
+    this.stack = new List<int>();
+
     SetCollision(allowCollision);
     InitArea();
     speaker = new Speaker();
@@ -182,6 +186,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     dat.type = type;
     dat.weight = weight;
     dat.pos = GetTranslation();
+    dat.stack = new List<int>(stack.ToArray());
 
     return dat;
   }
@@ -194,6 +199,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     type = dat.type;
     weight = dat.weight;
     Translation = dat.pos;
+    stack = new List<int>(dat.stack.ToArray());
   }
 
   public void OnCollide(object body){
@@ -395,6 +401,40 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   
   public virtual void Unequip(){
     ItemBaseUnequip();
+  }
+
+
+  public List<int> GetStack(){
+    return stack;
+  }
+
+  public bool Push(ItemData item){
+    if(!stackable || item.type != this.type){
+      return false;
+    }
+
+    stack.Add(item.id);
+    stack.AddRange(item.GetStack());
+    return true;
+  }
+
+  public ItemData Pop(int quantity = 1){
+    if(stack.Count == 0 || quantity > stack.Count){
+      return null;
+    }
+
+    ItemData ret = GetData();
+    ret.stack = new List<int>();
+
+    ret.id = stack[0];
+    stack.RemoveAt(0);
+
+    for(int i = 1; i < quantity; i++){
+      ret.stack.Add(stack[0]);
+      stack.RemoveAt(0);
+    }
+
+    return ret;
   }
 
   public static Categories TypeCategory(Types type){
