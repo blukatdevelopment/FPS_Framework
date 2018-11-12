@@ -248,8 +248,10 @@ food
 ### IThinkSlow.cs
 turn-based AI
 
+void Update(int timeUnits)
+
 ### IActor.cs
-Executor of actions.
+Executor of actions, most likely implemented by turn-based AI.
 
 int GetActionPoints()
 bool ConsumeActionPoints(int quantity, IAction action)
@@ -258,8 +260,12 @@ bool ConsumeActionPoints(int quantity, IAction action)
 A discrete action to be used by an IActor.
 First an IActor sets the parameters and checks the cost.
 An IActor then attempts to perform the action, consuming the action points involved.
+This should work well for turn-based AI as well as for abilities or spells.
 
-void Init(IActor executor)
+
+void Init(IActor executor) // Set the executor. Action may attempt to cast executor to other interface types to perform side-effects on Execute or to calculate cost.
+
+
 bool CanExecute()
 bool Execute()
 int Cost()
