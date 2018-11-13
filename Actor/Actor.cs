@@ -848,11 +848,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     paused = false;
   }
   
-  public static Actor ActorFactory(ActorData data){
-    return ActorFactory(data.brain, data);
+  public static Actor Factory(ActorData data){
+    return Factory(data.brain, data);
   }
 
-  public static Actor ActorFactory(Brains brain = Brains.Player1, ActorData data = null){
+  public static Actor Factory(Brains brain = Brains.Player1, ActorData data = null){
     PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
     Node actorInstance = actorPs.Instance();
     

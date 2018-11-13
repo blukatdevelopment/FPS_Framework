@@ -48,8 +48,4 @@ Minimalistic multiplayer arena shooter.
 # Active stories
 
 
-## Auth service
-- DONE Build auth service in other repo.
-- Set up outward-facing nodejs server to offer this service, at least just to test.
-- Build static Util method in this project to attempt to connect and use configured auth service endpoint.
-
+## Construct actor scene tree programmatically

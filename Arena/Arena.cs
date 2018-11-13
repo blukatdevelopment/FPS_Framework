@@ -413,7 +413,7 @@ public class Arena : Spatial {
   
   public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1, int id = 0){
     Vector3 pos = RandomActorSpawn();
-    Actor actor = Actor.ActorFactory(brain);
+    Actor actor = Actor.Factory(brain);
     actor.netId = id;
     actor.worldId = id;
     actors.Add(actor);

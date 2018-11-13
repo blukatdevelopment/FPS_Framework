@@ -366,7 +366,7 @@ public class Overworld : Spatial {
 		ActorData actorData = actorsData[id];
 		actorsData.Remove(id);
 
-		Actor actor = Actor.ActorFactory(actorData);
+		Actor actor = Actor.Factory(actorData);
 		actors.Add(actor.worldId, actor);
 		AddChild(actor);
 
