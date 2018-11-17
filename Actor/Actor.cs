@@ -59,6 +59,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   // These can change when detailed actor models with animations are added in.
   public const string ActorMeshPath = "res://Models/Actor.obj";
+  public const int HumanoidHealthMax = 100;
 
   // Delayed inventory init for netcode.
   // TODO: Get rid of this messy setup by using ItemData
@@ -98,7 +99,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Construct node tree. */
   protected void InitChildren(){
     // MeshInstance
-    string meshPath = "res://Models/Hand.obj"; // TODO: Remove hardcoding
+    string meshPath = ActorMeshPath;
     meshInstance = new MeshInstance();
     meshInstance.Mesh = ResourceLoader.Load(meshPath) as Mesh;
     AddChild(meshInstance);
@@ -107,8 +108,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     collisionShape = new CollisionShape();
     AddChild(collisionShape);
     collisionShape.MakeConvexFromBrothers();
-
-
 
     // Eyes
     Spatial eyesInstance;
@@ -134,7 +133,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void InitStats(){
-    health = 100;
+    healthMax = HumanoidHealthMax;
+    health = healthMax;
   }
 
   void InitInventory(){
@@ -164,6 +164,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Translation = dat.pos;
     name = dat.name;
     worldId = dat.id;
+    inventory = dat.inventory;
   }
 
   public ActorData GetData(){
@@ -175,6 +176,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     data.brain = brainType;
     data.id = worldId;
     data.name = name;
+    data.inventory = inventory;
     
     return data;
   }

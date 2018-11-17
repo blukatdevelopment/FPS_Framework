@@ -12,11 +12,13 @@ public class ActorData {
 	public string name;
 	public int id, health, healthMax;
 	public Vector3 pos, rot;
+	public Inventory inventory;
 
 	// Extra data
 	public System.Collections.Generic.Dictionary<string, string> extra;
 
 	public ActorData(){
+		inventory = new Inventory();
 		pos = new Vector3();
 		rot = new Vector3();
 		extra = new System.Collections.Generic.Dictionary<string, string>();
