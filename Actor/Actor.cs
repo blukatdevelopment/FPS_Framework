@@ -61,22 +61,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public const string ActorMeshPath = "res://Models/Actor.obj";
   public const int HumanoidHealthMax = 100;
 
-  // Delayed inventory init for netcode.
-  // TODO: Get rid of this messy setup by using ItemData
-  float initTimer, initDelay;
-  bool initActive = false;
-  string initHand, initRifle;
-  float readyTimer, readyDelay;
-  bool readyActive = false;
-
-
-  public Actor(){}
+  public Actor(){
+    brainType = Brains.Ai;
+    InitChildren();
+    InitBrain(brainType);
+    inventory = new Inventory();
+    InitHand();
+  }
 
   public Actor(Brains b){
     brainType = b;
     InitChildren();
     InitBrain(b);
-    InitInventory();
+    inventory = new Inventory();
+    InitHand();
   }
 
   public void InitBrain(Brains b){
@@ -137,26 +135,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     health = healthMax;
   }
 
-  void InitInventory(){
-    inventory = new Inventory();
-    if(Session.NetActive() && !Session.IsServer()){
-      return;
-    }
-    
-    string rifle = Session.NextItemName();
-    string hand = Session.NextItemName();
-
-    if(!Session.NetActive()){
-      DeferredInitInventory(hand);
-    }
-    if(Session.IsServer()){
-      initTimer = 0f;
-      initDelay = 0.25f;
-      initActive = true;
-      initHand = hand;
-    }
-  }
-
   public void LoadData(ActorData dat){
     // FIXME add remaining fields to ActorData and this method
     health = dat.health;
@@ -185,27 +163,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return activeItem;
   }
 
-  [Remote]
-  void DeferredInitInventory(string handName){
-    InitHand(handName);
-    Session.InitKit(this);
-    if(Session.NetActive()){
-      readyTimer = 0;
-      readyDelay = 1f;
-      readyActive = true;
-    }
-    else{ // Forego delaying the equip of this inventory.
-      Session.PlayerReady();
-    }
-  }
-
-  public void InitHand(string handName){
+  public void InitHand(){
     hand = Item.Factory(Item.Types.Hand);
-    hand.Name = handName;
     if(unarmed && activeItem == null){
-      EquipHand();  
+      EquipHand(); 
     }
-    
   }
 
   /* Return global position of eyes(if available) or body */
@@ -567,25 +529,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       if(brainType != Brains.Remote){ 
         brain.Update(delta); 
         Gravity(delta);
-      }
-
-      if(initActive){
-        initTimer += delta;
-        if(initTimer >= initDelay){
-          initActive = false;
-          initTimer = 0;
-          DeferredInitInventory(initHand);
-          Rpc(nameof(DeferredInitInventory), initHand);
-        }
-      }
-
-      if(readyActive){
-        readyTimer += delta;
-        if(readyTimer >= readyDelay){
-          Session.PlayerReady();
-          readyActive = false;
-          readyTimer = 0;
-        }
       }
   }
   
