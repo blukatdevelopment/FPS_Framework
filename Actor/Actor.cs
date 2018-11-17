@@ -106,6 +106,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     // CollisionShape
     collisionShape = new CollisionShape();
     AddChild(collisionShape);
+    collisionShape.MakeConvexFromBrothers();
 
 
 
