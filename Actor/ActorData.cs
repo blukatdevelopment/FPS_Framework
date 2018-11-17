@@ -5,6 +5,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class ActorData {
 	public Actor.Brains brain;
@@ -33,5 +34,13 @@ public class ActorData {
 		ret += "\tPos: [" + x + "," + y + "," + z + "] \n";
 
 		return ret;
+	}
+
+	public static ActorData FromJson(string json){
+		return JsonConvert.DeserializeObject<ActorData>(json);
+	}
+
+	public static string ToJson(ActorData dat){
+		return JsonConvert.SerializeObject(dat, Formatting.Indented);
 	}
 }

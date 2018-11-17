@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Godot;
+using Newtonsoft.Json;
 
 public class ItemData : IHasInfo {
 	
@@ -133,5 +134,13 @@ public class ItemData : IHasInfo {
 
   public int GetQuantity(){
     return 1 + stack.Count;
+  }
+
+  public static ItemData FromJson(string json){
+    return JsonConvert.DeserializeObject<ItemData>(json);
+  }
+
+  public static string ToJson(ItemData dat){
+    return JsonConvert.SerializeObject(dat, Formatting.Indented);
   }
 }
