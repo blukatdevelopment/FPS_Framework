@@ -48,4 +48,14 @@ Minimalistic multiplayer arena shooter.
 # Active stories
 
 
-## Construct actor scene tree programmatically
+## Fix arena inventory init
+Looks like regressions (from updating the editor, among other sources) have made multiplayer arena non-functioning.
+The sizeable rewrite needed by this story has now grown even larger.
+
+The solution that comes to mind is to simply nuke existing netcode until the editor doesn't magically crash upon starting a multiplayer Arena game.
+
+The general attack plan should look like this:
+- Gut arena multiplayer logic
+- Change namescheme to Local Vs Online in both Arena and Adventure modes.
+- Remove any arena-specific netcode from Actor
+- Investigate bug where items fall through world
