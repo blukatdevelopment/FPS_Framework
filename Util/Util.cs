@@ -266,4 +266,8 @@ public class Util{
         System.Threading.Thread.Sleep(100);
     }
   }
+
+  public static Vector2 GetMousePosition(Spatial spat){
+    return spat.GetViewport().GetMousePosition();
+  }
 }

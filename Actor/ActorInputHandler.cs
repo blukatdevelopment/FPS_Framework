@@ -16,7 +16,7 @@ public class ActorInputHandler : Brain {
   public ActorInputHandler(Actor actor, Spatial eyes) : base (actor, eyes){
     InitHeld();
     InitEyes(eyes);
-    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, this.eyes as Eyes);
+    device = new DeviceManager(DeviceManager.Devices.MouseAndKeyboard, eyes);
   }
   
   private void InitEyes(Node eyes){

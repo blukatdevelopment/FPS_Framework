@@ -80,6 +80,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
   public void InitBrain(Brains b){
     this.brainType = b;
+    GD.Print("eyes. " + eyes);
     switch(b){
       case Brains.Player1:
         brain = (Brain)new ActorInputHandler(this, eyes); 

@@ -11,19 +11,20 @@ public class DeviceManager {
   public enum Devices{MouseAndKeyboard};
   private Devices device;
   private bool mouseActive;
-  private Eyes eyes;
+  private Spatial eyes;
   private float sensitivityX = 0.2f;
   private float sensitivityY = 0.2f;
   
   List<bool> buttonsDown; // Store button states to check for changes.
   Vector2 mouseCur, mouseLast;
   
-  public DeviceManager(Devices device, Eyes eyes = null){
+  public DeviceManager(Devices device, Spatial eyes = null){
     this.device = device;
     buttonsDown = new List<bool>();
     mouseActive = false;
     switch(device){
       case Devices.MouseAndKeyboard:
+        Input.SetMouseMode(Input.MouseMode.Captured);
         mouseActive = true;
         int buttonCount = 70;
         for(int i = 0; i < buttonCount; i++){ buttonsDown.Add(false); }
@@ -93,12 +94,12 @@ public class DeviceManager {
 
     return ret;
   }
-  
+
   private List<InputEvent> MouseEvents(){
     List<InputEvent> ret = new List<InputEvent>();
     
     if(eyes != null){
-      mouseCur = eyes.GetMousePosition();
+      mouseCur = Util.GetMousePosition(eyes);
     }
     else{ GD.Print("DeviceManager:Eyes null"); }
     
@@ -115,6 +116,5 @@ public class DeviceManager {
     
     return ret;
   }
-  
   
 }
