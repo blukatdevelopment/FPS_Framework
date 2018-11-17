@@ -36,7 +36,6 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   public string name;
   public string description;
   public int weight;
-  public Godot.CollisionShape collider;
   private bool collisionDisabled = true;
   protected Speaker speaker;
   protected object wielder;
@@ -44,7 +43,7 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
   protected bool stopColliding = false; // Stop applying OnCollide effect
   protected bool paused = false;
   protected MeshInstance meshInstance;
-  protected CollisionShape shape;
+  protected CollisionShape collisionShape;
   public bool stackable;
   public List<int> stack;
 
@@ -63,6 +62,10 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     meshInstance = new MeshInstance();
     meshInstance.Mesh = ResourceLoader.Load(meshPath) as Mesh;
     AddChild(meshInstance);
+
+    collisionShape = new CollisionShape();
+    AddChild(collisionShape);
+    collisionShape.MakeConvexFromBrothers();
   }
   
   public virtual bool IsBusy(){
