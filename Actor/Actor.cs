@@ -33,7 +33,10 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   public bool menuActive = false;
   public bool paused = false;
 
+  // Child nodes
   public Speaker speaker;
+  public MeshInstance meshInstance;
+  public CollisionShape collisionShape;
 
   private int health;
   private int healthMax = 100;
@@ -52,8 +55,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   // Network
   public int netId;
   public int worldId;
-  public string name; 
-  
+  public string name;
+
+  // These can change when detailed actor models with animations are added in.
+  public const string ActorMeshPath = "res://Models/Actor.obj";
+
   // Delayed inventory init for netcode.
   // TODO: Get rid of this messy setup by using ItemData
   float initTimer, initDelay;
@@ -62,12 +68,20 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   float readyTimer, readyDelay;
   bool readyActive = false;
 
-  
-  public void Init(Brains b = Brains.Player1, bool initHealth = true){
+
+  public Actor(){}
+
+  public Actor(Brains b){
+    brainType = b;
     InitChildren();
+    InitBrain(b);
+    InitInventory();
+  }
+
+  public void InitBrain(Brains b){
     this.brainType = b;
     switch(b){
-      case Brains.Player1: 
+      case Brains.Player1:
         brain = (Brain)new ActorInputHandler(this, eyes); 
         Session.session.player = this;
         break;
@@ -77,17 +91,68 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       case Brains.Remote:
         brain = null;
         break;
+    }
+  }
 
+  /* Construct node tree. */
+  protected void InitChildren(){
+    // MeshInstance
+    string meshPath = "res://Models/Hand.obj"; // TODO: Remove hardcoding
+    meshInstance = new MeshInstance();
+    meshInstance.Mesh = ResourceLoader.Load(meshPath) as Mesh;
+    AddChild(meshInstance);
+
+    // CollisionShape
+    collisionShape = new CollisionShape();
+    AddChild(collisionShape);
+
+
+
+    // Eyes
+    Spatial eyesInstance;
+
+    if(brainType == Brains.Player1){
+      Camera cam = new Camera();
+      eyesInstance = (Spatial)cam;
     }
-    if(eyes != null){
-      eyes.SetRotationDegrees(new Vector3(0, 0, 0));  
+    else{
+      eyesInstance = new Spatial();
     }
+
+    eyesInstance.Name = "Eyes";
+    AddChild(eyesInstance);
+    Vector3 eyesPos = EyesPos();
+    eyesInstance.TranslateObjectLocal(eyesPos);
+    eyes = eyesInstance;
+    eyes.SetRotationDegrees(new Vector3(0, 0, 0));
+
+    // Speaker
     speaker = new Speaker();
     AddChild(speaker);
-    if(initHealth){
-      health = 100;
+  }
+
+  public void InitStats(){
+    health = 100;
+  }
+
+  void InitInventory(){
+    inventory = new Inventory();
+    if(Session.NetActive() && !Session.IsServer()){
+      return;
     }
-    InitInventory();
+    
+    string rifle = Session.NextItemName();
+    string hand = Session.NextItemName();
+
+    if(!Session.NetActive()){
+      DeferredInitInventory(hand);
+    }
+    if(Session.IsServer()){
+      initTimer = 0f;
+      initDelay = 0.25f;
+      initActive = true;
+      initHand = hand;
+    }
   }
 
   public void LoadData(ActorData dat){
@@ -114,26 +179,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   
   public Item PrimaryItem(){
     return activeItem;
-  }
-  
-  void InitInventory(){
-    inventory = new Inventory();
-    if(Session.NetActive() && !Session.IsServer()){
-      return;
-    }
-    
-    string rifle = Session.NextItemName();
-    string hand = Session.NextItemName();
-
-    if(!Session.NetActive()){
-      DeferredInitInventory(hand);
-    }
-    if(Session.IsServer()){
-      initTimer = 0f;
-      initDelay = 0.25f;
-      initActive = true;
-      initHand = hand;
-    }
   }
 
   [Remote]
@@ -471,19 +516,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     unarmed = true;
   }
   
-  /* Finds any attached eyes if eys are not already set by factory.  */
-  protected void InitChildren(){
-    if(eyes != null){
-      return;
-    }
-
-    foreach(Node child in this.GetChildren()){
-      switch(child.GetName()){
-        case "Eyes": eyes = child as Eyes; break;
-      }
-    }
-  }
-  
   public bool IsBusy(){
     if(activeItem == null){
       return false;
@@ -523,7 +555,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     activeItem.Use(use);
   }
 
-  
+  public static Vector3 EyesPos(){
+    return new Vector3(0, 2, 0);
+  }
     
   public override void _Process(float delta){
       if(brainType != Brains.Remote){ 
@@ -839,7 +873,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
 
-
   public void Pause(){
     paused = true;
   }
@@ -853,30 +886,8 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public static Actor Factory(Brains brain = Brains.Player1, ActorData data = null){
-    PackedScene actorPs = (PackedScene)GD.Load("res://Scenes/Prefabs/Actor.tscn");
-    Node actorInstance = actorPs.Instance();
     
-    Actor actor = (Actor)actorInstance;
-    
-    Vector3 eyesPos = new Vector3(0, 2, 0);
-    
-    switch(brain){
-      case Brains.Player1: 
-        Node eyeInstance = Session.Instance("res://Scenes/Prefabs/Eyes.tscn");
-        eyeInstance.Name = "Eyes";
-        actor.eyes = eyeInstance as Spatial;
-        break;
-      default:
-        Spatial eyeSpat = new Spatial();
-        Node eyesNode = eyeSpat as Node;
-        eyesNode.Name = "Eyes";
-        actor.eyes = eyeSpat;
-        break;
-    }
-    
-    actor.eyes.TranslateObjectLocal(eyesPos);
-    actor.AddChild(actor.eyes);
-    actor.Init(brain);
+    Actor actor = new Actor(brain);
 
     if(data != null){
       actor.LoadData(data);
