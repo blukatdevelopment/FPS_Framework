@@ -3,6 +3,7 @@
 */
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class ArenaSettings {
 	public bool useKits, usePowerups;
@@ -17,5 +18,13 @@ public class ArenaSettings {
 		duration = 5;
 		bots = 0;
 		botIds = new List<int>();
+	}
+
+	public static ArenaSettings FromJson(string json){
+		return JsonConvert.DeserializeObject<ArenaSettings>(json);
+	}
+
+	public static string ToJson(ArenaSettings dat){
+		return JsonConvert.SerializeObject(dat, Formatting.Indented);
 	}
 }

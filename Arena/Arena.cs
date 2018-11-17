@@ -216,10 +216,10 @@ public class Arena : Spatial {
       settings.botIds.Add(NextWorldId());
     }
 
-    string json = JsonConvert.SerializeObject(Session.session.arenaSettings, Formatting.Indented);
-
-    DeferredMultiplayerInit(json);
-    Rpc(nameof(DeferredMultiplayerInit), json);
+    string settingsJson = ArenaSettings.ToJson(Session.session.arenaSettings);
+    
+    DeferredMultiplayerInit(settingsJson);
+    Rpc(nameof(DeferredMultiplayerInit), settingsJson);
   }
 
   [Remote]
