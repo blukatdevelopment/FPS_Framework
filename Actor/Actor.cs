@@ -52,9 +52,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
 
-  // Network
-  public int netId;
-  public int worldId;
+  public int id;
   public string name;
 
   // These can change when detailed actor models with animations are added in.
@@ -67,6 +65,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     InitBrain(brainType);
     inventory = new Inventory();
     InitHand();
+    id = -1;
   }
 
   public Actor(Brains b){
@@ -75,6 +74,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     InitBrain(b);
     inventory = new Inventory();
     InitHand();
+    id = -1;
   }
 
   public void InitBrain(Brains b){
@@ -141,18 +141,17 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     healthMax = dat.healthMax;
     Translation = dat.pos;
     name = dat.name;
-    worldId = dat.id;
+    id = dat.id;
     inventory = dat.inventory;
   }
 
   public ActorData GetData(){
-    //GD.Print("Actor.GetData not implemented");
     ActorData data = new ActorData();
     data.pos = Translation;
     data.health = health;
     data.healthMax = healthMax;
     data.brain = brainType;
-    data.id = worldId;
+    data.id = id;
     data.name = name;
     data.inventory = inventory;
     
@@ -838,8 +837,11 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
 
     if(data != null){
       actor.LoadData(data);
+      if(actor.id != -1){
+        actor.Name = "Actor" + actor.id;
+      }
     }
-    
+
     return actor;
   }
 }

@@ -367,7 +367,7 @@ public class Overworld : Spatial {
 		actorsData.Remove(id);
 
 		Actor actor = Actor.Factory(actorData);
-		actors.Add(actor.worldId, actor);
+		actors.Add(actor.id, actor);
 		AddChild(actor);
 
 		return actor;
@@ -486,7 +486,7 @@ public class Overworld : Spatial {
 
 		foreach(Actor actor in ActorsAtCoords(cell.coords)){
 			GD.Print("Found actor " + actor);
-			UnrenderActor(actor.worldId);
+			UnrenderActor(actor.id);
 		}
 
 		foreach(Item item in ItemsAtCoords(cell.coords)){

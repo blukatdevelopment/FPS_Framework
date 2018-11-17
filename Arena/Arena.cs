@@ -312,7 +312,7 @@ public class Arena : Spatial {
     Actor actor = actorNode as Actor;
     Actor.Brains brain = actor.brainType;
     
-    int id = actor.worldId;
+    int id = actor.id;
 
     actorNode.Name = "Deadplayer" + id;
     actor.QueueFree();
@@ -330,7 +330,7 @@ public class Arena : Spatial {
     Actor killer = killerNode as Actor;
 
     if(killer != null){
-      scores[killer.worldId]++;
+      scores[killer.id]++;
     }
   }
 
@@ -413,30 +413,28 @@ public class Arena : Spatial {
   
   public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1, int id = 0){
     Vector3 pos = RandomActorSpawn();
-    Actor actor = Actor.Factory(brain);
-    actor.netId = id;
-    actor.worldId = id;
-    actors.Add(actor);
-    actor.SetPos(pos);
-    Node actorNode = actor as Node;
     
-    if(id != 0){
-      actorNode.Name = "Player" + id;
-    } 
-    AddChild(actorNode);
+
+    ActorData dat = new ActorData();
+
+    dat.id = id;
+    dat.pos = pos;
+
+    if(settings.useKits){
+      dat.inventory.ReceiveItem(Item.Factory(Item.Types.Rifle));
+      dat.inventory.ReceiveItemRange(Item.BulkFactory(Item.Types.Ammo, 100));
+    }
+
+    Actor actor = Actor.Factory(brain, dat);    
+    
+    actors.Add(actor);
+    AddChild(actor);
+
+    if(settings.useKits){
+      EquipActor(actor, Item.Types.Rifle, "Rifle");
+    }
 
     return actor;
-  }
-
-  public void InitKit(Actor actor){
-    if(!settings.useKits){
-      GD.Print();
-    }
-    
-    actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
-    actor.ReceiveItems(Item.BulkFactory(Item.Types.Ammo, 100));
-    EquipActor(actor, Item.Types.Rifle, "Rifle");
-    
   }
   
   public Vector3 RandomActorSpawn(){
@@ -457,7 +455,6 @@ public class Arena : Spatial {
       Rpc(nameof(DeferredPlayerReady));
     }
   }
-
 
   public void EquipActor(Actor actor, Item.Types itemType, string itemName){
     int index = actor.IndexOf(itemType, itemName);

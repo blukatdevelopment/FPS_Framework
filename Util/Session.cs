@@ -288,14 +288,6 @@ public class Session : Node {
     Session.session.HandleEvent(sessionEvent);
   }
 
-  public static void InitKit(Actor actor){
-    Arena arena = Session.session.arena;
-    
-    if(arena != null){
-      arena.InitKit(actor);
-    }
-  }
-
   public static void PlayerReady(){
     Arena arena = Session.session.arena;
     
