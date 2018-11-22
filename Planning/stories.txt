@@ -48,20 +48,3 @@ Components: Core
 Body:
 Replace the items_extra and actors_extra tables with an
 additional field in items and actors to speed up saving/loading.
-
-Title: Construct actor scene tree programmatically
-Components: Core
-Body:
-Currently actors are created using an actor.tscn scene file, which makes customizing them sub-optimal. Construct the Actor and set up its child nodes in order to make this process automated. This way down the road, different materials/models/animations can be loaded on on the fly instead of requiring human help.
-
-Title: Create ToJson and FromJson for ActorData and ItemData
-Components: Core
-Body:
-Convert ItemData and ActorData to and from JSON for net code.
-
-
-Title: Fix arena inventory init
-Components: Core, Network
-Body:
-Arena currently initializes actor inventory with a delay after spawning them.
-Ideally the arena should set up an ActorData pre-equipped.

@@ -46,3 +46,9 @@ Minimalistic multiplayer arena shooter.
 
 
 # Active stories
+
+Title: Convert extra tables to a JSON field
+Components: Core
+Body:
+Replace the items_extra and actors_extra tables with an
+additional field in items and actors to speed up saving/loading.
