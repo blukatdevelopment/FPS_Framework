@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 public class Arena : Spatial {
-  public bool singlePlayer;
+  public bool local;
   public List<Actor> actors;
   public Spatial terrain;
   public List<Vector3> actorSpawnPoints, itemSpawnPoints;
@@ -25,10 +25,9 @@ public class Arena : Spatial {
   public System.Collections.Generic.Dictionary<int, int> scores;
   public int playerWorldId = -1;
 
-  // used for singleplayer
   int playersReady = 0;
 
-  public void Init(bool singlePlayer){
+  public void Init(bool local){
     settings = Session.session.arenaSettings;
     
     if(settings == null){
@@ -36,18 +35,18 @@ public class Arena : Spatial {
       settings = new ArenaSettings();
     }
     
-    this.singlePlayer = singlePlayer;
+    this.local = local;
     actors = new List<Actor>();
     scores = new System.Collections.Generic.Dictionary<int, int>();
 
     InitTerrain();
     InitSpawnPoints();
     
-    if(singlePlayer){
-      SinglePlayerInit();
+    if(local){
+      LocalInit();
     }
     else{
-      MultiplayerInit();
+      OnlineInit();
     } 
   }
 
@@ -157,7 +156,7 @@ public class Arena : Spatial {
   public void RoundOver(){
     roundTimerActive = false;
 
-    if(this.singlePlayer){
+    if(this.local){
       Session.QuitToMainMenu();
     }
     else{
@@ -184,7 +183,7 @@ public class Arena : Spatial {
     return name;
   }
 
-  public void SinglePlayerInit(){
+  public void LocalInit(){
     if(settings.usePowerups){
       for(int i = 0; i < 1; i++){
         SpawnItem(Item.Types.AmmoPack, 10);
@@ -207,7 +206,7 @@ public class Arena : Spatial {
     roundTimerActive = true;
   }
 
-  public void MultiplayerInit(){
+  public void OnlineInit(){
     if(!Session.IsServer()){
       return;
     }
@@ -218,12 +217,12 @@ public class Arena : Spatial {
 
     string settingsJson = ArenaSettings.ToJson(Session.session.arenaSettings);
     
-    DeferredMultiplayerInit(settingsJson);
-    Rpc(nameof(DeferredMultiplayerInit), settingsJson);
+    DeferredOnlineInit(settingsJson);
+    Rpc(nameof(DeferredOnlineInit), settingsJson);
   }
 
   [Remote]
-  public void DeferredMultiplayerInit(string json){
+  public void DeferredOnlineInit(string json){
     if(!Session.IsServer()){
       settings = JsonConvert.DeserializeObject<ArenaSettings>(json);
       Session.session.arenaSettings = settings;

@@ -225,7 +225,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     return max;
   }
   
-
   /* Return up to max ammo, removing that ammo from inventory. */
   public List<ItemData> RequestAmmo(string ammoType, int max){
     return inventory.RetrieveItems(Item.Types.Ammo, ammoType, max);
@@ -363,7 +362,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
-    //DeferredEquipItem(index);
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
     }
@@ -515,7 +513,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     }
   }
 
-
   [Remote]
   public void DeferredUse(Item.Uses use, bool released = false){
     if(activeItem == null){
@@ -548,7 +545,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Move(grav, delta);
   }
 
-  
   public void Move(Vector3 movement, float moveDelta = 1f){
       movement *= moveDelta;
       

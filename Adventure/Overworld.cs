@@ -57,7 +57,7 @@ public class Overworld : Spatial {
 			// Client setup
 		}
 		else{
-			SinglePlayerInit();
+			LocalInit();
 		}
 	}
 
@@ -67,8 +67,8 @@ public class Overworld : Spatial {
 		}
 	}
 
-	public void SinglePlayerInit(){
-		string debug = "SinglePlayerInit\n";
+	public void LocalInit(){
+		string debug = "LocalInit\n";
 
 		if(Session.session.adventureSettings != null){
 			saveFile = Session.session.adventureSettings.fileName;

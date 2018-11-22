@@ -12,8 +12,8 @@ break in the future. Similarly, test method names are to be long and descriptive
 because they will be called exactly once, reducing the need for brevity.
 
 
-Lastly, this test class will test against singleplayer functionality.
-Multiplayer testing will be a bit more difficult to arrange.
+Lastly, this test class will test against local functionality.
+Online testing will be a bit more difficult to arrange.
 */
 using Godot;
 using System;

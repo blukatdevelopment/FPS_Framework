@@ -56,6 +56,6 @@ The solution that comes to mind is to simply nuke existing netcode until the edi
 
 The general attack plan should look like this:
 - Gut arena multiplayer logic
-- Change namescheme to Local Vs Online in both Arena and Adventure modes.
-- Remove any arena-specific netcode from Actor
-- Investigate bug where items fall through world
+- DONE Change namescheme to Local Vs Online in both Arena and Adventure modes.
+- DONE Remove any arena-specific netcode from Actor
+- DONE Investigate bug where items fall through world

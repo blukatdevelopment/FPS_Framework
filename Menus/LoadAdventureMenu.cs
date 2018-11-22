@@ -50,14 +50,14 @@ public class LoadAdventureMenu : Container, IMenu {
     }
 
     Session.session.adventureSettings.load = true;
-    Session.SinglePlayerAdventure();
+    Session.LocalAdventure();
   }
 
   public void Back(){
     string destination = "";
 
     if(Session.session.adventure == null){
-      Session.ChangeMenu(Menu.Menus.Singleplayer);
+      Session.ChangeMenu(Menu.Menus.Local);
     }
     else{
       Session.ChangeMenu(Menu.Menus.Pause);

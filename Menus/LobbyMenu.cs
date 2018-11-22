@@ -422,10 +422,10 @@ public class LobbyMenu : Container, IMenu {
     
     switch(activeMode){
       case Session.Gamemodes.Arena:
-        Session.MultiplayerArena();
+        Session.OnlineArena();
         break;
       case Session.Gamemodes.Adventure:
-        Session.MultiplayerAdventure();
+        Session.OnlineAdventure();
         break;
     }
   }
