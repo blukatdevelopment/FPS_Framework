@@ -368,6 +368,9 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     else if(Session.NetActive()){
       RpcId(1, nameof(ServerEquipItem), index);
     }
+    else{
+      DeferredEquipItem(index);
+    }
   }
 
   [Remote]
