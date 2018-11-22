@@ -18,6 +18,8 @@ public class ActorData {
 	public System.Collections.Generic.Dictionary<string, string> extra;
 
 	public ActorData(){
+		id = -1;
+		health = healthMax = 0;
 		inventory = new Inventory();
 		pos = new Vector3();
 		rot = new Vector3();

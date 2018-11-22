@@ -1,12 +1,12 @@
 /*
-  The purpose of the MultiplayerMenu is to set up a NetworkSession
+  The purpose of the OnlineMenu is to set up a NetworkSession
   and to establish or connect to a server. After a connection has
-  been established, the MultiplayerMenu should flow to the Lobbymenu.
+  been established, the OnlineMenu should flow to the Lobbymenu.
 */
 using Godot;
 using System;
 
-public class MultiplayerMenu : Container, IMenu {
+public class OnlineMenu : Container, IMenu {
   public Godot.Button mainMenuButton;
   public Godot.Button selectionButton;
   public Godot.Button serverButton;

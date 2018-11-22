@@ -117,6 +117,12 @@ public class Inventory : IHasItem {
 		return ToString();
 	}
 
+	public void StoreItemDataRange(List<ItemData> data){
+		foreach(ItemData dat in data){
+			StoreItemData(dat);
+		}
+	}
+
 	public void StoreItemData(ItemData data){
 		
 		if(!data.stackable){
@@ -143,6 +149,12 @@ public class Inventory : IHasItem {
 		}
 
 		return -1;
+	}
+
+	public void ReceiveItemRange(List<Item> items){
+		foreach(Item item in items){
+			ReceiveItem(item);
+		}
 	}
 
 	public bool ReceiveItem(Item item){

@@ -1,7 +1,7 @@
-// Allow player to configure their singleplayer game before starting.
+// Allow player to configure their local game before starting.
 using Godot;
 
-public class SingleplayerMenu : Container, IMenu {
+public class LocalMenu : Container, IMenu {
   public Button mainMenuButton;
   public Button startButton;
   public Button modeButton;
@@ -91,10 +91,10 @@ public class SingleplayerMenu : Container, IMenu {
         GD.Print("No gamemode selected");
         break;
       case Session.Gamemodes.Arena:
-        Session.SinglePlayerArena();
+        Session.LocalArena();
         break;
       case Session.Gamemodes.Adventure:
-        Session.SinglePlayerAdventure();
+        Session.LocalAdventure();
         break;
     }
   }

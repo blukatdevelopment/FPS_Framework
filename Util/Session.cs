@@ -183,7 +183,7 @@ public class Session : Node {
     Session.ClearGame();
   }
   
-  public static void SinglePlayerArena(){
+  public static void LocalArena(){
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
     Session ses = Session.session;
@@ -193,19 +193,19 @@ public class Session : Node {
     ses.arena.Init(true);
   }
 
-  public static void SinglePlayerAdventure(){
+  public static void LocalAdventure(){
     ChangeMenu(Menu.Menus.None);
     Session.session.adventure = new Overworld();
     Session.session.AddChild(Session.session.adventure);
   }
 
-  public static void MultiplayerAdventure(){
+  public static void OnlineAdventure(){
     ChangeMenu(Menu.Menus.None);
     Session.session.adventure = new Overworld();
     Session.session.AddChild(Session.session.adventure);
   }
 
-  public static void MultiplayerArena(){
+  public static void OnlineArena(){
     Session ses = Session.session;
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
@@ -286,14 +286,6 @@ public class Session : Node {
   
   public static void Event(SessionEvent sessionEvent){
     Session.session.HandleEvent(sessionEvent);
-  }
-
-  public static void InitKit(Actor actor){
-    Arena arena = Session.session.arena;
-    
-    if(arena != null){
-      arena.InitKit(actor);
-    }
   }
 
   public static void PlayerReady(){

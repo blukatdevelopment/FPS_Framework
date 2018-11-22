@@ -19,7 +19,7 @@ public class LobbyMenu : Container, IMenu {
   public IMenu adventureConfig;
   private bool countDownActive = false;
   private float timer = 0f;
-  private int countDown = 10;
+  private int countDown = 3;
   private bool isReady = false;
   private string myName;
   private List<string> messages;
@@ -422,10 +422,10 @@ public class LobbyMenu : Container, IMenu {
     
     switch(activeMode){
       case Session.Gamemodes.Arena:
-        Session.MultiplayerArena();
+        Session.OnlineArena();
         break;
       case Session.Gamemodes.Adventure:
-        Session.MultiplayerAdventure();
+        Session.OnlineAdventure();
         break;
     }
   }
@@ -438,7 +438,7 @@ public class LobbyMenu : Container, IMenu {
   [Remote]
   void StartCountDown(){
     timer = 0f;
-    countDown = 10;
+    countDown = 3;
     countDownActive = true;
     BuildPlayers();
   }

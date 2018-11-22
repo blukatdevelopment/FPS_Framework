@@ -6,8 +6,8 @@ public class Menu{
   public enum Menus{
     None, 
     Main,
-    Singleplayer,
-    Multiplayer, 
+    Local,
+    Online, 
     Settings,
     Lobby, 
     Pause, 
@@ -74,13 +74,13 @@ public class Menu{
         ret = new MainMenu();
         ret.Name = "Main"; 
         break;
-      case Menus.Singleplayer: 
-        ret = new SingleplayerMenu(); 
-        ret.Name = "Singleplayer";
+      case Menus.Local: 
+        ret = new LocalMenu(); 
+        ret.Name = "Local";
         break;
-      case Menus.Multiplayer: 
-        ret = new MultiplayerMenu(); 
-        ret.Name = "Multiplayer";
+      case Menus.Online: 
+        ret = new OnlineMenu(); 
+        ret.Name = "Online";
         break;
       case Menus.Lobby: 
         ret = new LobbyMenu(); 
