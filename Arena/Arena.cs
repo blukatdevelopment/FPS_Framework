@@ -166,7 +166,7 @@ public class Arena : Spatial {
     } 
   }
 
-  public int NextWorldId(){
+  public int NextId(){
     int ret = nextId;
     nextId++;
     return ret;
@@ -192,17 +192,17 @@ public class Arena : Spatial {
       }
     }
 
-    InitActor(Actor.Brains.Player1, NextWorldId());
+    InitActor(Actor.Brains.Player1, NextId());
     for(int i = 0; i < settings.bots; i++){
-      InitActor(Actor.Brains.Ai, NextWorldId());
+      InitActor(Actor.Brains.Ai, NextId());
     }
 
     roundTimeRemaining = settings.duration * 60;
-    if(settings.useKits){
-      foreach(Actor actor in actors){
-        EquipActor(actor, Item.Types.Rifle, "Rifle");
-      }
-    }
+    // if(settings.useKits){
+    //   foreach(Actor actor in actors){
+    //     EquipActor(actor, Item.Types.Rifle, "Rifle");
+    //   }
+    // }
 
     roundTimerActive = true;
   }
@@ -213,7 +213,7 @@ public class Arena : Spatial {
     }
 
     for(int i = 0; i < settings.bots; i++){
-      settings.botIds.Add(NextWorldId());
+      settings.botIds.Add(NextId());
     }
 
     string settingsJson = ArenaSettings.ToJson(Session.session.arenaSettings);
@@ -422,10 +422,13 @@ public class Arena : Spatial {
 
     if(settings.useKits){
       dat.inventory.ReceiveItem(Item.Factory(Item.Types.Rifle));
-      dat.inventory.ReceiveItemRange(Item.BulkFactory(Item.Types.Ammo, 100));
+      List<Item> kitItems = Item.BulkFactory(Item.Types.Ammo, 100);
+
+      dat.inventory.ReceiveItem(kitItems[0]);
     }
 
-    Actor actor = Actor.Factory(brain, dat);    
+    Actor actor = Actor.Factory(brain, dat);
+    actor.NameHand(actor.Name + "(Hand)");  
     
     actors.Add(actor);
     AddChild(actor);
@@ -462,11 +465,10 @@ public class Arena : Spatial {
       GD.Print("Actor doesn't have this weapon.");
     }
     else{
-      GD.Print("Equipping Actor");
+      GD.Print("Equipping Actor with " + itemType.ToString());
       actor.EquipItem(index);
     }
   }
-
 
   [Remote]
   public void DeferredPlayerReady(){
@@ -482,11 +484,11 @@ public class Arena : Spatial {
       return;
     }
     gameStarted = true;
-    if(settings.useKits){
-      foreach(Actor actor in actors){
-        EquipActor(actor, Item.Types.Rifle, "Rifle");
-      }
-    }
+    // if(settings.useKits){
+    //   foreach(Actor actor in actors){
+    //     EquipActor(actor, Item.Types.Rifle, "Rifle");
+    //   }
+    // }
     
   }
 

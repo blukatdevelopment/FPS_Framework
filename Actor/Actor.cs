@@ -163,10 +163,15 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   }
 
   public void InitHand(){
-    hand = Item.Factory(Item.Types.Hand);
-    if(unarmed && activeItem == null){
-      EquipHand(); 
+    if(hand != null){
+      GD.Print("Hand already initialized.");
     }
+    hand = Item.Factory(Item.Types.Hand);
+    EquipHand(); 
+  }
+
+  public void NameHand(string handName){
+    hand.Name = handName;
   }
 
   /* Return global position of eyes(if available) or body */
@@ -354,24 +359,25 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Equip item based on inventory index. */
   public void EquipItem(int index){
     if(inventory.GetItem(index) == null){
+      GD.Print("Item at index " + index + " does not exist.");
       return;
     }
 
-    DeferredEquipItem(index);
+    //DeferredEquipItem(index);
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
     }
     else if(Session.NetActive()){
-      RpcId(1, nameof(ServerEquipItem), Session.session.netSes.selfPeerId, index);
+      RpcId(1, nameof(ServerEquipItem), index);
     }
   }
 
   [Remote]
-  public void ServerEquipItem(int caller, int index){
+  public void ServerEquipItem( int index){
     DeferredEquipItem(index);
 
     foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
-      if(caller != entry.Key){
+      if(true){
         RpcId(entry.Key, nameof(DeferredEquipItem), index);
       }
     }
@@ -396,6 +402,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     Item item = Item.FromData(dat);
 
     if(eyes == null){
+      GD.Print("Actor.DeferredEquipItem: No eyes.");
       return;
     }
     
@@ -407,9 +414,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     activeItem.Equip(this);
     unarmed = false;
   }
-
-
-
   
   /* Removes activeItem from hands. */
   public void StashItem(){
@@ -459,6 +463,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   /* Remove hand in preparation of equipping an item */
   public void StashHand(){
     if(activeItem != hand){
+      GD.Print("Can't stash hand when it's not active.");
       return;
     }
 
