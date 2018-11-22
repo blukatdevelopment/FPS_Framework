@@ -418,7 +418,7 @@ public class Arena : Spatial {
 
     dat.id = id;
     dat.pos = pos;
-
+    dat.health = dat.healthMax = 100;
     if(settings.useKits){
       dat.inventory.ReceiveItem(Item.Factory(Item.Types.Rifle));
       List<Item> kitItems = Item.BulkFactory(Item.Types.Ammo, 100);
