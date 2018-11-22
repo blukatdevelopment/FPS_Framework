@@ -362,23 +362,21 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
+    DeferredEquipItem(index);
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
     }
     else if(Session.NetActive()){
       RpcId(1, nameof(ServerEquipItem), index);
     }
-    else{
-      DeferredEquipItem(index);
-    }
   }
 
   [Remote]
-  public void ServerEquipItem( int index){
+  public void ServerEquipItem(int caller,  int index){
     DeferredEquipItem(index);
 
     foreach(KeyValuePair<int, PlayerData> entry in Session.session.netSes.playerData){
-      if(true){
+      if(entry.Key != caller){
         RpcId(entry.Key, nameof(DeferredEquipItem), index);
       }
     }
@@ -414,6 +412,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     activeItem = item;
     activeItem.Equip(this);
     unarmed = false;
+    GD.Print("Successfully equipped item " + item.Name);
   }
   
   /* Removes activeItem from hands. */

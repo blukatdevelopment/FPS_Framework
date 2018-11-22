@@ -17,7 +17,7 @@ public class Arena : Spatial {
   public int nextId = -2147483648;
   public bool gameStarted = false;
   public ArenaSettings settings;
-  const float RoundDuration = 300f;
+  const float RoundDuration = 15f;//300f;
   const float ScoreDuration = 5f;
   public float roundTimeRemaining, secondCounter;
   public bool roundTimerActive = false;
