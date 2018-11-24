@@ -164,6 +164,36 @@ public class Util{
     return y * gridSize + x;
   }
 
+  public static List<Vector2> NeighborCoords(Vector2 center, int gridSize){
+    List<Vector2> coordsInRadius = CoordsInRadius(center, 1);
+
+    List<Vector2> neighbors = new List<Vector2>();
+
+    foreach(Vector2 coords in coordsInRadius){
+      if(coords != center){
+        neighbors.Add(coords);
+      }
+    }
+
+    return neighbors;
+  }
+
+  public static List<int> NeighborIndices(int index, int gridSize){
+    Vector2 centerCoords = CellIndexToCoords(index, gridSize);
+    List<Vector2> neighborCoords = CoordsInRadius(centerCoords, 1);
+    List<int> neighborIndices = new List<int>();
+
+    foreach(Vector2 coords in neighborCoords){
+      int neighborIndex = CoordsToCellIndex(coords, gridSize);
+      
+      if(neighborIndex != index){
+        neighborIndices.Add(neighborIndex);
+      }
+    }
+
+    return neighborIndices;
+  }
+
   // Turn an int index for position into a Vector2
   public static Vector2 CellIndexToCoords(int index, int gridSize){
     int y = index % gridSize;

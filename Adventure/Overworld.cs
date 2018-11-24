@@ -20,6 +20,7 @@ public class Overworld : Spatial {
 	public System.Collections.Generic.Dictionary<int, TerrainCell> cells;
 	public System.Collections.Generic.Dictionary<int, Actor> actors;
 	public System.Collections.Generic.Dictionary<int, Item> items;
+	public System.Collections.Generic.Dictionary<Vector2, Spatial> invisibleWalls;
 
 	// Unrendered entities
 	public System.Collections.Generic.Dictionary<int, TerrainCellData> cellsData;
@@ -44,6 +45,7 @@ public class Overworld : Spatial {
 		actors = new System.Collections.Generic.Dictionary<int, Actor>();
 		cells = new System.Collections.Generic.Dictionary<int, TerrainCell>();
 		items = new System.Collections.Generic.Dictionary<int, Item>();
+		invisibleWalls = new System.Collections.Generic.Dictionary<Vector2, Spatial>();
 
 		actorsData = new System.Collections.Generic.Dictionary<int, ActorData>();
 		cellsData = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
@@ -102,7 +104,6 @@ public class Overworld : Spatial {
 		if(Session.session.adventureSettings != null 
 			 && Session.session.adventureSettings.load){
 			
-			GD.Print("InitWorld saveFile " + saveFile);
 			AdventureDb db = new AdventureDb(saveFile);
 			OverworldData dat = db.LoadData();
 			
@@ -179,8 +180,10 @@ public class Overworld : Spatial {
 	// Returns rendered cell, rendering if necessary. Returns null for invalid
 	// coords. Request/Release are high-level methods used by treadmills.
 	public TerrainCell RequestCell(Vector2 coords){
-		// TODO: Destroy invisible wall if it exists.
 		int id = CoordsToCellId(coords);
+		if(id != -1){
+			HandleWallsOnCellRequest(coords);
+		}
 		return RenderCell(id);
 	}
 
@@ -188,6 +191,76 @@ public class Overworld : Spatial {
 	public void ReleaseCell(Vector2 coords){
 		int id = CoordsToCellId(coords);
 		UnrenderCell(id); // TODO: delay unrendering
+		HandleWallsOnCellRelease(coords);
+	}
+
+	public void HandleWallsOnCellRequest(Vector2 coords){
+		
+		if(invisibleWalls.ContainsKey(coords)){
+			BreakWall(coords);
+		}
+
+		List<Vector2> neighbors = Util.NeighborCoords(coords, WorldHeight);
+		foreach(Vector2 neighbor in neighbors){
+			int index = Util.CoordsToCellIndex(neighbor, WorldHeight);
+			if(!cells.ContainsKey(index) && !invisibleWalls.ContainsKey(neighbor)){
+				BuildWall(neighbor);
+			}
+		}
+	}
+
+	public void HandleWallsOnCellRelease(Vector2 coords){
+		List<Vector2> neighbors = Util.NeighborCoords(coords, WorldHeight);
+		bool needWall = false;
+
+		foreach(Vector2 neighbor in neighbors){
+			int index = Util.CoordsToCellIndex(neighbor, WorldHeight);
+			if(cells.ContainsKey(index)){
+				needWall = true;
+			}
+		}
+
+		if(needWall){
+			BuildWall(coords);
+		}
+	}
+
+	public bool WallNeeded(Vector2 coords){
+		return true;
+	}
+
+	public void BreakWall(Vector2 coords){
+		if(invisibleWalls.ContainsKey(coords) && invisibleWalls[coords] != null){
+			invisibleWalls[coords].QueueFree();
+			invisibleWalls.Remove(coords);
+		}
+	}
+
+	public void BuildWall(Vector2 coords){
+		
+		if(invisibleWalls.ContainsKey(coords) && invisibleWalls[coords] != null){
+			return;
+		}
+		
+		BoxShape bs = new BoxShape();
+		float scale = GetCellScale();
+
+		Vector3 extents = new Vector3(scale, scale, scale);
+		extents /= 2f; // Make these into half-extents.
+		bs.Extents = extents;
+
+		CollisionShape cs = new CollisionShape();
+		cs.Shape = (Shape) bs;
+
+
+		StaticBody wall = new StaticBody();
+		wall.AddChild(cs);
+
+		AddChild(wall);
+
+		wall.Translation = Util.CellPositionFromCoords(coords, scale);
+
+		invisibleWalls.Add(coords, (Spatial)wall);
 	}
 
 	// Size of cell in blocks
@@ -270,11 +343,9 @@ public class Overworld : Spatial {
 
 	public List<Treadmill> CellUsers(int cellId){
 		if(cellId == -1){
-			//GD.Print("Overworld.CellUsers: Invalid cellID:" + cellId);
 			return new List<Treadmill>();
 		}
 		if(!cells.ContainsKey(cellId)){
-			//GD.Print("Overworld.CellUsers: Cell not active:" + cellId);
 			return new List<Treadmill>();	
 		}
 		TerrainCell cell = cells[cellId];
@@ -318,7 +389,6 @@ public class Overworld : Spatial {
 
 
 	public void Save(){
-		GD.Print("Saving");
 		OverworldData data = new OverworldData(this);
 
 		AdventureDb db = new AdventureDb(saveFile);
@@ -327,7 +397,6 @@ public class Overworld : Spatial {
 	}
 
 	public void Load(){
-		GD.Print("Loading");
 		AdventureDb db = new AdventureDb(saveFile);
 
 		OverworldData data = db.LoadData();
@@ -342,7 +411,6 @@ public class Overworld : Spatial {
 
 		foreach(int key in actorsData.Keys){
 			if(actorsData[key].brain == brain){
-				GD.Print("Found brain in " + key);
 				return key;
 			}
 		}
@@ -446,7 +514,6 @@ public class Overworld : Spatial {
 		}
 		
 		if(!cellsData.ContainsKey(id)){
-			GD.Print("RenderCell saveFile " + saveFile);
 			AdventureDb db = new AdventureDb(saveFile);
 			TerrainCellData data = db.LoadCell(id);
 			cellsData.Add(id, data);
@@ -485,12 +552,10 @@ public class Overworld : Spatial {
 		TerrainCellData cellData = cell.GetData();
 
 		foreach(Actor actor in ActorsAtCoords(cell.coords)){
-			GD.Print("Found actor " + actor);
 			UnrenderActor(actor.id);
 		}
 
 		foreach(Item item in ItemsAtCoords(cell.coords)){
-			GD.Print("Found item " + item);
 			UnrenderItem(item.id);
 		}
 
