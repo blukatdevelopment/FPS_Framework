@@ -4,7 +4,7 @@
     of abstraction obscuring away how this data is saved or loaded.
 
     Actor and item data are stored in SQLite, whilst for performance reasons
-    cells are serialized directly.
+    cells are serialized directly into individual files.
 */
 using Godot;
 using System;
@@ -56,48 +56,10 @@ public class AdventureDb{
 
         cmd.CommandText = sql;
         IDataReader rdr = cmd.ExecuteReader();
-
         while(rdr.Read()){
-            ActorData dat = new ActorData();
-            dat.id = System.Convert.ToInt32(rdr["id"]);
-            dat.brain = (Actor.Brains)System.Convert.ToInt32(rdr["brain"]);
-            
-            float posx = (float)System.Convert.ToDecimal(rdr["posx"]);
-            float posy = (float)System.Convert.ToDecimal(rdr["posy"]);
-            float posz = (float)System.Convert.ToDecimal(rdr["posz"]);
-            dat.pos = new Vector3(posx, posy, posz);
-
-            float rotx = (float)System.Convert.ToDecimal(rdr["rotx"]);
-            float roty = (float)System.Convert.ToDecimal(rdr["roty"]);
-            float rotz = (float)System.Convert.ToDecimal(rdr["rotz"]);
-            dat.rot = new Vector3(rotx, roty, rotz);
-            GD.Print("Found actor " + dat.ToString());
+            string json = (string)rdr["data"];
+            ActorData dat = ActorData.FromJson(json);
             actors.Add(dat.id, dat);
-        }
-        rdr.Close();
-
-        sql = @"
-            SELECT * from actors_extra;
-        ";
-
-        cmd.CommandText = sql;
-        rdr = cmd.ExecuteReader();
-
-        while(rdr.Read()){
-            int id = (int)rdr["id"];
-            string name = (string)rdr["name"];
-            string val = (string)rdr["value"];
-
-            if(actors.ContainsKey(id)){
-                ActorData actor = actors[id];
-
-                if(actor.extra.ContainsKey(name)){
-                    actor.extra[name] = val;
-                }
-                else{
-                    actor.extra.Add(name, val);
-                }
-            }
         }
         rdr.Close();
 
@@ -116,53 +78,11 @@ public class AdventureDb{
         IDataReader rdr = cmd.ExecuteReader();
 
         while(rdr.Read()){
-            ItemData dat = new ItemData();
-            
-            dat.id = System.Convert.ToInt32(rdr["id"]);
-            dat.type = (Item.Types)System.Convert.ToInt32(rdr["itemType"]);
-            dat.name = (string)rdr["name"];
-            dat.description = (string)rdr["description"];
-            dat.weight = System.Convert.ToInt32(rdr["weight"]);
-            dat.held = System.Convert.ToBoolean(rdr["held"]);
-
-            float posx = (float)System.Convert.ToDecimal(rdr["posx"]);
-            float posy = (float)System.Convert.ToDecimal(rdr["posy"]);
-            float posz = (float)System.Convert.ToDecimal(rdr["posz"]);
-            dat.pos = new Vector3(posx, posy, posz);
-
-            float rotx = (float)System.Convert.ToDecimal(rdr["rotx"]);
-            float roty = (float)System.Convert.ToDecimal(rdr["roty"]);
-            float rotz = (float)System.Convert.ToDecimal(rdr["rotz"]);
-            dat.rot = new Vector3(rotx, roty, rotz);
-            
-            items.Add(dat.id, dat);
+            string json = (string)rdr["data"];
+            ItemData data = ItemData.FromJson(json);
+            items.Add(data.id, data);
         }
 
-        rdr.Close();
-
-        sql = @"
-            SELECT * from actors_extra;
-        ";
-
-        cmd.CommandText = sql;
-        rdr = cmd.ExecuteReader();
-
-        while(rdr.Read()){
-            int id = (int)rdr["id"];
-            string name = (string)rdr["name"];
-            string val = (string)rdr["value"];
-
-            if(items.ContainsKey(id)){
-                ItemData item = items[id];
-
-                if(item.extra.ContainsKey(name)){
-                    item.extra[name] = val;
-                }
-                else{
-                    item.extra.Add(name, val);
-                }
-            }
-        }
         rdr.Close();
 
         return items;
@@ -179,43 +99,13 @@ public class AdventureDb{
         CREATE TABLE items
         (
             id BIGINT PRIMARY KEY,
-            posx FLOAT,
-            posy FLOAT,
-            posz FLOAT,
-            rotx FLOAT,
-            roty FLOAT,
-            rotz FLOAT,
-            name VARCHAR(200),
-            itemType INT,
-            description TEXT,
-            weight INT(2),
-            held BOOLEAN
-        );
-
-        CREATE TABLE items_extra
-        (
-            id BIGINT,
-            name VARCHAR(200),
-            value TEXT
+            data TEXT
         );
 
         CREATE TABLE actors
         (
             id BIGINT PRIMARY KEY,
-            brain VARCHAR(200),
-            posx FLOAT,
-            posy FLOAT,
-            posz FLOAT,
-            rotx FLOAT,
-            roty FLOAT,
-            rotz FLOAT
-        );
-
-        CREATE TABLE actors_extra
-        (
-            id BIGINT PRIMARY KEY,
-            name VARCHAR(200),
-            value TEXT
+            data TEXT
         );
         ";
         cmd.CommandText = sql;
@@ -224,40 +114,14 @@ public class AdventureDb{
 
     public void SaveActor(ActorData data){
         string sql = @"
-            INSERT INTO actors(id, brain, posx, posy, posz, rotx, roty, rotz)
-            VALUES (@id, @brain, @posx, @posy, @posz, @rotx, @roty, @rotz);
+            INSERT INTO actors(id, data)
+            VALUES (@id, @data);
             
         ";
         cmd.CommandText = sql;
         cmd.Parameters.Add(new SqliteParameter("@id", data.id));
-        cmd.Parameters.Add(new SqliteParameter("@brain", (int)data.brain));
-        cmd.Parameters.Add(new SqliteParameter("@posx", data.pos.x));
-        cmd.Parameters.Add(new SqliteParameter("@posy", data.pos.y));
-        cmd.Parameters.Add(new SqliteParameter("@posz", data.pos.z));
-        cmd.Parameters.Add(new SqliteParameter("@rotx", data.rot.x));
-        cmd.Parameters.Add(new SqliteParameter("@roty", data.rot.y));
-        cmd.Parameters.Add(new SqliteParameter("@rotz", data.rot.z));
-        cmd.ExecuteNonQuery();
-
-        foreach(string key in data.extra.Keys){
-            SaveActorExtra(data.id, key, data.extra[key]);
-        }
-
-    }
-
-    public void SaveActorExtra(int id, string name, string val){
-        string sql = @"
-            INSERT OR IGNORE INTO actors_extra(id, name, value)
-            VALUES (@id, @name, @value);
-            UPDATE settings
-            SET value = @value 
-            WHERE name = @name
-                AND id = @id;
-        ";
-        cmd.CommandText = sql;
-        cmd.Parameters.Add(new SqliteParameter("@id", id));
-        cmd.Parameters.Add(new SqliteParameter("@name", name));
-        cmd.Parameters.Add(new SqliteParameter("@value", val));
+        cmd.Parameters.Add(new SqliteParameter("@data", ActorData.ToJson(data)));
+        
         cmd.ExecuteNonQuery();
     }
 
@@ -266,67 +130,18 @@ public class AdventureDb{
             INSERT INTO items
             (
                 id, 
-                posx, 
-                posy, 
-                posz, 
-                rotx, 
-                roty, 
-                rotz, 
-                name, 
-                itemType,
-                description,
-                weight,
-                held
+                data
             )
             VALUES 
             (
                 @id, 
-                @posx, 
-                @posy, 
-                @posz, 
-                @rotx, 
-                @roty, 
-                @rotz, 
-                @name, 
-                @itemType,
-                @description,
-                @weight,
-                @held
+                @data
             );
         ";
         cmd.CommandText = sql;
         cmd.Parameters.Add(new SqliteParameter("@id", data.id));
-        cmd.Parameters.Add(new SqliteParameter("@posx", data.pos.x));
-        cmd.Parameters.Add(new SqliteParameter("@posy", data.pos.y));
-        cmd.Parameters.Add(new SqliteParameter("@posz", data.pos.z));
-        cmd.Parameters.Add(new SqliteParameter("@rotx", data.rot.x));
-        cmd.Parameters.Add(new SqliteParameter("@roty", data.rot.y));
-        cmd.Parameters.Add(new SqliteParameter("@rotz", data.rot.z));
-        cmd.Parameters.Add(new SqliteParameter("@name", data.name));
-        cmd.Parameters.Add(new SqliteParameter("@itemType", (int)data.type));
-        cmd.Parameters.Add(new SqliteParameter("@description", data.description));
-        cmd.Parameters.Add(new SqliteParameter("@weight", data.weight));
-        cmd.Parameters.Add(new SqliteParameter("@held", data.held));
-        cmd.ExecuteNonQuery();
+        cmd.Parameters.Add(new SqliteParameter("@data", ItemData.ToJson(data)));
 
-        foreach(string key in data.extra.Keys){
-            SaveItemExtra(data.id, key, data.extra[key]);
-        }
-    }
-
-    public void SaveItemExtra(int id, string name, string val){
-        string sql = @"
-            INSERT OR IGNORE INTO items_extra(id, name, value)
-            VALUES (@id, @name, @value);
-            UPDATE settings
-            SET value = @value 
-            WHERE name = @name
-                AND id = @id;
-        ";
-        cmd.CommandText = sql;
-        cmd.Parameters.Add(new SqliteParameter("@id", id));
-        cmd.Parameters.Add(new SqliteParameter("@name", name));
-        cmd.Parameters.Add(new SqliteParameter("@value", val));
         cmd.ExecuteNonQuery();
     }
 

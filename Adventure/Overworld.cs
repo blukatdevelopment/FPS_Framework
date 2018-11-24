@@ -108,6 +108,7 @@ public class Overworld : Spatial {
 			OverworldData dat = db.LoadData();
 			
 			actorsData = dat.actorsData;
+			itemsData = dat.itemsData;
 			return;
 		}
 
@@ -305,6 +306,7 @@ public class Overworld : Spatial {
 		foreach(int id in itemsData.Keys){
 			ItemData itemData = itemsData[id];
 			Vector2 actualCoords = Util.CoordsFromPosition(itemData.pos, scale);
+			GD.Print("Item " + id + " at " + actualCoords + ", " + itemData.pos );
 			if(coords == actualCoords){
 				ret.Add(itemData);
 			}
@@ -394,12 +396,6 @@ public class Overworld : Spatial {
 		AdventureDb db = new AdventureDb(saveFile);
 
 		db.SaveData(data);
-	}
-
-	public void Load(){
-		AdventureDb db = new AdventureDb(saveFile);
-
-		OverworldData data = db.LoadData();
 	}
 
 	public int GetActorByBrain(Actor.Brains brain){
@@ -533,6 +529,7 @@ public class Overworld : Spatial {
 		}
 
 		foreach(ItemData item in ItemDataAtCoords(cell.coords)){
+			GD.Print("Item found at " + cell.coords);
 			RenderItem(item.id);
 		}
 
