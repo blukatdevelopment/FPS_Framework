@@ -31,20 +31,35 @@ Title:
 Components:
 Body:
 
-Title: Invisible walls in overworld
-Components: Core
-Body:
-Invisible walls should prevent items and NPCs from leaving the rendered map.
 
-Title: Overworld (Multiplayer)
+Title: Auth MVP
 Components: Core, Networking
 Body:
-Server should be responsible for feeding clients all the terrain, actor, and item data they need as they move accross the overworld.
+Every client should have a username and password when connecting to the server.
+The server should store these (with password hashed) and check them again on
+subsequent login. Failing auth should prevent send the client back to the
+main menu.
 
+Title: client/server overworld MVP
+Components: Core, Networking
+Body: 
+A method should exist to send the terrain, items, and actors contained within
+a cell from the server to client.
 
+Another method should exist for clients to request the data above for a cell.
 
-Title: Convert extra tables to a JSON field
-Components: Core
+Instead of reading from disc, clients should request the cell data from the
+server and leave it there. As such, clients should request cells in a 
+
+A third method should exist so that the server can change the brain/type of
+an actor when a client connects and takes over an actor (turning it Remote), 
+or disconnects, abandoning it (turning it to Ai).
+
+When a player's actor dies, they should respawn with a blank inventory at a 
+random spawn point decided by the server.
+
+Title: No lobby multiplayer
+Components: Core, Networking
 Body:
-Replace the items_extra and actors_extra tables with an
-additional field in items and actors to speed up saving/loading.
+The overworld server should start the game immediately, and clients should be
+free to connect/disconnect whenever.

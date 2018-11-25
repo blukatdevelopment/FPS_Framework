@@ -89,3 +89,14 @@ Components: Core, Network
 Body:
 Arena currently initializes actor inventory with a delay after spawning them.
 Ideally the arena should set up an ActorData pre-equipped.
+
+Title: Convert extra tables to a JSON field
+Components: Core
+Body:
+Replace the items_extra and actors_extra tables with an
+additional field in items and actors to speed up saving/loading.
+
+Title: Invisible walls in overworld
+Components: Core
+Body:
+Invisible walls should prevent items and NPCs from leaving the rendered map.
