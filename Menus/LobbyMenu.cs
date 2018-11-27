@@ -15,6 +15,7 @@ public class LobbyMenu : Container, IMenu {
 
   // Server stuff
   public Session.Gamemodes activeMode;
+  public Button serverStartButton;
   public IMenu arenaConfig;
   public IMenu adventureConfig;
   private bool countDownActive = false;
@@ -114,6 +115,9 @@ public class LobbyMenu : Container, IMenu {
     playersBox.Readonly = true;
     AddChild(playersBox);
 
+    serverStartButton = Menu.Button("Start server", StartGame);
+    // Don't add this as a child until a lobbyless mode is selected.
+
     modeButton = Menu.Button("Gamemode: " + activeMode, ToggleMode);
     AddChild(modeButton);
 
@@ -158,9 +162,18 @@ public class LobbyMenu : Container, IMenu {
     }
 
     modeButton.SetText("Gamemode: " + activeMode);
+
+    bool needLobby = Session.OnlineLobbyUsed(activeMode);
+    GD.Print("Gamemode: " + activeMode + " needs lobby: " +  needLobby);
+    if(serverStartButton.GetParent() != null && needLobby){
+      RemoveChild(serverStartButton);
+    }
+    else if(serverStartButton.GetParent() == null && !needLobby){
+      AddChild(serverStartButton);
+    }
+
     Rpc(nameof(ChangeMode), activeMode);
   }
-
 
   [Remote]
   public void ChangeMode(Session.Gamemodes mode){
@@ -185,7 +198,6 @@ public class LobbyMenu : Container, IMenu {
           AddPlayer(json);
           Rpc(nameof(AddPlayer), json);
         }
-
       }
       else{
         netSes.UpdateClient(obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected));
@@ -232,9 +244,10 @@ public class LobbyMenu : Container, IMenu {
     float hu = height/10;
     
     Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+    Menu.ScaleControl(serverStartButton, 2 * wu, hu, 0, height - 3 * hu);
     Menu.ScaleControl(modeButton, 2 * wu, hu, 0, height - 2 * hu);
     Menu.ScaleControl(messageBox, 6 * wu, hu, 3 * wu, 0);
-    Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
+    Menu.ScaleControl(playersBox, 2 * wu, 7 * hu, 0, 0);
 
     arenaConfig.Init(2 * wu, hu, width, height);
     adventureConfig.Init(2 * wu, hu, width, height);

@@ -24,11 +24,33 @@ public class Session : Node {
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;
   public Actor player;
-  public enum Gamemodes{
+  public enum Gamemodes {
     None,
     Arena,
     Adventure
   };
+
+  public static Gamemodes GetGamemode(){
+    if(Session.session.arena != null){
+      return Gamemodes.Arena;
+    }
+    else if(Session.session.adventure != null){
+      return Gamemodes.Adventure;
+    }
+    return Gamemodes.None;
+  }
+
+  public static bool OnlineLobbyUsed(Gamemodes mode){
+    switch(mode){
+      case Gamemodes.Arena:
+        return true;
+        break;
+      case Gamemodes.Adventure:
+        return false;
+        break;
+    }
+    return true;
+  }
 
   public static string NextItemName(){
     if(Session.session.arena != null){

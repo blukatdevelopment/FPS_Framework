@@ -81,3 +81,6 @@ free to connect/disconnect whenever.
 
 The menus should account for this change by disabling the lobby for 
 online overworld clients and providing a start button for servers.
+
+TODO:
+- If in lobbyless mode, send 

@@ -58,7 +58,9 @@ public class AdventureConfigMenu : Container, IMenu {
     AddChild(nameBox);
 
     loadAdventureButton = Menu.Button("Load Adventure", GoToLoadAdventure);
-    AddChild(loadAdventureButton);
+    if(!Session.NetActive()){
+      AddChild(loadAdventureButton);
+    }
   }
 
   public void GoToLoadAdventure(){

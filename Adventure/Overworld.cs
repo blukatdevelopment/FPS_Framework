@@ -54,9 +54,11 @@ public class Overworld : Spatial {
 		Name = "Adventure";
 		if(Session.IsServer()){
 			// Server setup
+			GD.Print("Init adventure server");
 		}
 		else if(Session.NetActive()){
 			// Client setup
+			GD.Print("Init adventure client");
 		}
 		else{
 			LocalInit();
