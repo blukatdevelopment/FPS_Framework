@@ -143,11 +143,14 @@ public class LobbyMenu : Container, IMenu {
 
     switch(activeMode){
       case Session.Gamemodes.None:
+        Session.session.activeMode = Session.Gamemodes.None;
         break;
       case Session.Gamemodes.Arena:
+        Session.session.activeMode = Session.Gamemodes.Arena;
         AddChild(arenaConfig as Node);
         break;
       case Session.Gamemodes.Adventure:
+        Session.session.activeMode = Session.Gamemodes.Adventure;
         AddChild(adventureConfig as Node);
         break;
     }
@@ -283,6 +286,17 @@ public class LobbyMenu : Container, IMenu {
 
   /* Called before peers connect. */
   public void ConnectionSucceeded(){
+    int peerId = Session.session.netSes.selfPeerId;
+    string name = "Player #" + peerId.ToString();
+    Session.session.AuthRequest(peerId, name);
+  }
+
+  public void ConnectedLobbyInit(){
+    if(!Session.OnlineLobbyUsed(Session.GetGamemode())){
+      LobbylessSetup();
+      return;
+    }
+
     NetworkSession netSes = Session.session.netSes;
     myName = netSes.initName;
     int myId = netSes.selfPeerId;
@@ -299,6 +313,10 @@ public class LobbyMenu : Container, IMenu {
     string message = myName + " joined!"; 
     ReceiveMessage(message);
     Rpc(nameof(ReceiveMessage), message);
+  }
+
+  public void LobbylessSetup(){
+    GD.Print("Lobbyless setup");
   }
 
   public void PeerConnected(int id){

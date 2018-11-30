@@ -12,7 +12,8 @@ using System.Text;
 
 public class Session : Node {
   public static Session session;
-  private Node activeMenu;
+  public Node activeMenu;
+  public Gamemodes activeMode = Gamemodes.None;
   public Arena arena;
   public Overworld adventure; // Overworld manages adventure mode.
   public NetworkSession netSes;
@@ -31,13 +32,7 @@ public class Session : Node {
   };
 
   public static Gamemodes GetGamemode(){
-    if(Session.session.arena != null){
-      return Gamemodes.Arena;
-    }
-    else if(Session.session.adventure != null){
-      return Gamemodes.Adventure;
-    }
-    return Gamemodes.None;
+    return session.activeMode;
   }
 
   public static bool OnlineLobbyUsed(Gamemodes mode){
@@ -321,4 +316,21 @@ public class Session : Node {
   public static Vector3 WorldPosition(Item item){
     return item.Translation;
   }
+
+  // TODO: Add password validation
+  public void AuthRequest(int peerId, string name){
+    RpcId(1, nameof(RemoteAuthRequest), peerId, name);
+  }
+
+  [Remote]
+  public void RemoteAuthRequest(int peerId, string name){
+    GD.Print("RemoteAuthRequest " + peerId + ", " + name);
+    RpcId(peerId, nameof(RemoteAuthResponse), true, GetGamemode());
+  }
+
+  [Remote]
+  public void RemoteAuthResponse(bool success, Gamemodes mode){
+    GD.Print("AuthResponse " + success + ", " + mode);
+  }
+
 }

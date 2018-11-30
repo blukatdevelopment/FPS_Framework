@@ -9,6 +9,7 @@ public class MainMenu : Container, IMenu {
     public Godot.Button quitButton;
 
     public void Init(float minX, float minY, float maxX, float maxY){
+      Session.session.activeMode = Session.Gamemodes.None;
       InitControls();
       ScaleControls();
     }
