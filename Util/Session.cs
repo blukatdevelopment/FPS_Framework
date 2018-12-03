@@ -331,6 +331,21 @@ public class Session : Node {
   [Remote]
   public void RemoteAuthResponse(bool success, Gamemodes mode){
     GD.Print("AuthResponse " + success + ", " + mode);
+    if(!success){
+      GD.Print("RemoteAuthResponse: Unsuccessful");
+      ChangeMenu(Menu.Menus.Main);
+      return;
+    }
+
+    LobbyMenu menu = activeMenu as LobbyMenu;
+
+    if(menu == null){
+      GD.Print("RemoteAuthResponse: LobbyMenu not active");
+      ChangeMenu(Menu.Menus.Main);
+      return;
+    }
+
+    menu.ConnectedLobbyInit();
   }
 
 }
