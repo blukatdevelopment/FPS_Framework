@@ -317,20 +317,32 @@ public class Session : Node {
     return item.Translation;
   }
 
-  // TODO: Add password validation
   public void AuthRequest(int peerId, string name){
-    RpcId(1, nameof(RemoteAuthRequest), peerId, name);
+    RpcId(1, nameof(RemoteAuthRequest), peerId, name, "pass");
   }
 
   [Remote]
-  public void RemoteAuthRequest(int peerId, string name){
+  public void RemoteAuthRequest(int peerId, string name, string pass){
     GD.Print("RemoteAuthRequest " + peerId + ", " + name);
-    RpcId(peerId, nameof(RemoteAuthResponse), true, GetGamemode());
+
+    bool success = true;
+    Gamemodes mode = GetGamemode();
+
+    if(mode == Gamemodes.Adventure && (adventure == null || !adventure.netReady)){
+      success = false;
+    }
+
+    if(!netSes.Authorization(name, pass)){
+      GD.Print("RemoteAuthRequest: Auth failed");
+      success = false;
+    }
+
+    RpcId(peerId, nameof(RemoteAuthResponse), success, mode);
   }
 
   [Remote]
   public void RemoteAuthResponse(bool success, Gamemodes mode){
-    GD.Print("AuthResponse " + success + ", " + mode);
+    
     if(!success){
       GD.Print("RemoteAuthResponse: Unsuccessful");
       ChangeMenu(Menu.Menus.Main);

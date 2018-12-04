@@ -23,7 +23,10 @@ public class LobbyMenu : Container, IMenu {
   private int countDown = 3;
   private bool isReady = false;
   private string myName;
+  private string myData; 
   private List<string> messages;
+
+
 
   public override void _Ready() {
     messages = new List<string>();
@@ -286,9 +289,19 @@ public class LobbyMenu : Container, IMenu {
 
   /* Called before peers connect. */
   public void ConnectionSucceeded(){
-    int peerId = Session.session.netSes.selfPeerId;
-    string name = "Player #" + peerId.ToString();
-    Session.session.AuthRequest(peerId, name);
+    NetworkSession netSes = Session.session.netSes;
+    int peerId = netSes.selfPeerId;
+    myName = netSes.initName;
+
+    if(myName == "Name"){
+      myName = "Player #" + peerId.ToString();
+    }
+
+    PlayerData dat = new PlayerData(myName, peerId);
+    myData = JsonConvert.SerializeObject(dat, Formatting.Indented);
+    AddPlayer(myData);
+
+    Session.session.AuthRequest(peerId, myName);
   }
 
   public void ConnectedLobbyInit(){
@@ -297,18 +310,7 @@ public class LobbyMenu : Container, IMenu {
       return;
     }
 
-    NetworkSession netSes = Session.session.netSes;
-    myName = netSes.initName;
-    int myId = netSes.selfPeerId;
-
-    if(myName == "Name"){
-      myName = "Player #" + myId.ToString();
-    }
-
-    PlayerData dat = new PlayerData(myName, myId);
-    string json = JsonConvert.SerializeObject(dat, Formatting.Indented);
-    AddPlayer(json);
-    Rpc(nameof(AddPlayer), json);
+    Rpc(nameof(AddPlayer), myData);
 
     string message = myName + " joined!"; 
     ReceiveMessage(message);
@@ -324,6 +326,10 @@ public class LobbyMenu : Container, IMenu {
       return; // Don't worry about the server.
     }
     int myId = Session.session.netSes.selfPeerId;
+    if(!Session.session.netSes.playerData.ContainsKey(myId)){
+      GD.Print("PeerConnected:(" + id + "): couldn't find user.");
+      return;
+    }
     PlayerData myDat = Session.session.netSes.playerData[myId];
     string myJson = JsonConvert.SerializeObject(myDat, Formatting.Indented);
     RpcId(id, nameof(AddPlayer), myJson);
@@ -365,6 +371,7 @@ public class LobbyMenu : Container, IMenu {
   
   [Remote]
   public void AddPlayer(string json){
+    GD.Print("AddPlayer: " + json);
     PlayerData dat = JsonConvert.DeserializeObject<PlayerData>(json);
     
     if(dat == null){
@@ -414,6 +421,11 @@ public class LobbyMenu : Container, IMenu {
 
   [Remote]
   public void TogglePlayerReady(int playerId){
+    NetworkSession netSes = Session.session.netSes;
+    if(!netSes.playerData.ContainsKey(playerId)){
+      GD.Print("TogglePlayerReady(" + playerId + "): Player does not exist.");
+      return;
+    }
     PlayerData dat = Session.session.netSes.playerData[playerId];
     
     if(dat == null){

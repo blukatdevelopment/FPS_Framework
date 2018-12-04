@@ -90,4 +90,8 @@ public class NetworkSession : Node {
     this.random = new System.Random(randomSeed);
   }
   
+  public bool Authorization(string name, string pass){
+    return true;
+  }
+
 }

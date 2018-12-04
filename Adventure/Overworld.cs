@@ -36,6 +36,7 @@ public class Overworld : Spatial {
 
 	public int nextActorId, nextItemId; // auto-incremented ids.
 
+	public bool netReady = false;
 
 	public Overworld(){
 		nextActorId = 1;

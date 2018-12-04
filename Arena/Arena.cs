@@ -477,11 +477,6 @@ public class Arena : Spatial {
       return;
     }
     gameStarted = true;
-    // if(settings.useKits){
-    //   foreach(Actor actor in actors){
-    //     EquipActor(actor, Item.Types.Rifle, "Rifle");
-    //   }
-    // }
     
   }
 

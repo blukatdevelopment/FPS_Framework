@@ -167,6 +167,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       GD.Print("Hand already initialized.");
     }
     hand = Item.Factory(Item.Types.Hand);
+    GD.Print("InitHand");
     EquipHand(); 
   }
 
@@ -362,12 +363,14 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
+    GD.Print("EquipItem");
     DeferredEquipItem(index);
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
     }
     else if(Session.NetActive()){
-      RpcId(1, nameof(ServerEquipItem), index);
+      int peerId = Session.session.netSes.selfPeerId;
+      RpcId(1, nameof(ServerEquipItem), peerId, index);
     }
   }
 
@@ -478,6 +481,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
+    GD.Print("Equipping hand ");
     activeItem = hand;
     eyes.AddChild(activeItem);
     activeItem.Translation = new Vector3(HandPosX, HandPosY, HandPosZ);
