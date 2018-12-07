@@ -459,7 +459,14 @@ public class Arena : Spatial {
     }
     else{
       GD.Print("Equipping Actor with " + itemType.ToString());
-      actor.ServerEquipItem(1, index);
+      
+      if(Session.NetActive()){
+        actor.ServerEquipItem(1, index);
+      }
+      else{
+        actor.EquipItem(index);
+      }
+      
     }
   }
 
