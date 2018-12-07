@@ -363,7 +363,6 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
       return;
     }
 
-    GD.Print("EquipItem");
     DeferredEquipItem(index);
     if(Session.NetActive() && Session.IsServer()){
       Rpc(nameof(DeferredEquipItem), index);
