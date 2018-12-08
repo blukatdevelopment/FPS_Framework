@@ -26,8 +26,6 @@ public class LobbyMenu : Container, IMenu {
   private string myData; 
   private List<string> messages;
 
-
-
   public override void _Ready() {
     messages = new List<string>();
   }
@@ -305,11 +303,12 @@ public class LobbyMenu : Container, IMenu {
   }
 
   public void ConnectedLobbyInit(){
+    GD.Print("ConnectedLobbyInit");
     if(!Session.OnlineLobbyUsed(Session.GetGamemode())){
       LobbylessSetup();
       return;
     }
-
+    GD.Print(Session.GetGamemode() + " needs a lobby");
     Rpc(nameof(AddPlayer), myData);
 
     string message = myName + " joined!"; 

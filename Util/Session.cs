@@ -37,6 +37,9 @@ public class Session : Node {
 
   public static bool OnlineLobbyUsed(Gamemodes mode){
     switch(mode){
+      case Gamemodes.None:
+        return false;
+        break;
       case Gamemodes.Arena:
         return true;
         break;

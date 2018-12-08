@@ -54,16 +54,23 @@ public class Overworld : Spatial {
 
 		Name = "Adventure";
 		if(Session.IsServer()){
-			// Server setup
-			GD.Print("Init adventure server");
+			InitServer();
 		}
 		else if(Session.NetActive()){
-			// Client setup
-			GD.Print("Init adventure client");
+			InitClient();
 		}
 		else{
 			LocalInit();
 		}
+	}
+
+	public void InitServer(){
+		GD.Print("Init adventure server");
+		netReady = true;
+	}
+
+	public void InitClient(){
+		GD.Print("Init adventure client");
 	}
 
 	public override void _Process(float delta){
