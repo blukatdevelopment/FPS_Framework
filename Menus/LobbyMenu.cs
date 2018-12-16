@@ -302,13 +302,15 @@ public class LobbyMenu : Container, IMenu {
     Session.session.AuthRequest(peerId, myName);
   }
 
-  public void ConnectedLobbyInit(){
+  /* Client successfully connects to server. */
+  public void ConnectedLobbyInit(Session.Gamemodes mode, string extra){
     GD.Print("ConnectedLobbyInit");
-    if(!Session.OnlineLobbyUsed(Session.GetGamemode())){
-      LobbylessSetup();
+    if(!Session.OnlineLobbyUsed(mode)){
+      GD.Print(mode + " does not need a lobby.");
+      LobbylessSetup(mode, extra);
       return;
     }
-    GD.Print(Session.GetGamemode() + " needs a lobby");
+    GD.Print(mode + " needs a lobby");
     Rpc(nameof(AddPlayer), myData);
 
     string message = myName + " joined!"; 
@@ -316,8 +318,24 @@ public class LobbyMenu : Container, IMenu {
     Rpc(nameof(ReceiveMessage), message);
   }
 
-  public void LobbylessSetup(){
-    GD.Print("Lobbyless setup");
+  /* Client successfully connects to a server with drop-in multiplayer. */
+  public void LobbylessSetup(Session.Gamemodes mode, string extra){
+    GD.Print("Lobbyless setup " + mode  + " -extra " + extra);
+
+    switch(mode){
+      case Session.Gamemodes.Adventure:
+        AdventureSettings settings = Session.session.adventureSettings;
+        
+        if(settings == null){
+          settings = new AdventureSettings();
+          Session.session.adventureSettings = settings;
+        }
+
+        settings.extra = extra;
+
+        Session.OnlineAdventure();
+        break;
+    }
   }
 
   public void PeerConnected(int id){

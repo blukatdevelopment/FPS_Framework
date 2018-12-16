@@ -340,17 +340,36 @@ public class Session : Node {
       success = false;
     }
 
-    RpcId(peerId, nameof(RemoteAuthResponse), success, mode);
+    string extra = GetGamemodeAuthExtra();
+
+    RpcId(peerId, nameof(RemoteAuthResponse), success, mode, extra);
+  }
+
+  public string GetGamemodeAuthExtra(){
+    Gamemodes mode = GetGamemode();
+
+    switch(mode){
+      case Gamemodes.Arena:
+        return "";
+        break;
+      case Gamemodes.Adventure:
+        return "Placeholder adventure extra.";
+        break;
+    }
+    return "";
   }
 
   [Remote]
-  public void RemoteAuthResponse(bool success, Gamemodes mode){
+  public void RemoteAuthResponse(bool success, Gamemodes mode, string extra){
     
     if(!success){
       GD.Print("RemoteAuthResponse: Unsuccessful");
       ChangeMenu(Menu.Menus.Main);
       return;
     }
+
+    GD.Print("RemoteAuthResponse: -mode " + mode);
+    GD.Print("RemoteAuthResponse: -extra " + extra);
 
     LobbyMenu menu = activeMenu as LobbyMenu;
 
@@ -360,7 +379,7 @@ public class Session : Node {
       return;
     }
 
-    menu.ConnectedLobbyInit();
+    menu.ConnectedLobbyInit(mode, extra);
   }
 
 }
