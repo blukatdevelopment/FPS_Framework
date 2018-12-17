@@ -108,6 +108,7 @@
     <Compile Include="Items\HealthAid.cs" />
     <Compile Include="Arena\Arena.cs" />
     <Compile Include="Arena\ArenaSettings.cs" />
+    <Compile Include="Adventure\AdventureExtraData.cs" />
     <Compile Include="Adventure\AdventureSettings.cs" />
     <Compile Include="Adventure\AdventureTest.cs" />
     <Compile Include="Adventure\Overworld.cs" />

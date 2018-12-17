@@ -340,12 +340,12 @@ public class Session : Node {
       success = false;
     }
 
-    string extra = GetGamemodeAuthExtra();
+    string extra = GetGamemodeAuthExtra(name);
 
     RpcId(peerId, nameof(RemoteAuthResponse), success, mode, extra);
   }
 
-  public string GetGamemodeAuthExtra(){
+  public string GetGamemodeAuthExtra(string name){
     Gamemodes mode = GetGamemode();
 
     switch(mode){
@@ -353,7 +353,7 @@ public class Session : Node {
         return "";
         break;
       case Gamemodes.Adventure:
-        return "Placeholder adventure extra.";
+        return adventure.GetGamemodeAuthExtra(name);
         break;
     }
     return "";

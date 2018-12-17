@@ -607,4 +607,16 @@ public class Overworld : Spatial {
   	return "Take a look around.";
   }
 
+  
+  public string GetGamemodeAuthExtra(string name){
+  	GD.Print("Overworld.GetGamemodeAuthExtra: -name " + name);
+
+  	// TODO: put logic here instead of hardcoding
+  	AdventureExtraData dat = new AdventureExtraData();
+  	dat.startingCell = new Vector2(0, 0);
+  	dat.actorId = 1;
+
+  	return dat.ToJson();
+  }
+
 }
