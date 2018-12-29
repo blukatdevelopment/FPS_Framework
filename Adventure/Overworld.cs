@@ -26,6 +26,8 @@ public class Overworld : Spatial {
 	public System.Collections.Generic.Dictionary<int, TerrainCellData> cellsData;
 	public System.Collections.Generic.Dictionary<int, ItemData> itemsData;
 	public System.Collections.Generic.Dictionary<int, ActorData> actorsData;
+
+	public System.Collections.Generic.Dictionary<string, int> players;
 	
 	public bool paused = false;
 
@@ -34,13 +36,14 @@ public class Overworld : Spatial {
 	public const int CellSize = 50; // x, y, z length in TerrainBlocks.
 	public const int DefaultTreadmillRadius = 1;
 
-	public int nextActorId, nextItemId; // auto-incremented ids.
+	public int nextActorId, nextItemId, nextPlayerId; // auto-incremented ids.
 
 	public bool netReady = false;
 
 	public Overworld(){
 		nextActorId = 1;
 		nextItemId = 1;
+		nextPlayerId = 1;
 
 		treadmills = new List<Treadmill>();
 		actors = new System.Collections.Generic.Dictionary<int, Actor>();
@@ -51,6 +54,8 @@ public class Overworld : Spatial {
 		actorsData = new System.Collections.Generic.Dictionary<int, ActorData>();
 		cellsData = new System.Collections.Generic.Dictionary<int, TerrainCellData>();
 		itemsData = new System.Collections.Generic.Dictionary<int, ItemData>();
+
+		players = new System.Collections.Generic.Dictionary<string, int>();
 
 		Name = "Adventure";
 		if(Session.IsServer()){
@@ -66,6 +71,7 @@ public class Overworld : Spatial {
 
 	public void InitServer(){
 		GD.Print("Init adventure server");
+		InitWorld();
 		netReady = true;
 	}
 
@@ -148,6 +154,8 @@ public class Overworld : Spatial {
 		dat.id = NextActorId();
 		dat.healthMax = 100;
 		dat.health = 100;
+
+		dat.pos = new Vector3(0, 10, 0);
 
 		return dat;
 	}
@@ -607,16 +615,64 @@ public class Overworld : Spatial {
   	return "Take a look around.";
   }
 
-  
   public string GetGamemodeAuthExtra(string name){
   	GD.Print("Overworld.GetGamemodeAuthExtra: -name " + name);
 
   	// TODO: put logic here instead of hardcoding
   	AdventureExtraData dat = new AdventureExtraData();
   	dat.startingCell = new Vector2(0, 0);
-  	dat.actorId = 1;
+  	int playerId = GetPlayerId(name);
+  	dat.actorId = GetActorIdByPlayerId(playerId);
 
   	return dat.ToJson();
+  }
+
+  // Fetch or create player id.
+  public int GetPlayerId(string name){
+  	if(players.ContainsKey(name)){
+  		return players[name];
+  	}
+  	return CreatePlayerId(name);
+  }
+
+  public int CreatePlayerId(string name){
+  	int playerId = nextPlayerId;
+  	players.Add(name, playerId);
+  	nextPlayerId++;
+  	return playerId;
+  }
+
+  // Fetch or create actor for given player Id.
+  public int GetActorIdByPlayerId(int playerId){
+  	foreach(int key in actors.Keys){
+  		Actor actor = actors[key];
+  		if(actor.playerId == playerId){
+  			return actor.id;
+  		}
+  		if(actor.playerId == -1){
+  			actor.playerId = playerId;
+  			GD.Print("Got existing actor.");
+  			return actor.id;
+  		}
+  	}
+
+  	foreach(int key in actorsData.Keys){
+  		ActorData dat = actorsData[key];
+  		if(dat.playerId == playerId){
+  			return dat.id;
+  		}
+  		if(dat.playerId == -1){
+  			dat.playerId = playerId;
+  			GD.Print("Got existing actorData.");
+  			return dat.id;
+  		}
+  	}
+
+  	GD.Print("Created new actor.");
+  	ActorData actorData = CreateActor();
+  	actorsData.Add(actorData.id, actorData);
+
+  	return actorData.id;
   }
 
 }

@@ -13,6 +13,7 @@ public class ActorData {
 	public int id, health, healthMax;
 	public Vector3 pos, rot;
 	public Inventory inventory;
+	public int playerId;
 
 	// Extra data
 	public System.Collections.Generic.Dictionary<string, string> extra;
@@ -32,7 +33,7 @@ public class ActorData {
 		int z = (int)pos.z;
 
 		string ret = "Actor[" + id + "]:\n";
-		
+		ret += "\tplayerId:" + playerId + "\n";
 		ret += "\tname: " + name + "\n";
 		ret += "\tbrain: " + brain + "\n";
 		ret += "\tPos: [" + x + "," + y + "," + z + "] \n";

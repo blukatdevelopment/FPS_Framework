@@ -52,6 +52,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
   private float HandPosY = 0;
   private float HandPosZ = -1.5f;
 
+  public int playerId;
   public int id;
   public string name;
 
@@ -66,6 +67,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     inventory = new Inventory();
     InitHand();
     id = -1;
+    playerId = -1;
   }
 
   public Actor(Brains b){
@@ -75,6 +77,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     inventory = new Inventory();
     InitHand();
     id = -1;
+    playerId = -1;
   }
 
   public void InitBrain(Brains b){
@@ -152,6 +155,7 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     data.healthMax = healthMax;
     data.brain = brainType;
     data.id = id;
+    data.playerId = playerId;
     data.name = name;
     data.inventory = inventory;
     
