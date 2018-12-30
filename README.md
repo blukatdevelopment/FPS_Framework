@@ -1,13 +1,40 @@
-# FPS_Project
+# FPS_Framework
 
-FPS_Project is exactly what the name implies. The intent is to create a first-person multiplayer game
-with which to experiment. An MIT license will ensure that others curious about making their own FPS can
-use this project as a starting point or a code reference. As this project matures, a thought of selling
-a polished deliverable as a product will be considered. The game engine used will be Godot 3.0 with C# 
-as the scripting language of choice.
+As the title states, this is a framework for first person shooter games. 
+Ideally, a developer should be able to take a release of this framework and
+expand upon it by adding game-specific tweaks, scripts, and assets. With an
+MIT license for both this framework and the engine it relies upon, the hope is
+to provide a FOSS starting point for indie devs, and to promote linux gaming.
 
-This project is a departure from a [previous project](https://github.com/justi1jc/FPS), which was an attempt
-to recreate common FPS game mechanics using Unity3d.
+What this framework **is**:
+- A collection of Base Classes for in-game items, Actors, Terrain
+- Session management for 
+- Netcode
+- FPS Arena
+- Openworld FPS sandbox
+
+What this framework **isn't**:
+- A broad library of quality assets
+- A finished game filled with content
+
+## History 
+
+This project is the latest evolution of a [previous project](https://github.com/justi1jc/FPS), which aimed to
+recreate common FPS game mechanics using Unity3D. Originally the idea was to switch out Unity3D for Godot
+because it was FOSS and had permissive licenses. The idea was to replicate the functionality of the other, 
+albeit with an MIT license so that the project could be used as a starting point for others(including myself).
+
+After putting some serious time into developing the game, I noticed I was putting an inordinate amount of time into
+the functionality under the dash, and not spending any time polishing the look and feel of the game. 
+I've since come to realize that what I was intending to work on was not a finished game, but a framework for one.
+A finished game would offer artistic content (such as a rocket launcher that fires potatos), whereas my concern
+with this project is to tackle the technical problems (such as providing a projectile weapon and explosions).
+
+At this point in time, the plan is to work iteratively with the following process:
+1. Reach significant milestone with this framework.
+2. Develop small game using the framework.
+3. Apply lessons learned to improve framework.
+4. Return to step 1.
 
 # Development 
 
