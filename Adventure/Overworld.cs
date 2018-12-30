@@ -10,6 +10,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 public class Overworld : Spatial {
 	public List<Treadmill> treadmills;
@@ -39,8 +40,11 @@ public class Overworld : Spatial {
 	public int nextActorId, nextItemId, nextPlayerId; // auto-incremented ids.
 
 	public bool netReady = false;
+	public int clientActorId = -1;
 
 	public Overworld(){
+
+		Session.session.AddChild(this);
 		nextActorId = 1;
 		nextItemId = 1;
 		nextPlayerId = 1;
@@ -77,6 +81,16 @@ public class Overworld : Spatial {
 
 	public void InitClient(){
 		GD.Print("Init adventure client");
+		string json = Session.session.adventureSettings.extra;
+		AdventureExtraData extra = AdventureExtraData.FromJson(json);
+		
+		RequestWorld(extra.startingCell);
+	}
+
+	public void RequestWorld(Vector2 startingCell){
+		GD.Print("RequestWorld TODO:" + startingCell);
+		int peerId = Session.session.netSes.selfPeerId;
+		RpcId(1, nameof(NetRequestCell), peerId, startingCell.x, startingCell.y);
 	}
 
 	public override void _Process(float delta){
@@ -214,7 +228,6 @@ public class Overworld : Spatial {
 	}
 
 	public void HandleWallsOnCellRequest(Vector2 coords){
-		
 		if(invisibleWalls.ContainsKey(coords)){
 			BreakWall(coords);
 		}
@@ -291,59 +304,6 @@ public class Overworld : Spatial {
 	public static float GetCellScale(){
 			return CellSize * BaseBlockSize().x;
 	}
-
-	public List<ActorData> ActorsDataAtCoords(Vector2 coords){
-		List<ActorData> ret = new List<ActorData>();
-		float scale = GetCellScale();
-		foreach(int id in actorsData.Keys){
-			ActorData actorData = actorsData[id];
-			Vector2 actualCoords = Util.CoordsFromPosition(actorData.pos, scale);
-			if(coords == actualCoords){
-				ret.Add(actorData);
-			}
-		}
-		return ret;
-	}
-
-	public List<Actor> ActorsAtCoords(Vector2 coords){
-		List<Actor> ret = new List<Actor>();
-		float scale = GetCellScale();
-		foreach(int id in actors.Keys){
-			Actor actor = actors[id];
-			Vector2 actualCoords = Util.CoordsFromPosition(actor.Translation, scale);
-			if(coords == actualCoords){
-				ret.Add(actor);
-			}
-		}
-		return ret;
-	}
-
-	public List<ItemData> ItemDataAtCoords(Vector2 coords){
-		List<ItemData> ret = new List<ItemData>();
-		float scale = GetCellScale();
-		foreach(int id in itemsData.Keys){
-			ItemData itemData = itemsData[id];
-			Vector2 actualCoords = Util.CoordsFromPosition(itemData.pos, scale);
-			GD.Print("Item " + id + " at " + actualCoords + ", " + itemData.pos );
-			if(coords == actualCoords){
-				ret.Add(itemData);
-			}
-		}
-		return ret;
-	}	
-
-	public List<Item> ItemsAtCoords(Vector2 coords){
-		List<Item> ret = new List<Item>();
-		float scale = GetCellScale();
-		foreach(int id in items.Keys){
-			Item item = items[id];
-			Vector2 actualCoords = Util.CoordsFromPosition(item.Translation, scale);
-			if(coords == actualCoords){
-				ret.Add(item);
-			}
-		}
-		return ret;
-	}	
 
 	// Size of each block used in gridmaps
 	public static Vector3 BaseBlockSize(){
@@ -430,10 +390,6 @@ public class Overworld : Spatial {
 		}
 
 		return -1;
-	}
-
-	public bool ActorExists(int id){
-		return actors.ContainsKey(id) || actorsData.ContainsKey(id);
 	}
 
 	public Actor RenderActor(int id){
@@ -582,6 +538,181 @@ public class Overworld : Spatial {
 	}
 
 	//############################################################################
+	//#								Entity queries																             #
+	//############################################################################
+
+	public bool ActorExists(int id){
+		return actors.ContainsKey(id) || actorsData.ContainsKey(id);
+	}
+
+	// Fetch or create actor for given player Id.
+  public int GetActorIdByPlayerId(int playerId){
+  	foreach(int key in actors.Keys){
+  		Actor actor = actors[key];
+  		if(actor.playerId == playerId){
+  			return actor.id;
+  		}
+  		if(actor.playerId == -1){
+  			actor.playerId = playerId;
+  			GD.Print("Got existing actor.");
+  			return actor.id;
+  		}
+  	}
+
+  	foreach(int key in actorsData.Keys){
+  		ActorData dat = actorsData[key];
+  		if(dat.playerId == playerId){
+  			return dat.id;
+  		}
+  		if(dat.playerId == -1){
+  			dat.playerId = playerId;
+  			GD.Print("Got existing actorData.");
+  			return dat.id;
+  		}
+  	}
+
+  	GD.Print("Created new actor.");
+  	ActorData actorData = CreateActor();
+  	actorsData.Add(actorData.id, actorData);
+
+  	return actorData.id;
+  }
+
+  // Combines ActorData and data from Actor at coords
+  public List<ActorData> AllActorsDataAtCoords(Vector2 coords){
+  	List<ActorData> data = ActorsDataAtCoords(coords);
+  	List<Actor> actorsAtCoords = ActorsAtCoords(coords);
+  	data.AddRange(Actor.GetDataList(actorsAtCoords));
+  	return data;
+  }
+
+  public List<ItemData> AllItemDataAtCoords(Vector2 coords){
+  	List<ItemData> data = ItemDataAtCoords(coords);
+  	List<Item> itemsAtCoords = ItemsAtCoords(coords);
+  	data.AddRange(Item.GetDataList(itemsAtCoords));
+  	return data;
+  }
+
+	public List<ActorData> ActorsDataAtCoords(Vector2 coords){
+		List<ActorData> ret = new List<ActorData>();
+		float scale = GetCellScale();
+		foreach(int id in actorsData.Keys){
+			ActorData actorData = actorsData[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(actorData.pos, scale);
+			if(coords == actualCoords){
+				ret.Add(actorData);
+			}
+		}
+		return ret;
+	}
+
+	public List<Actor> ActorsAtCoords(Vector2 coords){
+		List<Actor> ret = new List<Actor>();
+		float scale = GetCellScale();
+		foreach(int id in actors.Keys){
+			Actor actor = actors[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(actor.Translation, scale);
+			if(coords == actualCoords){
+				ret.Add(actor);
+			}
+		}
+		return ret;
+	}
+
+	public List<ItemData> ItemDataAtCoords(Vector2 coords){
+		List<ItemData> ret = new List<ItemData>();
+		float scale = GetCellScale();
+		foreach(int id in itemsData.Keys){
+			ItemData itemData = itemsData[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(itemData.pos, scale);
+			GD.Print("Item " + id + " at " + actualCoords + ", " + itemData.pos );
+			if(coords == actualCoords){
+				ret.Add(itemData);
+			}
+		}
+		return ret;
+	}	
+
+	public List<Item> ItemsAtCoords(Vector2 coords){
+		List<Item> ret = new List<Item>();
+		float scale = GetCellScale();
+		foreach(int id in items.Keys){
+			Item item = items[id];
+			Vector2 actualCoords = Util.CoordsFromPosition(item.Translation, scale);
+			if(coords == actualCoords){
+				ret.Add(item);
+			}
+		}
+		return ret;
+	}
+
+	//############################################################################
+	//#								 Cell requests																						 #
+	//############################################################################
+
+	[Remote]
+	public void NetRequestCell(int peerId, int x, int y){
+		GD.Print("Negative two");
+		Vector2 coords = new Vector2(x, y);
+		int cellIndex = Util.CoordsToCellIndex(coords, WorldHeight);
+		GD.Print("Negative one");
+
+		if(cellIndex == -1){
+			GD.Print("zero");
+			return; //invalid cell requested
+		}
+		else if(cells.ContainsKey(cellIndex)){
+			GD.Print("one");
+			TerrainCell tc = cells[cellIndex];
+			TerrainCellData tcd = tc.GetData();
+			SendCellData(peerId, tcd);
+		}
+		else if(cellsData.ContainsKey(cellIndex)){
+			GD.Print("two " + cellsData[cellIndex].ToString());
+			SendCellData(peerId, cellsData[cellIndex]);
+		}
+		else {
+			GD.Print("three");
+			AdventureDb db = new AdventureDb(saveFile);
+			TerrainCellData tcd = db.LoadCell(cellIndex);
+			cellsData.Add(cellIndex, tcd);
+			SendCellData(peerId, tcd);
+		}
+		SendItemBatch(peerId, AllItemDataAtCoords(coords));
+
+		SendActorBatch(peerId, AllActorsDataAtCoords(coords));
+	}
+
+	public void SendCellData(int peerId, TerrainCellData dat){
+		GD.Print("Sending cell " + dat.ToString());
+		//string json = JsonConvert.SerializeObject(this, Formatting.Indented);
+	}
+
+	public void SendItemBatch(int peerId, List<ItemData> batch){
+		GD.Print("Sending  " + batch.Count + " items");
+	}
+
+	public void SendActorBatch(int peerId, List<ActorData> batch){
+		GD.Print("Sending " + batch.Count + " actors");
+	}
+
+	// Fulfill request on client side.
+	[Remote]
+	public void ReceiveCellData(string json){
+
+	}
+
+	[Remote]
+	public void ReceiveActorsData(string json){
+
+	}
+
+	[Remote]
+	public void ReceiveItemsData(string json){
+
+	}
+
+	//############################################################################
 	//#								Session interactions																			 #
 	//############################################################################
 
@@ -624,6 +755,11 @@ public class Overworld : Spatial {
   	int playerId = GetPlayerId(name);
   	dat.actorId = GetActorIdByPlayerId(playerId);
 
+  	if(dat == null){
+  		GD.Print("GetGamemodeAuthExtra " + name + " dat null");
+  		return "null";
+  	}
+
   	return dat.ToJson();
   }
 
@@ -640,39 +776,6 @@ public class Overworld : Spatial {
   	players.Add(name, playerId);
   	nextPlayerId++;
   	return playerId;
-  }
-
-  // Fetch or create actor for given player Id.
-  public int GetActorIdByPlayerId(int playerId){
-  	foreach(int key in actors.Keys){
-  		Actor actor = actors[key];
-  		if(actor.playerId == playerId){
-  			return actor.id;
-  		}
-  		if(actor.playerId == -1){
-  			actor.playerId = playerId;
-  			GD.Print("Got existing actor.");
-  			return actor.id;
-  		}
-  	}
-
-  	foreach(int key in actorsData.Keys){
-  		ActorData dat = actorsData[key];
-  		if(dat.playerId == playerId){
-  			return dat.id;
-  		}
-  		if(dat.playerId == -1){
-  			dat.playerId = playerId;
-  			GD.Print("Got existing actorData.");
-  			return dat.id;
-  		}
-  	}
-
-  	GD.Print("Created new actor.");
-  	ActorData actorData = CreateActor();
-  	actorsData.Add(actorData.id, actorData);
-
-  	return actorData.id;
   }
 
 }

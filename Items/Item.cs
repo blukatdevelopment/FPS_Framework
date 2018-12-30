@@ -505,6 +505,16 @@ public class Item : RigidBody, IHasInfo, IUse, IEquip, ICollide, IInteract{
     return ret;
   }
 
+  public static List<ItemData> GetDataList(List<Item> items){
+    List<ItemData> data = new List<ItemData>();
+
+    foreach(Item item in items){
+      data.Add(item.GetData());
+    }
+
+    return data;
+  }
+
   public static int TotalWeight(List<ItemData> items){
     int total = 0;
     

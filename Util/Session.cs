@@ -216,13 +216,11 @@ public class Session : Node {
   public static void LocalAdventure(){
     ChangeMenu(Menu.Menus.None);
     Session.session.adventure = new Overworld();
-    Session.session.AddChild(Session.session.adventure);
   }
 
   public static void OnlineAdventure(){
     ChangeMenu(Menu.Menus.None);
     Session.session.adventure = new Overworld();
-    Session.session.AddChild(Session.session.adventure);
   }
 
   public static void OnlineArena(){

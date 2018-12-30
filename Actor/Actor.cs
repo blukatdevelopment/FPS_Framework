@@ -837,6 +837,16 @@ public class Actor : KinematicBody, IReceiveDamage, IUse, IHasItem, IHasInfo, IH
     paused = false;
   }
   
+  public static List<ActorData> GetDataList(List<Actor> actors){
+    List<ActorData> data = new List<ActorData>();
+    
+    foreach(Actor actor in actors){
+      data.Add(actor.GetData());
+    }
+
+    return data;
+  }
+
   public static Actor Factory(ActorData data){
     return Factory(data.brain, data);
   }
