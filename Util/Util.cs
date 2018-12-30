@@ -152,7 +152,36 @@ public class Util{
     return true;
   }
 
+  // Flatten a Vector3 into an int index
+  // Assumes valid coords between [0,0,0] and [gridSize-1, gridSize-1, gridSize-1]
+  public static int CoordsTo3DIndex(Vector3 coords, int gridSize){
+    int x = (int)coords.x;
+    int y = (int)coords.y;
+    int z = (int)coords.z;
+    if(x < 0 || y < 0 || z < 0){
+      return -1;
+    }
+
+    if(y >= gridSize || x >= gridSize || x >= gridSize){
+      return -1;
+    }
+
+    int xIndex = x;
+    int yIndex = y * gridSize;
+    int zIndex = z * gridSize * gridSize;
+    return xIndex + yIndex + zIndex;
+  }
+
+  public static Vector3 IndexTo3DCoords(int index, int gridSize){
+    int z = index / (gridSize * gridSize);
+    index -= z * (gridSize * gridSize);
+    int y = index / gridSize;
+    int x = index % gridSize;
+    return new Vector3(x, y, z);
+  }
+
   // Flatten a Vector2 into an int index
+  // Assumes valid coords between [0, 0, 0] and [gridSize-1, gridSize-1]
   public static int CoordsToCellIndex(Vector2 coords, int gridSize){
     int x = (int)coords.x;
     int y = (int)coords.y;

@@ -296,7 +296,7 @@ public class Overworld : Spatial {
 	}
 
 	// Size of cell in blocks
-	public int GetCellSize(){
+	public static int GetCellSize(){
 		return CellSize;
 	}
  

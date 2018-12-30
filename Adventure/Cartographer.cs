@@ -21,7 +21,7 @@ public class Cartographer {
 		this.world = world;
 		worldWidth = world.GetWorldWidth();
 		worldHeight = world.GetWorldWidth();
-		cellSize = world.GetCellSize();
+		cellSize = Overworld.GetCellSize();
 		nextItemId = 0;
 		nextActorId = 0;
 		GenerateTerrain();
@@ -70,15 +70,15 @@ public class Cartographer {
 				block.gpx = i;
 				block.gpz = j;
 				block.blockId = TerrainBlock.Blocks.Dirt;
-				data.blocks.Add(block);
+				data.StoreBlock(block);
 			}
 		}
 
 		// Add blocks to each corner
-		data.blocks.Add(new TerrainBlock(new Vector3(1, 1, 1)));
-		data.blocks.Add(new TerrainBlock(new Vector3(cellSize-2, 1, 1)));
-		data.blocks.Add(new TerrainBlock(new Vector3(1, 1, cellSize-2)));
-		data.blocks.Add(new TerrainBlock(new Vector3(cellSize-2, 1, cellSize-2)));
+		data.StoreBlock(new TerrainBlock(new Vector3(1, 1, 1)));
+		data.StoreBlock(new TerrainBlock(new Vector3(cellSize-2, 1, 1)));
+		data.StoreBlock(new TerrainBlock(new Vector3(1, 1, cellSize-2)));
+		data.StoreBlock(new TerrainBlock(new Vector3(cellSize-2, 1, cellSize-2)));
 		
 		return data;
 	}

@@ -48,15 +48,15 @@ public class TerrainCell : GridMap{
 		data.xCoord = (int)coords.x;
 		data.yCoord = (int)coords.y;
 		data.id = id;
-		data.blocks = blockData;
+		data.StoreBlocks(blockData);
 		return data;
 	}
 	
 	public void LoadData(TerrainCellData data){
 		coords = new Vector2(data.xCoord, data.yCoord);
 		id = data.id;
-		blockData = data.blocks;
-		foreach(TerrainBlock block in data.blocks){
+		blockData = data.GetBlocks();
+		foreach(TerrainBlock block in blockData){
 			int x = block.gpx;
 			int y = block.gpy;
 			int z = block.gpz;
