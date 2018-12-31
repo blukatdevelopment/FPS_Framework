@@ -3,51 +3,50 @@ using System;
 
 public class Menu{
   public enum Controls{ Button, TextBox }; 
-<<<<<<< HEAD
-  public enum Menus{ None, Main, Multiplayer, Lobby, Pause, HUD};
-=======
-  public enum Menus{ // Parented by Session.session
+  public enum Menus{
     None, 
     Main,
-    Singleplayer,
-    Multiplayer, 
+    Local,
+    Online, 
     Settings,
     Lobby, 
     Pause, 
     HUD, 
-    Inventory
+    Inventory,
+    LoadAdventure
   };
 
-  public enum SubMenus{ // Parented by menu
+  public enum SubMenus{
     None,
-    ArenaConfig
-  }
->>>>>>> develop
-  
-  /* Returns instances of desired control. */
-  public static Control ControlFactory(Controls control){
-    switch(control){
-      case Controls.Button: return Button(); break;
-      case Controls.TextBox: return TextBox(); break;
-    }
-    return null;
+    ArenaConfig,
+    AdventureConfig
   }
   
-  public static Control Button(string text = "", Action onClick = null){
-    Node buttonInstance = Session.Instance("res://Scenes/Prefabs/Controls/Button.tscn");
-    Button button = (Button)buttonInstance;
+  public static Button Button(string text = "", Action onClick = null){
+    Button button = new Button();
+    
     if(text != ""){ button.SetText(text); }
     if(onClick != null){ button.SetOnClick(onClick); }
-    return (Control)buttonInstance;
+    
+    return button;
   }
   
-  public static Control TextBox(string val = ""){
-    Node textBoxInstance = Session.Instance("res://Scenes/Prefabs/Controls/TextBox.tscn");
-    if(val != ""){
-      TextEdit textBox = (Godot.TextEdit)textBoxInstance;
-      textBox.SetText(val);
-    }
-    return (Control)textBoxInstance;
+  public static TextEdit TextBox(string val = "", bool readOnly = true){    
+    TextEdit textBox = new TextEdit();
+    textBox.SetText(val);
+    textBox.Readonly = readOnly;
+  
+    return textBox;
+  }
+
+  public static HSlider HSlider(float min, float max, float val, float step){    
+    HSlider slider = new HSlider();
+    slider.MinValue = min;
+    slider.MaxValue = max;
+    slider.Value = val;
+    slider.Step = step;
+    
+    return slider;
   }
 
   public static Label Label(string text = ""){
@@ -63,13 +62,6 @@ public class Menu{
         Sound.PauseSong();
         return null; 
         break;
-<<<<<<< HEAD
-      case Menus.HUD: ret = HUDMenu(); break;
-      case Menus.Pause: ret = PauseMenu(); break;
-      case Menus.Main: ret = MainMenu(); break;
-      case Menus.Multiplayer: ret = MultiplayerMenu(); break;
-      case Menus.Lobby: ret = LobbyMenu(); break;
-=======
       case Menus.HUD: 
         ret = new HUDMenu(); 
         ret.Name = "Pause";
@@ -82,13 +74,13 @@ public class Menu{
         ret = new MainMenu();
         ret.Name = "Main"; 
         break;
-      case Menus.Singleplayer: 
-        ret = new SingleplayerMenu(); 
-        ret.Name = "Singleplayer";
+      case Menus.Local: 
+        ret = new LocalMenu(); 
+        ret.Name = "Local";
         break;
-      case Menus.Multiplayer: 
-        ret = new MultiplayerMenu(); 
-        ret.Name = "Multiplayer";
+      case Menus.Online: 
+        ret = new OnlineMenu(); 
+        ret.Name = "Online";
         break;
       case Menus.Lobby: 
         ret = new LobbyMenu(); 
@@ -102,56 +94,22 @@ public class Menu{
         ret = new SettingsMenu(); 
         ret.Name = "Settings";
         break;
+      case Menus.LoadAdventure:
+        ret = new LoadAdventureMenu();
+        ret.Name = "LoadAdventure";
+        break;
     }
+    
     Session.session.AddChild(ret);
     IMenu menuInstance = ret as IMenu;
+    
     if(menuInstance != null){
       menuInstance.Init(0, 0, 0, 0); // Assuiming these are not subMenus
->>>>>>> develop
     }
+    
     return ret;
   }
 
-<<<<<<< HEAD
-  public static Node MainMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MainMenu.tscn");
-    MainMenu menu = (MainMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node MultiplayerMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/MultiplayerMenu.tscn");
-    MultiplayerMenu menu = (MultiplayerMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node LobbyMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/LobbyMenu.tscn");
-    LobbyMenu menu = (LobbyMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node PauseMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/PauseMenu.tscn");
-    PauseMenu menu = (PauseMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-  }
-  
-  public static Node HUDMenu(){
-    Node menuInstance = Session.Instance("res://Scenes/Prefabs/Menus/HUDMenu.tscn");
-    HUDMenu menu = (HUDMenu)menuInstance;
-    Session.session.AddChild(menu);
-    menu.Init();
-    return menuInstance;
-=======
   public static Node SubMenuFactory(SubMenus menu){
     Node ret = null;
     switch(menu){
@@ -162,13 +120,17 @@ public class Menu{
         ret = new ArenaConfigMenu();
         ret.Name = "ArenaConfig";
         break;
+      case SubMenus.AdventureConfig:
+        ret = new AdventureConfigMenu();
+        ret.Name = "AdventureConfig";
+        break;
     }
     return ret;
->>>>>>> develop
   }
   
   public static void ScaleControl(Control control, float width, float height, float x, float y){
     if(control == null){ return; }
+    
     control.SetSize(new Vector2(width, height)); 
     control.SetPosition(new Vector2(x, y)); 
   }

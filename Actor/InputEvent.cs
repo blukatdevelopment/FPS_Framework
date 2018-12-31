@@ -23,7 +23,6 @@ public class InputEvent {
   };
   public enum Actions {None, Up, Down};
   public enum Axes {None, Mouse };
-  
   public Buttons button;
   public Actions action;
   public Axes axis;
@@ -50,6 +49,7 @@ public class InputEvent {
     if(this.button == Buttons.None){
       return false;  
     }
+
     return true;
   }
   

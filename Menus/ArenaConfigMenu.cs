@@ -2,19 +2,15 @@ using Godot;
 
 public class ArenaConfigMenu : Container, IMenu {
 	
-	Godot.TextEdit gamemodeLabel;
-	
-	Godot.HSlider botsSlider;
-	Godot.TextEdit botsLabel;
-
-	Godot.HSlider durationSlider;
-	Godot.TextEdit durationLabel;
-	
-	Godot.Button powerupsButton;
-	Godot.Button kitsButton;
-
-	float minX, minY, maxX, maxY; // For scaling
-	ArenaSettings config;
+	public Godot.TextEdit gamemodeLabel;
+	public Godot.HSlider botsSlider;
+	public Godot.TextEdit botsLabel;
+	public Godot.HSlider durationSlider;
+	public Godot.TextEdit durationLabel;
+	public Godot.Button powerupsButton;
+	public Godot.Button kitsButton;
+	public float minX, minY, maxX, maxY;
+	public ArenaSettings config;
 
 
   public void Init(float minX, float minY, float maxX, float maxY){
@@ -22,7 +18,7 @@ public class ArenaConfigMenu : Container, IMenu {
   	this.minY = minY;
   	this.maxX = maxX;
   	this.maxY = maxY;
-  	GD.Print("Init arena config");
+
     InitArenaSettings();
     InitControls();
     ScaleControls();
@@ -54,7 +50,6 @@ public class ArenaConfigMenu : Container, IMenu {
   	gamemodeLabel = (Godot.TextEdit)Menu.TextBox("Arena Config");
     AddChild(gamemodeLabel);
 
-
     botsSlider = Menu.HSlider(0f, 16f, config.bots, 1f);
     AddChild(botsSlider);
     botsSlider.Connect("value_changed", this, nameof(UpdateBots));
@@ -66,7 +61,6 @@ public class ArenaConfigMenu : Container, IMenu {
     durationSlider.Connect("value_changed", this, nameof(UpdateDuration));
     durationLabel = Menu.TextBox("Duration: " + config.duration + " minutes");
     AddChild(durationLabel);
-
 
     powerupsButton = Menu.Button("Spawn powerups: " + config.usePowerups, TogglePowerups);
     AddChild(powerupsButton);
@@ -118,5 +112,4 @@ public class ArenaConfigMenu : Container, IMenu {
   	string str = "Spawn with kits: " + config.useKits;
   	kitsButton.SetText(str);
   }
-	
 }

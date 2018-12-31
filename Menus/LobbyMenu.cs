@@ -5,23 +5,22 @@ using System.Linq;
 using Newtonsoft.Json;
 
 public class LobbyMenu : Container, IMenu {
-  Godot.TextEdit messageBox;
-  Godot.TextEdit composeBox;
-  Godot.Button sendButton;
-  Godot.Button mainMenuButton;
-  Godot.TextEdit playersBox;
-  Godot.Button readyButton;
+  public TextEdit messageBox;
+  public TextEdit composeBox;
+  public Godot.Button sendButton;
+  public Godot.Button mainMenuButton;
+  public TextEdit playersBox;
+  public Godot.Button readyButton;
+  public Godot.Button modeButton;
 
   // Server stuff
-  IMenu arenaConfig;
-  
-
+  public Session.Gamemodes activeMode;
+  public IMenu arenaConfig;
+  public IMenu adventureConfig;
   private bool countDownActive = false;
   private float timer = 0f;
-  private int countDown = 10;
+  private int countDown = 3;
   private bool isReady = false;
-
-
   private string myName;
   private List<string> messages;
 
@@ -32,17 +31,18 @@ public class LobbyMenu : Container, IMenu {
   public override void _Process(float delta){
     if(countDownActive){
       CountDown(delta);
-    }
-    
+    } 
   }
 
   void CountDown(float delta){
     timer += delta;
+    
     if(timer > 1f){
       countDown--;
       timer = 0;
       BuildPlayers();
     }
+    
     if(countDown < 1){
       countDownActive = false;
       StartGame();
@@ -57,19 +57,18 @@ public class LobbyMenu : Container, IMenu {
     else{
       InitControls();
     } 
+    
     InitNetwork();
+    
     if(netSes.isServer){
       ScaleServerControls();
     }
     else{
       ScaleControls();
     }
-    
   }
   
-  public void Resize(float minX, float minY, float maxX, float maxY){
-
-  }
+  public void Resize(float minX, float minY, float maxX, float maxY){}
 
   public bool IsSubMenu(){
     return false;
@@ -102,10 +101,11 @@ public class LobbyMenu : Container, IMenu {
   }
 
   void InitServerControls(){
+    activeMode = Session.Gamemodes.Arena;
+
     messageBox = (Godot.TextEdit)Menu.TextBox();
     messageBox.Readonly = true;
-    AddChild(messageBox);
-    
+    AddChild(messageBox); 
     
     mainMenuButton = (Godot.Button)Menu.Button("Main Menu", ReturnToMainMenu);
     AddChild(mainMenuButton);
@@ -114,9 +114,58 @@ public class LobbyMenu : Container, IMenu {
     playersBox.Readonly = true;
     AddChild(playersBox);
 
-    Node arenaConfigNode = Menu.SubMenuFactory(Menu.SubMenus.ArenaConfig);
-    AddChild(arenaConfigNode);
-    arenaConfig = arenaConfigNode as IMenu;
+    modeButton = Menu.Button("Gamemode: " + activeMode, ToggleMode);
+    AddChild(modeButton);
+
+    arenaConfig = Menu.SubMenuFactory(Menu.SubMenus.ArenaConfig) as IMenu;
+    adventureConfig = Menu.SubMenuFactory(Menu.SubMenus.AdventureConfig) as IMenu;
+
+    SetMenu(activeMode);
+  }
+
+  public void SetMenu(Session.Gamemodes mode){
+    switch(activeMode){
+      case Session.Gamemodes.None:
+        break;
+      case Session.Gamemodes.Arena:
+        RemoveChild(arenaConfig as Node);
+        break;
+      case Session.Gamemodes.Adventure:
+        RemoveChild(adventureConfig as Node);
+        break; 
+    }
+
+    activeMode = mode;
+
+    switch(activeMode){
+      case Session.Gamemodes.None:
+        break;
+      case Session.Gamemodes.Arena:
+        AddChild(arenaConfig as Node);
+        break;
+      case Session.Gamemodes.Adventure:
+        AddChild(adventureConfig as Node);
+        break;
+    }
+  }
+
+  public void ToggleMode(){
+    if(activeMode == Session.Gamemodes.Arena){
+      SetMenu(Session.Gamemodes.Adventure);
+    }
+    else{
+      SetMenu(Session.Gamemodes.Arena);
+    }
+
+    modeButton.SetText("Gamemode: " + activeMode);
+    Rpc(nameof(ChangeMode), activeMode);
+  }
+
+
+  [Remote]
+  public void ChangeMode(Session.Gamemodes mode){
+    activeMode = mode;
+    GD.Print("Mode changed to " + mode);
   }
 
   void InitNetwork(){
@@ -141,6 +190,7 @@ public class LobbyMenu : Container, IMenu {
       else{
         netSes.UpdateClient(obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected));
       }
+
       BuildPlayers();
       return;
     }
@@ -160,6 +210,7 @@ public class LobbyMenu : Container, IMenu {
     else{
       netSes.InitClient(address: netSes.initAddress, obj: this, success: nameof(ConnectionSucceeded), fail: nameof(ConnectionFailed), peerJoin : nameof(PeerConnected),  port: netSes.initPort);
     }
+
     BuildPlayers();
   }
   
@@ -186,10 +237,12 @@ public class LobbyMenu : Container, IMenu {
     float hu = height/10;
     
     Menu.ScaleControl(mainMenuButton, 2 * wu, hu, 0, height - hu);
+    Menu.ScaleControl(modeButton, 2 * wu, hu, 0, height - 2 * hu);
     Menu.ScaleControl(messageBox, 6 * wu, hu, 3 * wu, 0);
     Menu.ScaleControl(playersBox, 2 * wu, 8 * hu, 0, 0);
 
     arenaConfig.Init(2 * wu, hu, width, height);
+    adventureConfig.Init(2 * wu, hu, width, height);
   }
   
   public void ReturnToMainMenu(){
@@ -207,6 +260,7 @@ public class LobbyMenu : Container, IMenu {
   }
   
   public void PlayerJoined(int id){
+    RpcId(id , nameof(ChangeMode), activeMode);
   }
 
   [Remote]
@@ -215,7 +269,6 @@ public class LobbyMenu : Container, IMenu {
   }
 
   public void PlayerQuit(int id){
-    //ReceiveMessage("Player " + id + " quit.");
     RemovePlayer(id);
     Rpc(nameof(RemovePlayer), id);
   }
@@ -260,7 +313,6 @@ public class LobbyMenu : Container, IMenu {
     }
   }
 
-
   public void ConnectionFailed(){
     ReceiveMessage("Connection failed. :(");
   }
@@ -295,10 +347,12 @@ public class LobbyMenu : Container, IMenu {
     }
 
     NetworkSession netSes = Session.session.netSes;
+    
     if(netSes == null){ 
       GD.Print("AddPlayer: No network session detected");
       return; 
     }
+
     if(dat.id == netSes.selfPeerId){
       myName = dat.name;
     }
@@ -306,7 +360,6 @@ public class LobbyMenu : Container, IMenu {
     if(!netSes.playerData.ContainsKey(dat.id)){
       netSes.playerData.Add(dat.id, dat);
     }
-    
     
     BuildPlayers();
   }
@@ -366,17 +419,27 @@ public class LobbyMenu : Container, IMenu {
 
   public bool AllPlayersReady(){
     NetworkSession netSes = Session.session.netSes;
+    
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       if(entry.Value.ready == false){
         return false;
       }
     }
+
     return true;
   }
 
   public void StartGame(){
     ResetReady();
-    Session.MultiplayerArena();
+    
+    switch(activeMode){
+      case Session.Gamemodes.Arena:
+        Session.OnlineArena();
+        break;
+      case Session.Gamemodes.Adventure:
+        Session.OnlineAdventure();
+        break;
+    }
   }
 
   void StopCountDown(){
@@ -387,7 +450,7 @@ public class LobbyMenu : Container, IMenu {
   [Remote]
   void StartCountDown(){
     timer = 0f;
-    countDown = 10;
+    countDown = 3;
     countDownActive = true;
     BuildPlayers();
   }
@@ -396,7 +459,6 @@ public class LobbyMenu : Container, IMenu {
   void PrintPlayer(string dat){
     PlayerData playerDat = JsonConvert.DeserializeObject<PlayerData>(dat);
   }
-
 
   void BuildPlayers(){
     NetworkSession netSes = Session.session.netSes;
@@ -411,7 +473,7 @@ public class LobbyMenu : Container, IMenu {
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       names += entry.Value.name + "\n";
     }
+
     playersBox.SetText(names);
-  }
-    
+  }   
 }

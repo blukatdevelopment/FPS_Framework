@@ -1,0 +1,65 @@
+This file contains stories to be used on a Kanban board.
+
+Kanban board procedure:
+Currently the kanban is hosted via Trello (An in-house solution may be considered in the future): https://trello.com/b/lGaz9YsG/kanban
+
+The five columns of the kanban board:
+Not Ready - Blocked by the completion of existing stories.
+Ready - Is not blocked, and is ready to work on.
+In Progress - Is being actively worked on.
+Review - Initial build is complete. Primary testing in progress.
+Done -  Story is available for regression testing and should be archived.
+
+Stories can be shared among the following components.
+Design - Story creation/grooming, planning, communication.
+Creative - Creation of non-programming assets such as music, textures, models, and animations.
+Content - Creation of programming and creative-heavy assets such as speech trees, quests, enemies, items.
+Testing - Create/execute manual test plans and automated tests.
+Interface - Create user interfaces.
+Network - Manage security, create external services, and manage netcode.
+Core - Provide core classes and 
+User experience - Assess the "fun" of existing features, propose alterations/user settings/features to make the game more balanced, cohesive, and "fun".
+AI - Create and maintain any artificial intelligences.
+
+Stories should contain three parts:
+Title- name to be used on Kanban board
+Components- disciplines needed to create this story
+Body- a description, estimate, test plan, and any other info to copy/paste into the body of a story on a kanban.  
+
+
+Title:
+Components:
+Body:
+
+
+Title: Auth MVP
+Components: Core, Networking
+Body:
+Every client should have a username and password when connecting to the server.
+The server should store these (with password hashed) and check them again on
+subsequent login. Failing auth should prevent send the client back to the
+main menu.
+
+Title: client/server overworld MVP
+Components: Core, Networking
+Body: 
+A method should exist to send the terrain, items, and actors contained within
+a cell from the server to client.
+
+Another method should exist for clients to request the data above for a cell.
+
+Instead of reading from disc, clients should request the cell data from the
+server and leave it there. As such, clients should request cells in a 
+
+A third method should exist so that the server can change the brain/type of
+an actor when a client connects and takes over an actor (turning it Remote), 
+or disconnects, abandoning it (turning it to Ai).
+
+When a player's actor dies, they should respawn with a blank inventory at a 
+random spawn point decided by the server.
+
+Title: No lobby multiplayer
+Components: Core, Networking
+Body:
+The overworld server should start the game immediately, and clients should be
+free to connect/disconnect whenever.

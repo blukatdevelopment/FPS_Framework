@@ -11,29 +11,28 @@ public class DeviceManager {
   public enum Devices{MouseAndKeyboard};
   private Devices device;
   private bool mouseActive;
-  private Eyes eyes;
+  private Spatial eyes;
   private float sensitivityX = 0.2f;
   private float sensitivityY = 0.2f;
   
   List<bool> buttonsDown; // Store button states to check for changes.
   Vector2 mouseCur, mouseLast;
   
-  public DeviceManager(Devices device, Eyes eyes = null){
-    //ShowMethods(typeof(Viewport));
+  public DeviceManager(Devices device, Spatial eyes = null){
     this.device = device;
     buttonsDown = new List<bool>();
     mouseActive = false;
     switch(device){
       case Devices.MouseAndKeyboard:
+        Input.SetMouseMode(Input.MouseMode.Captured);
         mouseActive = true;
-        int buttonCount = 70; // TODO: Make this number exact.
+        int buttonCount = 70;
         for(int i = 0; i < buttonCount; i++){ buttonsDown.Add(false); }
       break;  
     }
     this.eyes = eyes;
   }
   
-  /* Returns inputs using device-specific method. */
   public List<InputEvent> GetInputEvents(){
     switch(device){
       case Devices.MouseAndKeyboard: return KeyboardEvents(); break;
@@ -41,17 +40,14 @@ public class DeviceManager {
     return new List<InputEvent>();  
   }
   
-  /* Convenience method for button down events. */
   private InputEvent Down(InputEvent.Buttons button){
       return new InputEvent(button, InputEvent.Actions.Down);
   }
   
-  /* Convenience method for button up events. */
   private InputEvent Up(InputEvent.Buttons button){
       return new InputEvent(button, InputEvent.Actions.Up);
   }
   
-  /* Returns a list of InputEvents for a given key press */
   private List<InputEvent> KeyEvents(int key, int buttonIndex, InputEvent.Buttons button){
     List<InputEvent> ret = new List<InputEvent>();
     
@@ -73,11 +69,9 @@ public class DeviceManager {
     return ret;
   }
   
-  
-  /* Returns input events from MouseAndKeyboard inputs. */
   private List<InputEvent> KeyboardEvents(){
     List<InputEvent> ret = new List<InputEvent>();
-    // TODO: Replace all literals with appropriate constants when their location is known.
+
     ret.AddRange(KeyEvents(87, 0, InputEvent.Buttons.W));
     ret.AddRange(KeyEvents(65, 1, InputEvent.Buttons.A));
     ret.AddRange(KeyEvents(83, 2, InputEvent.Buttons.S));
@@ -95,28 +89,32 @@ public class DeviceManager {
     ret.AddRange(KeyEvents(32, 14, InputEvent.Buttons.Space));
     ret.AddRange(KeyEvents(16777237, 15, InputEvent.Buttons.Shift));
     ret.AddRange(KeyEvents(82, 16, InputEvent.Buttons.R));
-    
+    ret.AddRange(KeyEvents(69, 17, InputEvent.Buttons.E));
     ret.AddRange(MouseEvents());
+
     return ret;
   }
-  
+
   private List<InputEvent> MouseEvents(){
     List<InputEvent> ret = new List<InputEvent>();
+    
     if(eyes != null){
-      mouseCur = eyes.GetMousePosition();
+      mouseCur = Util.GetMousePosition(eyes);
     }
     else{ GD.Print("DeviceManager:Eyes null"); }
+    
     if(mouseLast == null){ mouseLast = mouseCur; }
     else if((mouseLast.x != mouseCur.x) || (mouseLast.y != mouseCur.y)){
       float dx = mouseLast.x - mouseCur.x;
       float dy = mouseLast.y - mouseCur.y;
       dx *= sensitivityX;
       dy *= sensitivityY;
+      
       mouseLast = mouseCur;
       ret.Add(new InputEvent(InputEvent.Axes.Mouse, dx, dy));
     }
+    
     return ret;
   }
-  
   
 }

@@ -6,7 +6,7 @@ using Godot;
 
 public class Projectile : Item {
   int healthDamage = 50;
-  public string sender; // Actor that fired this projectile.
+  public string sender; // Node path for actor that fired this projectile.
   
   [Remote]
   public override void DoOnCollide(object body){
@@ -17,11 +17,11 @@ public class Projectile : Item {
     this.QueueFree();
   }
 
-  // Should only occur once. 
   void GiveDamage(IReceiveDamage receiver){
     if(stopColliding){
       return;
     }
+    
     Damage damage = new Damage();
     damage.health = healthDamage;
     damage.sender = sender;

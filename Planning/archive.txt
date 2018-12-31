@@ -1,0 +1,102 @@
+This file contains an archive of old, completed stores for historical purposes and manual regression testing.
+
+Title: Cartographer
+Components: Core
+Body:
+The cartographer creates an overworld to be used in the adventure mode.
+Minimally-viable product: create flat plain  with some cubes raised.
+
+Title: Overworld(Singleplayer)
+Components: Core
+Body:
+The overworld should handle converting terraincells, items, and actors between
+their rendered and unrendered representations.
+
+Title: Treadmill(Singleplayer)
+Components: Core, Network
+Body:
+A treadmill should track a player as they move across the overworld, 
+requesting and releasing cells as needed.
+
+Title: Auth service
+Components: Network
+Body:
+The auth service should allow users to create accounts and then log into them once globally for all participating servers.
+
+Title: Save/Load options in Adventure mode pause menu
+Components: Interface
+Body:
+In Adventure mode the pause menu should display an option to save or load the
+game. Clicking the load button should lead to the load menu. Clicking the 
+save button should cause the overworld to save to the currently loaded file.
+
+Title: Load option in adventure menu
+Components: Interface
+Body:
+When entering the single player advneture mode menu, the player should be able
+to navigate to the load menu.
+
+Title: Load menu
+Components: Interface, Core
+Body:
+The load menu should check the saves folder and produce a list of .adventure files
+that can be loaded, if any exist.
+Selecting a listed file should load adventure mode using that save file.
+A back button should appear when in adventure mode, leading back to the pause
+menu.
+A main menu button should lead to the main menu.
+
+Title: Select adventure name in adventure menu
+Components: Interface
+Body: 
+As a player starting a new single player adventure game, I should be prompted to
+select an adventure name. I should not be able to progress to start the game 
+until a valid adventure name (one that is not taken and only contains alphanumeric
+characters) is in the field.
+
+Title: Save singleplayer Overworld 
+Components: Core
+Body: 
+Each game save should be an SQLite database file with an extension of .adventure.
+Each entity saved (Actor/Item/TerrainCell) should have one or more normalized
+tables to store data in.
+
+Title: Normalize extra data in actor/item records 
+Components: Core
+Body: 
+ActorData and ItemData should both contain a dictionary<string, string>
+containing scalar(or csv) data that can be used when loading said data.
+
+Title: Load singleplayer Overworld 
+Components: Core
+Body: 
+When loading from a save file, each entity should be loaded into its unrendered
+form in place of using the cartographer to generate a new world.
+
+Title: Construct actor scene tree programmatically
+Components: Core
+Body:
+Currently actors are created using an actor.tscn scene file, which makes customizing them sub-optimal. Construct the Actor and set up its child nodes in order to make this process automated. This way down the road, different materials/models/animations can be loaded on on the fly instead of requiring human help.
+
+Title: Create ToJson and FromJson for ActorData and ItemData
+Components: Core
+Body:
+Convert ItemData and ActorData to and from JSON for net code.
+
+
+Title: Fix arena inventory init
+Components: Core, Network
+Body:
+Arena currently initializes actor inventory with a delay after spawning them.
+Ideally the arena should set up an ActorData pre-equipped.
+
+Title: Convert extra tables to a JSON field
+Components: Core
+Body:
+Replace the items_extra and actors_extra tables with an
+additional field in items and actors to speed up saving/loading.
+
+Title: Invisible walls in overworld
+Components: Core
+Body:
+Invisible walls should prevent items and NPCs from leaving the rendered map.

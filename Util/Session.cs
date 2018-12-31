@@ -7,7 +7,6 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 
 
@@ -15,40 +14,59 @@ public class Session : Node {
   public static Session session;
   private Node activeMenu;
   public Arena arena;
+  public Overworld adventure; // Overworld manages adventure mode.
   public NetworkSession netSes;
-
-<<<<<<< HEAD
-  public JukeBox jukeBox;
-=======
-  // Settings
+  public Random random;
+  public AudioStreamPlayer jukeBox;
   public ArenaSettings arenaSettings; // Set up just before Arena game
+  public AdventureSettings adventureSettings; // Set up for an adventure game
   public float masterVolume, sfxVolume, musicVolume;
   public string userName;
   public float mouseSensitivityX, mouseSensitivityY;
->>>>>>> develop
-  
-
   public Actor player;
+  public enum Gamemodes{
+    None,
+    Arena,
+    Adventure
+  };
 
-  public static string NextItemId(){
+  public static string NextItemName(){
     if(Session.session.arena != null){
       return Session.session.arena.NextItemName();
     }
+    
     return "";
+  }
+
+  public static int NextItemId(){
+    if(Session.session.adventure != null){
+      return Session.session.adventure.NextItemId();
+    }
+
+    return 0;
+  }
+
+  public static int NextActorId(){
+    if(Session.session.adventure != null){
+      return Session.session.adventure.NextActorId();
+    }
+
+    return 0;
   }
 
   public override void _Ready() {
     EnforceSingleton();
     ChangeMenu(Menu.Menus.Main);
-    //ShowMethods(typeof(Godot.RigidBody));
-    //ShowProperties(typeof(Godot.CollisionShape));
-    //ShowVariables(typeof(Godot.RigidBody));
+    InitJukeBox();
+    InitSettings();
   }
-<<<<<<< HEAD
-=======
+
+  public void PerformTests(){
+    Test.Init();
+    AdventureTest.RunTests();
+  }
 
   public void InitSettings(){
-    GD.Print("InitSettings");
     SettingsDb db = SettingsDb.Init();
     masterVolume = Util.ToFloat(db.SelectSetting("master_volume"));
     sfxVolume = Util.ToFloat(db.SelectSetting("sfx_volume"));
@@ -62,40 +80,49 @@ public class Session : Node {
 
   public static void SaveSettings(){
     SettingsDb db = SettingsDb.Init();
+    
     db.StoreSetting("master_volume", "" + Session.session.masterVolume);
     db.StoreSetting("sfx_volume", "" + Session.session.sfxVolume);
     db.StoreSetting("music_volume", "" + Session.session.musicVolume);
     db.StoreSetting("mouse_sensitivity_x", "" + Session.session.mouseSensitivityX);
     db.StoreSetting("mouse_sensitivity_y", "" + Session.session.mouseSensitivityY);
     db.StoreSetting("username", Session.session.userName);
+    
     db.Close();
     Sound.RefreshVolume();
   }
->>>>>>> develop
   
   public void Quit(){
-    GetTree().Quit();  
+    GetTree().Quit(); 
   }
   
-  public void InitJukeBox(){
-    if(jukeBox != null){
+  public static void InitJukeBox(){
+    if(Session.session.jukeBox != null){
       return;
     }
-    jukeBox = (JukeBox)Instance("res://Scenes/JukeBox.tscn");
-    AddChild(jukeBox);
+
+    Session.session.jukeBox = new AudioStreamPlayer();
+    Session.session.AddChild(Session.session.jukeBox);
   }
   
   public static System.Random GetRandom(){
     if(Session.session.netSes != null && Session.session.netSes.random != null){
       return Session.session.netSes.random;
     }
-    return new System.Random();
+
+    if(Session.session.random != null){
+      return Session.session.random;
+    }
+
+    Session.session.random = new System.Random();
+    return Session.session.random;
   }
 
   public static bool NetActive(){
     if(session.netSes != null){
       return true;
     }
+    
     return false;
   }
 
@@ -104,6 +131,7 @@ public class Session : Node {
     if(session.netSes != null){
       return session.netSes.isServer;
     }
+    
     return false;
   }
 
@@ -112,23 +140,33 @@ public class Session : Node {
     byte[] bytes = Encoding.Default.GetBytes(path);
     path = Encoding.UTF8.GetString(bytes);
     PackedScene packedScene = (PackedScene)GD.Load(path);
+    
     if(packedScene == null){
       GD.Print("Path [" + path + "] is invalid." );
       return null;
     }
+    
     return packedScene.Instance();
   }
   
   /* Remove game nodes/variables in order to return it to a menu. */
-  public void ClearGame(bool keepNet = false){
-    if(arena != null){
-      arena.QueueFree();
-      arena = null;
+  public static void ClearGame(bool keepNet = false){
+    Session ses = Session.session;
+    if(ses.arena != null){
+      ses.arena.QueueFree();
+      ses.arena = null;
     }
-    if(!keepNet && netSes != null){
-      netSes.QueueFree();
-      netSes = null;
+    
+    if(ses.adventure != null){
+      ses.adventure.QueueFree();
+      ses.adventure = null;
     }
+    
+    if(!keepNet && ses.netSes != null){
+      ses.netSes.QueueFree();
+      ses.netSes = null;
+    }
+    
     Input.SetMouseMode(Input.MouseMode.Visible);
   }
   
@@ -136,67 +174,67 @@ public class Session : Node {
     if(Session.session.arena != null){
       return Session.session.arena;
     }
+    
     return Session.session;
   }
   
-  public void QuitToMainMenu(){
-    ChangeMenu(Menu.Menus.Main);
-    ClearGame();
+  public static void QuitToMainMenu(){
+    Session.ChangeMenu(Menu.Menus.Main);
+    Session.ClearGame();
   }
   
-<<<<<<< HEAD
-  public void SinglePlayerGame(){
-=======
-  public static void SinglePlayerArena(){
->>>>>>> develop
+  public static void LocalArena(){
     ChangeMenu(Menu.Menus.None);
     ChangeMenu(Menu.Menus.HUD);
+    Session ses = Session.session;
     Node arenaNode = Arena.ArenaFactory();
-    arena = (Arena)arenaNode;
-    AddChild(arenaNode);
-    arena.Init(true);
-    
+    ses.arena = (Arena)arenaNode;
+    ses.AddChild(arenaNode);
+    ses.arena.Init(true);
   }
 
-<<<<<<< HEAD
-  public void MultiPlayerGame(){
-=======
-  public static void MultiplayerArena(){
+  public static void LocalAdventure(){
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
+  }
+
+  public static void OnlineAdventure(){
+    ChangeMenu(Menu.Menus.None);
+    Session.session.adventure = new Overworld();
+    Session.session.AddChild(Session.session.adventure);
+  }
+
+  public static void OnlineArena(){
     Session ses = Session.session;
->>>>>>> develop
     ChangeMenu(Menu.Menus.None);
     Node arenaNode = Arena.ArenaFactory();
-    AddChild(arenaNode);
-    arena = (Arena)arenaNode;
-    arena.Init(false);
-    if(netSes.isServer == false){
+    
+    ses.AddChild(arenaNode);
+    ses.arena = (Arena)arenaNode;
+    ses.arena.Init(false);
+    
+    if(ses.netSes.isServer == false){
       ChangeMenu(Menu.Menus.HUD);
     }
   }
 
-<<<<<<< HEAD
-  public void ChangeMenu(Menu.Menus menu){
-    if(activeMenu != null){
-      activeMenu.QueueFree();
-      activeMenu = null;
-    }
-    activeMenu = Menu.MenuFactory(menu);
-=======
   public static void ChangeMenu(Menu.Menus menu){
     Session ses = Session.session;
     if(ses.activeMenu != null){
       IMenu menuInstance = ses.activeMenu as IMenu;
+      
       if(menuInstance != null){
         menuInstance.Clear();
       }
       else{
         ses.activeMenu.QueueFree();
       }
+      
       ses.activeMenu = null;
     }
 
     ses.activeMenu = Menu.MenuFactory(menu);
->>>>>>> develop
   }
   
   private void EnforceSingleton(){
@@ -204,56 +242,61 @@ public class Session : Node {
     else{ this.QueueFree(); }
   }
   
-  // Use this to find methods for classes.
-  // Because Godot lacks real C# documentation.
-  public static void ShowMethods(Type type){
-    foreach (var method in type.GetMethods()){
-      string ret = "" + method.ReturnType +"," + method.Name;
-      foreach( var parameter in method.GetParameters()){
-        ret += ", " + parameter.ParameterType + " " + parameter.Name; 
-      }
-      GD.Print(ret);
-      System.Threading.Thread.Sleep(100);
+  public static string GetObjectiveText(){
+    Session ses = Session.session;
+    
+    if(ses.arena != null){
+      return ses.arena.GetObjectiveText();
     }
-  }
-  
-  // Use this to find variables for classes, because Godot
-  // Lacks real C# documentation
-  public static void ShowProperties(Type type){
-    foreach(PropertyInfo prop in type.GetProperties()){
-      GD.Print(prop.Name + " : " + prop.PropertyType );
+    
+    if(ses.adventure != null){
+      return ses.adventure.GetObjectiveText();
     }
-  }
-  
-  // Use this to print out class variables 
-  public static void ShowVariables(Type type){
-    BindingFlags bindingFlags = BindingFlags.Public |
-                            BindingFlags.NonPublic |
-                            BindingFlags.Instance |
-                            BindingFlags.Static;
-
-    foreach (FieldInfo field in type.GetFields(bindingFlags)) {
-        GD.Print(field.Name);
-        System.Threading.Thread.Sleep(100);
-    }
-  }
-  
-  public string GetObjectiveText(){
-    if(arena != null){
-      return arena.GetObjectiveText();
-    }
+    
     return "Fight the enemies.";
   }
   
-  /* Trickle events down from the Session */
   public void HandleEvent(SessionEvent sessionEvent){
+    if(Session.NetActive() && sessionEvent.type == SessionEvent.Types.ItemDiscarded){
+      HandleItemDiscardedEvent(sessionEvent); // Refresh inventory when deferred discard item.
+    }
+    
     if(arena != null){
       arena.HandleEvent(sessionEvent);
     }
+    
+    if(adventure != null){
+      adventure.HandleEvent(sessionEvent);
+    }
+  }
+
+  public void HandleItemDiscardedEvent(SessionEvent sessionEvent){
+    if(player.NodePath().ToString() != sessionEvent.args[0]){
+      return;
+    }
+
+    InventoryMenu invMenu = activeMenu as InventoryMenu;
+    
+    if(invMenu == null){
+      return;
+    }
+    
+    invMenu.RefreshInventory();
   }
   
-  // Static convenience method.
   public static void Event(SessionEvent sessionEvent){
     Session.session.HandleEvent(sessionEvent);
+  }
+
+  public static void PlayerReady(){
+    Arena arena = Session.session.arena;
+    
+    if(arena != null){
+      arena.PlayerReady();
+    }
+  }
+
+  public static Vector3 WorldPosition(Item item){
+    return item.Translation;
   }
 }

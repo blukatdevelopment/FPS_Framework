@@ -4,11 +4,11 @@
 .dll
 .o
 .so
-
+.pdb
 .obj
 .png
 .svg
-
+.import
 .mp3
 .ovg
 .wav

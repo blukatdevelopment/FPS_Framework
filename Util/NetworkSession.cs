@@ -14,26 +14,23 @@ public class NetworkSession : Node {
   private const int MaxPlayers = 10;
   public const string DefaultServerAddress = "127.0.0.1";
   public int selfPeerId;
-  public Dictionary<int, PlayerData> playerData;
+  public System.Collections.Generic.Dictionary<int, PlayerData> playerData;
   public int randomSeed;
   public System.Random random;
-
-  // Init variables
+  public int playersReady;
   public bool isServer;
   public string initAddress;
   public string initPort;
   public string initName;
-
   
   public override void _Ready(){
-    playerData = new Dictionary<int, PlayerData>();
+    playerData = new System.Collections.Generic.Dictionary<int, PlayerData>();
   }
 
   public bool Initialized(){
     return peer != null;
   }
 
-  // Update handler methods without disconnecting.
   public void UpdateServer(Godot.Object obj, string playerJoin, string playerLeave){
     this.GetTree().Connect("network_peer_connected", obj, playerJoin);
     this.GetTree().Connect("network_peer_disconnected", obj, playerLeave);
@@ -88,7 +85,6 @@ public class NetworkSession : Node {
     selfPeerId = this.GetTree().GetNetworkUniqueId();
   }
   
-
   public void InitRandom(int seed){
     this.randomSeed = seed;
     this.random = new System.Random(randomSeed);

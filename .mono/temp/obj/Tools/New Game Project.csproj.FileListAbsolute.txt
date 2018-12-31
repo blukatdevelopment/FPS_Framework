@@ -10,3 +10,21 @@
 /home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.csproj.CoreCompileInputs.cache
 /home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.dll
 /home/blukat/Documents/FPS/.mono/temp/obj/Tools/New Game Project.pdb
+/home/blukat/Documents/FPS/.mono/temp/bin/Tools/Mono.Data.Sqlite.dll
+/home/blukat/Documents/FPS/.mono/temp/bin/Tools/System.Data.SQLite.dll
+/home/blukat/LocalDev/FPS_Project/.mono/temp/obj/Tools/New Game Project.csprojResolveAssemblyReference.cache
+/home/blukat/LocalDev/FPS_Project/.mono/temp/obj/Tools/New Game Project.csproj.CoreCompileInputs.cache
+/home/blukat/LocalDev/FPS_Project/.mono/temp/obj/Tools/New Game Project.dll
+/home/blukat/LocalDev/FPS_Project/.mono/temp/obj/Tools/New Game Project.pdb
+/home/blukat/LocalDev/FPS_Project/.mono/temp/bin/Tools/New Game Project.dll
+/home/blukat/LocalDev/FPS_Project/.mono/temp/bin/Tools/New Game Project.pdb
+/home/blukat/LocalDev/FPS_Project/.mono/temp/bin/Tools/Mono.Data.Sqlite.dll
+/home/blukat/LocalDev/FPS_Project/.mono/temp/bin/Tools/System.Data.SQLite.dll
+/home/blukat/localdev/FPS/.mono/temp/obj/Tools/New Game Project.csprojResolveAssemblyReference.cache
+/home/blukat/localdev/FPS/.mono/temp/obj/Tools/New Game Project.csproj.CoreCompileInputs.cache
+/home/blukat/localdev/FPS/.mono/temp/obj/Tools/New Game Project.dll
+/home/blukat/localdev/FPS/.mono/temp/obj/Tools/New Game Project.pdb
+/home/blukat/localdev/FPS/.mono/temp/bin/Tools/New Game Project.dll
+/home/blukat/localdev/FPS/.mono/temp/bin/Tools/New Game Project.pdb
+/home/blukat/localdev/FPS/.mono/temp/bin/Tools/Mono.Data.Sqlite.dll
+/home/blukat/localdev/FPS/.mono/temp/bin/Tools/System.Data.SQLite.dll

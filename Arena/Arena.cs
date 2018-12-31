@@ -10,44 +10,43 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 
 public class Arena : Spatial {
-  bool singlePlayer;
-  List<Actor> actors;
-  Spatial terrain;
-  List<Vector3> actorSpawnPoints, itemSpawnPoints;
-  int nextId = -2147483648;
+  public bool local;
+  public List<Actor> actors;
+  public Spatial terrain;
+  public List<Vector3> actorSpawnPoints, itemSpawnPoints;
+  public int nextId = -2147483648;
   public bool gameStarted = false;
-
   public ArenaSettings settings;
-  
-  const float RoundDuration = 300f;
   const float ScoreDuration = 5f;
-  float roundTimeRemaining, secondCounter;
-  bool roundTimerActive = false;
-  bool scorePresented = false;
-  Dictionary<int, int> scores;
-  public int playerWorldId;
+  public float roundTimeRemaining, secondCounter;
+  public bool roundTimerActive = false;
+  public bool scorePresented = false;
+  public System.Collections.Generic.Dictionary<int, int> scores;
+  public int playerWorldId = -1;
 
-  // used for singleplayer
   int playersReady = 0;
 
-  public void Init(bool singlePlayer){
+  public void Init(bool local){
     settings = Session.session.arenaSettings;
+    
     if(settings == null){
       GD.Print("Using default arena settings.");
       settings = new ArenaSettings();
     }
-    this.singlePlayer = singlePlayer;
+    
+    this.local = local;
     actors = new List<Actor>();
-    scores = new Dictionary<int, int>();
+    scores = new System.Collections.Generic.Dictionary<int, int>();
+
     InitTerrain();
     InitSpawnPoints();
-    if(singlePlayer){
-      SinglePlayerInit();
+    
+    if(local){
+      LocalInit();
     }
     else{
-      MultiplayerInit();
-    }
-    
+      OnlineInit();
+    } 
   }
 
   public override void _Process(float delta){
@@ -74,6 +73,7 @@ public class Arena : Spatial {
           Rpc(nameof(PresentScore));
         }
       }
+      
       if(roundTimeRemaining < -ScoreDuration){
         
         if(Session.IsServer()){
@@ -82,36 +82,42 @@ public class Arena : Spatial {
         }
       }
     }
-
-
     
   }
   
   public bool PlayerWon(){
     int max = playerWorldId;
+    
     foreach(KeyValuePair<int, int> key in scores){
       int score = key.Value;
+      
       if(score > scores[max]){
         max = score;
       }
     }
+    
     if(max == playerWorldId){
       return true;
     }
+    
     return false;
   }
 
   public string GetObjectiveText(){
+    if(playerWorldId == -1){
+      return "Player not initialized.";
+    }
     
-
     if(scorePresented){
       return PlayerWon() ? "Victory!" : "Defeat!";
     }
 
     string ret = "Arena\n";
+    
     string timeText = TimeFormat( (int)roundTimeRemaining);
     ret += "Time: " + timeText + "\n";
     ret += "Score: " + scores[playerWorldId];
+    
     return ret;
   }
   
@@ -119,13 +125,17 @@ public class Arena : Spatial {
     int minutes = timeSeconds / 60;
     int seconds = timeSeconds % 60;
     string minutesText = "" + minutes;
+    
     if(minutes < 1){
       minutesText = "00";
     }
+    
     string secondsText = "" + seconds;
+    
     if(seconds < 1){
       secondsText = "00";
     }
+    
     return minutesText + ":" + secondsText;
   }
   
@@ -138,24 +148,23 @@ public class Arena : Spatial {
   public void PresentScore(){
     scorePresented = true;
     SetPause(true);
-    Session.session.ChangeMenu(Menu.Menus.HUD);
+    Session.ChangeMenu(Menu.Menus.HUD);
   }
   
   [Remote]
   public void RoundOver(){
     roundTimerActive = false;
 
-    if(this.singlePlayer){
-      Session.session.QuitToMainMenu();
+    if(this.local){
+      Session.QuitToMainMenu();
     }
     else{
-      Session.session.ChangeMenu(Menu.Menus.Lobby);
-      Session.session.ClearGame(true);
+      Session.ChangeMenu(Menu.Menus.Lobby);
+      Session.ClearGame(true);
     } 
   }
 
-
-  public int NextWorldId(){
+  public int NextId(){
     int ret = nextId;
     nextId++;
     return ret;
@@ -173,61 +182,50 @@ public class Arena : Spatial {
     return name;
   }
 
-  public void SinglePlayerInit(){
-<<<<<<< HEAD:Util/Arena.cs
-    SpawnItem(Item.Types.HealthPack);
-    SpawnItem(Item.Types.AmmoPack);
-=======
+  public void LocalInit(){
     if(settings.usePowerups){
       for(int i = 0; i < 1; i++){
         SpawnItem(Item.Types.AmmoPack, 10);
         SpawnItem(Item.Types.HealthPack);  
       }
     }
->>>>>>> develop:Arena/Arena.cs
 
-
-    InitActor(Actor.Brains.Player1, NextWorldId());
+    InitActor(Actor.Brains.Player1, NextId());
     for(int i = 0; i < settings.bots; i++){
-      InitActor(Actor.Brains.Ai, NextWorldId());
+      InitActor(Actor.Brains.Ai, NextId());
     }
 
     roundTimeRemaining = settings.duration * 60;
-    if(settings.useKits){
-      foreach(Actor actor in actors){
-        EquipActor(actor, Item.Types.Rifle, "Rifle");
-      }
-    }
 
     roundTimerActive = true;
-
   }
 
-  public void MultiplayerInit(){
+  public void OnlineInit(){
     if(!Session.IsServer()){
       return;
     }
 
     for(int i = 0; i < settings.bots; i++){
-      settings.botIds.Add(NextWorldId());
+      settings.botIds.Add(NextId());
     }
 
-    string json = JsonConvert.SerializeObject(Session.session.arenaSettings, Formatting.Indented);
-
-    DeferredMultiplayerInit(json);
-    Rpc(nameof(DeferredMultiplayerInit), json);
+    string settingsJson = ArenaSettings.ToJson(Session.session.arenaSettings);
+    
+    DeferredOnlineInit(settingsJson);
+    Rpc(nameof(DeferredOnlineInit), settingsJson);
   }
 
-  // Make sure clients 
   [Remote]
-  public void DeferredMultiplayerInit(string json){
+  public void DeferredOnlineInit(string json){
     if(!Session.IsServer()){
       settings = JsonConvert.DeserializeObject<ArenaSettings>(json);
       Session.session.arenaSettings = settings;
     }
+    
     NetworkSession netSes = Session.session.netSes;
-
+    netSes.playersReady = 0;
     playerWorldId = netSes.selfPeerId;
+    
     foreach(KeyValuePair<int, PlayerData> entry in netSes.playerData){
       int id = entry.Value.id;
       InitActor(Actor.Brains.Remote, id);
@@ -260,9 +258,11 @@ public class Arena : Spatial {
 
     if(!Session.NetActive()){
       SpawnActor(brain, id);
+      
       if(brain == Actor.Brains.Player1){
         playerWorldId = id;
       }
+      
       return null;
     }
 
@@ -278,7 +278,6 @@ public class Arena : Spatial {
     return ret; 
   }
 
-  
   public void InitTerrain(){
     PackedScene ps = (PackedScene)GD.Load("res://Scenes/Prefabs/Terrain.tscn");
     Node instance = ps.Instance();
@@ -297,8 +296,8 @@ public class Arena : Spatial {
 
   public void HandleActorDead(SessionEvent sessionEvent){
     string[] actors = sessionEvent.args;  
+    
     if(actors == null || actors.Length == 0 || actors[0] == ""){
-      GD.Print("Arena.HandleActorDead: Insufficient args");
       return;
     }
 
@@ -306,7 +305,7 @@ public class Arena : Spatial {
     Actor actor = actorNode as Actor;
     Actor.Brains brain = actor.brainType;
     
-    int id = actor.worldId;
+    int id = actor.id;
 
     actorNode.Name = "Deadplayer" + id;
     actor.QueueFree();
@@ -317,7 +316,6 @@ public class Arena : Spatial {
     }
     
     if(actors.Length < 2 || actors[1] == ""){
-     GD.Print("HandleActorDead: Insufficient arguments");
      return; 
     }
 
@@ -325,15 +323,8 @@ public class Arena : Spatial {
     Actor killer = killerNode as Actor;
 
     if(killer != null){
-      GD.Print("Killer:" + killer.worldId);
-      scores[killer.worldId]++;
+      scores[killer.id]++;
     }
-    else{
-      GD.Print("HandleActorDead: Killer null");
-    }
-    
-    
-
   }
 
   public void SetPause(bool val){
@@ -352,45 +343,50 @@ public class Arena : Spatial {
   
   public void InitSpawnPoints(){
     SceneTree st = GetTree();
-    object[] actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
+    Godot.Array actorSpawns = st.GetNodesInGroup("ActorSpawnPoint");
+    
     this.actorSpawnPoints = new List<Vector3>();
-    for(int i = 0; i < actorSpawns.Length; i++){
+    
+    for(int i = 0; i < actorSpawns.Count; i++){
       Spatial spawnPoint = actorSpawns[i] as Spatial;
+      
       if(spawnPoint != null){
         this.actorSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
       }
     }
     
-    object[] itemSpawns = st.GetNodesInGroup("ItemSpawnPoint");
+    Godot.Array itemSpawns = st.GetNodesInGroup("ItemSpawnPoint");
     this.itemSpawnPoints = new List<Vector3>();
-    for(int i = 0; i < itemSpawns.Length; i++){
+    
+    for(int i = 0; i < itemSpawns.Count; i++){
       Spatial spawnPoint = itemSpawns[i] as Spatial;
+      
       if(spawnPoint != null){
         this.itemSpawnPoints.Add(spawnPoint.GetGlobalTransform().origin);
       }
     }
   }
   
-  public void SpawnItem(Item.Types type){
+  public void SpawnItem(Item.Types type, int quantity = 1){
     if(Session.NetActive() && !Session.IsServer()){
       return;
     }
+    
     Vector3 pos = RandomItemSpawn();
     Item item = Item.Factory(type);
     item.Translation = pos;
     AddChild(item);
 
-
     if(Session.IsServer()){
       string name = NextItemName();
       Node itemNode = item as Node;
       itemNode.Name = name;
-      Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z);
+      Rpc(nameof(DeferredSpawnItem), type, name, pos.x, pos.y, pos.z, quantity);
     }
   }
 
   [Remote]
-  public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z){
+  public Item DeferredSpawnItem(Item.Types type, string name, float x, float y, float z, int quantity){
     Vector3 pos = new Vector3(x, y, z);
     Item item = Item.Factory(type);
     item.Translation = pos;
@@ -410,33 +406,32 @@ public class Arena : Spatial {
   
   public Actor SpawnActor(Actor.Brains brain = Actor.Brains.Player1, int id = 0){
     Vector3 pos = RandomActorSpawn();
-    Actor actor = Actor.ActorFactory(brain);
-    actor.netId = id;
-    actor.worldId = id;
-    actors.Add(actor);
-    actor.SetPos(pos);
-    Node actorNode = actor as Node;
-    if(id != 0){
-      actorNode.Name = "Player" + id;
-    }
     
-    AddChild(actorNode);
+
+    ActorData dat = new ActorData();
+
+    dat.id = id;
+    dat.pos = pos;
+    dat.health = dat.healthMax = 100;
+    if(settings.useKits){
+      dat.inventory.ReceiveItem(Item.Factory(Item.Types.Rifle));
+      List<Item> kitItems = Item.BulkFactory(Item.Types.Ammo, 100);
+
+      dat.inventory.ReceiveItem(kitItems[0]);
+    }
+
+    Actor actor = Actor.Factory(brain, dat);
+    actor.NameHand(actor.Name + "(Hand)");  
+    
+    actors.Add(actor);
+    AddChild(actor);
+
+    if(settings.useKits){
+      EquipActor(actor, Item.Types.Rifle, "Rifle");
+    }
+
     return actor;
   }
-<<<<<<< HEAD:Util/Arena.cs
-=======
-
-  public void InitKit(Actor actor){
-    if(!settings.useKits){
-      GD.Print();
-    }
-    GD.Print("Arena.Initkit");
-    actor.ReceiveItem(Item.Factory(Item.Types.Rifle));
-    actor.ReceiveItem(Item.Factory(Item.Types.Ammo, "", "Bullet", 100));
-    EquipActor(actor, Item.Types.Rifle, "Rifle");
-    
-  }
->>>>>>> develop:Arena/Arena.cs
   
   public Vector3 RandomActorSpawn(){
     System.Random rand = Session.GetRandom();
@@ -451,14 +446,11 @@ public class Arena : Spatial {
     return (Arena)instance;
   }
 
-<<<<<<< HEAD:Util/Arena.cs
-=======
   public void PlayerReady(){
     if(Session.NetActive()){
       Rpc(nameof(DeferredPlayerReady));
     }
   }
-
 
   public void EquipActor(Actor actor, Item.Types itemType, string itemName){
     int index = actor.IndexOf(itemType, itemName);
@@ -466,11 +458,10 @@ public class Arena : Spatial {
       GD.Print("Actor doesn't have this weapon.");
     }
     else{
-      GD.Print("Equipping Actor");
+      GD.Print("Equipping Actor with " + itemType.ToString());
       actor.EquipItem(index);
     }
   }
-
 
   [Remote]
   public void DeferredPlayerReady(){
@@ -486,14 +477,12 @@ public class Arena : Spatial {
       return;
     }
     gameStarted = true;
-    //Equip rifle.
-    if(settings.useKits){
-      foreach(Actor actor in actors){
-        EquipActor(actor, Item.Types.Rifle, "Rifle");
-      }
-    }
+    // if(settings.useKits){
+    //   foreach(Actor actor in actors){
+    //     EquipActor(actor, Item.Types.Rifle, "Rifle");
+    //   }
+    // }
     
   }
->>>>>>> develop:Arena/Arena.cs
 
 }
