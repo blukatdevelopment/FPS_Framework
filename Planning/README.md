@@ -1,83 +1,98 @@
-# Planning
+# Hiatus
+The plan is to work on another unrelated project of a different genre, get a bit more experience with godot, and then come back for a rebuild using lessons learned from Manafest: Arena.
 
-This folder is where all files relating to planning reside.
+## File structure
 
-# Guidelines
+It's clear to me now that the top level of the file structure should be cleaned up to look like this:
 
-## Commits
+assets/
+    src/ - Source code
+    textures/
+    models/
+    audio/
+    data/ - Saves, preferences, level data, copy, etc
+docs/
+bin/
+screenshots/
 
-A commit message should look something like this. Note that the QA and Bug
-sections are optional, but the type(scope): is not.
+## Session/
+Should contain Session.cs, which should primarily be the singleton god-object for the game.
+It should primarilily provide static methods and maintain a global state consisting largely of components that implement interfaces such as IGameMode and IMenu that can be swapped out when convenient. Said interfaces should reside here.
+Session should likewise receive events that are tricked down to its active IGameMode.
 
-``` 
-feat(AI): Installed morality core.
+## Input/
+There should be three layers of abstraction:
+1. Detecting the current state of keys/buttons/axes
+- should be updated as children of Session
+- Should be handled based on configs. 
+- Only listen to keys/buttons/axes for active mapping
+2. Mapping this state to input events 
+- type (eg press, combo press, held, double tap) 
+- name (ie right hand, punch, moveForward, lookUp, crouch)
+- static GetInputEvents(playerNumber)
+- static SetInputMapping(playerNumber, mapping)
+3. Mapping input events to in-game behaviors
+- should be configurable in input menu
+- One should exist for every player-controlled entity
+- Should have Sensitivity for every pseudo-analog input
+- Menu should provide "Press Punch" sort of setup to be joystick agnostic
 
-QA: Check to make sure testing chamber is not flooded with nerve toxins.
-Bug: Fixes #1234
-```
+## DB/
+Should contain classes that abstract data stores and server communication away.
+Some should do this asynchronously or with buffering due to retrieval speed, whilst others should fetch data immediately.
 
-Acceptable commit types include:
-- fix : A fix to existing functionality.
-- feat : Adding new functionality.
-- docs : Updating documentation.
+Examples:
+SettingsDB - string-based key/value store for config.
+CopyDB - Retrieve copy strings such as  "Hello, player!" using node strings such as "player.greeting" in order to avoid hardcoding this and allow language switching
+AdventureDB - Save adventure games and maps
+ArenaDB - Arena game saves
+ItemDB - Item configs for use in ItemFactory
+ActorDB - Stored premade and user-customized actors
+DialogueDB - Dialogue trees
+NameDB - Names with associated tags ie "Jonathan": ["first", "male", "biblical", "western"]
 
-# State of development
+## Actor/
+Actor should be an aggregation of components that each handle some aspectof an actor
+StatsManager - RPG stats and calculations
+ActorInputHandler - Control playable actors
+ActorAnimationHandler - Should control blending animations of a rigged skeleton
 
-At the time of this writing this game is being developed by
-one person assuming all roles. Godot 3.0.6 Mono is the engine selected 
-for this project.
+## Item/
+IItem
+ItemFactory - Used in absence of 
 
-The first iteration of development created the Arena mode, wherein players and
-AI fight one another in a static arena.
+### Item/Items/
+Classes that implement IItem and use IItemBehaviors 
+### Item/Behaviors/
+Classes that implement IItemBehavior
 
-The ongoing second iteration of development is creating the Adventure mode, 
-wherein players and AI interact in an open world sandbox.
+## AI/
+Should contain any artificial intelligence used in the game.
 
-# Areas lacking polish or needing refactor
-- Menus use default skin and it is hideous.
-- Actors lack humanoid models with animations.
-- BUG: When a match ends and new match starts, arena is not initialized properly. (Will take significant effort to reproduce. Considering non-critical for the time being.)
-- BUG: Cannot load adventure from pause menu
+## Audio/
+Jukebox - Play/loop music from folder, configured playlists, etc
+Speaker - 3D Moving source of sound
+OneShotAudio - Plays sound and then QueueFrees, static OneShotAudio.PlayAtPoint(point, sound)
 
-# Completed Milestones
+## Dialogue/
+Classes to construct dialogue trees that send events to the Session and make checks against a global EventHistory object.
 
-**Version 1.0.1 Arena**
-Minimalistic multiplayer arena shooter.
+## Inventory/
+HotBar - Finite numbered slots meant to be cycled through and equipped
+Inventory - Bottomless inventory of items
+PaperDoll - Slots for passive equippable items such as clothing, charms, and armor
 
+## Util/
+Should contain miscellanious static engine helper methods in Util.cs, a simple test class in Test.cs, and any other misfits.
 
-# Active stories
+## Menu/
+Should have a MenuFactory class that returns various classes that implement IMenu. Should also have a Menu class to provide convenience methods to build and configure various UI elements. One or more baseclasses for menus should allow allow extending the menus to be easier.
 
-Title: Auth MVP
-Components: Core, Networking
-Body:
-Every client should have a username and password when connecting to the server.
-The server should store these (with password hashed) and check them again on
-subsequent login. Failing auth should prevent send the client back to the
-main menu.
+## Arena/
+Should contain any Arena-specific classes 
 
-Title: client/server overworld MVP
-Components: Core, Networking
-Body: 
-A method should exist to send the terrain, items, and actors contained within
-a cell from the server to client.
+## Adventure/
+Should contain any Adventure-specific classes
 
-Another method should exist for clients to request the data above for a cell.
-
-Instead of reading from disc, clients should request the cell data from the
-server and leave it there. As such, clients should request cells in a 
-
-A third method should exist so that the server can change the brain/type of
-an actor when a client connects and takes over an actor (turning it Remote), 
-or disconnects, abandoning it (turning it to Ai).
-
-When a player's actor dies, they should respawn with a blank inventory at a 
-random spawn point decided by the server.
-
-Title: lobbyless multiplayer
-Components: Core, Networking
-Body:
-The overworld server should start the game immediately, and clients should be
-free to connect/disconnect whenever.
-
-The menus should account for this change by disabling the lobby for 
-online overworld clients and providing a start button for servers.
+## Network/
+Should contain classes to further abstract away or simplify netcode and other online features.

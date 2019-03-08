@@ -30,20 +30,15 @@ I've since come to realize that what I was intending to work on was not a finish
 A finished game would offer artistic content (such as a rocket launcher that fires potatos), whereas my concern
 with this project is to tackle the technical problems (such as providing a projectile weapon and explosions).
 
-At this point in time, the plan is to work iteratively with the following process:
-1. Reach significant milestone with this framework.
-2. Develop small game using the framework.
-3. Apply lessons learned to improve framework.
-4. Return to step 1.
+Thus arose the plan to use the framework as a starting point for a [new project](https://github.com/blukatstudios/ManafestArena). As of this update, I am wrapping up said project and have learned many lessons. Rather than directly jump back into this project, I have decided to turn my attention to something unrelated in order to clear my mind and return with a fresh start. The plan is to tear this project apart and rebuild it in a smarter way upon my return.
 
 # Development 
 
-The 1.1.0 release includes some additional features not present in 1.0.1 such as settings menu, arena configuration, and bots in multiplayer. An inventory menu now exists for equipping, stashing, and dropping items.
+See releases 1.0.1 and 1.1.0 for what this project's older state.
 
-The next major milestone will be an Adventure gamemode centered around players exploring a persistant open world. 
+Version 2.0.0 will undergo development after I take a hiatus from the FPS genre to clear my head, gain more familiarity with Godot, and allow Godot's 3D and C# features to mature a bit.
 
-See Planning/README.md on develop or feature branches for more granular information.
-
+The Planning/README.md contains the game plan for the major refactoring/rebuild.
 
 ![MainMenu](/Screenshots/main_menu.png)
 ![TwoAi](/Screenshots/two_ai.png)
