@@ -1,3 +1,7 @@
+# Disclaimer
+
+Development of this repo has been moved to https://github.com/blukatstudios/ManafestArena , where massive refactors have taken place and multiplayer support has been dropped. After the current development cycle on said project some time in early to mid 2020 this repo will be updated with game-specific content and features stripped out to leave a more polished framework than what exists in the 1.1.0 release.
+
 # FPS_Framework
 
 As the title states, this is a framework for first person shooter games. 
@@ -8,10 +12,9 @@ to provide a FOSS starting point for indie devs, and to promote linux gaming.
 
 What this framework **is**:
 - A collection of Base Classes for in-game items, Actors, Terrain
-- Session management for 
+- Session managemen 
 - Netcode
 - FPS Arena
-- Openworld FPS sandbox
 
 What this framework **isn't**:
 - A broad library of quality assets
